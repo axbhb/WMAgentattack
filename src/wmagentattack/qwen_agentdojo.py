@@ -1,4 +1,4 @@
-"""Direct Transformers adapter for running a local Qwen model in AgentDojo.
+"""Direct Transformers adapter for running a local chat model in AgentDojo.
 
 AgentDojo's built-in ``local`` provider expects an OpenAI-compatible inference
 server. This adapter keeps the official AgentDojo pipeline, tools, task suites,
@@ -28,7 +28,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 
 class TransformersQwenLLM(BasePipelineElement):
-    """AgentDojo pipeline element backed by a local Qwen Transformers model."""
+    """AgentDojo pipeline element backed by a local Transformers chat model."""
 
     def __init__(
         self,
@@ -41,6 +41,8 @@ class TransformersQwenLLM(BasePipelineElement):
         prompt_profile: str = "base",
         max_input_tokens: int = 8_192,
         protocol: str = "function_tags",
+        model_label: str | None = None,
+        trust_remote_code: bool = False,
     ) -> None:
         model_path = Path(model_path).resolve()
         if not model_path.exists():
@@ -56,24 +58,26 @@ class TransformersQwenLLM(BasePipelineElement):
         self.prompt_profile = prompt_profile
         self.max_input_tokens = max_input_tokens
         self.protocol = protocol
+        self.model_label = model_label or model_path.name
+        self.trust_remote_code = trust_remote_code
         compact_label = (
             f"compact{max_tool_output_chars}"
             if max_tool_output_chars > 0
             else "fullcontext"
         )
         self.name = (
-            f"qwen2.5-7b-instruct-transformers-{quantization}-"
+            f"{self.model_label}-transformers-{quantization}-"
             f"{compact_label}-{prompt_profile}-{protocol}-ctx{max_input_tokens}"
         )
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_path,
             local_files_only=True,
-            trust_remote_code=False,
+            trust_remote_code=trust_remote_code,
         )
         model_kwargs: dict[str, Any] = {
             "local_files_only": True,
-            "trust_remote_code": False,
+            "trust_remote_code": trust_remote_code,
             "device_map": {"": device},
             "low_cpu_mem_usage": True,
             "attn_implementation": "sdpa",
