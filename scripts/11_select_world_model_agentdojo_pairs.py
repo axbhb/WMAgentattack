@@ -45,12 +45,15 @@ def _representative_step(steps: list[StepRecord]) -> StepRecord | None:
     return steps[0] if steps else None
 
 
-def _score_step(model: SklearnWorldModel, step: StepRecord) -> dict:
+def _score_step(model: SklearnWorldModel, step: StepRecord | dict) -> dict:
     predictions = model.predict([step])
     classes = list(predictions["skill_classes"])
+    target_skill = (
+        step.target_skill if isinstance(step, StepRecord) else step.get("target_skill")
+    )
     target_index = (
-        classes.index(step.target_skill)
-        if step.target_skill is not None and step.target_skill in classes
+        classes.index(target_skill)
+        if target_skill is not None and target_skill in classes
         else None
     )
     target_probability = (
@@ -88,6 +91,27 @@ def _dedupe_by_pair(rows: list[dict], max_per_user_task: int = 0) -> list[dict]:
     return output
 
 
+def _clean_prefix_states(run_root: Path) -> dict[tuple[str, str], dict]:
+    states = {}
+    for path in sorted(run_root.rglob("none/none.json")):
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        if not str(raw.get("user_task_id", "")).startswith("user_task_"):
+            continue
+        if raw.get("attack_type") not in (None, "none"):
+            continue
+        trajectory = normalize_trace(path)
+        step = _representative_step(trajectory.steps)
+        if step is None:
+            continue
+        states[(raw["suite_name"], raw["user_task_id"])] = step.model_dump(
+            mode="json"
+        )
+    return states
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
@@ -96,6 +120,16 @@ def main() -> None:
     parser.add_argument("--attack", default="important_instructions_no_model_name")
     parser.add_argument("--top-k", type=int, default=32)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument(
+        "--scoring-mode",
+        choices=["attack_trace_state", "clean_prefix"],
+        default="attack_trace_state",
+        help=(
+            "attack_trace_state scores a state from the completed attacked trace; "
+            "clean_prefix scores the matching clean user-task state with only "
+            "hypothetical attack/target metadata."
+        ),
+    )
     parser.add_argument(
         "--allowed-trajectories",
         type=Path,
@@ -114,6 +148,11 @@ def main() -> None:
     args = parser.parse_args()
 
     model = SklearnWorldModel.load(args.model)
+    clean_states = (
+        _clean_prefix_states(args.run_root)
+        if args.scoring_mode == "clean_prefix"
+        else {}
+    )
     allowed_ids = None
     if args.allowed_trajectories:
         allowed_ids = {
@@ -131,9 +170,22 @@ def main() -> None:
         trajectory = normalize_trace(path)
         if allowed_ids is not None and trajectory.trajectory_id not in allowed_ids:
             continue
-        step = _representative_step(trajectory.steps)
-        if step is None:
+        attack_step = _representative_step(trajectory.steps)
+        if attack_step is None:
             continue
+        if args.scoring_mode == "clean_prefix":
+            step = clean_states.get((raw["suite_name"], raw["user_task_id"]))
+            if step is None:
+                continue
+            step = {
+                **step,
+                "attack_action": f"AGENTDOJO_ATTACK_{raw['attack_type']}",
+                "attack_location": None,
+                "target_skill": attack_step.target_skill,
+                "untrusted_content": None,
+            }
+        else:
+            step = attack_step
         scores = _score_step(model, step)
         candidates.append(
             {
@@ -142,7 +194,7 @@ def main() -> None:
                 "injection_task_id": raw["injection_task_id"],
                 "attack": raw["attack_type"],
                 "trajectory_id": trajectory.trajectory_id,
-                "target_skill": step.target_skill,
+                "target_skill": attack_step.target_skill,
                 "observed_utility": bool(raw.get("utility")),
                 "observed_security": bool(raw.get("security")),
                 "source_trace": str(path),
@@ -196,6 +248,7 @@ def main() -> None:
         "top_k": top_k,
         "seed": args.seed,
         "candidate_count": len(candidates),
+        "scoring_mode": args.scoring_mode,
         "allowed_trajectories": (
             str(args.allowed_trajectories.resolve())
             if args.allowed_trajectories
