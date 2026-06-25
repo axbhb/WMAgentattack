@@ -31,5 +31,5 @@ python -m pip install --extra-index-url https://download.pytorch.org/whl/cu128 \
 python -m pip install -e external/agentdojo
 
 python -m pip check
+export PYTHONPATH="$PROJECT_ROOT/src:$PROJECT_ROOT/external/agentdojo/src:${PYTHONPATH:-}"
 python -m pytest -q
-
