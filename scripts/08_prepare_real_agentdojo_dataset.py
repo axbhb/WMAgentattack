@@ -31,6 +31,15 @@ def _infer_prompt_profile(victim_model: str) -> str:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--run-root",
+        type=Path,
+        help=(
+            "AgentDojo run root containing both clean traces "
+            "(`<suite>/<user_task>/none/none.json`) and attacked traces. "
+            "When set, --clean-root and --attack-root are ignored."
+        ),
+    )
+    parser.add_argument(
         "--clean-root",
         type=Path,
         default=ROOT
@@ -47,8 +56,26 @@ def main():
     )
     args = parser.parse_args()
 
-    clean = normalize_directory(args.clean_root)
-    attacked_all = normalize_directory(args.attack_root)
+    if args.run_root:
+        all_trajectories = normalize_directory(args.run_root)
+        clean = [
+            trajectory
+            for trajectory in all_trajectories
+            if trajectory.steps
+            and all(step.attack_action is None for step in trajectory.steps)
+        ]
+        attacked_all = [
+            trajectory
+            for trajectory in all_trajectories
+            if trajectory.steps
+            and any(step.attack_action is not None for step in trajectory.steps)
+        ]
+        raw_roots = [args.run_root]
+    else:
+        clean = normalize_directory(args.clean_root)
+        attacked_all = normalize_directory(args.attack_root)
+        raw_roots = [args.attack_root]
+
     attacked = [
         trajectory
         for trajectory in attacked_all
@@ -58,15 +85,16 @@ def main():
     trajectories = clean + attacked
     steps = [step for trajectory in trajectories for step in trajectory.steps]
     incomplete_raw_traces = 0
-    for path in args.attack_root.rglob("*.json"):
-        try:
-            raw = json.loads(path.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            continue
-        if {"suite_name", "pipeline_name", "messages"}.issubset(raw) and (
-            "utility" not in raw or "security" not in raw
-        ):
-            incomplete_raw_traces += 1
+    for raw_root in raw_roots:
+        for path in raw_root.rglob("*.json"):
+            try:
+                raw = json.loads(path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                continue
+            if {"suite_name", "pipeline_name", "messages"}.issubset(raw) and (
+                "utility" not in raw or "security" not in raw
+            ):
+                incomplete_raw_traces += 1
 
     write_jsonl(args.out_dir / "trajectories.jsonl", trajectories)
     write_jsonl(args.out_dir / "steps.jsonl", steps)
