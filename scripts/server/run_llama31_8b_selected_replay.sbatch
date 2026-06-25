@@ -27,7 +27,9 @@ export HF_HUB_OFFLINE=1
   --run-root "${RUN_ROOT}" \
   --model artifacts/agentdojo_full_llama31_8b_world_model.joblib \
   --output artifacts/agentdojo_full_llama31_8b_selected_pairs_top${TOP_K}.json \
-  --top-k "${TOP_K}"
+  --allowed-trajectories data/agentdojo_full_llama31_8b/splits/test_trajectories.jsonl \
+  --top-k "${TOP_K}" \
+  --max-per-user-task 2
 
 "${CONDA}" run -n wmagentattack python scripts/12_run_agentdojo_hf_selected.py \
   --selection artifacts/agentdojo_full_llama31_8b_selected_pairs_top${TOP_K}.json \

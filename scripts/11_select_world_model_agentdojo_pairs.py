@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from wmagentattack.normalize_agentdojo import normalize_trace
+from wmagentattack.io_utils import read_jsonl
 from wmagentattack.schema import StepRecord
 from wmagentattack.world_model import SklearnWorldModel
 
@@ -70,14 +71,19 @@ def _score_step(model: SklearnWorldModel, step: StepRecord) -> dict:
     }
 
 
-def _dedupe_by_pair(rows: list[dict]) -> list[dict]:
+def _dedupe_by_pair(rows: list[dict], max_per_user_task: int = 0) -> list[dict]:
     seen = set()
+    per_user_task: dict[tuple[str, str], int] = {}
     output = []
     for row in rows:
         key = (row["suite"], row["user_task_id"], row["injection_task_id"])
         if key in seen:
             continue
+        user_key = (row["suite"], row["user_task_id"])
+        if max_per_user_task > 0 and per_user_task.get(user_key, 0) >= max_per_user_task:
+            continue
         seen.add(key)
+        per_user_task[user_key] = per_user_task.get(user_key, 0) + 1
         output.append(row)
     return output
 
@@ -90,9 +96,30 @@ def main() -> None:
     parser.add_argument("--attack", default="important_instructions_no_model_name")
     parser.add_argument("--top-k", type=int, default=32)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument(
+        "--allowed-trajectories",
+        type=Path,
+        help=(
+            "Optional JSONL of TrajectoryRecord rows. When set, only raw traces "
+            "whose normalized trajectory_id is present in this file are scored. "
+            "Use the held-out split here to avoid train/test leakage."
+        ),
+    )
+    parser.add_argument(
+        "--max-per-user-task",
+        type=int,
+        default=2,
+        help="Maximum selected pairs per (suite, user_task_id); <=0 disables.",
+    )
     args = parser.parse_args()
 
     model = SklearnWorldModel.load(args.model)
+    allowed_ids = None
+    if args.allowed_trajectories:
+        allowed_ids = {
+            row["trajectory_id"] for row in read_jsonl(args.allowed_trajectories)
+        }
+
     candidates: list[dict] = []
     for path in sorted(args.run_root.rglob("*.json")):
         try:
@@ -102,6 +129,8 @@ def main() -> None:
         if raw.get("attack_type") != args.attack or not _is_benchmark_attack_trace(raw):
             continue
         trajectory = normalize_trace(path)
+        if allowed_ids is not None and trajectory.trajectory_id not in allowed_ids:
+            continue
         step = _representative_step(trajectory.steps)
         if step is None:
             continue
@@ -134,9 +163,15 @@ def main() -> None:
     rng.shuffle(random_rows)
 
     selections = {
-        "world_model_top": _dedupe_by_pair(sorted_high)[:top_k],
-        "low_score": _dedupe_by_pair(sorted_low)[:top_k],
-        "random": _dedupe_by_pair(random_rows)[:top_k],
+        "world_model_top": _dedupe_by_pair(
+            sorted_high, max_per_user_task=args.max_per_user_task
+        )[:top_k],
+        "low_score": _dedupe_by_pair(
+            sorted_low, max_per_user_task=args.max_per_user_task
+        )[:top_k],
+        "random": _dedupe_by_pair(
+            random_rows, max_per_user_task=args.max_per_user_task
+        )[:top_k],
     }
     summary = {}
     for name, rows in selections.items():
@@ -161,6 +196,13 @@ def main() -> None:
         "top_k": top_k,
         "seed": args.seed,
         "candidate_count": len(candidates),
+        "allowed_trajectories": (
+            str(args.allowed_trajectories.resolve())
+            if args.allowed_trajectories
+            else None
+        ),
+        "allowed_trajectory_count": len(allowed_ids) if allowed_ids is not None else None,
+        "max_per_user_task": args.max_per_user_task,
         "summary": summary,
         "selections": selections,
     }
