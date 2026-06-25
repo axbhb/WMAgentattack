@@ -1,0 +1,42 @@
+# Python/cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local Codex/session state
+.agents/
+.codex/
+
+# External checkouts and generated benchmark logs
+external/
+runs/
+
+# Large/generated datasets. Keep only compact audit summaries for provenance.
+data/**
+!data/
+!data/real_agentdojo/
+!data/real_agentdojo/audit.json
+!data/real_agentdojo/splits/
+!data/real_agentdojo/splits/summary.json
+
+# Model artifacts. Keep lightweight JSON reports, exclude trained binaries.
+artifacts/**
+!artifacts/
+!artifacts/*.json
+*.joblib
+
+# Local papers/extractions; cite or download separately.
+reference/
+
+# Local model/cache paths should stay outside the repository.
+hf_cache/
+models/
+checkpoints/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.tmp
+*.log

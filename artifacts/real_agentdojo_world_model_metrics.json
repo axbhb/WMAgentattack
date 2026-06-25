@@ -1,0 +1,8 @@
+{
+  "next_skill_accuracy": 0.6351351351351351,
+  "next_skill_top3_accuracy": 0.8783783783783784,
+  "risk_auc": 0.8325892857142858,
+  "risk_f1": 0.8842105263157894,
+  "utility_auc": 0.8717948717948718,
+  "calibration_brier_score": 0.13083653843092763
+}

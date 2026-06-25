@@ -1,0 +1,41 @@
+{
+  "scope": "real_agentdojo_offline_eval",
+  "attack_metrics": {
+    "random": {
+      "ASR": 0.7692307692307693,
+      "TSSR": 0.7692307692307693,
+      "BUP": 0.7692307692307693,
+      "USPR": 0.7692307692307693,
+      "query_budget": 13
+    },
+    "manual_template": {
+      "ASR": 0.6153846153846154,
+      "TSSR": 0.6153846153846154,
+      "BUP": 0.9230769230769231,
+      "USPR": 0.6153846153846154,
+      "query_budget": 13
+    },
+    "no_world_model": {
+      "ASR": 0.38461538461538464,
+      "TSSR": 0.38461538461538464,
+      "BUP": 0.9230769230769231,
+      "USPR": 0.38461538461538464,
+      "query_budget": 13
+    },
+    "world_model": {
+      "ASR": 0.38461538461538464,
+      "TSSR": 0.38461538461538464,
+      "BUP": 0.9230769230769231,
+      "USPR": 0.38461538461538464,
+      "query_budget": 13
+    }
+  },
+  "defense_metrics": {
+    "threshold": 0.5,
+    "unsafe_steps": 42,
+    "blocked_unsafe_paths": 42,
+    "unsafe_block_rate": 1.0,
+    "safe_steps": 32,
+    "utility_loss_proxy": 0.34375
+  }
+}

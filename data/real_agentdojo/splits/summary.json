@@ -1,0 +1,38 @@
+{
+  "scope": "AgentDojo sandbox only",
+  "input": "D:\\WMagentattack\\data\\real_agentdojo\\trajectories.jsonl",
+  "out_dir": "D:\\WMagentattack\\data\\real_agentdojo\\splits",
+  "seed": 7,
+  "splits": {
+    "train": {
+      "trajectories": 65,
+      "steps": 288,
+      "positive_attack_trajectories": 21,
+      "negative_attack_or_clean_trajectories": 44,
+      "domains": {
+        "workspace": 35,
+        "slack": 30
+      }
+    },
+    "val": {
+      "trajectories": 13,
+      "steps": 56,
+      "positive_attack_trajectories": 4,
+      "negative_attack_or_clean_trajectories": 9,
+      "domains": {
+        "workspace": 7,
+        "slack": 6
+      }
+    },
+    "test": {
+      "trajectories": 16,
+      "steps": 74,
+      "positive_attack_trajectories": 5,
+      "negative_attack_or_clean_trajectories": 11,
+      "domains": {
+        "workspace": 8,
+        "slack": 8
+      }
+    }
+  }
+}

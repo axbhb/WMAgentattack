@@ -1,0 +1,41 @@
+{
+  "scope": "synthetic_sandbox_only",
+  "attack_metrics": {
+    "random": {
+      "ASR": 0.5247813411078717,
+      "TSSR": 0.5247813411078717,
+      "BUP": 0.8309037900874635,
+      "USPR": 0.5247813411078717,
+      "query_budget": 343
+    },
+    "manual_template": {
+      "ASR": 0.5597667638483965,
+      "TSSR": 0.5597667638483965,
+      "BUP": 0.8221574344023324,
+      "USPR": 0.5597667638483965,
+      "query_budget": 343
+    },
+    "no_world_model": {
+      "ASR": 0.37900874635568516,
+      "TSSR": 0.37900874635568516,
+      "BUP": 0.8746355685131195,
+      "USPR": 0.37900874635568516,
+      "query_budget": 343
+    },
+    "world_model": {
+      "ASR": 0.6822157434402333,
+      "TSSR": 0.6822157434402333,
+      "BUP": 0.7842565597667639,
+      "USPR": 0.6822157434402333,
+      "query_budget": 343
+    }
+  },
+  "defense_metrics": {
+    "threshold": 0.5,
+    "unsafe_steps": 489,
+    "blocked_unsafe_paths": 318,
+    "unsafe_block_rate": 0.6503067484662577,
+    "safe_steps": 1148,
+    "utility_loss_proxy": 0.18815331010452963
+  }
+}
