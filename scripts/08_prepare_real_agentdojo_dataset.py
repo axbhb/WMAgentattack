@@ -28,6 +28,10 @@ def _infer_prompt_profile(victim_model: str) -> str:
     return "unknown"
 
 
+def _is_benchmark_user_task(task_id: str) -> bool:
+    return task_id.startswith("user_task_")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -58,16 +62,22 @@ def main():
 
     if args.run_root:
         all_trajectories = normalize_directory(args.run_root)
+        standalone_injection_task_trajectories_excluded = sum(
+            not _is_benchmark_user_task(trajectory.task_id)
+            for trajectory in all_trajectories
+        )
         clean = [
             trajectory
             for trajectory in all_trajectories
             if trajectory.steps
+            and _is_benchmark_user_task(trajectory.task_id)
             and all(step.attack_action is None for step in trajectory.steps)
         ]
         attacked_all = [
             trajectory
             for trajectory in all_trajectories
             if trajectory.steps
+            and _is_benchmark_user_task(trajectory.task_id)
             and any(step.attack_action is not None for step in trajectory.steps)
         ]
         raw_roots = [args.run_root]
@@ -75,6 +85,7 @@ def main():
         clean = normalize_directory(args.clean_root)
         attacked_all = normalize_directory(args.attack_root)
         raw_roots = [args.attack_root]
+        standalone_injection_task_trajectories_excluded = 0
 
     attacked = [
         trajectory
@@ -116,6 +127,9 @@ def main():
         "clean_trajectories": len(clean),
         "attack_trajectories": len(attacked),
         "total_steps": len(steps),
+        "standalone_injection_task_trajectories_excluded": (
+            standalone_injection_task_trajectories_excluded
+        ),
         "incomplete_raw_traces_excluded": incomplete_raw_traces,
         "steps_with_untrusted_content": sum(
             step.untrusted_content is not None for step in steps
@@ -158,7 +172,7 @@ def main():
         ),
         "notes": [
             "AgentDojo security=True on attacked traces means the attacker goal was achieved.",
-            "Standalone injection-task utility checks are excluded from attack_trajectories.",
+            "Standalone injection-task utility checks are excluded from --run-root benchmark datasets.",
             "Do not train a real-data risk head unless both positive and negative attack labels exist.",
         ],
     }
