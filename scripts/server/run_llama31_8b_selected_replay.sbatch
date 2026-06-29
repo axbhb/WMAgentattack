@@ -15,8 +15,9 @@ CONDA=/share/guozhix/software/miniconda3/bin/conda
 MODEL_PATH=/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659
 RUN_ROOT=${PROJECT_ROOT}/runs/agentdojo_full_hf
 TOP_K=${TOP_K:-12}
+SEED=${SEED:-7}
 SCORING_MODE=${SCORING_MODE:-clean_prefix}
-OUTPUT_PREFIX=agentdojo_full_llama31_8b_selected_${SCORING_MODE}_top${TOP_K}
+OUTPUT_PREFIX=agentdojo_full_llama31_8b_selected_${SCORING_MODE}_top${TOP_K}_seed${SEED}
 SELECTION_NAMES=${SELECTION_NAMES:-"world_model_top random low_score"}
 SELECTION_NAME_ARGS=()
 for selection_name in ${SELECTION_NAMES}; do
@@ -37,6 +38,7 @@ export HF_HUB_OFFLINE=1
   --allowed-trajectories data/agentdojo_full_llama31_8b/splits/test_trajectories.jsonl \
   --scoring-mode "${SCORING_MODE}" \
   --top-k "${TOP_K}" \
+  --seed "${SEED}" \
   --max-per-user-task 2 \
   --exclude-world-model-from-baselines
 
@@ -53,6 +55,6 @@ export HF_HUB_OFFLINE=1
   --max-new-tokens 256 \
   --max-tool-output-chars 12000 \
   --agentdojo-local-alias \
-  --logdir runs/agentdojo_selected_replay/${SCORING_MODE}_top${TOP_K} \
+  --logdir runs/agentdojo_selected_replay/${SCORING_MODE}_top${TOP_K}_seed${SEED} \
   --output artifacts/${OUTPUT_PREFIX}_replay.json \
   --force-rerun
