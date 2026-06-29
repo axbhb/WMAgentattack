@@ -17,6 +17,11 @@ RUN_ROOT=${PROJECT_ROOT}/runs/agentdojo_full_hf
 TOP_K=${TOP_K:-12}
 SCORING_MODE=${SCORING_MODE:-clean_prefix}
 OUTPUT_PREFIX=agentdojo_full_llama31_8b_selected_${SCORING_MODE}_top${TOP_K}
+SELECTION_NAMES=${SELECTION_NAMES:-"world_model_top random low_score"}
+SELECTION_NAME_ARGS=()
+for selection_name in ${SELECTION_NAMES}; do
+  SELECTION_NAME_ARGS+=(--selection-name "${selection_name}")
+done
 
 cd "${PROJECT_ROOT}"
 mkdir -p logs artifacts runs/agentdojo_selected_replay
@@ -32,10 +37,12 @@ export HF_HUB_OFFLINE=1
   --allowed-trajectories data/agentdojo_full_llama31_8b/splits/test_trajectories.jsonl \
   --scoring-mode "${SCORING_MODE}" \
   --top-k "${TOP_K}" \
-  --max-per-user-task 2
+  --max-per-user-task 2 \
+  --exclude-world-model-from-baselines
 
 "${CONDA}" run -n wmagentattack python scripts/12_run_agentdojo_hf_selected.py \
   --selection artifacts/${OUTPUT_PREFIX}_pairs.json \
+  "${SELECTION_NAME_ARGS[@]}" \
   --model-path "${MODEL_PATH}" \
   --model-label meta-llama-3.1-8b-instruct \
   --benchmark-version v1.2.2 \

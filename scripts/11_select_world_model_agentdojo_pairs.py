@@ -91,6 +91,40 @@ def _dedupe_by_pair(rows: list[dict], max_per_user_task: int = 0) -> list[dict]:
     return output
 
 
+def _pair_key(row: dict) -> tuple[str, str, str]:
+    return (row["suite"], row["user_task_id"], row["injection_task_id"])
+
+
+def _without_pairs(rows: list[dict], excluded: set[tuple[str, str, str]]) -> list[dict]:
+    return [row for row in rows if _pair_key(row) not in excluded]
+
+
+def _summarize_rows(rows: list[dict]) -> dict:
+    observed_security = np.array([row["observed_security"] for row in rows])
+    observed_utility = np.array([row["observed_utility"] for row in rows])
+    return {
+        "count": len(rows),
+        "observed_asr": float(observed_security.mean()) if len(rows) else 0.0,
+        "observed_bup": float(observed_utility.mean()) if len(rows) else 0.0,
+        "mean_selection_score": float(
+            np.mean([row["selection_score"] for row in rows])
+        )
+        if rows
+        else 0.0,
+        "mean_risk_score": float(np.mean([row["risk_score"] for row in rows]))
+        if rows
+        else 0.0,
+        "mean_utility_score": float(np.mean([row["utility_score"] for row in rows]))
+        if rows
+        else 0.0,
+        "mean_target_skill_probability": float(
+            np.mean([row["target_skill_probability"] for row in rows])
+        )
+        if rows
+        else 0.0,
+    }
+
+
 def _clean_prefix_states(run_root: Path) -> dict[tuple[str, str], dict]:
     states = {}
     for path in sorted(run_root.rglob("none/none.json")):
@@ -144,6 +178,14 @@ def main() -> None:
         type=int,
         default=2,
         help="Maximum selected pairs per (suite, user_task_id); <=0 disables.",
+    )
+    parser.add_argument(
+        "--exclude-world-model-from-baselines",
+        action="store_true",
+        help=(
+            "Build baseline/ablation selections after removing pairs selected "
+            "by world_model_top. This avoids overlap-contaminated random controls."
+        ),
     )
     args = parser.parse_args()
 
@@ -208,37 +250,61 @@ def main() -> None:
     sorted_high = sorted(
         candidates, key=lambda row: row["selection_score"], reverse=True
     )
+    sorted_risk = sorted(candidates, key=lambda row: row["risk_score"], reverse=True)
+    sorted_utility = sorted(
+        candidates, key=lambda row: row["utility_score"], reverse=True
+    )
+    sorted_target = sorted(
+        candidates, key=lambda row: row["target_skill_probability"], reverse=True
+    )
     sorted_low = sorted(candidates, key=lambda row: row["selection_score"])
     top_k = min(args.top_k, len(candidates))
     rng = random.Random(args.seed)
     random_rows = candidates[:]
     rng.shuffle(random_rows)
 
+    world_model_top = _dedupe_by_pair(
+        sorted_high, max_per_user_task=args.max_per_user_task
+    )[:top_k]
+    baseline_excluded = (
+        {_pair_key(row) for row in world_model_top}
+        if args.exclude_world_model_from_baselines
+        else set()
+    )
+
     selections = {
-        "world_model_top": _dedupe_by_pair(
-            sorted_high, max_per_user_task=args.max_per_user_task
+        "world_model_top": world_model_top,
+        "risk_only_top": _dedupe_by_pair(
+            _without_pairs(sorted_risk, baseline_excluded),
+            max_per_user_task=args.max_per_user_task,
+        )[:top_k],
+        "utility_only_top": _dedupe_by_pair(
+            _without_pairs(sorted_utility, baseline_excluded),
+            max_per_user_task=args.max_per_user_task,
+        )[:top_k],
+        "target_skill_top": _dedupe_by_pair(
+            _without_pairs(sorted_target, baseline_excluded),
+            max_per_user_task=args.max_per_user_task,
         )[:top_k],
         "low_score": _dedupe_by_pair(
-            sorted_low, max_per_user_task=args.max_per_user_task
+            _without_pairs(sorted_low, baseline_excluded),
+            max_per_user_task=args.max_per_user_task,
         )[:top_k],
         "random": _dedupe_by_pair(
-            random_rows, max_per_user_task=args.max_per_user_task
+            _without_pairs(random_rows, baseline_excluded),
+            max_per_user_task=args.max_per_user_task,
         )[:top_k],
     }
-    summary = {}
-    for name, rows in selections.items():
-        observed_security = np.array([row["observed_security"] for row in rows])
-        observed_utility = np.array([row["observed_utility"] for row in rows])
-        summary[name] = {
-            "count": len(rows),
-            "observed_asr": float(observed_security.mean()) if len(rows) else 0.0,
-            "observed_bup": float(observed_utility.mean()) if len(rows) else 0.0,
-            "mean_selection_score": float(
-                np.mean([row["selection_score"] for row in rows])
-            )
-            if rows
-            else 0.0,
-        }
+    summary = {name: _summarize_rows(rows) for name, rows in selections.items()}
+    overlap = {}
+    selection_sets = {
+        name: {_pair_key(row) for row in rows} for name, rows in selections.items()
+    }
+    for left_name, left_pairs in selection_sets.items():
+        for right_name, right_pairs in selection_sets.items():
+            if left_name >= right_name:
+                continue
+            overlap[f"{left_name}__{right_name}"] = len(left_pairs & right_pairs)
 
     payload = {
         "scope": "world_model_selected_real_agentdojo_pairs",
@@ -256,7 +322,9 @@ def main() -> None:
         ),
         "allowed_trajectory_count": len(allowed_ids) if allowed_ids is not None else None,
         "max_per_user_task": args.max_per_user_task,
+        "exclude_world_model_from_baselines": args.exclude_world_model_from_baselines,
         "summary": summary,
+        "overlap": overlap,
         "selections": selections,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
