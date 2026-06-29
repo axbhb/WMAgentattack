@@ -18,6 +18,9 @@ TOP_K=${TOP_K:-12}
 SEED=${SEED:-7}
 SCORING_MODE=${SCORING_MODE:-clean_prefix}
 OUTPUT_PREFIX=agentdojo_full_llama31_8b_selected_${SCORING_MODE}_top${TOP_K}_seed${SEED}
+if [[ -n "${OUTPUT_TAG:-}" ]]; then
+  OUTPUT_PREFIX=${OUTPUT_PREFIX}_${OUTPUT_TAG}
+fi
 SELECTION_NAMES=${SELECTION_NAMES:-"world_model_top random low_score"}
 SELECTION_NAME_ARGS=()
 for selection_name in ${SELECTION_NAMES}; do
