@@ -32,6 +32,7 @@ def main() -> None:
     parser.add_argument("--top-k", default="16,24,32,48")
     parser.add_argument("--seeds", default="7,13,21")
     parser.add_argument("--scoring-mode", default="clean_prefix")
+    parser.add_argument("--rollout-horizon", type=int, default=3)
     parser.add_argument("--max-per-user-task", type=int, default=2)
     parser.add_argument("--attack", default="important_instructions_no_model_name")
     parser.add_argument("--exclude-world-model-from-baselines", action="store_true")
@@ -59,6 +60,8 @@ def main() -> None:
                 str(args.allowed_trajectories),
                 "--scoring-mode",
                 args.scoring_mode,
+                "--rollout-horizon",
+                str(args.rollout_horizon),
                 "--top-k",
                 str(top_k),
                 "--seed",
@@ -93,6 +96,7 @@ def main() -> None:
         "top_k": top_ks,
         "seeds": seeds,
         "scoring_mode": args.scoring_mode,
+        "rollout_horizon": args.rollout_horizon,
         "exclude_world_model_from_baselines": (
             args.exclude_world_model_from_baselines
         ),

@@ -17,6 +17,7 @@ RUN_ROOT=${PROJECT_ROOT}/runs/agentdojo_full_hf
 TOP_K=${TOP_K:-12}
 SEED=${SEED:-7}
 SCORING_MODE=${SCORING_MODE:-clean_prefix}
+ROLLOUT_HORIZON=${ROLLOUT_HORIZON:-3}
 OUTPUT_PREFIX=agentdojo_full_llama31_8b_selected_${SCORING_MODE}_top${TOP_K}_seed${SEED}
 if [[ -n "${OUTPUT_TAG:-}" ]]; then
   OUTPUT_PREFIX=${OUTPUT_PREFIX}_${OUTPUT_TAG}
@@ -40,6 +41,7 @@ export HF_HUB_OFFLINE=1
   --output artifacts/${OUTPUT_PREFIX}_pairs.json \
   --allowed-trajectories data/agentdojo_full_llama31_8b/splits/test_trajectories.jsonl \
   --scoring-mode "${SCORING_MODE}" \
+  --rollout-horizon "${ROLLOUT_HORIZON}" \
   --top-k "${TOP_K}" \
   --seed "${SEED}" \
   --max-per-user-task 2 \

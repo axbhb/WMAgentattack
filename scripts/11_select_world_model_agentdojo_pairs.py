@@ -45,22 +45,26 @@ def _representative_step(steps: list[StepRecord]) -> StepRecord | None:
     return steps[0] if steps else None
 
 
-def _score_step(model: SklearnWorldModel, step: StepRecord | dict) -> dict:
-    predictions = model.predict([step])
+def _target_probability(predictions: dict, target_skill: str | None) -> float:
     classes = list(predictions["skill_classes"])
-    target_skill = (
-        step.target_skill if isinstance(step, StepRecord) else step.get("target_skill")
-    )
     target_index = (
         classes.index(target_skill)
         if target_skill is not None and target_skill in classes
         else None
     )
-    target_probability = (
+    return (
         float(predictions["next_skill_proba"][0, target_index])
         if target_index is not None
         else 0.0
     )
+
+
+def _score_step(model: SklearnWorldModel, step: StepRecord | dict) -> dict:
+    predictions = model.predict([step])
+    target_skill = (
+        step.target_skill if isinstance(step, StepRecord) else step.get("target_skill")
+    )
+    target_probability = _target_probability(predictions, target_skill)
     risk_score = float(predictions["risk_score"][0])
     utility_score = float(predictions["utility_score"][0])
     # Prioritize likely attack success, but avoid selecting only traces where
@@ -71,6 +75,71 @@ def _score_step(model: SklearnWorldModel, step: StepRecord | dict) -> dict:
         "utility_score": utility_score,
         "target_skill_probability": target_probability,
         "selection_score": selection_score,
+    }
+
+
+def _rollout_score_step(
+    model: SklearnWorldModel,
+    step: dict,
+    *,
+    horizon: int,
+) -> dict:
+    imagined = dict(step)
+    previous_skills = list(imagined.get("previous_skills", []))
+    target_skill = imagined.get("target_skill")
+    risk_scores = []
+    utility_scores = []
+    target_probabilities = []
+    imagined_skills = []
+
+    for rollout_step in range(horizon):
+        predictions = model.predict([imagined])
+        next_skill = str(predictions["next_skill"][0])
+        risk_score = float(predictions["risk_score"][0])
+        utility_score = float(predictions["utility_score"][0])
+        target_probability = _target_probability(predictions, target_skill)
+
+        risk_scores.append(risk_score)
+        utility_scores.append(utility_score)
+        target_probabilities.append(target_probability)
+        imagined_skills.append(next_skill)
+
+        previous_skills.append(next_skill)
+        imagined = {
+            **imagined,
+            "previous_skills": previous_skills,
+            "agent_history": (
+                imagined.get("agent_history", "")
+                + f"\n[IMAGINED_STEP_{rollout_step}] selected_skill={next_skill}"
+            ),
+        }
+
+    max_risk = max(risk_scores) if risk_scores else 0.0
+    mean_risk = float(np.mean(risk_scores)) if risk_scores else 0.0
+    mean_utility = float(np.mean(utility_scores)) if utility_scores else 0.0
+    max_target_probability = (
+        max(target_probabilities) if target_probabilities else 0.0
+    )
+    mean_target_probability = (
+        float(np.mean(target_probabilities)) if target_probabilities else 0.0
+    )
+    target_reached = float(target_skill in imagined_skills) if target_skill else 0.0
+    selection_score = (
+        max_risk
+        + 0.3 * mean_risk
+        + 0.5 * mean_utility
+        + 0.3 * max_target_probability
+        + 0.2 * target_reached
+    )
+    return {
+        "risk_score": max_risk,
+        "utility_score": mean_utility,
+        "target_skill_probability": max_target_probability,
+        "selection_score": selection_score,
+        "rollout_mean_risk_score": mean_risk,
+        "rollout_mean_target_skill_probability": mean_target_probability,
+        "rollout_target_reached": target_reached,
+        "rollout_imagined_skills": imagined_skills,
     }
 
 
@@ -156,14 +225,16 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument(
         "--scoring-mode",
-        choices=["attack_trace_state", "clean_prefix"],
+        choices=["attack_trace_state", "clean_prefix", "clean_prefix_rollout"],
         default="attack_trace_state",
         help=(
             "attack_trace_state scores a state from the completed attacked trace; "
             "clean_prefix scores the matching clean user-task state with only "
-            "hypothetical attack/target metadata."
+            "hypothetical attack/target metadata; clean_prefix_rollout performs "
+            "a lightweight multi-step skill rollout from that clean state."
         ),
     )
+    parser.add_argument("--rollout-horizon", type=int, default=3)
     parser.add_argument(
         "--allowed-trajectories",
         type=Path,
@@ -192,7 +263,7 @@ def main() -> None:
     model = SklearnWorldModel.load(args.model)
     clean_states = (
         _clean_prefix_states(args.run_root)
-        if args.scoring_mode == "clean_prefix"
+        if args.scoring_mode in {"clean_prefix", "clean_prefix_rollout"}
         else {}
     )
     allowed_ids = None
@@ -215,7 +286,7 @@ def main() -> None:
         attack_step = _representative_step(trajectory.steps)
         if attack_step is None:
             continue
-        if args.scoring_mode == "clean_prefix":
+        if args.scoring_mode in {"clean_prefix", "clean_prefix_rollout"}:
             step = clean_states.get((raw["suite_name"], raw["user_task_id"]))
             if step is None:
                 continue
@@ -228,7 +299,15 @@ def main() -> None:
             }
         else:
             step = attack_step
-        scores = _score_step(model, step)
+        scores = (
+            _rollout_score_step(
+                model,
+                step,
+                horizon=args.rollout_horizon,
+            )
+            if args.scoring_mode == "clean_prefix_rollout"
+            else _score_step(model, step)
+        )
         candidates.append(
             {
                 "suite": raw["suite_name"],
@@ -315,6 +394,7 @@ def main() -> None:
         "seed": args.seed,
         "candidate_count": len(candidates),
         "scoring_mode": args.scoring_mode,
+        "rollout_horizon": args.rollout_horizon,
         "allowed_trajectories": (
             str(args.allowed_trajectories.resolve())
             if args.allowed_trajectories
