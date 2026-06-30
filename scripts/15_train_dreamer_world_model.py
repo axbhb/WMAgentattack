@@ -31,6 +31,9 @@ def main():
     parser.add_argument("--utility-loss-scale", type=float, default=1.0)
     parser.add_argument("--risk-pos-weight", type=float, default=1.0)
     parser.add_argument("--utility-pos-weight", type=float, default=1.0)
+    parser.add_argument("--kl-dynamic-scale", type=float, default=0.5)
+    parser.add_argument("--kl-representation-scale", type=float, default=0.1)
+    parser.add_argument("--kl-free-nats", type=float, default=1.0)
     parser.add_argument("--device", default="auto")
     args = parser.parse_args()
 
@@ -46,6 +49,9 @@ def main():
         utility_loss_scale=args.utility_loss_scale,
         risk_pos_weight=args.risk_pos_weight,
         utility_pos_weight=args.utility_pos_weight,
+        kl_dynamic_scale=args.kl_dynamic_scale,
+        kl_representation_scale=args.kl_representation_scale,
+        kl_free_nats=args.kl_free_nats,
         epochs=args.epochs,
         batch_size=args.batch_size,
         device=args.device,

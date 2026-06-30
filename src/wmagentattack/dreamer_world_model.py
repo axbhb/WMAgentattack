@@ -100,6 +100,9 @@ class DreamerWorldModelConfig:
     risk_pos_weight: float = 1.0
     utility_pos_weight: float = 1.0
     kl_scale: float = 0.01
+    kl_dynamic_scale: float = 0.5
+    kl_representation_scale: float = 0.1
+    kl_free_nats: float = 1.0
     reconstruction_scale: float = 0.05
     seed: int = 7
     device: str = "auto"
@@ -297,7 +300,18 @@ class SheepRLDreamerWorldModel:
                 post_log = F.log_softmax(post, dim=-1)
                 prior_log = F.log_softmax(prior, dim=-1)
                 post_prob = post_log.exp()
-                return (post_prob * (post_log - prior_log)).sum(dim=(-1, -2))
+                dynamic_loss = (
+                    post_prob.detach() * (post_log.detach() - prior_log)
+                ).sum(dim=(-1, -2))
+                representation_loss = (
+                    post_prob * (post_log - prior_log.detach())
+                ).sum(dim=(-1, -2))
+                free_nats = torch.full_like(dynamic_loss, cfg.kl_free_nats)
+                dynamic_loss = cfg.kl_dynamic_scale * torch.maximum(dynamic_loss, free_nats)
+                representation_loss = cfg.kl_representation_scale * torch.maximum(
+                    representation_loss, free_nats
+                )
+                return dynamic_loss + representation_loss
 
         return _OfflineDreamerModule()
 
@@ -464,61 +478,97 @@ class SheepRLDreamerWorldModel:
         obs = self._vectorize_step(step).astype(np.float32)
         obs_t = torch.from_numpy(obs).reshape(1, 1, -1).to(device)
         actions = torch.zeros((1, 1), dtype=torch.long, device=device)
-        risk_scores: list[float] = []
-        utility_scores: list[float] = []
-        target_probabilities: list[float] = []
-        imagined_skills: list[str] = []
+        step_value = step.model_dump(mode="json") if isinstance(step, StepRecord) else step
+        branch_skill_names = []
+        if target_skill and target_skill in self.skill_to_id:
+            branch_skill_names.append(target_skill)
+        branch_skill_names.extend(
+            skill
+            for skill in step_value.get("candidate_skills", [])
+            if skill in self.skill_to_id and skill not in branch_skill_names
+        )
+        if not branch_skill_names:
+            branch_skill_names = ["finish"] if "finish" in self.skill_to_id else [self.skill_classes[0]]
 
         module.eval()
         with torch.no_grad():
             out = module(obs_t, actions)
-            feature = out["features"][:, -1, :]
-            stochastic_state = out["posterior_states"][:, -1, :].unsqueeze(0)
-            recurrent_state = out["recurrent_states"][:, -1, :].unsqueeze(0)
+            base_stochastic_state = out["posterior_states"][:, -1, :].unsqueeze(0)
+            base_recurrent_state = out["recurrent_states"][:, -1, :].unsqueeze(0)
 
-            for _ in range(horizon):
-                skill_prob = F.softmax(module.skill_head(feature), dim=-1)
-                risk_score = torch.sigmoid(module.risk_head(feature)).squeeze(-1)
-                utility_score = torch.sigmoid(module.utility_head(feature)).squeeze(-1)
-                next_skill_id = int(torch.argmax(skill_prob, dim=-1).item())
-                next_skill = self.skill_classes[next_skill_id]
+            branch_summaries = []
+            for first_skill in branch_skill_names:
+                stochastic_state = base_stochastic_state.clone()
+                recurrent_state = base_recurrent_state.clone()
+                imagined_skills: list[str] = []
+                risk_scores: list[float] = []
+                utility_scores: list[float] = []
+                target_probabilities: list[float] = []
+                action_skill_id = self.skill_to_id[first_skill]
 
-                risk_scores.append(float(risk_score.item()))
-                utility_scores.append(float(utility_score.item()))
-                target_probabilities.append(
-                    float(skill_prob[0, target_index].item()) if target_index is not None else 0.0
+                for rollout_index in range(max(horizon, 1)):
+                    action = torch.zeros(1, 1, len(self.skill_classes), device=device)
+                    action[:, :, action_skill_id] = 1.0
+                    stochastic_state, recurrent_state = module.rssm.imagination(
+                        stochastic_state, recurrent_state, action
+                    )
+                    stochastic_state = stochastic_state.reshape(1, 1, -1)
+                    feature = torch.cat(
+                        (stochastic_state.squeeze(0), recurrent_state.squeeze(0)), dim=-1
+                    )
+                    skill_prob = F.softmax(module.skill_head(feature), dim=-1)
+                    risk_score = torch.sigmoid(module.risk_head(feature)).squeeze(-1)
+                    utility_score = torch.sigmoid(module.utility_head(feature)).squeeze(-1)
+                    predicted_next_id = int(torch.argmax(skill_prob, dim=-1).item())
+                    predicted_next_skill = self.skill_classes[predicted_next_id]
+
+                    imagined_skill = first_skill if rollout_index == 0 else predicted_next_skill
+                    imagined_skills.append(imagined_skill)
+                    risk_scores.append(float(risk_score.item()))
+                    utility_scores.append(float(utility_score.item()))
+                    target_probabilities.append(
+                        float(skill_prob[0, target_index].item()) if target_index is not None else 0.0
+                    )
+                    action_skill_id = predicted_next_id
+
+                max_risk = max(risk_scores) if risk_scores else 0.0
+                mean_risk = float(np.mean(risk_scores)) if risk_scores else 0.0
+                mean_utility = float(np.mean(utility_scores)) if utility_scores else 0.0
+                max_target_probability = max(target_probabilities) if target_probabilities else 0.0
+                mean_target_probability = (
+                    float(np.mean(target_probabilities)) if target_probabilities else 0.0
                 )
-                imagined_skills.append(next_skill)
+                target_reached = float(target_skill in imagined_skills) if target_skill else 0.0
+                selection_score = (
+                    max_risk
+                    + 0.3 * mean_risk
+                    + 0.5 * mean_utility
+                    + 0.3 * max_target_probability
+                    + 0.2 * target_reached
+                )
+                branch_summaries.append(
+                    {
+                        "branch_first_skill": first_skill,
+                        "risk_score": max_risk,
+                        "utility_score": mean_utility,
+                        "target_skill_probability": max_target_probability,
+                        "selection_score": selection_score,
+                        "rollout_mean_risk_score": mean_risk,
+                        "rollout_mean_target_skill_probability": mean_target_probability,
+                        "rollout_target_reached": target_reached,
+                        "rollout_imagined_skills": imagined_skills,
+                    }
+                )
 
-                action = torch.zeros(1, 1, len(self.skill_classes), device=device)
-                action[:, :, next_skill_id] = 1.0
-                stochastic_state, recurrent_state = module.rssm.imagination(stochastic_state, recurrent_state, action)
-                stochastic_state = stochastic_state.reshape(1, 1, -1)
-                feature = torch.cat((stochastic_state.squeeze(0), recurrent_state.squeeze(0)), dim=-1)
-
-        max_risk = max(risk_scores) if risk_scores else 0.0
-        mean_risk = float(np.mean(risk_scores)) if risk_scores else 0.0
-        mean_utility = float(np.mean(utility_scores)) if utility_scores else 0.0
-        max_target_probability = max(target_probabilities) if target_probabilities else 0.0
-        mean_target_probability = float(np.mean(target_probabilities)) if target_probabilities else 0.0
-        target_reached = float(target_skill in imagined_skills) if target_skill else 0.0
-        selection_score = (
-            max_risk
-            + 0.3 * mean_risk
-            + 0.5 * mean_utility
-            + 0.3 * max_target_probability
-            + 0.2 * target_reached
-        )
+        best_branch = max(branch_summaries, key=lambda item: item["selection_score"])
+        compact_branch_summaries = sorted(
+            branch_summaries, key=lambda item: item["selection_score"], reverse=True
+        )[:3]
         return {
-            "risk_score": max_risk,
-            "utility_score": mean_utility,
-            "target_skill_probability": max_target_probability,
-            "selection_score": selection_score,
-            "rollout_mean_risk_score": mean_risk,
-            "rollout_mean_target_skill_probability": mean_target_probability,
-            "rollout_target_reached": target_reached,
-            "rollout_imagined_skills": imagined_skills,
-            "rollout_backend": "sheeprl_rssm_imagination",
+            **best_branch,
+            "rollout_backend": "sheeprl_rssm_branch_imagination",
+            "rollout_branch_count": len(branch_summaries),
+            "rollout_top_branch_summaries": compact_branch_summaries,
         }
 
     def save(self, path: str | Path):
