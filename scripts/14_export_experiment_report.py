@@ -37,6 +37,7 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 
 def _method_rows_from_summary(summary_json: dict[str, Any]) -> list[dict[str, Any]]:
+    source_rows = summary_json.get("summary", summary_json.get("rows", []))
     return [
         {
             "top_k": row["top_k"],
@@ -48,7 +49,7 @@ def _method_rows_from_summary(summary_json: dict[str, Any]) -> list[dict[str, An
             "utility_rate_mean": row["utility_rate_mean"],
             "utility_rate_values": row["utility_rate_values"],
         }
-        for row in summary_json["summary"]
+        for row in source_rows
     ]
 
 
