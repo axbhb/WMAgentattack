@@ -98,6 +98,8 @@ class DreamerWorldModelConfig:
     risk_loss_scale: float = 1.0
     utility_loss_scale: float = 1.0
     final_utility_loss_scale: float = 1.0
+    utility_ranking_loss_scale: float = 0.0
+    utility_ranking_margin: float = 0.2
     risk_pos_weight: float = 1.0
     utility_pos_weight: float = 1.0
     kl_scale: float = 0.01
@@ -139,6 +141,11 @@ def _group_steps(steps: list[StepRecord]) -> list[list[StepRecord]]:
     for step in steps:
         grouped.setdefault(step.trajectory_id, []).append(step)
     return [sorted(items, key=lambda item: item.step_id) for items in grouped.values()]
+
+
+def _sequence_group_key(sequence: list[StepRecord]) -> str:
+    first = sequence[0]
+    return f"{first.domain}|{first.task_id}"
 
 
 def _binary_auc(labels: np.ndarray, scores: np.ndarray) -> float | None:
@@ -334,7 +341,14 @@ class SheepRLDreamerWorldModel:
         risk = np.zeros((len(sequences), max_len), dtype=np.float32)
         utility = np.zeros((len(sequences), max_len), dtype=np.float32)
         mask = np.zeros((len(sequences), max_len), dtype=np.float32)
+        final_utility = np.zeros(len(sequences), dtype=np.float32)
+        group_ids = np.zeros(len(sequences), dtype=np.int64)
+        group_to_id: dict[str, int] = {}
         for row, sequence in enumerate(sequences):
+            group_key = _sequence_group_key(sequence)
+            group_to_id.setdefault(group_key, len(group_to_id))
+            group_ids[row] = group_to_id[group_key]
+            final_utility[row] = float(sequence[-1].task_success)
             for col, step in enumerate(sequence):
                 obs[row, col] = self._vectorize_step(step)
                 actions[row, col] = self.skill_to_id[step.selected_skill]
@@ -346,6 +360,8 @@ class SheepRLDreamerWorldModel:
             "actions": torch.from_numpy(actions),
             "risk": torch.from_numpy(risk),
             "utility": torch.from_numpy(utility),
+            "final_utility": torch.from_numpy(final_utility),
+            "group_ids": torch.from_numpy(group_ids),
             "mask": torch.from_numpy(mask),
         }
 
@@ -375,6 +391,7 @@ class SheepRLDreamerWorldModel:
                 "risk": 0.0,
                 "utility": 0.0,
                 "final_utility": 0.0,
+                "utility_ranking": 0.0,
                 "reconstruction": 0.0,
                 "kl": 0.0,
             }
@@ -385,6 +402,8 @@ class SheepRLDreamerWorldModel:
                 actions = data["actions"][indices].to(device)
                 risk = data["risk"][indices].to(device)
                 utility = data["utility"][indices].to(device)
+                final_utility = data["final_utility"][indices].to(device)
+                group_ids = data["group_ids"][indices].to(device)
                 mask = data["mask"][indices].to(device)
                 out = module(obs, actions)
                 flat_mask = mask.reshape(-1) > 0
@@ -408,12 +427,26 @@ class SheepRLDreamerWorldModel:
                 final_indices = sequence_lengths - 1
                 batch_indices = torch.arange(mask.shape[0], device=device)
                 final_utility_logits = out["final_utility_logits"][batch_indices, final_indices]
-                final_utility_targets = utility[batch_indices, final_indices]
+                final_utility_targets = final_utility
                 final_utility_loss = F.binary_cross_entropy_with_logits(
                     final_utility_logits,
                     final_utility_targets,
                     pos_weight=utility_pos_weight,
                 )
+                positive_pairs = (
+                    (group_ids[:, None] == group_ids[None, :])
+                    & (final_utility[:, None] > final_utility[None, :])
+                )
+                if positive_pairs.any():
+                    pos_index, neg_index = positive_pairs.nonzero(as_tuple=True)
+                    utility_ranking_loss = F.margin_ranking_loss(
+                        final_utility_logits[pos_index],
+                        final_utility_logits[neg_index],
+                        torch.ones_like(final_utility_logits[pos_index]),
+                        margin=self.config.utility_ranking_margin,
+                    )
+                else:
+                    utility_ranking_loss = final_utility_logits.sum() * 0.0
                 reconstruction_loss = ((out["reconstruction"] - obs) ** 2).mean(dim=-1)
                 reconstruction_loss = (reconstruction_loss * mask).sum() / mask.sum().clamp_min(1.0)
                 kl_loss = module.kl_loss(out["posterior_logits"], out["prior_logits"])
@@ -423,6 +456,7 @@ class SheepRLDreamerWorldModel:
                     + self.config.risk_loss_scale * risk_loss
                     + self.config.utility_loss_scale * utility_loss
                     + self.config.final_utility_loss_scale * final_utility_loss
+                    + self.config.utility_ranking_loss_scale * utility_ranking_loss
                     + self.config.reconstruction_scale * reconstruction_loss
                     + self.config.kl_scale * kl_loss
                 )
@@ -438,6 +472,7 @@ class SheepRLDreamerWorldModel:
                     ("risk", risk_loss),
                     ("utility", utility_loss),
                     ("final_utility", final_utility_loss),
+                    ("utility_ranking", utility_ranking_loss),
                     ("reconstruction", reconstruction_loss),
                     ("kl", kl_loss),
                 ]:
