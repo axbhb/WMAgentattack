@@ -173,6 +173,28 @@ accuracy, 0.82 risk AUC, and 0.81 utility AUC. These are integration-health
 numbers, not final model quality; the next step is to tune the offline Dreamer
 objective and connect multi-step imagination scoring into the replay selector.
 
+The replay selector can compare the sklearn and Dreamer backbones with the same
+selection contract. Dreamer rollout mode uses the RSSM latent imagination path:
+
+```bash
+PYTHONPATH=src python scripts/13_run_selection_grid.py \
+  --run-root runs/agentdojo_full_hf/<model-run> \
+  --model artifacts/agentdojo_full_llama31_8b_dreamer_world_model \
+  --model-backend dreamer \
+  --allowed-trajectories data/agentdojo_full_llama31_8b/splits/test_trajectories.jsonl \
+  --standardized-steps data/agentdojo_full_llama31_8b/steps.jsonl \
+  --out-dir artifacts/selection_grid_dreamer_clean_prefix_rollout_h3_disjoint \
+  --top-k 16,24,32 \
+  --seeds 7,13,21 \
+  --scoring-mode clean_prefix_rollout \
+  --rollout-horizon 3 \
+  --exclude-world-model-from-baselines
+```
+
+`--standardized-steps` lets this run inside `sheeprl_env` without importing
+AgentDojo: representative states and target skills are read from the already
+standardized JSONL records.
+
 ## Real AgentDojo attack collection
 
 Small sandbox-only attack batches can be collected with:

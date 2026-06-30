@@ -27,7 +27,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--model", type=Path, required=True)
+    parser.add_argument(
+        "--model-backend",
+        choices=["sklearn", "dreamer"],
+        default="sklearn",
+    )
     parser.add_argument("--allowed-trajectories", type=Path, required=True)
+    parser.add_argument("--standardized-steps", type=Path)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--top-k", default="16,24,32,48")
     parser.add_argument("--seeds", default="7,13,21")
@@ -54,6 +60,8 @@ def main() -> None:
                 str(args.run_root),
                 "--model",
                 str(args.model),
+                "--model-backend",
+                args.model_backend,
                 "--output",
                 str(output),
                 "--allowed-trajectories",
@@ -71,6 +79,8 @@ def main() -> None:
                 "--attack",
                 args.attack,
             ]
+            if args.standardized_steps:
+                command.extend(["--standardized-steps", str(args.standardized_steps)])
             if args.exclude_world_model_from_baselines:
                 command.append("--exclude-world-model-from-baselines")
             subprocess.run(command, check=True, cwd=ROOT)
@@ -96,6 +106,8 @@ def main() -> None:
         "top_k": top_ks,
         "seeds": seeds,
         "scoring_mode": args.scoring_mode,
+        "model_backend": args.model_backend,
+        "standardized_steps": str(args.standardized_steps.resolve()) if args.standardized_steps else None,
         "rollout_horizon": args.rollout_horizon,
         "exclude_world_model_from_baselines": (
             args.exclude_world_model_from_baselines

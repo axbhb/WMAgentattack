@@ -251,6 +251,8 @@ class SheepRLDreamerWorldModel:
                     prev_actions[:, 1:, :].scatter_(2, prev_ids.unsqueeze(-1), 1.0)
                 recurrent_state, posterior = self.rssm.get_initial_states((1, batch))
                 outputs = []
+                posterior_states = []
+                recurrent_states = []
                 posterior_logits = []
                 prior_logits = []
                 for index in range(steps):
@@ -264,13 +266,18 @@ class SheepRLDreamerWorldModel:
                         encoded[:, index, :].unsqueeze(0),
                         is_first,
                     )
-                    feature = torch.cat((posterior.reshape(1, batch, -1), recurrent_state), dim=-1).squeeze(0)
+                    posterior_flat = posterior.reshape(1, batch, -1)
+                    feature = torch.cat((posterior_flat, recurrent_state), dim=-1).squeeze(0)
                     outputs.append(feature)
+                    posterior_states.append(posterior_flat.squeeze(0))
+                    recurrent_states.append(recurrent_state.squeeze(0))
                     posterior_logits.append(post_logits.squeeze(0))
                     prior_logits.append(prior_logits_t.squeeze(0))
                 features = torch.stack(outputs, dim=1)
                 return {
                     "features": features,
+                    "posterior_states": torch.stack(posterior_states, dim=1),
+                    "recurrent_states": torch.stack(recurrent_states, dim=1),
                     "skill_logits": self.skill_head(features),
                     "risk_logits": self.risk_head(features).squeeze(-1),
                     "utility_logits": self.utility_head(features).squeeze(-1),
@@ -428,6 +435,81 @@ class SheepRLDreamerWorldModel:
             "utility_score": utility,
             "next_skill_proba": skill_proba,
             "skill_classes": np.asarray(self.skill_classes),
+        }
+
+    def rollout_score_step(self, step: StepRecord | dict, *, horizon: int = 3) -> dict[str, Any]:
+        """Score a state with true RSSM latent imagination.
+
+        This is the Dreamer-specific counterpart of the text-based rollout used
+        by the sklearn baseline.  The current observation is encoded once, then
+        future latent states are generated with ``rssm.imagination`` and decoded
+        only through the prediction heads.
+        """
+
+        torch, _, F, *_ = _require_torch_and_sheeprl()
+        module = self._ensure_module()
+        device = next(module.parameters()).device
+        target_skill = step.target_skill if isinstance(step, StepRecord) else step.get("target_skill")
+        target_index = self.skill_to_id.get(target_skill) if target_skill else None
+
+        obs = self._vectorize_step(step).astype(np.float32)
+        obs_t = torch.from_numpy(obs).reshape(1, 1, -1).to(device)
+        actions = torch.zeros((1, 1), dtype=torch.long, device=device)
+        risk_scores: list[float] = []
+        utility_scores: list[float] = []
+        target_probabilities: list[float] = []
+        imagined_skills: list[str] = []
+
+        module.eval()
+        with torch.no_grad():
+            out = module(obs_t, actions)
+            feature = out["features"][:, -1, :]
+            stochastic_state = out["posterior_states"][:, -1, :].unsqueeze(0)
+            recurrent_state = out["recurrent_states"][:, -1, :].unsqueeze(0)
+
+            for _ in range(horizon):
+                skill_prob = F.softmax(module.skill_head(feature), dim=-1)
+                risk_score = torch.sigmoid(module.risk_head(feature)).squeeze(-1)
+                utility_score = torch.sigmoid(module.utility_head(feature)).squeeze(-1)
+                next_skill_id = int(torch.argmax(skill_prob, dim=-1).item())
+                next_skill = self.skill_classes[next_skill_id]
+
+                risk_scores.append(float(risk_score.item()))
+                utility_scores.append(float(utility_score.item()))
+                target_probabilities.append(
+                    float(skill_prob[0, target_index].item()) if target_index is not None else 0.0
+                )
+                imagined_skills.append(next_skill)
+
+                action = torch.zeros(1, 1, len(self.skill_classes), device=device)
+                action[:, :, next_skill_id] = 1.0
+                stochastic_state, recurrent_state = module.rssm.imagination(stochastic_state, recurrent_state, action)
+                stochastic_state = stochastic_state.reshape(1, 1, -1)
+                feature = torch.cat((stochastic_state.squeeze(0), recurrent_state.squeeze(0)), dim=-1)
+
+        max_risk = max(risk_scores) if risk_scores else 0.0
+        mean_risk = float(np.mean(risk_scores)) if risk_scores else 0.0
+        mean_utility = float(np.mean(utility_scores)) if utility_scores else 0.0
+        max_target_probability = max(target_probabilities) if target_probabilities else 0.0
+        mean_target_probability = float(np.mean(target_probabilities)) if target_probabilities else 0.0
+        target_reached = float(target_skill in imagined_skills) if target_skill else 0.0
+        selection_score = (
+            max_risk
+            + 0.3 * mean_risk
+            + 0.5 * mean_utility
+            + 0.3 * max_target_probability
+            + 0.2 * target_reached
+        )
+        return {
+            "risk_score": max_risk,
+            "utility_score": mean_utility,
+            "target_skill_probability": max_target_probability,
+            "selection_score": selection_score,
+            "rollout_mean_risk_score": mean_risk,
+            "rollout_mean_target_skill_probability": mean_target_probability,
+            "rollout_target_reached": target_reached,
+            "rollout_imagined_skills": imagined_skills,
+            "rollout_backend": "sheeprl_rssm_imagination",
         }
 
     def save(self, path: str | Path):

@@ -24,10 +24,20 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from wmagentattack.normalize_agentdojo import normalize_trace
 from wmagentattack.io_utils import read_jsonl
 from wmagentattack.schema import StepRecord
-from wmagentattack.world_model import SklearnWorldModel
+
+
+def _load_model(path: Path, backend: str):
+    if backend == "sklearn":
+        from wmagentattack.world_model import SklearnWorldModel
+
+        return SklearnWorldModel.load(path)
+    if backend == "dreamer":
+        from wmagentattack.dreamer_world_model import SheepRLDreamerWorldModel
+
+        return SheepRLDreamerWorldModel.load(path)
+    raise ValueError(f"Unsupported model backend: {backend}")
 
 
 def _is_benchmark_attack_trace(raw: dict) -> bool:
@@ -36,6 +46,17 @@ def _is_benchmark_attack_trace(raw: dict) -> bool:
         and str(raw.get("injection_task_id", "")).startswith("injection_task_")
         and raw.get("attack_type") not in (None, "none")
     )
+
+
+def _trajectory_id_from_raw(raw: dict) -> str:
+    import hashlib
+
+    suite_name = raw["suite_name"]
+    attack_type = raw.get("attack_type")
+    return hashlib.sha1(
+        f"{raw['pipeline_name']}|{suite_name}|{raw['user_task_id']}|"
+        f"{raw.get('injection_task_id')}|{attack_type}".encode()
+    ).hexdigest()[:16]
 
 
 def _representative_step(steps: list[StepRecord]) -> StepRecord | None:
@@ -59,7 +80,7 @@ def _target_probability(predictions: dict, target_skill: str | None) -> float:
     )
 
 
-def _score_step(model: SklearnWorldModel, step: StepRecord | dict) -> dict:
+def _score_step(model, step: StepRecord | dict) -> dict:
     predictions = model.predict([step])
     target_skill = (
         step.target_skill if isinstance(step, StepRecord) else step.get("target_skill")
@@ -79,11 +100,14 @@ def _score_step(model: SklearnWorldModel, step: StepRecord | dict) -> dict:
 
 
 def _rollout_score_step(
-    model: SklearnWorldModel,
+    model,
     step: dict,
     *,
     horizon: int,
 ) -> dict:
+    if hasattr(model, "rollout_score_step"):
+        return model.rollout_score_step(step, horizon=horizon)
+
     imagined = dict(step)
     previous_skills = list(imagined.get("previous_skills", []))
     target_skill = imagined.get("target_skill")
@@ -195,6 +219,8 @@ def _summarize_rows(rows: list[dict]) -> dict:
 
 
 def _clean_prefix_states(run_root: Path) -> dict[tuple[str, str], dict]:
+    from wmagentattack.normalize_agentdojo import normalize_trace
+
     states = {}
     for path in sorted(run_root.rglob("none/none.json")):
         try:
@@ -215,10 +241,40 @@ def _clean_prefix_states(run_root: Path) -> dict[tuple[str, str], dict]:
     return states
 
 
+def _standardized_representatives(
+    steps_path: Path,
+) -> tuple[dict[str, StepRecord], dict[tuple[str, str], dict]]:
+    grouped: dict[str, list[StepRecord]] = {}
+    for row in read_jsonl(steps_path):
+        step = StepRecord.model_validate(row)
+        grouped.setdefault(step.trajectory_id, []).append(step)
+
+    representatives = {}
+    clean_states = {}
+    for trajectory_id, steps in grouped.items():
+        ordered = sorted(steps, key=lambda item: item.step_id)
+        representative = _representative_step(ordered)
+        if representative is not None:
+            representatives[trajectory_id] = representative
+        first = ordered[0] if ordered else None
+        if first is not None and first.attack_action is None:
+            clean_states[(first.domain, first.task_id)] = first.model_dump(mode="json")
+    return representatives, clean_states
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--model", type=Path, required=True)
+    parser.add_argument(
+        "--model-backend",
+        choices=["sklearn", "dreamer"],
+        default="sklearn",
+        help=(
+            "World-model backend. `dreamer` loads the SheepRL DreamerV3-style "
+            "adapter and uses RSSM latent imagination for clean_prefix_rollout."
+        ),
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--attack", default="important_instructions_no_model_name")
     parser.add_argument("--top-k", type=int, default=32)
@@ -245,6 +301,16 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--standardized-steps",
+        type=Path,
+        help=(
+            "Optional StepRecord JSONL. When set, the selector uses these "
+            "standardized records for representative states and target skills "
+            "instead of importing AgentDojo to normalize raw traces. This is "
+            "useful when running the Dreamer backend in sheeprl_env."
+        ),
+    )
+    parser.add_argument(
         "--max-per-user-task",
         type=int,
         default=2,
@@ -260,12 +326,19 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    model = SklearnWorldModel.load(args.model)
-    clean_states = (
-        _clean_prefix_states(args.run_root)
-        if args.scoring_mode in {"clean_prefix", "clean_prefix_rollout"}
-        else {}
+    model = _load_model(args.model, args.model_backend)
+    standardized_steps, standardized_clean_states = (
+        _standardized_representatives(args.standardized_steps)
+        if args.standardized_steps
+        else ({}, {})
     )
+    clean_states = {}
+    if args.scoring_mode in {"clean_prefix", "clean_prefix_rollout"}:
+        clean_states = (
+            standardized_clean_states
+            if args.standardized_steps
+            else _clean_prefix_states(args.run_root)
+        )
     allowed_ids = None
     if args.allowed_trajectories:
         allowed_ids = {
@@ -280,10 +353,16 @@ def main() -> None:
             continue
         if raw.get("attack_type") != args.attack or not _is_benchmark_attack_trace(raw):
             continue
-        trajectory = normalize_trace(path)
-        if allowed_ids is not None and trajectory.trajectory_id not in allowed_ids:
+        trajectory_id = _trajectory_id_from_raw(raw)
+        if allowed_ids is not None and trajectory_id not in allowed_ids:
             continue
-        attack_step = _representative_step(trajectory.steps)
+        if args.standardized_steps:
+            attack_step = standardized_steps.get(trajectory_id)
+        else:
+            from wmagentattack.normalize_agentdojo import normalize_trace
+
+            trajectory = normalize_trace(path)
+            attack_step = _representative_step(trajectory.steps)
         if attack_step is None:
             continue
         if args.scoring_mode in {"clean_prefix", "clean_prefix_rollout"}:
@@ -314,7 +393,7 @@ def main() -> None:
                 "user_task_id": raw["user_task_id"],
                 "injection_task_id": raw["injection_task_id"],
                 "attack": raw["attack_type"],
-                "trajectory_id": trajectory.trajectory_id,
+                "trajectory_id": trajectory_id,
                 "target_skill": attack_step.target_skill,
                 "observed_utility": bool(raw.get("utility")),
                 "observed_security": bool(raw.get("security")),
@@ -389,6 +468,7 @@ def main() -> None:
         "scope": "world_model_selected_real_agentdojo_pairs",
         "run_root": str(args.run_root.resolve()),
         "model": str(args.model.resolve()),
+        "model_backend": args.model_backend,
         "attack": args.attack,
         "top_k": top_k,
         "seed": args.seed,
@@ -401,6 +481,9 @@ def main() -> None:
             else None
         ),
         "allowed_trajectory_count": len(allowed_ids) if allowed_ids is not None else None,
+        "standardized_steps": (
+            str(args.standardized_steps.resolve()) if args.standardized_steps else None
+        ),
         "max_per_user_task": args.max_per_user_task,
         "exclude_world_model_from_baselines": args.exclude_world_model_from_baselines,
         "summary": summary,
