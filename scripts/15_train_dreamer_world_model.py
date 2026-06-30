@@ -26,6 +26,11 @@ def main():
     parser.add_argument("--recurrent-state-size", type=int, default=256)
     parser.add_argument("--stochastic-size", type=int, default=16)
     parser.add_argument("--discrete-size", type=int, default=16)
+    parser.add_argument("--skill-loss-scale", type=float, default=1.0)
+    parser.add_argument("--risk-loss-scale", type=float, default=1.0)
+    parser.add_argument("--utility-loss-scale", type=float, default=1.0)
+    parser.add_argument("--risk-pos-weight", type=float, default=1.0)
+    parser.add_argument("--utility-pos-weight", type=float, default=1.0)
     parser.add_argument("--device", default="auto")
     args = parser.parse_args()
 
@@ -36,6 +41,11 @@ def main():
         recurrent_state_size=args.recurrent_state_size,
         stochastic_size=args.stochastic_size,
         discrete_size=args.discrete_size,
+        skill_loss_scale=args.skill_loss_scale,
+        risk_loss_scale=args.risk_loss_scale,
+        utility_loss_scale=args.utility_loss_scale,
+        risk_pos_weight=args.risk_pos_weight,
+        utility_pos_weight=args.utility_pos_weight,
         epochs=args.epochs,
         batch_size=args.batch_size,
         device=args.device,

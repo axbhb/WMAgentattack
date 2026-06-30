@@ -42,6 +42,11 @@ def main() -> None:
     parser.add_argument("--max-per-user-task", type=int, default=2)
     parser.add_argument("--attack", default="important_instructions_no_model_name")
     parser.add_argument("--exclude-world-model-from-baselines", action="store_true")
+    parser.add_argument("--score-risk-weight", type=float, default=1.0)
+    parser.add_argument("--score-mean-risk-weight", type=float, default=0.3)
+    parser.add_argument("--score-utility-weight", type=float, default=0.5)
+    parser.add_argument("--score-target-weight", type=float, default=0.3)
+    parser.add_argument("--score-target-reached-weight", type=float, default=0.2)
     args = parser.parse_args()
 
     top_ks = _parse_int_list(args.top_k)
@@ -78,6 +83,16 @@ def main() -> None:
                 str(args.max_per_user_task),
                 "--attack",
                 args.attack,
+                "--score-risk-weight",
+                str(args.score_risk_weight),
+                "--score-mean-risk-weight",
+                str(args.score_mean_risk_weight),
+                "--score-utility-weight",
+                str(args.score_utility_weight),
+                "--score-target-weight",
+                str(args.score_target_weight),
+                "--score-target-reached-weight",
+                str(args.score_target_reached_weight),
             ]
             if args.standardized_steps:
                 command.extend(["--standardized-steps", str(args.standardized_steps)])
@@ -108,6 +123,13 @@ def main() -> None:
         "scoring_mode": args.scoring_mode,
         "model_backend": args.model_backend,
         "standardized_steps": str(args.standardized_steps.resolve()) if args.standardized_steps else None,
+        "selection_score_weights": {
+            "risk": args.score_risk_weight,
+            "mean_risk": args.score_mean_risk_weight,
+            "utility": args.score_utility_weight,
+            "target": args.score_target_weight,
+            "target_reached": args.score_target_reached_weight,
+        },
         "rollout_horizon": args.rollout_horizon,
         "exclude_world_model_from_baselines": (
             args.exclude_world_model_from_baselines

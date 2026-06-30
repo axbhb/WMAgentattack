@@ -99,6 +99,40 @@ def _score_step(model, step: StepRecord | dict) -> dict:
     }
 
 
+def _apply_selection_weights(
+    scores: dict,
+    *,
+    risk_weight: float,
+    mean_risk_weight: float,
+    utility_weight: float,
+    target_weight: float,
+    target_reached_weight: float,
+) -> dict:
+    """Recompute the scalar selection score from model-predicted components."""
+
+    risk_score = float(scores.get("risk_score", 0.0))
+    mean_risk = float(scores.get("rollout_mean_risk_score", risk_score))
+    utility_score = float(scores.get("utility_score", 0.0))
+    target_probability = float(scores.get("target_skill_probability", 0.0))
+    target_reached = float(scores.get("rollout_target_reached", 0.0))
+    updated = dict(scores)
+    updated["selection_score"] = (
+        risk_weight * risk_score
+        + mean_risk_weight * mean_risk
+        + utility_weight * utility_score
+        + target_weight * target_probability
+        + target_reached_weight * target_reached
+    )
+    updated["selection_score_weights"] = {
+        "risk": risk_weight,
+        "mean_risk": mean_risk_weight,
+        "utility": utility_weight,
+        "target": target_weight,
+        "target_reached": target_reached_weight,
+    }
+    return updated
+
+
 def _rollout_score_step(
     model,
     step: dict,
@@ -324,6 +358,16 @@ def main() -> None:
             "by world_model_top. This avoids overlap-contaminated random controls."
         ),
     )
+    parser.add_argument("--score-risk-weight", type=float, default=1.0)
+    parser.add_argument("--score-mean-risk-weight", type=float, default=0.3)
+    parser.add_argument("--score-utility-weight", type=float, default=0.5)
+    parser.add_argument("--score-target-weight", type=float, default=0.3)
+    parser.add_argument("--score-target-reached-weight", type=float, default=0.2)
+    parser.add_argument(
+        "--include-candidates",
+        action="store_true",
+        help="Store the full scored candidate pool in the output JSON for offline weight sweeps.",
+    )
     args = parser.parse_args()
 
     model = _load_model(args.model, args.model_backend)
@@ -386,6 +430,14 @@ def main() -> None:
             )
             if args.scoring_mode == "clean_prefix_rollout"
             else _score_step(model, step)
+        )
+        scores = _apply_selection_weights(
+            scores,
+            risk_weight=args.score_risk_weight,
+            mean_risk_weight=args.score_mean_risk_weight,
+            utility_weight=args.score_utility_weight,
+            target_weight=args.score_target_weight,
+            target_reached_weight=args.score_target_reached_weight,
         )
         candidates.append(
             {
@@ -486,10 +538,19 @@ def main() -> None:
         ),
         "max_per_user_task": args.max_per_user_task,
         "exclude_world_model_from_baselines": args.exclude_world_model_from_baselines,
+        "selection_score_weights": {
+            "risk": args.score_risk_weight,
+            "mean_risk": args.score_mean_risk_weight,
+            "utility": args.score_utility_weight,
+            "target": args.score_target_weight,
+            "target_reached": args.score_target_reached_weight,
+        },
         "summary": summary,
         "overlap": overlap,
         "selections": selections,
     }
+    if args.include_candidates:
+        payload["candidates"] = candidates
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(json.dumps(payload, indent=2))

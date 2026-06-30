@@ -195,6 +195,47 @@ PYTHONPATH=src python scripts/13_run_selection_grid.py \
 AgentDojo: representative states and target skills are read from the already
 standardized JSONL records.
 
+Selection-score tuning can be done without re-running Dreamer inference:
+
+```bash
+PYTHONPATH=src python scripts/11_select_world_model_agentdojo_pairs.py \
+  --run-root runs/agentdojo_full_hf/<model-run> \
+  --model artifacts/agentdojo_full_llama31_8b_dreamer_world_model \
+  --model-backend dreamer \
+  --output artifacts/dreamer_val_candidate_cache.json \
+  --allowed-trajectories data/agentdojo_full_llama31_8b/splits/val_trajectories.jsonl \
+  --standardized-steps data/agentdojo_full_llama31_8b/steps.jsonl \
+  --scoring-mode clean_prefix_rollout \
+  --rollout-horizon 3 \
+  --include-candidates
+
+python scripts/17_tune_selection_weights.py \
+  --candidate-json artifacts/dreamer_val_candidate_cache.json \
+  --output artifacts/dreamer_val_weight_sweep.json
+```
+
+The current method skeleton is:
+
+1. AgentDojo raw traces are normalized into `TrajectoryRecord` and
+   `StepRecord` JSONL.
+2. Each step is converted into stable hashed text features containing the user
+   goal, history, current observation, candidate skills, previous skills,
+   attack metadata, and target skill.
+3. SheepRL DreamerV3 components encode those vectors into a latent RSSM state.
+   The previous selected skill is the discrete action.
+4. The latent state feeds three heads: next skill, attack risk, and utility.
+5. During selection, a clean-prefix state is encoded once, then
+   `rssm.imagination()` rolls out imagined future skills in latent space.
+6. The selector ranks existing AgentDojo task/injection pairs by a weighted
+   combination of max risk, mean imagined risk, predicted utility, target-skill
+   probability, and target-reached indicator.
+
+The first weight sweep suggests that selection-weight changes alone have only a
+limited effect; the next useful tuning knob is model training itself. The
+training script therefore supports risk/utility loss scaling and positive-label
+weights, and `scripts/server/run_sheeprl_dreamer_tuned_e5.sbatch` runs a small
+5-epoch risk/utility-weighted Dreamer variant.
+
 ## Real AgentDojo attack collection
 
 Small sandbox-only attack batches can be collected with:

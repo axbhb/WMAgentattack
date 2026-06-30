@@ -94,6 +94,11 @@ class DreamerWorldModelConfig:
     learning_rate: float = 3e-4
     batch_size: int = 16
     epochs: int = 5
+    skill_loss_scale: float = 1.0
+    risk_loss_scale: float = 1.0
+    utility_loss_scale: float = 1.0
+    risk_pos_weight: float = 1.0
+    utility_pos_weight: float = 1.0
     kl_scale: float = 0.01
     reconstruction_scale: float = 0.05
     seed: int = 7
@@ -362,22 +367,26 @@ class SheepRLDreamerWorldModel:
                     out["skill_logits"].reshape(-1, len(self.skill_classes))[flat_mask],
                     actions.reshape(-1)[flat_mask],
                 )
+                risk_pos_weight = torch.tensor(cfg.risk_pos_weight, device=device)
+                utility_pos_weight = torch.tensor(cfg.utility_pos_weight, device=device)
                 risk_loss = F.binary_cross_entropy_with_logits(
                     out["risk_logits"].reshape(-1)[flat_mask],
                     risk.reshape(-1)[flat_mask],
+                    pos_weight=risk_pos_weight,
                 )
                 utility_loss = F.binary_cross_entropy_with_logits(
                     out["utility_logits"].reshape(-1)[flat_mask],
                     utility.reshape(-1)[flat_mask],
+                    pos_weight=utility_pos_weight,
                 )
                 reconstruction_loss = ((out["reconstruction"] - obs) ** 2).mean(dim=-1)
                 reconstruction_loss = (reconstruction_loss * mask).sum() / mask.sum().clamp_min(1.0)
                 kl_loss = module.kl_loss(out["posterior_logits"], out["prior_logits"])
                 kl_loss = (kl_loss * mask).sum() / mask.sum().clamp_min(1.0)
                 loss = (
-                    skill_loss
-                    + risk_loss
-                    + utility_loss
+                    self.config.skill_loss_scale * skill_loss
+                    + self.config.risk_loss_scale * risk_loss
+                    + self.config.utility_loss_scale * utility_loss
                     + self.config.reconstruction_scale * reconstruction_loss
                     + self.config.kl_scale * kl_loss
                 )
