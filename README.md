@@ -136,6 +136,43 @@ These numbers validate code flow only and are not research evidence. The next
 scientific milestone is collecting AgentDojo attack trajectories and replacing
 synthetic risk labels with benchmark security evaluations.
 
+## SheepRL DreamerV3 world model adapter
+
+The sklearn world model remains the fast default baseline. A parallel offline
+DreamerV3-style backbone is available for sequence-latent world-model
+experiments:
+
+```bash
+PYTHONPATH=src python scripts/15_train_dreamer_world_model.py \
+  --train data/agentdojo_full_llama31_8b/splits/train_steps.jsonl \
+  --model-out artifacts/agentdojo_full_llama31_8b_dreamer_world_model
+
+PYTHONPATH=src python scripts/16_eval_dreamer_world_model.py \
+  --test data/agentdojo_full_llama31_8b/splits/test_steps.jsonl \
+  --model artifacts/agentdojo_full_llama31_8b_dreamer_world_model
+```
+
+On the remote server this should be run in the existing `sheeprl_env` Conda
+environment. The Slurm smoke-test wrapper is:
+
+```bash
+sbatch scripts/server/run_sheeprl_dreamer_smoke.sbatch
+```
+
+This adapter is offline rather than a Gym environment wrapper: AgentDojo traces
+are converted into vector observation sequences, selected skills are discrete
+actions, and the model reuses SheepRL DreamerV3 `MLPEncoder`, `MLPDecoder`,
+`RecurrentModel`, `RSSM`, and initialization utilities. The saved model exposes
+the same `predict()` and `score_actions()` contract as the sklearn prototype so
+the attack-selection layer can compare backbones.
+
+The first remote GPU smoke run on the full Llama-3.1-8B AgentDojo split trained
+for 3 epochs on 2,797 steps and produced a healthy optimization trace. Held-out
+metrics were approximately 28.9% next-skill accuracy, 67.5% top-3 next-skill
+accuracy, 0.82 risk AUC, and 0.81 utility AUC. These are integration-health
+numbers, not final model quality; the next step is to tune the offline Dreamer
+objective and connect multi-step imagination scoring into the replay selector.
+
 ## Real AgentDojo attack collection
 
 Small sandbox-only attack batches can be collected with:
