@@ -367,8 +367,8 @@ class SheepRLDreamerWorldModel:
                     out["skill_logits"].reshape(-1, len(self.skill_classes))[flat_mask],
                     actions.reshape(-1)[flat_mask],
                 )
-                risk_pos_weight = torch.tensor(cfg.risk_pos_weight, device=device)
-                utility_pos_weight = torch.tensor(cfg.utility_pos_weight, device=device)
+                risk_pos_weight = torch.tensor(self.config.risk_pos_weight, device=device)
+                utility_pos_weight = torch.tensor(self.config.utility_pos_weight, device=device)
                 risk_loss = F.binary_cross_entropy_with_logits(
                     out["risk_logits"].reshape(-1)[flat_mask],
                     risk.reshape(-1)[flat_mask],
