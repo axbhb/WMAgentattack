@@ -97,6 +97,7 @@ class DreamerWorldModelConfig:
     skill_loss_scale: float = 1.0
     risk_loss_scale: float = 1.0
     utility_loss_scale: float = 1.0
+    final_utility_loss_scale: float = 1.0
     risk_pos_weight: float = 1.0
     utility_pos_weight: float = 1.0
     kl_scale: float = 0.01
@@ -248,6 +249,7 @@ class SheepRLDreamerWorldModel:
                 self.skill_head = nn.Linear(latent_size, num_actions)
                 self.risk_head = nn.Linear(latent_size, 1)
                 self.utility_head = nn.Linear(latent_size, 1)
+                self.final_utility_head = nn.Linear(latent_size, 1)
                 self.apply(init_weights)
 
             def forward(self, obs, action_ids):
@@ -289,6 +291,7 @@ class SheepRLDreamerWorldModel:
                     "skill_logits": self.skill_head(features),
                     "risk_logits": self.risk_head(features).squeeze(-1),
                     "utility_logits": self.utility_head(features).squeeze(-1),
+                    "final_utility_logits": self.final_utility_head(features).squeeze(-1),
                     "reconstruction": self.decoder(features.reshape(batch * steps, -1))["obs"].reshape(batch, steps, -1),
                     "posterior_logits": torch.stack(posterior_logits, dim=1),
                     "prior_logits": torch.stack(prior_logits, dim=1),
@@ -366,7 +369,15 @@ class SheepRLDreamerWorldModel:
         self.training_history = []
         for epoch in range(1, epochs + 1):
             permutation = torch.randperm(num_sequences)
-            totals = {"loss": 0.0, "skill": 0.0, "risk": 0.0, "utility": 0.0, "reconstruction": 0.0, "kl": 0.0}
+            totals = {
+                "loss": 0.0,
+                "skill": 0.0,
+                "risk": 0.0,
+                "utility": 0.0,
+                "final_utility": 0.0,
+                "reconstruction": 0.0,
+                "kl": 0.0,
+            }
             seen = 0.0
             for start in range(0, num_sequences, batch_size):
                 indices = permutation[start : start + batch_size]
@@ -393,6 +404,16 @@ class SheepRLDreamerWorldModel:
                     utility.reshape(-1)[flat_mask],
                     pos_weight=utility_pos_weight,
                 )
+                sequence_lengths = mask.sum(dim=1).long().clamp_min(1)
+                final_indices = sequence_lengths - 1
+                batch_indices = torch.arange(mask.shape[0], device=device)
+                final_utility_logits = out["final_utility_logits"][batch_indices, final_indices]
+                final_utility_targets = utility[batch_indices, final_indices]
+                final_utility_loss = F.binary_cross_entropy_with_logits(
+                    final_utility_logits,
+                    final_utility_targets,
+                    pos_weight=utility_pos_weight,
+                )
                 reconstruction_loss = ((out["reconstruction"] - obs) ** 2).mean(dim=-1)
                 reconstruction_loss = (reconstruction_loss * mask).sum() / mask.sum().clamp_min(1.0)
                 kl_loss = module.kl_loss(out["posterior_logits"], out["prior_logits"])
@@ -401,6 +422,7 @@ class SheepRLDreamerWorldModel:
                     self.config.skill_loss_scale * skill_loss
                     + self.config.risk_loss_scale * risk_loss
                     + self.config.utility_loss_scale * utility_loss
+                    + self.config.final_utility_loss_scale * final_utility_loss
                     + self.config.reconstruction_scale * reconstruction_loss
                     + self.config.kl_scale * kl_loss
                 )
@@ -415,6 +437,7 @@ class SheepRLDreamerWorldModel:
                     ("skill", skill_loss),
                     ("risk", risk_loss),
                     ("utility", utility_loss),
+                    ("final_utility", final_utility_loss),
                     ("reconstruction", reconstruction_loss),
                     ("kl", kl_loss),
                 ]:
@@ -503,6 +526,7 @@ class SheepRLDreamerWorldModel:
                 imagined_skills: list[str] = []
                 risk_scores: list[float] = []
                 utility_scores: list[float] = []
+                final_utility_scores: list[float] = []
                 target_probabilities: list[float] = []
                 action_skill_id = self.skill_to_id[first_skill]
 
@@ -519,6 +543,7 @@ class SheepRLDreamerWorldModel:
                     skill_prob = F.softmax(module.skill_head(feature), dim=-1)
                     risk_score = torch.sigmoid(module.risk_head(feature)).squeeze(-1)
                     utility_score = torch.sigmoid(module.utility_head(feature)).squeeze(-1)
+                    final_utility_score = torch.sigmoid(module.final_utility_head(feature)).squeeze(-1)
                     predicted_next_id = int(torch.argmax(skill_prob, dim=-1).item())
                     predicted_next_skill = self.skill_classes[predicted_next_id]
 
@@ -526,6 +551,7 @@ class SheepRLDreamerWorldModel:
                     imagined_skills.append(imagined_skill)
                     risk_scores.append(float(risk_score.item()))
                     utility_scores.append(float(utility_score.item()))
+                    final_utility_scores.append(float(final_utility_score.item()))
                     target_probabilities.append(
                         float(skill_prob[0, target_index].item()) if target_index is not None else 0.0
                     )
@@ -534,6 +560,8 @@ class SheepRLDreamerWorldModel:
                 max_risk = max(risk_scores) if risk_scores else 0.0
                 mean_risk = float(np.mean(risk_scores)) if risk_scores else 0.0
                 mean_utility = float(np.mean(utility_scores)) if utility_scores else 0.0
+                min_utility = min(utility_scores) if utility_scores else 0.0
+                final_utility = final_utility_scores[-1] if final_utility_scores else mean_utility
                 max_target_probability = max(target_probabilities) if target_probabilities else 0.0
                 mean_target_probability = (
                     float(np.mean(target_probabilities)) if target_probabilities else 0.0
@@ -551,6 +579,8 @@ class SheepRLDreamerWorldModel:
                         "branch_first_skill": first_skill,
                         "risk_score": max_risk,
                         "utility_score": mean_utility,
+                        "min_utility_score": min_utility,
+                        "final_utility_score": final_utility,
                         "target_skill_probability": max_target_probability,
                         "selection_score": selection_score,
                         "rollout_mean_risk_score": mean_risk,
@@ -595,6 +625,9 @@ class SheepRLDreamerWorldModel:
         model.training_history = metadata.get("training_history", [])
         module = model._ensure_module()
         state = torch.load(path / "model.pt", map_location=model._device_name())
+        if "final_utility_head.weight" not in state and "utility_head.weight" in state:
+            state["final_utility_head.weight"] = state["utility_head.weight"].clone()
+            state["final_utility_head.bias"] = state["utility_head.bias"].clone()
         module.load_state_dict(state)
         module.eval()
         return model

@@ -29,6 +29,7 @@ def main():
     parser.add_argument("--skill-loss-scale", type=float, default=1.0)
     parser.add_argument("--risk-loss-scale", type=float, default=1.0)
     parser.add_argument("--utility-loss-scale", type=float, default=1.0)
+    parser.add_argument("--final-utility-loss-scale", type=float, default=1.0)
     parser.add_argument("--risk-pos-weight", type=float, default=1.0)
     parser.add_argument("--utility-pos-weight", type=float, default=1.0)
     parser.add_argument("--kl-dynamic-scale", type=float, default=0.5)
@@ -47,6 +48,7 @@ def main():
         skill_loss_scale=args.skill_loss_scale,
         risk_loss_scale=args.risk_loss_scale,
         utility_loss_scale=args.utility_loss_scale,
+        final_utility_loss_scale=args.final_utility_loss_scale,
         risk_pos_weight=args.risk_pos_weight,
         utility_pos_weight=args.utility_pos_weight,
         kl_dynamic_scale=args.kl_dynamic_scale,

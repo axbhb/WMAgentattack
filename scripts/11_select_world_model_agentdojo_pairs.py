@@ -102,33 +102,50 @@ def _score_step(model, step: StepRecord | dict) -> dict:
 def _apply_selection_weights(
     scores: dict,
     *,
+    objective: str,
+    utility_score_key: str,
     risk_weight: float,
     mean_risk_weight: float,
     utility_weight: float,
     target_weight: float,
     target_reached_weight: float,
+    utility_threshold: float,
+    utility_shortfall_penalty: float,
 ) -> dict:
     """Recompute the scalar selection score from model-predicted components."""
 
     risk_score = float(scores.get("risk_score", 0.0))
     mean_risk = float(scores.get("rollout_mean_risk_score", risk_score))
-    utility_score = float(scores.get("utility_score", 0.0))
+    utility_score = float(scores.get(utility_score_key, scores.get("utility_score", 0.0)))
     target_probability = float(scores.get("target_skill_probability", 0.0))
     target_reached = float(scores.get("rollout_target_reached", 0.0))
     updated = dict(scores)
-    updated["selection_score"] = (
+    risk_target_score = (
         risk_weight * risk_score
         + mean_risk_weight * mean_risk
-        + utility_weight * utility_score
         + target_weight * target_probability
         + target_reached_weight * target_reached
     )
+    if objective == "weighted":
+        selection_score = risk_target_score + utility_weight * utility_score
+    elif objective == "utility_constrained":
+        selection_score = risk_target_score - utility_shortfall_penalty * max(
+            0.0, utility_threshold - utility_score
+        )
+    else:
+        raise ValueError(f"Unsupported selection objective: {objective}")
+    updated["selection_score"] = selection_score
+    updated["selection_utility_score"] = utility_score
     updated["selection_score_weights"] = {
+        "objective": objective,
+        "utility_score_key": utility_score_key,
         "risk": risk_weight,
         "mean_risk": mean_risk_weight,
         "utility": utility_weight,
         "target": target_weight,
         "target_reached": target_reached_weight,
+        "utility_threshold": utility_threshold,
+        "utility_shortfall_penalty": utility_shortfall_penalty,
     }
     return updated
 
@@ -364,6 +381,18 @@ def main() -> None:
     parser.add_argument("--score-target-weight", type=float, default=0.3)
     parser.add_argument("--score-target-reached-weight", type=float, default=0.2)
     parser.add_argument(
+        "--selection-objective",
+        choices=["weighted", "utility_constrained"],
+        default="weighted",
+    )
+    parser.add_argument(
+        "--utility-score-key",
+        choices=["utility_score", "final_utility_score", "min_utility_score"],
+        default="utility_score",
+    )
+    parser.add_argument("--utility-threshold", type=float, default=0.0)
+    parser.add_argument("--utility-shortfall-penalty", type=float, default=2.0)
+    parser.add_argument(
         "--include-candidates",
         action="store_true",
         help="Store the full scored candidate pool in the output JSON for offline weight sweeps.",
@@ -433,11 +462,15 @@ def main() -> None:
         )
         scores = _apply_selection_weights(
             scores,
+            objective=args.selection_objective,
+            utility_score_key=args.utility_score_key,
             risk_weight=args.score_risk_weight,
             mean_risk_weight=args.score_mean_risk_weight,
             utility_weight=args.score_utility_weight,
             target_weight=args.score_target_weight,
             target_reached_weight=args.score_target_reached_weight,
+            utility_threshold=args.utility_threshold,
+            utility_shortfall_penalty=args.utility_shortfall_penalty,
         )
         candidates.append(
             {
@@ -539,11 +572,15 @@ def main() -> None:
         "max_per_user_task": args.max_per_user_task,
         "exclude_world_model_from_baselines": args.exclude_world_model_from_baselines,
         "selection_score_weights": {
+            "objective": args.selection_objective,
+            "utility_score_key": args.utility_score_key,
             "risk": args.score_risk_weight,
             "mean_risk": args.score_mean_risk_weight,
             "utility": args.score_utility_weight,
             "target": args.score_target_weight,
             "target_reached": args.score_target_reached_weight,
+            "utility_threshold": args.utility_threshold,
+            "utility_shortfall_penalty": args.utility_shortfall_penalty,
         },
         "summary": summary,
         "overlap": overlap,

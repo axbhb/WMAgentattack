@@ -47,6 +47,18 @@ def main() -> None:
     parser.add_argument("--score-utility-weight", type=float, default=0.5)
     parser.add_argument("--score-target-weight", type=float, default=0.3)
     parser.add_argument("--score-target-reached-weight", type=float, default=0.2)
+    parser.add_argument(
+        "--selection-objective",
+        choices=["weighted", "utility_constrained"],
+        default="weighted",
+    )
+    parser.add_argument(
+        "--utility-score-key",
+        choices=["utility_score", "final_utility_score", "min_utility_score"],
+        default="utility_score",
+    )
+    parser.add_argument("--utility-threshold", type=float, default=0.0)
+    parser.add_argument("--utility-shortfall-penalty", type=float, default=2.0)
     args = parser.parse_args()
 
     top_ks = _parse_int_list(args.top_k)
@@ -93,6 +105,14 @@ def main() -> None:
                 str(args.score_target_weight),
                 "--score-target-reached-weight",
                 str(args.score_target_reached_weight),
+                "--selection-objective",
+                args.selection_objective,
+                "--utility-score-key",
+                args.utility_score_key,
+                "--utility-threshold",
+                str(args.utility_threshold),
+                "--utility-shortfall-penalty",
+                str(args.utility_shortfall_penalty),
             ]
             if args.standardized_steps:
                 command.extend(["--standardized-steps", str(args.standardized_steps)])
@@ -124,11 +144,15 @@ def main() -> None:
         "model_backend": args.model_backend,
         "standardized_steps": str(args.standardized_steps.resolve()) if args.standardized_steps else None,
         "selection_score_weights": {
+            "objective": args.selection_objective,
+            "utility_score_key": args.utility_score_key,
             "risk": args.score_risk_weight,
             "mean_risk": args.score_mean_risk_weight,
             "utility": args.score_utility_weight,
             "target": args.score_target_weight,
             "target_reached": args.score_target_reached_weight,
+            "utility_threshold": args.utility_threshold,
+            "utility_shortfall_penalty": args.utility_shortfall_penalty,
         },
         "rollout_horizon": args.rollout_horizon,
         "exclude_world_model_from_baselines": (
