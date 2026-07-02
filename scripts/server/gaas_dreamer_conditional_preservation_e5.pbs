@@ -1,0 +1,57 @@
+#!/bin/bash
+#PBS -N wma_dreamer_cond
+#PBS -q gpu_free
+#PBS -l select=1:ncpus=4:ngpus=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+set -euo pipefail
+
+cd "$PBS_O_WORKDIR"
+
+module load anaconda/2025
+eval "$(/usr/local/anaconda2025/bin/conda shell.bash hook)"
+conda activate "${ENV_NAME:-wmagentattack}"
+
+export PYTHONPATH="$PBS_O_WORKDIR/src:$PBS_O_WORKDIR/external/agentdojo/src:${PYTHONPATH:-}"
+export TOKENIZERS_PARALLELISM=false
+
+CLEAN_STATS="${CLEAN_STATS:-$PBS_O_WORKDIR/artifacts/clean_multiseed_llama31_8b_solvability_gaas.json}"
+SPLIT_DIR="${SPLIT_DIR:-$PBS_O_WORKDIR/data/agentdojo_full_llama31_8b/splits}"
+COND_SPLIT_DIR="${COND_SPLIT_DIR:-$PBS_O_WORKDIR/data/agentdojo_full_llama31_8b/splits_conditional_preservation_gaas}"
+MODEL_OUT="${MODEL_OUT:-$PBS_O_WORKDIR/artifacts/agentdojo_full_llama31_8b_dreamer_world_model_conditional_preservation_e5_gaas}"
+THRESHOLD="${THRESHOLD:-0.5}"
+
+test -f "$CLEAN_STATS"
+test -d "$SPLIT_DIR"
+
+python scripts/21_apply_conditional_preservation_labels.py \
+  --split-dir "$SPLIT_DIR" \
+  --clean-solvability-json "$CLEAN_STATS" \
+  --out-dir "$COND_SPLIT_DIR" \
+  --min-base-success-rate "$THRESHOLD"
+
+python scripts/15_train_dreamer_world_model.py \
+  --train "$COND_SPLIT_DIR/train_steps.jsonl" \
+  --model-out "$MODEL_OUT" \
+  --epochs 5 \
+  --batch-size 16 \
+  --risk-loss-scale 2.0 \
+  --utility-loss-scale 2.0 \
+  --final-utility-loss-scale 2.0 \
+  --utility-ranking-loss-scale 1.0 \
+  --utility-ranking-margin 0.2 \
+  --kl-scale 0.05 \
+  --kl-dynamic-scale 0.5 \
+  --kl-representation-scale 0.1 \
+  --kl-free-nats 1.0 \
+  --utility-pos-weight 1.0 \
+  --seed 7
+
+for SPLIT in val test; do
+  python scripts/16_eval_dreamer_world_model.py \
+    --test "$COND_SPLIT_DIR/${SPLIT}_steps.jsonl" \
+    --model "$MODEL_OUT" \
+    --output "artifacts/agentdojo_full_llama31_8b_dreamer_world_model_conditional_preservation_e5_gaas_${SPLIT}_metrics.json"
+done
+

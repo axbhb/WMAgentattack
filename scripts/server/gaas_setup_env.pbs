@@ -1,0 +1,53 @@
+#!/bin/bash
+#PBS -N wma_setup_env
+#PBS -q gpu_free
+#PBS -l select=1:ncpus=4:ngpus=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+set -euo pipefail
+
+cd "$PBS_O_WORKDIR"
+
+module load anaconda/2025
+eval "$(/usr/local/anaconda2025/bin/conda shell.bash hook)"
+
+ENV_NAME="${ENV_NAME:-wmagentattack}"
+
+if ! conda env list | awk '{print $1}' | grep -qx "$ENV_NAME"; then
+  conda create -n "$ENV_NAME" python=3.11 -y
+fi
+conda activate "$ENV_NAME"
+
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install \
+  torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+python -m pip install \
+  transformers accelerate bitsandbytes sentencepiece protobuf \
+  pydantic joblib scikit-learn numpy scipy pandas pypdf pytest
+
+if [ -d external/agentdojo/src ]; then
+  python -m pip install -e external/agentdojo
+else
+  mkdir -p external
+  if [ ! -d external/agentdojo/.git ]; then
+    git clone https://github.com/ethz-spylab/agentdojo.git external/agentdojo
+  fi
+  python -m pip install -e external/agentdojo
+fi
+
+python -m pip install sheeprl || true
+
+PYTHONPATH="$PBS_O_WORKDIR/src:$PBS_O_WORKDIR/external/agentdojo/src:${PYTHONPATH:-}" \
+python - <<'PY'
+import importlib.util
+import torch
+
+print("torch", torch.__version__)
+print("cuda_available", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print("gpu", torch.cuda.get_device_name(0))
+for name in ["agentdojo", "transformers", "bitsandbytes", "sheeprl"]:
+    print(name, bool(importlib.util.find_spec(name)))
+PY
+
