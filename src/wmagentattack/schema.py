@@ -40,6 +40,8 @@ class StepRecord(BaseModel):
     target_skill_success: bool
     policy_violation: bool
     risk_level: int = Field(ge=0, le=3)
+    base_task_success_rate: float | None = Field(default=None, ge=0.0, le=1.0)
+    preservation_trainable: bool = True
 
     @model_validator(mode="after")
     def selected_skill_is_candidate(self):

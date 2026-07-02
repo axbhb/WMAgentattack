@@ -8,11 +8,13 @@ and evaluators while loading a Hugging Face model directly on the local GPU.
 from __future__ import annotations
 
 import json
+import random
 import re
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import torch
 import yaml
 from agentdojo.agent_pipeline.base_pipeline_element import BasePipelineElement
@@ -43,6 +45,10 @@ class TransformersQwenLLM(BasePipelineElement):
         protocol: str = "function_tags",
         model_label: str | None = None,
         trust_remote_code: bool = False,
+        seed: int | None = None,
+        do_sample: bool = False,
+        temperature: float = 0.7,
+        top_p: float = 0.95,
     ) -> None:
         model_path = Path(model_path).resolve()
         if not model_path.exists():
@@ -60,6 +66,10 @@ class TransformersQwenLLM(BasePipelineElement):
         self.protocol = protocol
         self.model_label = model_label or model_path.name
         self.trust_remote_code = trust_remote_code
+        self.seed = seed
+        self.do_sample = do_sample
+        self.temperature = temperature
+        self.top_p = top_p
         compact_label = (
             f"compact{max_tool_output_chars}"
             if max_tool_output_chars > 0
@@ -69,6 +79,12 @@ class TransformersQwenLLM(BasePipelineElement):
             f"{self.model_label}-transformers-{quantization}-"
             f"{compact_label}-{prompt_profile}-{protocol}-ctx{max_input_tokens}"
         )
+        if seed is not None:
+            random.seed(seed)
+            np.random.seed(seed)
+            torch.manual_seed(seed)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed_all(seed)
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_path,
@@ -382,12 +398,23 @@ class TransformersQwenLLM(BasePipelineElement):
                     )
         inputs = {key: value.to(self.device) for key, value in inputs.items()}
 
+        generation_kwargs: dict[str, Any] = {
+            "max_new_tokens": self.max_new_tokens,
+            "do_sample": self.do_sample,
+            "use_cache": True,
+            "pad_token_id": self.tokenizer.eos_token_id,
+        }
+        if self.do_sample:
+            generation_kwargs.update(
+                {
+                    "temperature": self.temperature,
+                    "top_p": self.top_p,
+                }
+            )
+
         outputs = self.model.generate(
             **inputs,
-            max_new_tokens=self.max_new_tokens,
-            do_sample=False,
-            use_cache=True,
-            pad_token_id=self.tokenizer.eos_token_id,
+            **generation_kwargs,
         )
         generated = outputs[0, inputs["input_ids"].shape[1] :]
         completion = self.tokenizer.decode(generated, skip_special_tokens=True).strip()

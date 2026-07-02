@@ -165,6 +165,10 @@ def evaluate_dreamer_predictions(steps: list[StepRecord], predictions: dict[str,
     skill_true = np.array([step.selected_skill for step in steps])
     risk_true = np.array([step.attack_success for step in steps], dtype=int)
     utility_true = np.array([step.task_success for step in steps], dtype=int)
+    preservation_mask = np.array(
+        [bool(getattr(step, "preservation_trainable", True)) for step in steps],
+        dtype=bool,
+    )
     probabilities = np.asarray(predictions["next_skill_proba"])
     classes = np.asarray(predictions["skill_classes"])
     top_k = min(3, probabilities.shape[1])
@@ -179,7 +183,7 @@ def evaluate_dreamer_predictions(steps: list[StepRecord], predictions: dict[str,
     precision = tp / (tp + fp) if tp + fp else 0.0
     recall = tp / (tp + fn) if tp + fn else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
-    return {
+    payload = {
         "next_skill_accuracy": float(np.mean(skill_true == predictions["next_skill"])),
         "next_skill_top3_accuracy": float(top3),
         "risk_auc": _binary_auc(risk_true, risk_scores),
@@ -187,6 +191,25 @@ def evaluate_dreamer_predictions(steps: list[StepRecord], predictions: dict[str,
         "utility_auc": _binary_auc(utility_true, utility_scores),
         "calibration_brier_score": float(np.mean((risk_true - risk_scores) ** 2)),
     }
+    payload["preservation_eval_count"] = int(preservation_mask.sum())
+    if preservation_mask.any():
+        payload["preservation_utility_auc"] = _binary_auc(
+            utility_true[preservation_mask],
+            utility_scores[preservation_mask],
+        )
+        payload["preservation_utility_brier_score"] = float(
+            np.mean(
+                (
+                    utility_true[preservation_mask]
+                    - utility_scores[preservation_mask]
+                )
+                ** 2
+            )
+        )
+    else:
+        payload["preservation_utility_auc"] = None
+        payload["preservation_utility_brier_score"] = None
+    return payload
 
 
 class SheepRLDreamerWorldModel:
@@ -340,8 +363,10 @@ class SheepRLDreamerWorldModel:
         actions = np.full((len(sequences), max_len), -1, dtype=np.int64)
         risk = np.zeros((len(sequences), max_len), dtype=np.float32)
         utility = np.zeros((len(sequences), max_len), dtype=np.float32)
+        utility_mask = np.zeros((len(sequences), max_len), dtype=np.float32)
         mask = np.zeros((len(sequences), max_len), dtype=np.float32)
         final_utility = np.zeros(len(sequences), dtype=np.float32)
+        final_utility_mask = np.zeros(len(sequences), dtype=np.float32)
         group_ids = np.zeros(len(sequences), dtype=np.int64)
         group_to_id: dict[str, int] = {}
         for row, sequence in enumerate(sequences):
@@ -349,18 +374,26 @@ class SheepRLDreamerWorldModel:
             group_to_id.setdefault(group_key, len(group_to_id))
             group_ids[row] = group_to_id[group_key]
             final_utility[row] = float(sequence[-1].task_success)
+            final_utility_mask[row] = float(
+                getattr(sequence[-1], "preservation_trainable", True)
+            )
             for col, step in enumerate(sequence):
                 obs[row, col] = self._vectorize_step(step)
                 actions[row, col] = self.skill_to_id[step.selected_skill]
                 risk[row, col] = float(step.attack_success)
                 utility[row, col] = float(step.task_success)
+                utility_mask[row, col] = float(
+                    getattr(step, "preservation_trainable", True)
+                )
                 mask[row, col] = 1.0
         return {
             "obs": torch.from_numpy(obs),
             "actions": torch.from_numpy(actions),
             "risk": torch.from_numpy(risk),
             "utility": torch.from_numpy(utility),
+            "utility_mask": torch.from_numpy(utility_mask),
             "final_utility": torch.from_numpy(final_utility),
+            "final_utility_mask": torch.from_numpy(final_utility_mask),
             "group_ids": torch.from_numpy(group_ids),
             "mask": torch.from_numpy(mask),
         }
@@ -402,7 +435,9 @@ class SheepRLDreamerWorldModel:
                 actions = data["actions"][indices].to(device)
                 risk = data["risk"][indices].to(device)
                 utility = data["utility"][indices].to(device)
+                utility_mask = data["utility_mask"][indices].to(device)
                 final_utility = data["final_utility"][indices].to(device)
+                final_utility_mask = data["final_utility_mask"][indices].to(device)
                 group_ids = data["group_ids"][indices].to(device)
                 mask = data["mask"][indices].to(device)
                 out = module(obs, actions)
@@ -418,24 +453,37 @@ class SheepRLDreamerWorldModel:
                     risk.reshape(-1)[flat_mask],
                     pos_weight=risk_pos_weight,
                 )
-                utility_loss = F.binary_cross_entropy_with_logits(
-                    out["utility_logits"].reshape(-1)[flat_mask],
-                    utility.reshape(-1)[flat_mask],
-                    pos_weight=utility_pos_weight,
+                flat_utility_mask = (
+                    (mask.reshape(-1) > 0)
+                    & (utility_mask.reshape(-1) > 0)
                 )
+                if flat_utility_mask.any():
+                    utility_loss = F.binary_cross_entropy_with_logits(
+                        out["utility_logits"].reshape(-1)[flat_utility_mask],
+                        utility.reshape(-1)[flat_utility_mask],
+                        pos_weight=utility_pos_weight,
+                    )
+                else:
+                    utility_loss = out["utility_logits"].sum() * 0.0
                 sequence_lengths = mask.sum(dim=1).long().clamp_min(1)
                 final_indices = sequence_lengths - 1
                 batch_indices = torch.arange(mask.shape[0], device=device)
                 final_utility_logits = out["final_utility_logits"][batch_indices, final_indices]
                 final_utility_targets = final_utility
-                final_utility_loss = F.binary_cross_entropy_with_logits(
-                    final_utility_logits,
-                    final_utility_targets,
-                    pos_weight=utility_pos_weight,
-                )
+                final_trainable = final_utility_mask > 0
+                if final_trainable.any():
+                    final_utility_loss = F.binary_cross_entropy_with_logits(
+                        final_utility_logits[final_trainable],
+                        final_utility_targets[final_trainable],
+                        pos_weight=utility_pos_weight,
+                    )
+                else:
+                    final_utility_loss = final_utility_logits.sum() * 0.0
                 positive_pairs = (
                     (group_ids[:, None] == group_ids[None, :])
                     & (final_utility[:, None] > final_utility[None, :])
+                    & final_trainable[:, None]
+                    & final_trainable[None, :]
                 )
                 if positive_pairs.any():
                     pos_index, neg_index = positive_pairs.nonzero(as_tuple=True)

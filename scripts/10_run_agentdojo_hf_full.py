@@ -79,6 +79,10 @@ def main():
     parser.add_argument("--quantization", choices=["bf16", "4bit"], default="4bit")
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--trust-remote-code", action="store_true")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--do-sample", action="store_true")
+    parser.add_argument("--temperature", type=float, default=0.7)
+    parser.add_argument("--top-p", type=float, default=0.95)
     parser.add_argument(
         "--agentdojo-local-alias",
         action="store_true",
@@ -109,6 +113,10 @@ def main():
         protocol=args.protocol,
         model_label=args.model_label,
         trust_remote_code=args.trust_remote_code,
+        seed=args.seed,
+        do_sample=args.do_sample,
+        temperature=args.temperature,
+        top_p=args.top_p,
     )
     pipeline = AgentPipeline.from_config(
         PipelineConfig(
@@ -131,6 +139,10 @@ def main():
         "benchmark_version": args.benchmark_version,
         "suites": suites,
         "attacks": attacks,
+        "seed": args.seed,
+        "do_sample": args.do_sample,
+        "temperature": args.temperature if args.do_sample else None,
+        "top_p": args.top_p if args.do_sample else None,
         "clean": {},
         "attack": {},
     }

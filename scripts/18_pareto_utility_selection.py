@@ -66,6 +66,39 @@ def _utility_score(row: dict[str, Any], key: str) -> float:
     return float(row.get(key, row.get("utility_score", 0.0)))
 
 
+def _load_clean_rates(path: Path | None) -> dict[tuple[str, str], float]:
+    if path is None:
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        (row["suite"], row["user_task_id"]): float(row["base_success_rate"])
+        for row in payload.get("tasks", [])
+    }
+
+
+def _annotate_clean_rates(
+    candidates: list[dict[str, Any]],
+    clean_rates: dict[tuple[str, str], float],
+    *,
+    min_base_success_rate: float,
+) -> list[dict[str, Any]]:
+    if not clean_rates:
+        return candidates
+    output = []
+    for row in candidates:
+        base_rate = clean_rates.get((row["suite"], row["user_task_id"]))
+        output.append(
+            {
+                **row,
+                "base_task_success_rate": base_rate,
+                "preservation_eval_eligible": (
+                    base_rate is not None and base_rate >= min_base_success_rate
+                ),
+            }
+        )
+    return output
+
+
 def _threshold(candidates: list[dict[str, Any]], utility_key: str, mode: str, value: float) -> float:
     utilities = np.array([_utility_score(row, utility_key) for row in candidates], dtype=float)
     if mode == "fixed":
@@ -145,11 +178,35 @@ def _select_random(
 def _summarize(rows: list[dict[str, Any]]) -> dict[str, float | int]:
     asr = np.array([bool(row["observed_security"]) for row in rows], dtype=float)
     bup = np.array([bool(row["observed_utility"]) for row in rows], dtype=float)
+    eligible_rows = [
+        row for row in rows if bool(row.get("preservation_eval_eligible", True))
+    ]
+    eligible_asr = np.array(
+        [bool(row["observed_security"]) for row in eligible_rows],
+        dtype=float,
+    )
+    eligible_bup = np.array(
+        [bool(row["observed_utility"]) for row in eligible_rows],
+        dtype=float,
+    )
     return {
         "count": len(rows),
         "observed_asr": float(asr.mean()) if len(rows) else 0.0,
         "observed_bup": float(bup.mean()) if len(rows) else 0.0,
         "objective_asr_plus_bup": float(asr.mean() + bup.mean()) if len(rows) else 0.0,
+        "conditional_eval_count": len(eligible_rows),
+        "conditional_coverage": len(eligible_rows) / len(rows) if rows else 0.0,
+        "conditional_observed_asr": (
+            float(eligible_asr.mean()) if len(eligible_rows) else 0.0
+        ),
+        "conditional_observed_bup": (
+            float(eligible_bup.mean()) if len(eligible_rows) else 0.0
+        ),
+        "conditional_asr_plus_bup": (
+            float(eligible_asr.mean() + eligible_bup.mean())
+            if len(eligible_rows)
+            else 0.0
+        ),
         "mean_risk_score": float(np.mean([row.get("risk_score", 0.0) for row in rows])) if rows else 0.0,
         "mean_utility_score": (
             float(np.mean([row.get("utility_score", 0.0) for row in rows])) if rows else 0.0
@@ -178,10 +235,17 @@ def main() -> None:
     parser.add_argument("--quantiles", default="0.50,0.60,0.70,0.80,0.90")
     parser.add_argument("--fixed-thresholds", default="")
     parser.add_argument("--max-per-user-task", type=int, default=2)
+    parser.add_argument("--clean-solvability-json", type=Path)
+    parser.add_argument("--min-base-success-rate", type=float, default=0.5)
     args = parser.parse_args()
 
     payload = json.loads(args.candidate_json.read_text(encoding="utf-8"))
-    candidates = payload["candidates"]
+    clean_rates = _load_clean_rates(args.clean_solvability_json)
+    candidates = _annotate_clean_rates(
+        payload["candidates"],
+        clean_rates,
+        min_base_success_rate=args.min_base_success_rate,
+    )
     top_ks = _parse_int_list(args.top_k)
     seeds = _parse_int_list(args.seeds)
     utility_keys = [item.strip() for item in args.utility_keys.split(",") if item.strip()]
@@ -270,6 +334,21 @@ def main() -> None:
                 "objective_asr_plus_bup_mean": float(
                     np.mean([row["objective_asr_plus_bup"] for row in vals])
                 ),
+                "conditional_eval_count_mean": float(
+                    np.mean([row["conditional_eval_count"] for row in vals])
+                ),
+                "conditional_coverage_mean": float(
+                    np.mean([row["conditional_coverage"] for row in vals])
+                ),
+                "conditional_observed_asr_mean": float(
+                    np.mean([row["conditional_observed_asr"] for row in vals])
+                ),
+                "conditional_observed_bup_mean": float(
+                    np.mean([row["conditional_observed_bup"] for row in vals])
+                ),
+                "conditional_asr_plus_bup_mean": float(
+                    np.mean([row["conditional_asr_plus_bup"] for row in vals])
+                ),
                 "feasible_rate_mean": float(np.mean([row["feasible_rate"] for row in vals])),
                 "pareto_utility_score_mean": float(
                     np.mean([row["mean_pareto_utility_score"] for row in vals])
@@ -293,6 +372,12 @@ def main() -> None:
         "seeds": seeds,
         "utility_keys": utility_keys,
         "threshold_specs": specs,
+        "clean_solvability_json": (
+            str(args.clean_solvability_json.resolve())
+            if args.clean_solvability_json
+            else None
+        ),
+        "min_base_success_rate": args.min_base_success_rate,
         "best": best,
         "aggregate": aggregate,
         "rows": rows,
