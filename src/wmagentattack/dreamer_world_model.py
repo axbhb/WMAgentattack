@@ -364,9 +364,11 @@ class SheepRLDreamerWorldModel:
         risk = np.zeros((len(sequences), max_len), dtype=np.float32)
         utility = np.zeros((len(sequences), max_len), dtype=np.float32)
         utility_mask = np.zeros((len(sequences), max_len), dtype=np.float32)
+        utility_weight = np.zeros((len(sequences), max_len), dtype=np.float32)
         mask = np.zeros((len(sequences), max_len), dtype=np.float32)
         final_utility = np.zeros(len(sequences), dtype=np.float32)
         final_utility_mask = np.zeros(len(sequences), dtype=np.float32)
+        final_utility_weight = np.zeros(len(sequences), dtype=np.float32)
         group_ids = np.zeros(len(sequences), dtype=np.int64)
         group_to_id: dict[str, int] = {}
         for row, sequence in enumerate(sequences):
@@ -377,6 +379,9 @@ class SheepRLDreamerWorldModel:
             final_utility_mask[row] = float(
                 getattr(sequence[-1], "preservation_trainable", True)
             )
+            final_utility_weight[row] = float(
+                getattr(sequence[-1], "preservation_weight", final_utility_mask[row])
+            )
             for col, step in enumerate(sequence):
                 obs[row, col] = self._vectorize_step(step)
                 actions[row, col] = self.skill_to_id[step.selected_skill]
@@ -385,6 +390,9 @@ class SheepRLDreamerWorldModel:
                 utility_mask[row, col] = float(
                     getattr(step, "preservation_trainable", True)
                 )
+                utility_weight[row, col] = float(
+                    getattr(step, "preservation_weight", utility_mask[row, col])
+                )
                 mask[row, col] = 1.0
         return {
             "obs": torch.from_numpy(obs),
@@ -392,8 +400,10 @@ class SheepRLDreamerWorldModel:
             "risk": torch.from_numpy(risk),
             "utility": torch.from_numpy(utility),
             "utility_mask": torch.from_numpy(utility_mask),
+            "utility_weight": torch.from_numpy(utility_weight),
             "final_utility": torch.from_numpy(final_utility),
             "final_utility_mask": torch.from_numpy(final_utility_mask),
+            "final_utility_weight": torch.from_numpy(final_utility_weight),
             "group_ids": torch.from_numpy(group_ids),
             "mask": torch.from_numpy(mask),
         }
@@ -436,8 +446,10 @@ class SheepRLDreamerWorldModel:
                 risk = data["risk"][indices].to(device)
                 utility = data["utility"][indices].to(device)
                 utility_mask = data["utility_mask"][indices].to(device)
+                utility_weight = data["utility_weight"][indices].to(device)
                 final_utility = data["final_utility"][indices].to(device)
                 final_utility_mask = data["final_utility_mask"][indices].to(device)
+                final_utility_weight = data["final_utility_weight"][indices].to(device)
                 group_ids = data["group_ids"][indices].to(device)
                 mask = data["mask"][indices].to(device)
                 out = module(obs, actions)
@@ -453,30 +465,39 @@ class SheepRLDreamerWorldModel:
                     risk.reshape(-1)[flat_mask],
                     pos_weight=risk_pos_weight,
                 )
-                flat_utility_mask = (
-                    (mask.reshape(-1) > 0)
-                    & (utility_mask.reshape(-1) > 0)
-                )
+                flat_utility_weights = utility_weight.reshape(-1) * mask.reshape(-1)
+                flat_utility_mask = flat_utility_weights > 0
                 if flat_utility_mask.any():
-                    utility_loss = F.binary_cross_entropy_with_logits(
+                    raw_utility_loss = F.binary_cross_entropy_with_logits(
                         out["utility_logits"].reshape(-1)[flat_utility_mask],
                         utility.reshape(-1)[flat_utility_mask],
                         pos_weight=utility_pos_weight,
+                        reduction="none",
                     )
+                    utility_loss = (
+                        raw_utility_loss
+                        * flat_utility_weights[flat_utility_mask]
+                    ).sum() / flat_utility_weights[flat_utility_mask].sum().clamp_min(1e-6)
                 else:
                     utility_loss = out["utility_logits"].sum() * 0.0
                 sequence_lengths = mask.sum(dim=1).long().clamp_min(1)
                 final_indices = sequence_lengths - 1
                 batch_indices = torch.arange(mask.shape[0], device=device)
-                final_utility_logits = out["final_utility_logits"][batch_indices, final_indices]
+                final_utility_logits = out["final_utility_logits"][
+                    batch_indices, final_indices
+                ]
                 final_utility_targets = final_utility
-                final_trainable = final_utility_mask > 0
+                final_trainable = final_utility_weight > 0
                 if final_trainable.any():
-                    final_utility_loss = F.binary_cross_entropy_with_logits(
+                    raw_final_utility_loss = F.binary_cross_entropy_with_logits(
                         final_utility_logits[final_trainable],
                         final_utility_targets[final_trainable],
                         pos_weight=utility_pos_weight,
+                        reduction="none",
                     )
+                    final_utility_loss = (
+                        raw_final_utility_loss * final_utility_weight[final_trainable]
+                    ).sum() / final_utility_weight[final_trainable].sum().clamp_min(1e-6)
                 else:
                     final_utility_loss = final_utility_logits.sum() * 0.0
                 positive_pairs = (
