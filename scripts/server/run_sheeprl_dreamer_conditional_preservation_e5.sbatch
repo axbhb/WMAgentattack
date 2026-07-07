@@ -45,12 +45,10 @@ PYTHONWARNINGS=ignore PYTHONPATH=src "$SHEEPRL_PY" scripts/15_train_dreamer_worl
   --final-utility-loss-scale 2.0 \
   --utility-ranking-loss-scale 1.0 \
   --utility-ranking-margin 0.2 \
-  --kl-scale 0.05 \
   --kl-dynamic-scale 0.5 \
   --kl-representation-scale 0.1 \
   --kl-free-nats 1.0 \
-  --utility-pos-weight 1.0 \
-  --seed 7
+  --utility-pos-weight 1.0
 
 for SPLIT in val test; do
   PYTHONWARNINGS=ignore PYTHONPATH=src "$SHEEPRL_PY" scripts/16_eval_dreamer_world_model.py \
@@ -63,4 +61,3 @@ cp "$CLEAN_STATS" "$ARCHIVE"/
 cp "$COND_SPLIT_DIR/conditional_summary.json" "$ARCHIVE"/
 cp "$ROOT"/artifacts/agentdojo_full_llama31_8b_dreamer_world_model_conditional_preservation_e5_*_metrics.json "$ARCHIVE"/
 cp "$MODEL_OUT/training_history.json" "$ARCHIVE"/conditional_preservation_training_history.json
-
