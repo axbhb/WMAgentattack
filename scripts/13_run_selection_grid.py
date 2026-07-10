@@ -1,4 +1,4 @@
-"""Run a no-GPU selection grid over top-k and seed values.
+"""Run a selection-only grid over top-k and seed values.
 
 This script repeatedly calls ``11_select_world_model_agentdojo_pairs.py`` and
 collects compact method-level summaries. It is intentionally selection-only:
@@ -29,7 +29,7 @@ def main() -> None:
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument(
         "--model-backend",
-        choices=["sklearn", "dreamer"],
+        choices=["sklearn", "dreamer", "dreamer_full"],
         default="sklearn",
     )
     parser.add_argument("--allowed-trajectories", type=Path, required=True)
@@ -54,7 +54,13 @@ def main() -> None:
     )
     parser.add_argument(
         "--utility-score-key",
-        choices=["utility_score", "final_utility_score", "min_utility_score"],
+        choices=[
+            "utility_score",
+            "preservation_score",
+            "final_utility_score",
+            "min_utility_score",
+            "value_score",
+        ],
         default="utility_score",
     )
     parser.add_argument("--utility-threshold", type=float, default=0.0)

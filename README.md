@@ -236,6 +236,59 @@ training script therefore supports risk/utility loss scaling and positive-label
 weights, and `scripts/server/run_sheeprl_dreamer_tuned_e5.sbatch` runs a small
 5-epoch risk/utility-weighted Dreamer variant.
 
+### Full SheepRL DreamerV3 backend with continuous utility labels
+
+The original adapter above is retained as the RSSM-only comparison. The full
+backend in `src/wmagentattack/full_dreamer_v3.py` additionally contains the
+DreamerV3 reward and continue models, a discrete skill actor, critic and EMA
+target critic, latent imagination, lambda returns, two-hot reward/value
+distributions, and offline behavior-cloning regularization.
+
+First create leakage-controlled continuous probability labels. Clean
+solvability is a weak task prior; attack-location and global attack statistics
+come from the training split only. Training rows use leave-one-out context
+statistics, while validation and test never contribute to a prior.
+
+```bash
+PYTHONPATH=src python scripts/22_build_continuous_probability_labels.py \
+  --split-dir data/agentdojo_full_llama31_70b/splits_conditional_preservation_soft \
+  --clean-solvability-json artifacts/clean_multiseed_llama31_70b_solvability.json \
+  --out-dir data/agentdojo_full_llama31_70b/splits_continuous_probability \
+  --global-prior-strength 1 \
+  --clean-prior-strength 2 \
+  --context-max-strength 4 \
+  --observation-strength 1
+```
+
+The utility head is trained against the resulting continuous target in
+`[0, 1]`; `task_success` remains available as the original Bernoulli outcome.
+Reward and continuation are conditioned on both latent state and the current
+skill so that AgentDojo's post-tool-call outcomes are temporally aligned.
+
+```bash
+PYTHONPATH=src python scripts/23_train_full_dreamer_v3.py \
+  --train data/agentdojo_full_llama31_70b/splits_continuous_probability/train_steps.jsonl \
+  --val data/agentdojo_full_llama31_70b/splits_continuous_probability/val_steps.jsonl \
+  --model-out artifacts/full_dreamer_v3_llama31_70b_seed7 \
+  --epochs 30 --seed 7 --device cuda
+
+PYTHONPATH=src python scripts/24_eval_full_dreamer_v3.py \
+  --test data/agentdojo_full_llama31_70b/splits_continuous_probability/test_steps.jsonl \
+  --model artifacts/full_dreamer_v3_llama31_70b_seed7 \
+  --output artifacts/full_dreamer_v3_llama31_70b/seed7_test_metrics.json
+```
+
+The three-seed Slurm array also performs validation/test latent rollout,
+selection-cache construction, and Pareto utility grids:
+
+```bash
+sbatch scripts/server/run_sheeprl_full_dreamer_v3_70b.sbatch
+```
+
+Use `--model-backend dreamer_full` in the replay selector. This backend is a
+roughly 6M-parameter learner; Llama-3.1-70B is only the trajectory generator and
+is not loaded during world-model training.
+
 ## Real AgentDojo attack collection
 
 Small sandbox-only attack batches can be collected with:

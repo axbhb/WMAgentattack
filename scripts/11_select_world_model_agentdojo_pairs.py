@@ -37,6 +37,10 @@ def _load_model(path: Path, backend: str):
         from wmagentattack.dreamer_world_model import SheepRLDreamerWorldModel
 
         return SheepRLDreamerWorldModel.load(path)
+    if backend == "dreamer_full":
+        from wmagentattack.full_dreamer_v3 import FullSheepRLDreamerV3
+
+        return FullSheepRLDreamerV3.load(path)
     raise ValueError(f"Unsupported model backend: {backend}")
 
 
@@ -319,11 +323,12 @@ def main() -> None:
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument(
         "--model-backend",
-        choices=["sklearn", "dreamer"],
+        choices=["sklearn", "dreamer", "dreamer_full"],
         default="sklearn",
         help=(
             "World-model backend. `dreamer` loads the SheepRL DreamerV3-style "
-            "adapter and uses RSSM latent imagination for clean_prefix_rollout."
+            "adapter and uses RSSM latent imagination for clean_prefix_rollout; "
+            "`dreamer_full` loads the actor-critic/reward/continue backend."
         ),
     )
     parser.add_argument("--output", type=Path, required=True)
@@ -387,7 +392,13 @@ def main() -> None:
     )
     parser.add_argument(
         "--utility-score-key",
-        choices=["utility_score", "final_utility_score", "min_utility_score"],
+        choices=[
+            "utility_score",
+            "preservation_score",
+            "final_utility_score",
+            "min_utility_score",
+            "value_score",
+        ],
         default="utility_score",
     )
     parser.add_argument("--utility-threshold", type=float, default=0.0)

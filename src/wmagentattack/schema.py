@@ -43,6 +43,13 @@ class StepRecord(BaseModel):
     base_task_success_rate: float | None = Field(default=None, ge=0.0, le=1.0)
     preservation_trainable: bool = True
     preservation_weight: float = Field(default=1.0, ge=0.0)
+    utility_probability_target: float | None = Field(default=None, ge=0.0, le=1.0)
+    preservation_probability_target: float | None = Field(default=None, ge=0.0, le=1.0)
+    probability_label_alpha: float | None = Field(default=None, gt=0.0)
+    probability_label_beta: float | None = Field(default=None, gt=0.0)
+    probability_label_variance: float | None = Field(default=None, ge=0.0)
+    probability_label_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    probability_label_source: str | None = None
 
     @model_validator(mode="after")
     def selected_skill_is_candidate(self):
