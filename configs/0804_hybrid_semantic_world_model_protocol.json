@@ -1,0 +1,56 @@
+{
+  "protocol_id": "0804_hybrid_semantic_world_model_v1",
+  "run_tag": "aug4-semantic-wm-v3",
+  "stage": 2,
+  "status": "preregistered_before_architecture_audit",
+  "research_question": "Can exact observed semantic-state updates be cleanly composed with learned victim-action and candidate-conditional evidence-delta heads, without enabling completion, utility/value, planning, or attack generation?",
+  "source_dataset": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage1/rebuild_a/semantic_state_v3_dataset.json",
+  "source_dataset_sha256": "099aecb7ab70b5d822f44e9007fb95c1d6ed78569505dbc32621efdd88f82a53",
+  "output_root": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage2",
+  "fixed_budget": {
+    "architecture_candidates": 1,
+    "maximum_learned_head_implementation_repairs": 3,
+    "optimizer_updates": 0,
+    "victim_llm_calls": 0,
+    "attack_generations": 0
+  },
+  "architecture": {
+    "transition": "exact_observed_agentdojo_semantic_transition",
+    "learned_heads": [
+      "victim_action_and_argument_keys",
+      "candidate_conditional_evidence_delta"
+    ],
+    "disabled_heads": [
+      "completion",
+      "reward",
+      "utility",
+      "value",
+      "actor",
+      "critic",
+      "planner"
+    ],
+    "evidence_delta_targets": [
+      "record_added",
+      "goal_term_newly_matched",
+      "conflict_added",
+      "execution_error",
+      "ambiguous_or_unlinked_added"
+    ],
+    "hash_dimension": 64,
+    "hidden_size": 128,
+    "smoke_seed": 8042026
+  },
+  "acceptance_gate": {
+    "expected_episodes": 144,
+    "expected_states": 467,
+    "expected_exact_transitions": 323,
+    "expected_terminal_rows": 144,
+    "maximum_leakage_failures": 0,
+    "require_finite_all_head_gradients": true,
+    "require_zero_illegal_probability_mass": true,
+    "require_no_planning_or_value_heads": true,
+    "require_all_stage2_tests_pass": true
+  },
+  "next_if_go": "Freeze the composition and run the preregistered three-representation, three-seed Markov-sufficiency experiment.",
+  "next_if_no_go": "Do not run Stage 3; preserve the architecture failure and use only a non-semantic implementation repair within budget."
+}
