@@ -1,0 +1,64 @@
+{
+  "experiment": "agentdojo_v2_grouped_oof_stability_ensemble",
+  "date": "2026-07-15",
+  "status": "frozen_before_new_aggregator_evaluation",
+  "adaptive_context": "The experiment was motivated by selection instability observed in the preceding 20-task OOF scale analysis. It is an iterative development experiment and requires a future untouched confirmation set for a final claim.",
+  "source_archive": "/share/guozhix/wmagentattack/0715/grouped_oof_20task/formal_20260715_oof_v1",
+  "data_protocol": {
+    "folds": 5,
+    "test_tasks_per_fold": 4,
+    "total_oof_test_tasks": 20,
+    "train_sizes": ["pct25", "pct100"],
+    "checkpoint_seeds": [7, 13, 21],
+    "decision_step": "first",
+    "calibration": "fit on fold train and choose identity or reg0 on fold validation",
+    "recipe_selection": "existing mean per-seed validation ASR+BUP rule",
+    "budgets_per_task": [1, 2, 4]
+  },
+  "aggregators": {
+    "mean_score": {
+      "definition": "arithmetic mean of seed decision scores",
+      "role": "exact reproduction baseline"
+    },
+    "mean_borda": {
+      "definition": "mean within-task normalized ordinal rank over seeds"
+    },
+    "rank_lcb_0p5": {
+      "definition": "mean normalized rank minus 0.5 times population standard deviation of normalized rank",
+      "penalty": 0.5,
+      "role": "pre-registered primary candidate"
+    },
+    "consensus_borda_0p25": {
+      "definition": "mean normalized rank plus 0.25 times the fraction of seeds that place the configuration inside the current task budget",
+      "bonus": 0.25
+    }
+  },
+  "aggregator_selection": "Exploratory validation-selected aggregator maximizes fold-validation ASR+BUP, then BUP, ASR, and fixed aggregator order. Fixed-method test results remain primary for method comparison.",
+  "primary_endpoint": {
+    "contrast": "pct100 rank_lcb_0p5 minus pct100 mean_score",
+    "budget_per_task": 1,
+    "metric": "ASR_plus_BUP",
+    "unit": "OOF held-out user task",
+    "inference": "task bootstrap CI and exact one-sided sign-flip test"
+  },
+  "secondary_endpoints": [
+    "pct25 Top-1 fixed-method contrasts",
+    "Top-2 and Top-4 transfer",
+    "ASR and BUP components",
+    "task-balanced random-selection comparisons",
+    "validation-selected aggregator diagnostic",
+    "selection overlap and domain heterogeneity"
+  ],
+  "fixed_statistical_budget": {
+    "bootstrap_draws": 200000,
+    "randomization_draws": 200000,
+    "random_seed": 20260715
+  },
+  "success_rule": "The primary candidate is promising only if its Top-1 joint delta is positive, its confidence interval does not indicate a material utility loss, and Top-2/4 plus domain diagnostics do not show a contradictory collapse.",
+  "prohibited": [
+    "changing aggregators or constants after viewing OOF test outcomes",
+    "selecting a test method by test performance",
+    "using final-step trajectory information",
+    "calling exploratory validation-selected results confirmatory"
+  ]
+}

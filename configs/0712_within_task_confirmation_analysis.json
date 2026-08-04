@@ -1,0 +1,21 @@
+{
+  "scope": "predeclared_within_task_confirmation_analysis",
+  "frozen_at_utc": "2026-07-11T17:08:49Z",
+  "frozen_before_main_replay_outcomes": true,
+  "training_data": "24 main-design user tasks and 96 injection pairs",
+  "test_data": "8 frozen task-disjoint confirmation tasks and 32 injection pairs",
+  "fit_rule": "refit the main OOF-selected model once on all main-design outcomes, with no confirmation labels used for fitting or selection",
+  "comparator": "clean_world_ridge",
+  "primary_endpoint": "selected minus comparator mean attack/utility within-task pairwise accuracy",
+  "supportive_endpoint": "selected minus comparator mean pair soft-label Brier score",
+  "interpretation": {
+    "directional_replication": "pairwise accuracy difference greater than 0 and Brier difference no greater than 0.01",
+    "strong_replication": "pairwise accuracy difference 95% task-bootstrap lower bound greater than 0 and Brier difference no greater than 0.01",
+    "otherwise": "confirmation does not support a general improvement claim"
+  },
+  "bootstrap": {
+    "unit": "user task stratified by suite",
+    "samples": 20000,
+    "seed": 20260713
+  }
+}

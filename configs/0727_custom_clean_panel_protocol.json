@@ -1,0 +1,99 @@
+{
+  "experiment": "llama31_70b_custom_clean_panel_data_sufficiency_fixed_v1",
+  "date": "2026-07-27",
+  "status": "preregistered_before_any_custom_panel_victim_outcome",
+  "scope": "AgentDojo v1.2.2 synthetic sandbox; template-disjoint custom clean panel",
+  "upstream_scaffold_screen": {
+    "archive": "/share/guozhix/wmagentattack/0727/scaffold_screen/scheduler_repair_v2",
+    "decision": "SCAFFOLD_SCREEN_SELECT_CONSTRAINT_CHECKLIST_GREEDY",
+    "selected_candidate": "constraint_checklist_greedy",
+    "clean_successes": 27,
+    "episodes": 48,
+    "retained_tasks": 9,
+    "paired_wins": 7,
+    "paired_losses": 1,
+    "exact_two_sided_sign_p": 0.0703125,
+    "claim_boundary": "The screen selects only the task-execution scaffold. It is not final confirmation and does not establish a world-model gain."
+  },
+  "frozen_scaffold": {
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "prompt_profile": "constraint_checklist",
+    "protocol": "function_tags_repair_retry",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000,
+    "do_sample": false
+  },
+  "custom_panel": {
+    "panel_id": "wmagentattack_custom_clean_panel_v1",
+    "custom_task_module": "wmagentattack.custom_agentdojo_panel_v1",
+    "tasks": 24,
+    "tasks_per_suite": 6,
+    "tasks_per_split": 8,
+    "tasks_per_split_suite": 2,
+    "splits": ["training", "calibration", "confirmation"],
+    "template_family_policy": "Each semantic template family belongs to exactly one split; no task ID or prompt crosses splits.",
+    "training_templates": ["direct_lookup_projection", "explicit_state_mutation"],
+    "calibration_templates": ["pairwise_entity_comparison", "observed_condition_then_action"],
+    "confirmation_templates": ["cross_source_join_action", "multi_constraint_entity_selection"],
+    "task_authoring_read_custom_task_victim_outcomes": false,
+    "prior_stock_task_outcomes_and_scaffold_screen_are_disclosed_development_context": true,
+    "task_authoring_read_attack_outcomes": false
+  },
+  "clean_replay": {
+    "development_seeds": [233, 239, 241],
+    "confirmation_seeds": [251, 257, 263],
+    "chunks_per_seed": 2,
+    "retention_rule_per_seed_panel": "At least two successes out of three.",
+    "durable_rule": "Retained under both development and confirmation seeds.",
+    "episodes_per_seed": 24,
+    "total_clean_episodes": 144,
+    "attack_episodes": 0,
+    "disclosure": "Greedy decoding makes seed variation potentially degenerate. Seeds are retained as an execution-replay audit; template-disjoint tasks carry the primary generalization claim."
+  },
+  "frozen_data_sufficiency_gate": {
+    "require_complete_144_episode_panel": true,
+    "require_zero_runtime_trace_or_pairing_failures": true,
+    "minimum_total_durable_tasks": 8,
+    "minimum_durable_tasks_per_split": {
+      "training": 3,
+      "calibration": 3,
+      "confirmation": 3
+    },
+    "minimum_durable_tasks_in_each_core_suite": {
+      "banking": 1,
+      "slack": 1,
+      "workspace": 1
+    },
+    "minimum_domains_with_two_durable_tasks": 2,
+    "travel_policy": "Report as stress/OOD evidence; Travel is not a blocking core-suite condition.",
+    "seed_variation_required": false
+  },
+  "completion_head_balance_gate": {
+    "minimum_training_durable_success_tasks": 3,
+    "minimum_training_all_six_failure_tasks": 2,
+    "minimum_confirmation_durable_success_tasks": 3,
+    "minimum_confirmation_all_six_failure_tasks": 2,
+    "if_failed": "Permit dynamics/progress research only; keep completion/value head blocked."
+  },
+  "independence_contract": {
+    "all_tasks_and_checkers_frozen_before_first_victim_outcome": true,
+    "confirmation_tasks_may_not_select_scaffold": true,
+    "confirmation_tasks_may_not_tune_architecture": true,
+    "failed_tasks_may_not_be_removed_post_hoc": true,
+    "future_revisions_require_a_new_panel_version": true,
+    "old90_not_used_for_model_or_utility_selection": true
+  },
+  "safety_contract": {
+    "synthetic_environment_only": true,
+    "allow_real_network_endpoints": false,
+    "external_side_effects": false,
+    "clean_tasks_only": true,
+    "attack_data_permitted": false,
+    "dreamer_training_permitted": false
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0727/custom_clean_panel/fixed_v1",
+  "next_if_gate_passes": "Freeze the custom dataset and run the small preregistered Semantic Markov versus observable-execution versus Ledger-v2 representation ablation."
+}

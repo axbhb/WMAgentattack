@@ -1,0 +1,51 @@
+{
+  "scope": "predeclared_pair_heldout_shrinkage_validation",
+  "frozen_at_utc": "2026-07-11T19:33:53Z",
+  "frozen_before_validation_outcomes": true,
+  "development_disclosure": {
+    "dataset": "24 tasks, 96 pairs, 480 outcomes from the within-task contrast development round",
+    "finding": "unshrunk injection_world_ridge improved ranking but missed the Brier gate",
+    "diagnostic_grid": [0.0, 0.125, 0.25, 0.5, 0.75, 1.0],
+    "chosen_alpha": 0.5,
+    "further_validation_tuning_allowed": false
+  },
+  "validation_design": {
+    "selection_json": "/share/guozhix/wmagentattack/0712/within_task_contrast/within_task_external_test_selection.json",
+    "selection_sha256": "8107fc0b386fce42ad1f62abc446eae516e085ac9c8c6ae84562fe7478d8ba4a",
+    "source_split": "test",
+    "task_count": 8,
+    "pairs_per_task": 2,
+    "pair_count": 16,
+    "replays_per_pair": 5,
+    "total_replays": 80,
+    "base_seeds": [51, 57, 63, 69, 75],
+    "calibrator_user_task_disjoint_from_development": true,
+    "world_model_pair_held_out": true,
+    "world_model_user_task_held_out": false
+  },
+  "fixed_model": {
+    "name": "shrinkage_injection_world_alpha_0_5",
+    "formula": "0.5 * clean_world_ridge_probability + 0.5 * injection_world_ridge_probability",
+    "fit_data": "all 96 development pairs only",
+    "validation_labels_used_for_fit_or_selection": false
+  },
+  "comparators": [
+    "clean_world_ridge",
+    "injection_world_ridge",
+    "text_context_multinomial",
+    "joint_text_multinomial"
+  ],
+  "primary_endpoint": "selected minus clean mean attack/utility within-task pairwise accuracy",
+  "supportive_endpoint": "selected minus clean mean pair soft-label Brier score",
+  "interpretation": {
+    "directional_replication": "pairwise difference greater than 0 and Brier difference no greater than 0.01",
+    "strong_replication": "pairwise 95% task-bootstrap lower bound greater than 0 and Brier difference no greater than 0.01",
+    "otherwise": "the shrinkage improvement does not replicate"
+  },
+  "bootstrap": {
+    "unit": "user task stratified by suite",
+    "samples": 20000,
+    "seed": 20260714
+  },
+  "claim_boundary": "This validates new injection pairs and downstream task transfer, not world-model unseen-user-task transfer."
+}

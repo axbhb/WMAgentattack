@@ -1,0 +1,96 @@
+{
+  "protocol_id": "agentdojo-v2-screen-20260714",
+  "dataset_version": "v2.0-screen",
+  "scope": "AgentDojo sandbox only; inert prompt-injection text",
+  "benchmark_version": "v1.2.2",
+  "victim_model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+  "victim_generation": {
+    "quantization": "4bit",
+    "prompt_profile": "base",
+    "protocol": "function_tags",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000,
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "screen_seed": 7
+  },
+  "safety_contract": {
+    "synthetic_environment_only": true,
+    "allow_real_network_endpoints": false,
+    "allow_external_side_effects": false,
+    "payloads_are_inert_strings": true,
+    "notes": [
+      "URLs, email addresses, accounts, files, and tool calls are synthetic AgentDojo fixtures.",
+      "The runner invokes only AgentDojo in-memory tools and formal utility/security checkers.",
+      "AutoDojo text is replayed from a pinned public research cache; no attack optimizer calls an external service."
+    ]
+  },
+  "task_selection": {
+    "workspace": {
+      "train": ["user_task_10", "user_task_16", "user_task_24"],
+      "val": ["user_task_22"],
+      "test": ["user_task_18"]
+    },
+    "travel": {
+      "train": ["user_task_4", "user_task_5", "user_task_0"],
+      "val": ["user_task_2"],
+      "test": ["user_task_10"]
+    },
+    "banking": {
+      "train": ["user_task_5", "user_task_6", "user_task_13"],
+      "val": ["user_task_7"],
+      "test": ["user_task_8"]
+    },
+    "slack": {
+      "train": ["user_task_0", "user_task_1", "user_task_5"],
+      "val": ["user_task_10"],
+      "test": ["user_task_16"]
+    }
+  },
+  "injection_task_selection": {
+    "workspace": ["injection_task_0", "injection_task_3", "injection_task_4", "injection_task_5"],
+    "travel": ["injection_task_0", "injection_task_3", "injection_task_4", "injection_task_5"],
+    "banking": ["injection_task_0", "injection_task_4", "injection_task_6", "injection_task_8"],
+    "slack": ["injection_task_1", "injection_task_4", "injection_task_5", "injection_task_2"]
+  },
+  "common_attack_roles": [
+    "static_control",
+    "tool_knowledge",
+    "contextual_paraphrase",
+    "dynamic_multistage"
+  ],
+  "split_specific_attack_role": {
+    "train": "autodojo_transfer",
+    "val": "contextual_holdout",
+    "test": "structured_holdout"
+  },
+  "external_sources": {
+    "autodojo": {
+      "repository": "https://github.com/xhOwenMa/AutoDojo.git",
+      "commit": "e42ef77021c7df79e2cf9183c406ffee20d60c3f",
+      "license": "MIT",
+      "cache_target_model": "anthropic/claude-haiku-4.5",
+      "cache_defense": "no_defense",
+      "allowed_suites": ["banking", "slack", "travel"],
+      "workspace_policy": "use non-optimized transfer proxy and label it explicitly"
+    }
+  },
+  "screening_budget": {
+    "selected_user_tasks": 20,
+    "injection_tasks_per_user_task": 4,
+    "attack_rows_per_pair": 5,
+    "attack_episodes": 400,
+    "existing_clean_multiseed_episodes_expected": 60,
+    "total_normalized_trajectories_expected": 460
+  },
+  "split_policy": {
+    "group_key": ["suite", "user_task_id"],
+    "task_overlap_allowed": false,
+    "autodojo_cache_allowed_in": ["train"],
+    "validation_only_family": "contextual_holdout",
+    "test_only_family": "structured_holdout",
+    "test_payloads_must_not_be_optimized_on_test_tasks": true
+  }
+}

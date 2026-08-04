@@ -1,0 +1,206 @@
+{
+  "protocol_id": "0726_goal_progress_v2_gold_fixed_v1",
+  "status": "preregistered_before_execution",
+  "schema_version": "wmagentattack.goal_progress_gold.v1",
+  "compiler_id": "manual_schema_grounded_v2",
+  "data_policy": {
+    "trusted_goal_read": true,
+    "tool_schema_read": true,
+    "current_runtime_observations_read": true,
+    "current_exact_state_facts_read_by_environment_progress": true,
+    "expert_trajectory_read": false,
+    "future_calls_read": false,
+    "outcome_labels_read": false,
+    "victim_model_calls": 0,
+    "attacks": 0,
+    "dreamer": false
+  },
+  "cases": [
+    {
+      "case_id": "same_entity_supported",
+      "trusted_goal": "Find one restaurant rated at least 4.5, priced below 200, with a known address.",
+      "tool_schemas": [
+        {"name": "get_rating_reviews_for_restaurants"},
+        {"name": "get_price_for_restaurants"},
+        {"name": "get_restaurants_address"}
+      ],
+      "atoms": [
+        {"atom_id": "rating", "description": "rating is at least 4.5", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_PREDICATE", "entity_type": "restaurant", "attribute_name": "rating", "operator": "GE", "target_value": 4.5},
+        {"atom_id": "price", "description": "price is below 200", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_PREDICATE", "entity_type": "restaurant", "attribute_name": "price_per_person", "operator": "LT", "target_value": 200},
+        {"atom_id": "address", "description": "address is known", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_KNOWN", "entity_type": "restaurant", "attribute_name": "address"},
+        {"atom_id": "same", "description": "all constraints refer to one entity", "progress_type": "KNOWLEDGE", "kind": "SAME_ENTITY", "member_atom_ids": ["rating", "price", "address"]}
+      ],
+      "ledger_steps": [
+        {"tool": "get_rating_reviews_for_restaurants", "arguments": {"restaurant_names": ["R1"]}, "runtime_output": {"R1": "Rating: 4.7\nReviews: Great"}},
+        {"tool": "get_price_for_restaurants", "arguments": {"restaurant_names": ["R1"]}, "runtime_output": {"R1": 180.0}},
+        {"tool": "get_restaurants_address", "arguments": {"restaurant_names": ["R1"]}, "runtime_output": {"R1": "1 Main Street"}}
+      ],
+      "manual_records": [],
+      "environment_facts": [],
+      "completion_observation": null,
+      "expected_statuses": {"rating": "SUPPORTED", "price": "SUPPORTED", "address": "SUPPORTED", "same": "SUPPORTED"},
+      "expected_coverage": {"KNOWLEDGE": 1.0, "ENVIRONMENT": 0.0, "COMPLETION": 0.0},
+      "expected_required_coverage": 1.0,
+      "expected_completion_ready": false
+    },
+    {
+      "case_id": "split_entity_contradicted",
+      "trusted_goal": "Find one restaurant rated at least 4.5 and priced below 200.",
+      "tool_schemas": [{"name": "rating"}, {"name": "price"}],
+      "atoms": [
+        {"atom_id": "rating", "description": "rating is at least 4.5", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_PREDICATE", "entity_type": "restaurant", "attribute_name": "rating", "operator": "GE", "target_value": 4.5},
+        {"atom_id": "price", "description": "price is below 200", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_PREDICATE", "entity_type": "restaurant", "attribute_name": "price_per_person", "operator": "LT", "target_value": 200},
+        {"atom_id": "same", "description": "constraints refer to one entity", "progress_type": "KNOWLEDGE", "kind": "SAME_ENTITY", "member_atom_ids": ["rating", "price"]}
+      ],
+      "ledger_steps": [
+        {"tool": "get_rating_reviews_for_restaurants", "arguments": {"restaurant_names": ["R1"]}, "runtime_output": {"R1": "Rating: 4.7\nReviews: Great"}},
+        {"tool": "get_price_for_restaurants", "arguments": {"restaurant_names": ["R2"]}, "runtime_output": {"R2": 180.0}}
+      ],
+      "manual_records": [],
+      "environment_facts": [],
+      "completion_observation": null,
+      "expected_statuses": {"rating": "SUPPORTED", "price": "SUPPORTED", "same": "CONTRADICTED"},
+      "expected_coverage": {"KNOWLEDGE": 0.6666666666666666, "ENVIRONMENT": 0.0, "COMPLETION": 0.0},
+      "expected_required_coverage": 0.6666666666666666,
+      "expected_completion_ready": false
+    },
+    {
+      "case_id": "ambiguous_item",
+      "trusted_goal": "Find a restaurant with a known address.",
+      "tool_schemas": [{"name": "get_restaurants_address"}],
+      "atoms": [
+        {"atom_id": "address", "description": "address is known", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_KNOWN", "entity_type": "restaurant", "attribute_name": "address"}
+      ],
+      "ledger_steps": [],
+      "manual_records": [
+        {"entity_type": "restaurant", "candidate_entity_keys": [{"name": "R1"}, {"name": "R2"}], "attributes": [{"name": "address", "value": "1 Main Street", "kind": "SINGLE_VALUED"}]}
+      ],
+      "environment_facts": [],
+      "completion_observation": null,
+      "expected_statuses": {"address": "AMBIGUOUS"},
+      "expected_coverage": {"KNOWLEDGE": 0.0, "ENVIRONMENT": 0.0, "COMPLETION": 0.0},
+      "expected_required_coverage": 0.0,
+      "expected_completion_ready": false
+    },
+    {
+      "case_id": "unlinked_item",
+      "trusted_goal": "Find a restaurant with a known address.",
+      "tool_schemas": [{"name": "get_restaurants_address"}],
+      "atoms": [
+        {"atom_id": "address", "description": "address is known", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_KNOWN", "entity_type": "restaurant", "attribute_name": "address"}
+      ],
+      "ledger_steps": [],
+      "manual_records": [
+        {"entity_type": "restaurant", "candidate_entity_keys": [], "attributes": [{"name": "address", "value": "1 Main Street", "kind": "SINGLE_VALUED"}]}
+      ],
+      "environment_facts": [],
+      "completion_observation": null,
+      "expected_statuses": {"address": "PARTIALLY_SUPPORTED"},
+      "expected_coverage": {"KNOWLEDGE": 0.0, "ENVIRONMENT": 0.0, "COMPLETION": 0.0},
+      "expected_required_coverage": 0.0,
+      "expected_completion_ready": false
+    },
+    {
+      "case_id": "no_observation",
+      "trusted_goal": "Find a restaurant with a known address.",
+      "tool_schemas": [{"name": "get_restaurants_address"}],
+      "atoms": [
+        {"atom_id": "address", "description": "address is known", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_KNOWN", "entity_type": "restaurant", "attribute_name": "address"}
+      ],
+      "ledger_steps": [],
+      "manual_records": [],
+      "environment_facts": [],
+      "completion_observation": null,
+      "expected_statuses": {"address": "UNSUPPORTED"},
+      "expected_coverage": {"KNOWLEDGE": 0.0, "ENVIRONMENT": 0.0, "COMPLETION": 0.0},
+      "expected_required_coverage": 0.0,
+      "expected_completion_ready": false
+    },
+    {
+      "case_id": "incompatible_value",
+      "trusted_goal": "Find a restaurant priced below 200.",
+      "tool_schemas": [{"name": "get_price_for_restaurants"}],
+      "atoms": [
+        {"atom_id": "price", "description": "price is below 200", "progress_type": "KNOWLEDGE", "kind": "ATTRIBUTE_PREDICATE", "entity_type": "restaurant", "attribute_name": "price_per_person", "operator": "LT", "target_value": 200}
+      ],
+      "ledger_steps": [
+        {"tool": "get_price_for_restaurants", "arguments": {"restaurant_names": ["R1"]}, "runtime_output": {"R1": 250.0}}
+      ],
+      "manual_records": [],
+      "environment_facts": [],
+      "completion_observation": null,
+      "expected_statuses": {"price": "CONTRADICTED"},
+      "expected_coverage": {"KNOWLEDGE": 0.0, "ENVIRONMENT": 0.0, "COMPLETION": 0.0},
+      "expected_required_coverage": 0.0,
+      "expected_completion_ready": false
+    },
+    {
+      "case_id": "environment_mutation",
+      "trusted_goal": "Reserve Hotel A.",
+      "tool_schemas": [{"name": "reserve_hotel"}],
+      "atoms": [
+        {"atom_id": "reservation", "description": "reservation is confirmed", "progress_type": "ENVIRONMENT", "kind": "ATTRIBUTE_PREDICATE", "entity_type": "hotel_reservation", "entity_key": {"hotel": "Hotel A"}, "attribute_name": "status", "operator": "EQ", "target_value": "confirmed"}
+      ],
+      "ledger_steps": [],
+      "manual_records": [],
+      "environment_facts": [
+        {"entity_type": "hotel_reservation", "entity_key": {"hotel": "Hotel A"}, "attribute_name": "status", "value": "confirmed", "context": {"start_day": "2026-08-01"}, "source_call_index": 2}
+      ],
+      "completion_observation": null,
+      "expected_statuses": {"reservation": "SUPPORTED"},
+      "expected_coverage": {"KNOWLEDGE": 0.0, "ENVIRONMENT": 1.0, "COMPLETION": 0.0},
+      "expected_required_coverage": 1.0,
+      "expected_completion_ready": false
+    },
+    {
+      "case_id": "completion_stopped",
+      "trusted_goal": "Tell me the selected restaurant name.",
+      "tool_schemas": [],
+      "atoms": [
+        {"atom_id": "answer_name", "description": "answer contains selected restaurant", "progress_type": "COMPLETION", "kind": "COMPLETION_FIELD", "attribute_name": "selected_restaurant", "operator": "KNOWN"}
+      ],
+      "ledger_steps": [],
+      "manual_records": [],
+      "environment_facts": [],
+      "completion_observation": {"stop_decision_observed": true, "final_answer_present": true, "answer_fields": {"selected_restaurant": "R1"}},
+      "expected_statuses": {"answer_name": "SUPPORTED"},
+      "expected_coverage": {"KNOWLEDGE": 0.0, "ENVIRONMENT": 0.0, "COMPLETION": 1.0},
+      "expected_required_coverage": 1.0,
+      "expected_completion_ready": true
+    },
+    {
+      "case_id": "completion_not_stopped",
+      "trusted_goal": "Tell me the selected restaurant name.",
+      "tool_schemas": [],
+      "atoms": [
+        {"atom_id": "answer_name", "description": "answer contains selected restaurant", "progress_type": "COMPLETION", "kind": "COMPLETION_FIELD", "attribute_name": "selected_restaurant", "operator": "KNOWN"}
+      ],
+      "ledger_steps": [],
+      "manual_records": [],
+      "environment_facts": [],
+      "completion_observation": {"stop_decision_observed": false, "final_answer_present": true, "answer_fields": {"selected_restaurant": "R1"}},
+      "expected_statuses": {"answer_name": "SUPPORTED"},
+      "expected_coverage": {"KNOWLEDGE": 0.0, "ENVIRONMENT": 0.0, "COMPLETION": 1.0},
+      "expected_required_coverage": 1.0,
+      "expected_completion_ready": false
+    }
+  ],
+  "frozen_gates": {
+    "all_five_atom_statuses_exercised": true,
+    "three_progress_types_exercised": true,
+    "same_entity_relation_exact": true,
+    "ambiguous_and_unlinked_distinct": true,
+    "gold_statuses_exact": true,
+    "gold_coverage_exact": true,
+    "completion_readiness_exact": true,
+    "deterministic_plan_and_replay": true,
+    "probabilities_normalized": true,
+    "environment_facts_privileged_only": true,
+    "ledger_records_victim_observed_only": true,
+    "future_or_outcome_fields_zero": true,
+    "tests_pass": true
+  },
+  "pass_decision": "GOAL_PROGRESS_V2_GOLD_GATE_PASS",
+  "failure_decision": "GOAL_PROGRESS_V2_GOLD_GATE_FAIL",
+  "planned_archive": "/share/guozhix/wmagentattack/0726/goal_progress_v2/fixed_v1"
+}

@@ -1,0 +1,59 @@
+{
+  "experiment": "agentdojo_v2_grouped_oof_headwise_uncertainty_ensemble",
+  "date": "2026-07-15",
+  "status": "frozen_before_headwise_aggregator_evaluation",
+  "adaptive_context": "This exploratory round was designed after the frozen rank-LCB experiment showed that global disagreement penalties removed rare high-value Slack candidates. It must not be presented as an independent confirmation.",
+  "source_archive": "/share/guozhix/wmagentattack/0715/grouped_oof_20task/formal_20260715_oof_v1",
+  "shared_protocol": {
+    "folds": 5,
+    "total_oof_test_tasks": 20,
+    "train_sizes": ["pct25", "pct100"],
+    "checkpoint_seeds": [7, 13, 21],
+    "decision_step": "first",
+    "calibration": "fold-train fit and fold-validation identity/reg0 selection",
+    "recipe_selection": "existing mean per-seed validation ASR+BUP rule",
+    "budgets_per_task": [1, 2, 4]
+  },
+  "aggregators": {
+    "mean_score": {
+      "definition": "arithmetic mean of each prediction head over seeds",
+      "role": "exact reproduction baseline"
+    },
+    "risk_ucb_0p5": {
+      "definition": "mean calibrated risk plus 0.5 population standard deviations; utility and preservation remain seed means",
+      "role": "pre-registered primary candidate"
+    },
+    "utility_lcb_0p5": {
+      "definition": "mean utility and preservation minus 0.5 population standard deviations; risk remains the seed mean"
+    },
+    "asymmetric_ucb_lcb_0p5": {
+      "definition": "risk UCB with coefficient 0.5 plus utility and preservation LCB with coefficient 0.5"
+    }
+  },
+  "score_clipping": false,
+  "primary_endpoint": {
+    "contrast": "pct100 risk_ucb_0p5 minus pct100 mean_score",
+    "budget_per_task": 1,
+    "metric": "ASR_plus_BUP",
+    "unit": "OOF held-out user task",
+    "inference": "task bootstrap CI and exact one-sided sign-flip test"
+  },
+  "secondary_endpoints": [
+    "BUP component and utility-loss check",
+    "Top-2 and Top-4 transfer",
+    "pct25 behavior",
+    "domain heterogeneity",
+    "validation-selected headwise aggregator diagnostic"
+  ],
+  "fixed_statistical_budget": {
+    "bootstrap_draws": 200000,
+    "randomization_draws": 200000,
+    "random_seed": 20260715
+  },
+  "prohibited": [
+    "changing the 0.5 coefficient after viewing test outcomes",
+    "test-selected aggregator choice",
+    "using final-step information",
+    "calling this adaptive round independently confirmed"
+  ]
+}

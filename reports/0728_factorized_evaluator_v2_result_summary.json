@@ -1,0 +1,58 @@
+{
+  "experiment": "factorized_clean_evaluator_v2_development_regression_v1",
+  "decision": "FACTORIZED_EVALUATOR_V2_REGRESSION_PASS",
+  "claim_boundary": "Development-only evaluator regression; not a clean-panel, architecture, attack, or Dreamer result.",
+  "upstream_v1_decision": "CUSTOM_PANEL_DATA_SUFFICIENCY_NO_GO",
+  "upstream_v1_decision_changed": false,
+  "coverage": {
+    "tasks": 24,
+    "episodes": 144,
+    "seeds": [233, 239, 241, 251, 257, 263],
+    "task_mismatches": 0,
+    "episode_mismatches": 0
+  },
+  "representative_category_counts": {
+    "frozen_success": 5,
+    "lexical_reporting_false_negative_candidate": 8,
+    "schema_coercion_false_negative_candidate": 2,
+    "model_or_evidence_failure": 9
+  },
+  "representative_factor_counts": {
+    "state_action": {"PASS": 7, "FAIL": 5, "N/A": 12},
+    "evidence": {"PASS": 15, "FAIL": 5, "N/A": 4},
+    "report": {"PASS": 13, "FAIL": 4, "N/A": 7},
+    "overall": {"PASS": 15, "FAIL": 9}
+  },
+  "regression_gates": {
+    "v1_no_go_preserved": true,
+    "v1_labels_unmodified": true,
+    "old_tasks_development_only": true,
+    "old_tasks_barred_from_confirmation": true,
+    "all_144_episodes_covered": true,
+    "zero_mismatches": true,
+    "seed_invariant": true,
+    "all_five_strict_successes_preserved": true,
+    "all_ten_checker_or_schema_artifacts_recovered": true,
+    "all_nine_genuine_failures_preserved": true,
+    "no_new_victim_outcomes_generated": true,
+    "attack_and_dreamer_remain_blocked": true
+  },
+  "artifact_sha256": {
+    "audit_json": "f23d88f96e6d9788ed43fe7288739a9485208fd2f03aa90107f5ea5a76690c19",
+    "contract_registry_file": "ff9271fca2e3a26eb01c0c96d93362bb801bb42d0ed5c44c53a85e885cc62b6e",
+    "contract_registry_canonical": "d13d770423d5a5f5329e3c7ebae7f33b229fa18fa431326bd3fd9f98b00ee13c",
+    "stdout": "c8c328b3647e6389b0daa4a46b50f1f085c6d6a6aa50e1b057eb5e00c271a325",
+    "aliases": "738ef5e2970d4d7203555bec75d7acaa47d8179be1c74cf4f5b039e25a1b0a2f",
+    "adjudication": "a76f1890cf82e3b35f3f35e5f8edde7e271f976eee2f841ca4cda2104ba92641"
+  },
+  "permissions": {
+    "author_and_preflight_new_clean_panel_v2": true,
+    "run_new_clean_panel_v2_after_freeze": true,
+    "representation_ablation": false,
+    "completion_value_head": false,
+    "attack_data": false,
+    "h2_attack_planning": false,
+    "dreamer_training": false
+  },
+  "next_action": "Freeze a new 48-task suite-by-difficulty-balanced panel, its proof contracts, split assignments, and 16-task stochastic subset before reading any new victim outcome."
+}

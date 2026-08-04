@@ -1,0 +1,61 @@
+{
+  "experiment": "agentdojo_v2_field_aware_e5_ranking",
+  "date": "2026-07-16",
+  "status": "fixed_budget_complete_no_go",
+  "adaptive_context": "This sequential experiment was designed after the completed top-heavy OOF round and a label-blind tokenizer audit of the model inputs. It is exploratory rather than a pristine external confirmation.",
+  "audit_evidence": {
+    "attack_first_step_trajectories": 2000,
+    "full_text_over_512_fraction": 1.0,
+    "untrusted_marker_at_or_after_512_fraction": 0.1,
+    "attack_marker_at_or_after_512_fraction": 0.902,
+    "target_marker_at_or_after_512_fraction": 1.0,
+    "travel_untrusted_marker_at_or_after_512_fraction": 0.4
+  },
+  "fixed_method": {
+    "representation": "concatenate normalized E5(full original first-step text) and E5(critical field view), then concatenate train-only structured fields",
+    "critical_field_order": [
+      "target skill",
+      "target skill description",
+      "attack action",
+      "domain",
+      "untrusted content",
+      "current observation",
+      "user goal",
+      "trusted instruction"
+    ],
+    "critical_view_reason": "Target and attack metadata are placed before long observations so they survive E5's 512-token truncation.",
+    "ranker": "existing largest-gap pairwise ridge",
+    "alpha": 10.0,
+    "fit_scope": "outer-fold train plus validation",
+    "test_retuning": false,
+    "leakage_boundary": "All critical fields are available in the first decision state before the attacked trajectory outcome. No later tool result or success label is encoded."
+  },
+  "fixed_research_budget": {
+    "representations": 1,
+    "outer_folds": 5,
+    "total_fold_runs": 5,
+    "hyperparameter_search": 0,
+    "dreamer_training_runs": 0
+  },
+  "comparisons": [
+    "frozen E5 full-text plus structured largest-gap baseline",
+    "formal frozen Dreamer OOF pct100 Top-1"
+  ],
+  "results": {
+    "archive": "/share/guozhix/wmagentattack/0716/field_aware_e5/field_aware_e5_20260716_v1",
+    "truncation_audit": "/share/guozhix/wmagentattack/0716/field_aware_e5/field_aware_e5_20260716_v1/truncation_audit.json",
+    "top1": {"ASR": 0.32, "BUP": 0.46, "ASR_plus_BUP": 0.78},
+    "mean_task_spearman": 0.19582387996903874,
+    "baseline_mean_task_spearman": 0.189983399653828,
+    "top1_selection_changes_vs_e5": 0,
+    "decision": "NO_GO_REPAIR_LOADER_BUT_DO_NOT_SCALE_METHOD"
+  },
+  "success_gate": {
+    "minimum_joint_delta_vs_e5": 0.05,
+    "minimum_BUP_delta_vs_e5": 0.0,
+    "joint_bootstrap_ci95_must_exclude_zero_vs_dreamer": true,
+    "joint_exact_sign_flip_p_max_vs_dreamer": 0.05,
+    "minimum_domain_joint_delta_vs_dreamer": -0.1
+  },
+  "claim_boundary": "The representation is fixed before all field-aware fold tests. Results remain sequentially exploratory because the truncation audit followed prior OOF inspection."
+}

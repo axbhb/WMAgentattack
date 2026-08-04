@@ -1,0 +1,80 @@
+{
+  "experiment": "llama31_70b_custom_clean_panel_data_sufficiency_fixed_v1",
+  "archive": "/share/guozhix/wmagentattack/0727/custom_clean_panel/fixed_v1",
+  "jobs": {
+    "array": 4747,
+    "summary": 4748,
+    "array_spec": "0-11%3"
+  },
+  "execution_integrity": {
+    "expected_clean_episodes": 144,
+    "completed_with_trace": 144,
+    "complete_chunks": 12,
+    "failed_rows": 0,
+    "missing_pairs": 0,
+    "trace_failures": 0,
+    "source_errors": 0,
+    "oom_traceback_cuda_or_runtime_errors": 0,
+    "attack_episodes": 0,
+    "model_training_runs": 0
+  },
+  "frozen_result": {
+    "clean_successes": 30,
+    "clean_failures": 114,
+    "failures_without_tool_call": 0,
+    "durable_tasks": 5,
+    "all_six_failure_tasks": 19,
+    "seed_variant_tasks": 0,
+    "durable_by_split": {
+      "training": 3,
+      "calibration": 2,
+      "confirmation": 0
+    },
+    "durable_by_suite": {
+      "banking": 1,
+      "slack": 2,
+      "travel": 2,
+      "workspace": 0
+    },
+    "data_sufficiency_gate_passed": false,
+    "completion_head_balance_gate_passed": false,
+    "decision": "CUSTOM_PANEL_DATA_SUFFICIENCY_NO_GO"
+  },
+  "posthoc_checker_sensitivity": {
+    "binding_decision_unchanged": true,
+    "episode_categories": {
+      "frozen_success": 30,
+      "lexical_reporting_false_negative_candidate": 48,
+      "schema_coercion_false_negative_candidate": 12,
+      "model_or_evidence_failure": 54
+    },
+    "behavioral_durable_tasks": 15,
+    "behavioral_durable_by_split": {
+      "training": 8,
+      "calibration": 5,
+      "confirmation": 2
+    },
+    "behavioral_all_six_failure_by_split": {
+      "training": 0,
+      "calibration": 3,
+      "confirmation": 6
+    },
+    "data_sufficiency_gate_passed": false,
+    "completion_head_balance_gate_passed": false,
+    "conclusion": "FROZEN_NO_GO_ROBUST_TO_SCHEMA_AND_LEXICAL_SENSITIVITY"
+  },
+  "permissions": {
+    "dynamics_progress_ablation": false,
+    "completion_value_head": false,
+    "attack_data": false,
+    "dreamer_training": false
+  },
+  "artifact_sha256": {
+    "manifest": "23c98be89bca436a7b4bd58105d9293ef665af67df12772da278c81727a31a59",
+    "frozen_protocol": "5fd8ed104aebac88c45925e5c749fed2111ff193ad992c7f9c87632759bfa063",
+    "implementation_audit": "21c658c73e1db0b1bd1e373d73597499fc68ccf604e7c5c82143ce8249ea8798",
+    "frozen_summary": "ec89e9c6160a50c9d87cba03f3e7e327b7e6e467b5df93a7c509f3d1f909e693",
+    "counterevidence_audit": "bba582ea5e6f0ecdca62ee0ab6efce5c04b8b746091b45399249becdef3bc866"
+  },
+  "next_action": "Preserve v1 as counterevidence. Before any new victim-model collection, preregister a v2 evaluator and panel that separate state/action correctness, evidence sufficiency, and semantic reporting, then reserve new template-disjoint tasks for confirmation."
+}

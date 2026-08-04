@@ -1,0 +1,43 @@
+{
+  "protocol_id": "0726_structured_runtime_ledger_v2_fixed_v1",
+  "status": "preregistered_before_execution",
+  "benchmark_version": "v1.2.2",
+  "suite": "travel",
+  "registry": "configs/0726_travel_tool_output_adapter_registry_v2.json",
+  "expected_tool_count": 28,
+  "data_policy": {
+    "runtime_structured_output_only": true,
+    "outcome_labels_read": false,
+    "expert_calls_allowed_for_fixture_structure_only": true,
+    "old_90_utility_comparison": false,
+    "victim_model_calls": 0,
+    "attacks": 0,
+    "dreamer": false
+  },
+  "causal_contract": {
+    "PROPOSED": "no ledger update",
+    "EXECUTED_SUCCESS": "adapter records from actual runtime output",
+    "EXECUTED_ERROR": "error record only",
+    "TERMINAL_UNEXECUTED": "no ledger update",
+    "CENSORED": "no ledger update",
+    "signature_mismatch": "fail closed"
+  },
+  "frozen_gates": {
+    "registry_covers_all_suite_tools": true,
+    "record_boundaries_exact": true,
+    "deterministic_replay": true,
+    "same_record_replay_idempotent": true,
+    "no_future_or_outcome_fields": true,
+    "zero_terminal_unexecuted_updates": true,
+    "zero_unlinked_derived_conflicts": true,
+    "different_entities_do_not_conflict": true,
+    "same_entity_attribute_context_incompatible_values_conflict": true,
+    "set_valued_members_do_not_conflict": true,
+    "all_records_victim_observed": true,
+    "exact_state_fingerprint_replay": true,
+    "tests_pass": true
+  },
+  "pass_decision": "STRUCTURED_LEDGER_V2_READY_FOR_LABEL_BLIND_FIXTURES",
+  "failure_decision": "STRUCTURED_LEDGER_V2_NOT_READY",
+  "planned_archive": "/share/guozhix/wmagentattack/0726/structured_ledger_v2/fixed_v1"
+}

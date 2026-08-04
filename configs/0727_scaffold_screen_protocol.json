@@ -1,0 +1,114 @@
+{
+  "experiment": "llama31_70b_agentdojo_clean_scaffold_screen_fixed_v1",
+  "date": "2026-07-27",
+  "status": "preregistered_before_any_0727_outcome",
+  "scope": "AgentDojo v1.2.2 synthetic sandbox; clean-only scaffold screening",
+  "purpose": "Select and freeze one victim execution scaffold before authoring the independent custom-task clean panel.",
+  "inherited_decision": {
+    "job4722": "EVIDENCE_LEDGER_NO_INCREMENT_CLEAN_GATE_BLOCKED",
+    "accepted_model": "none_accepted",
+    "old90_permitted_use": [
+      "engineering fixtures",
+      "development diagnostics",
+      "extraction and state regression tests"
+    ],
+    "old90_forbidden_use": [
+      "utility or completion model selection",
+      "ledger-v2 representation claims",
+      "attack data construction",
+      "Dreamer training"
+    ]
+  },
+  "independence_contract": {
+    "stock_agentdojo_tasks_are_screening_only": true,
+    "screening_tasks_may_not_enter_custom_panel_confirmation": true,
+    "screening_outcomes_may_select_only_the_scaffold": true,
+    "final_custom_task_panel_must_be_template_disjoint": true,
+    "final_clean_development_and_confirmation_seeds_must_be_disjoint": true,
+    "no_final_confirmation_claim_from_this_experiment": true
+  },
+  "model": {
+    "name": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "protocol": "function_tags_repair_retry",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000
+  },
+  "screening": {
+    "manifest_id": "0727_scaffold_screen_stock_tasks_fixed_v1",
+    "task_selection": "Four SHA-256 ordered tasks per suite outside the historical 20-task set; outcome labels are not read.",
+    "suites": ["banking", "slack", "travel", "workspace"],
+    "tasks_per_suite": 4,
+    "tasks": 16,
+    "seeds": [151, 157, 163],
+    "chunks_per_seed": 2,
+    "retention_rule": "At least two clean successes out of three seeds.",
+    "candidates": [
+      {
+        "id": "base_sampled",
+        "prompt_profile": "base",
+        "do_sample": true,
+        "temperature": 0.7,
+        "top_p": 0.95
+      },
+      {
+        "id": "base_greedy",
+        "prompt_profile": "base",
+        "do_sample": false
+      },
+      {
+        "id": "constraint_checklist_sampled",
+        "prompt_profile": "constraint_checklist",
+        "do_sample": true,
+        "temperature": 0.7,
+        "top_p": 0.95
+      },
+      {
+        "id": "constraint_checklist_greedy",
+        "prompt_profile": "constraint_checklist",
+        "do_sample": false
+      }
+    ],
+    "baseline_candidate": "base_sampled",
+    "candidate_order_for_exact_ties": [
+      "constraint_checklist_sampled",
+      "constraint_checklist_greedy",
+      "base_greedy"
+    ],
+    "budget": {
+      "candidate_count": 4,
+      "clean_episodes_per_candidate": 48,
+      "total_clean_episodes": 192,
+      "attack_episodes": 0,
+      "model_training_runs": 0
+    }
+  },
+  "frozen_selection_gate": {
+    "require_complete_results": true,
+    "require_zero_runtime_or_trace_failures": true,
+    "minimum_retained_task_gain_over_baseline": 2,
+    "minimum_clean_success_gain_over_baseline": 3,
+    "require_no_domain_retained_task_regression": true,
+    "all_material_gain_conditions_required": true,
+    "tie_break": [
+      "maximum retained tasks",
+      "maximum clean successes",
+      "minimum failed episodes without a tool call",
+      "candidate_order_for_exact_ties"
+    ],
+    "if_no_candidate_passes": "Retain base_sampled and record no material scaffold improvement.",
+    "paired_diagnostic_only": "Report wins, losses, ties, and exact two-sided sign test; do not use p-value as an additional post-hoc gate."
+  },
+  "safety_contract": {
+    "synthetic_environment_only": true,
+    "allow_real_network_endpoints": false,
+    "external_side_effects": false,
+    "clean_tasks_only": true,
+    "attack_data_permitted": false,
+    "dreamer_training_permitted": false
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0727/scaffold_screen/fixed_v1",
+  "next_step": "Freeze the selected scaffold, then author template-disjoint custom AgentDojo tasks and preregister their train/calibration/confirmation split before collecting clean data."
+}

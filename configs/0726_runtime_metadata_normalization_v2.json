@@ -1,0 +1,39 @@
+{
+  "schema_version": "wmagentattack.runtime_metadata_normalization.v2",
+  "status": "frozen_after_v1_nondeterminism_diagnosis_before_repair_execution",
+  "benchmark_version": "v1.2.2",
+  "suite": "travel",
+  "rules": {
+    "create_calendar_event": {
+      "volatile_fields": ["timestamp"],
+      "origin": "The tool calls Inbox.send_email, whose implementation assigns datetime.datetime.now().",
+      "normalization": "episode-local call-index token",
+      "raw_exact_state_retained": true
+    },
+    "send_email": {
+      "volatile_fields": ["timestamp"],
+      "origin": "Inbox.send_email assigns datetime.datetime.now() to the returned and stored Email object.",
+      "normalization": "episode-local call-index token",
+      "raw_exact_state_retained": true
+    }
+  },
+  "source_evidence": [
+    {
+      "path": "external/agentdojo/src/agentdojo/default_suites/v1/tools/email_client.py",
+      "symbol": "Inbox.send_email",
+      "required_marker": "timestamp=datetime.datetime.now()"
+    },
+    {
+      "path": "external/agentdojo/src/agentdojo/default_suites/v1/tools/calendar_client.py",
+      "symbol": "create_calendar_event",
+      "required_marker": "inbox.send_email("
+    }
+  ],
+  "hard_boundaries": {
+    "raw_runtime_output_is_never_overwritten": true,
+    "raw_exact_state_blob_is_never_overwritten": true,
+    "normalization_is_only_for_cross_replay_semantic_fingerprints": true,
+    "user_supplied_start_end_and_task_dates_are_not_normalized": true,
+    "unregistered_tools_and_fields_fail_to_normalize": true
+  }
+}

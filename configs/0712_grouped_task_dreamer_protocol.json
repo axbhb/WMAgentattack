@@ -1,0 +1,46 @@
+{
+  "scope": "predeclared_grouped_user_task_dreamer_retraining",
+  "frozen_at_utc": "2026-07-11T20:02:26Z",
+  "motivation": "The legacy trajectory split placed every test user task in training; this round isolates complete (suite, user_task_id) groups.",
+  "data": {
+    "raw_split_dir": "/share/guozhix/wmagentattack/0712/grouped_user_task_split_raw",
+    "continuous_probability_dir": "/share/guozhix/wmagentattack/0712/grouped_user_task_split_continuous_probability",
+    "train_user_tasks": 68,
+    "validation_user_tasks": 14,
+    "test_user_tasks": 15,
+    "task_overlap_train_validation_test": 0,
+    "hashes": {
+      "raw_summary": "b027f13f130734e2d1cf76408bb16e327ff94031b2eccb377f6e03f8cd0f87c7",
+      "probability_summary": "6521e2692d3c33d202488281b6a14858e9f7cc5d1152a3aa06b66c2bd93d5876",
+      "train_steps": "e994793672512680f370a452b814f23bb0a72ad7bc2d80c959cb44953a53b7a1",
+      "validation_steps": "ef4ee8add6b8a2d5a073ab9b45a14ddb1e04da8919c6a00b44d96ea908f6d3d5",
+      "test_steps": "ed8f9638c343694249fa17c557dc68841d4f937da9e8428d18feffa61bbda630"
+    }
+  },
+  "model": {
+    "backend": "sheeprl_full_dreamer_v3_offline",
+    "seeds": [7, 13, 21],
+    "epochs": 30,
+    "batch_size": 16,
+    "obs_dim": 768,
+    "dense_units": 256,
+    "recurrent_state_size": 256,
+    "stochastic_size": 32,
+    "discrete_size": 32,
+    "imagination_horizon": 5,
+    "all_other_hyperparameters": "same as the 0710 continuous-probability full Dreamer baseline"
+  },
+  "fixed_evaluation": {
+    "splits": ["validation", "test"],
+    "score_modes": ["clean_prefix_rollout", "injection_conditioned_rollout"],
+    "rollout_horizon": 5,
+    "primary_question": "Does injection-conditioned scoring improve attack and utility ordering on user tasks unseen during world-model training?",
+    "no_hyperparameter_tuning_on_test": true
+  },
+  "resource_budget": {
+    "training_jobs": 3,
+    "gpu_type": "RTX 6000 Ada",
+    "maximum_time_per_job_hours": 12,
+    "new_llm_replays": 0
+  }
+}

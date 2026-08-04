@@ -1,0 +1,386 @@
+{
+  "scope": "outer_crossfit_checkpoint_held_metric_summary",
+  "checkpoint_count": 12,
+  "all_checkpoints_reached_epoch_budget": true,
+  "parameter_count_identical": true,
+  "parameter_count": 5952588,
+  "aggregate_metrics": {
+    "binary_utility_auc": {
+      "count": 12,
+      "mean": 0.6743425965425284,
+      "std": 0.058736124819714894,
+      "min": 0.5633647798742139,
+      "max": 0.738048032320814
+    },
+    "binary_utility_brier_score": {
+      "count": 12,
+      "mean": 0.19807830825448036,
+      "std": 0.0412516957066162,
+      "min": 0.13869689404964447,
+      "max": 0.2648077607154846
+    },
+    "next_skill_accuracy": {
+      "count": 12,
+      "mean": 0.3523376073763221,
+      "std": 0.05261166272932372,
+      "min": 0.2755417956656347,
+      "max": 0.4150268336314848
+    },
+    "next_skill_top3_accuracy": {
+      "count": 12,
+      "mean": 0.6200982561325624,
+      "std": 0.04188902665373076,
+      "min": 0.5309597523219814,
+      "max": 0.6876155268022182
+    },
+    "preservation_eval_count": {
+      "count": 12,
+      "mean": 506.0,
+      "std": 51.395525097035446,
+      "min": 445.0,
+      "max": 586.0
+    },
+    "preservation_probability_brier_score": {
+      "count": 12,
+      "mean": 0.07162024701635043,
+      "std": 0.014858644486104697,
+      "min": 0.041541922837495804,
+      "max": 0.08947397768497467
+    },
+    "preservation_probability_mae": {
+      "count": 12,
+      "mean": 0.224107147504886,
+      "std": 0.030904080863396216,
+      "min": 0.15883779525756836,
+      "max": 0.2711319625377655
+    },
+    "risk_auc": {
+      "count": 12,
+      "mean": 0.880273220274721,
+      "std": 0.05965170445229706,
+      "min": 0.7626746193690158,
+      "max": 0.9528101563205927
+    },
+    "risk_brier_score": {
+      "count": 12,
+      "mean": 0.11230469432969888,
+      "std": 0.03082267484444661,
+      "min": 0.06599755585193634,
+      "max": 0.1617606282234192
+    },
+    "utility_probability_brier_score": {
+      "count": 12,
+      "mean": 0.04307070902238289,
+      "std": 0.011009028056326118,
+      "min": 0.028371095657348633,
+      "max": 0.06510096788406372
+    },
+    "utility_probability_mae": {
+      "count": 12,
+      "mean": 0.15737711638212204,
+      "std": 0.01908937576966816,
+      "min": 0.12734557688236237,
+      "max": 0.19378222525119781
+    },
+    "validation_objective": {
+      "count": 12,
+      "mean": 0.3889112485243517,
+      "std": 0.04391734324242519,
+      "min": 0.33728115872125275,
+      "max": 0.4676002009850069
+    },
+    "validation_objective_binary": {
+      "count": 12,
+      "mean": 0.5439188477564492,
+      "std": 0.04892277956767216,
+      "min": 0.47222587631167645,
+      "max": 0.6154711588364168
+    },
+    "validation_objective_continuous": {
+      "count": 12,
+      "mean": 0.3889112485243517,
+      "std": 0.04391734324242519,
+      "min": 0.33728115872125275,
+      "max": 0.4676002009850069
+    }
+  },
+  "checkpoints": [
+    {
+      "fold": 0,
+      "seed": 13,
+      "held_step_count": 646,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.29721362229102166,
+        "next_skill_top3_accuracy": 0.5603715170278638,
+        "risk_auc": 0.7818238894992937,
+        "risk_brier_score": 0.11553256213665009,
+        "binary_utility_auc": 0.7303896103896104,
+        "binary_utility_brier_score": 0.13945479691028595,
+        "utility_probability_brier_score": 0.028371095657348633,
+        "utility_probability_mae": 0.12734557688236237,
+        "preservation_eval_count": 586.0,
+        "preservation_probability_brier_score": 0.041541922837495804,
+        "preservation_probability_mae": 0.15883779525756836,
+        "validation_objective_continuous": 0.36114217505873913,
+        "validation_objective_binary": 0.47222587631167645,
+        "validation_objective": 0.36114217505873913
+      }
+    },
+    {
+      "fold": 0,
+      "seed": 21,
+      "held_step_count": 646,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.28637770897832815,
+        "next_skill_top3_accuracy": 0.5789473684210527,
+        "risk_auc": 0.7626746193690158,
+        "risk_brier_score": 0.14386002719402313,
+        "binary_utility_auc": 0.7223297914207005,
+        "binary_utility_brier_score": 0.13869689404964447,
+        "utility_probability_brier_score": 0.03573043271899223,
+        "utility_probability_mae": 0.14489483833312988,
+        "preservation_eval_count": 586.0,
+        "preservation_probability_brier_score": 0.06880928575992584,
+        "preservation_probability_mae": 0.21224139630794525,
+        "validation_objective_continuous": 0.42680531842835917,
+        "validation_objective_binary": 0.5297717797590114,
+        "validation_objective": 0.42680531842835917
+      }
+    },
+    {
+      "fold": 0,
+      "seed": 7,
+      "held_step_count": 646,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.2755417956656347,
+        "next_skill_top3_accuracy": 0.5309597523219814,
+        "risk_auc": 0.8100965311568042,
+        "risk_brier_score": 0.1004476249217987,
+        "binary_utility_auc": 0.6892247146792602,
+        "binary_utility_brier_score": 0.13924843072891235,
+        "utility_probability_brier_score": 0.03177418187260628,
+        "utility_probability_mae": 0.13331054151058197,
+        "preservation_eval_count": 586.0,
+        "preservation_probability_brier_score": 0.06600870192050934,
+        "preservation_probability_mae": 0.19765034317970276,
+        "validation_objective_continuous": 0.37934505979850563,
+        "validation_objective_binary": 0.4868193086548117,
+        "validation_objective": 0.37934505979850563
+      }
+    },
+    {
+      "fold": 1,
+      "seed": 13,
+      "held_step_count": 491,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.41140529531568226,
+        "next_skill_top3_accuracy": 0.615071283095723,
+        "risk_auc": 0.9249119002439685,
+        "risk_brier_score": 0.09292922914028168,
+        "binary_utility_auc": 0.738048032320814,
+        "binary_utility_brier_score": 0.18463359773159027,
+        "utility_probability_brier_score": 0.039979882538318634,
+        "utility_probability_mae": 0.14925625920295715,
+        "preservation_eval_count": 445.0,
+        "preservation_probability_brier_score": 0.08119270950555801,
+        "preservation_probability_mae": 0.2321716696023941,
+        "validation_objective_continuous": 0.36125049735523773,
+        "validation_objective_binary": 0.5059042125485094,
+        "validation_objective": 0.36125049735523773
+      }
+    },
+    {
+      "fold": 1,
+      "seed": 21,
+      "held_step_count": 491,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.40122199592668023,
+        "next_skill_top3_accuracy": 0.659877800407332,
+        "risk_auc": 0.9528101563205927,
+        "risk_brier_score": 0.06599755585193634,
+        "binary_utility_auc": 0.7164634146341463,
+        "binary_utility_brier_score": 0.19302548468112946,
+        "utility_probability_brier_score": 0.041898585855960846,
+        "utility_probability_mae": 0.1590728759765625,
+        "preservation_eval_count": 445.0,
+        "preservation_probability_brier_score": 0.07969051599502563,
+        "preservation_probability_mae": 0.23364917933940887,
+        "validation_objective_continuous": 0.33728115872125275,
+        "validation_objective_binary": 0.48840805754642136,
+        "validation_objective": 0.33728115872125275
+      }
+    },
+    {
+      "fold": 1,
+      "seed": 7,
+      "held_step_count": 491,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.4073319755600815,
+        "next_skill_top3_accuracy": 0.6456211812627292,
+        "risk_auc": 0.9365907653383935,
+        "risk_brier_score": 0.08114386349916458,
+        "binary_utility_auc": 0.7284340864881041,
+        "binary_utility_brier_score": 0.1984478235244751,
+        "utility_probability_brier_score": 0.04311723634600639,
+        "utility_probability_mae": 0.16083064675331116,
+        "preservation_eval_count": 445.0,
+        "preservation_probability_brier_score": 0.07953919470310211,
+        "preservation_probability_mae": 0.23517736792564392,
+        "validation_objective_continuous": 0.3519673006582527,
+        "validation_objective_binary": 0.5072978878367214,
+        "validation_objective": 0.3519673006582527
+      }
+    },
+    {
+      "fold": 2,
+      "seed": 13,
+      "held_step_count": 559,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.40608228980322003,
+        "next_skill_top3_accuracy": 0.627906976744186,
+        "risk_auc": 0.884936104298438,
+        "risk_brier_score": 0.15468332171440125,
+        "binary_utility_auc": 0.5907582110412299,
+        "binary_utility_brier_score": 0.21601378917694092,
+        "utility_probability_brier_score": 0.06510096788406372,
+        "utility_probability_mae": 0.19378222525119781,
+        "preservation_eval_count": 508.0,
+        "preservation_probability_brier_score": 0.08947397768497467,
+        "preservation_probability_mae": 0.2630012333393097,
+        "validation_objective_continuous": 0.4577376948326346,
+        "validation_objective_binary": 0.6086505161255118,
+        "validation_objective": 0.4577376948326346
+      }
+    },
+    {
+      "fold": 2,
+      "seed": 21,
+      "held_step_count": 559,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.4150268336314848,
+        "next_skill_top3_accuracy": 0.6386404293381037,
+        "risk_auc": 0.8824190009035756,
+        "risk_brier_score": 0.14802445471286774,
+        "binary_utility_auc": 0.5633647798742139,
+        "binary_utility_brier_score": 0.2005445957183838,
+        "utility_probability_brier_score": 0.057486411184072495,
+        "utility_probability_mae": 0.17684608697891235,
+        "preservation_eval_count": 508.0,
+        "preservation_probability_brier_score": 0.08945205062627792,
+        "preservation_probability_mae": 0.2711319625377655,
+        "validation_objective_continuous": 0.44120620811534694,
+        "validation_objective_binary": 0.5842643926496582,
+        "validation_objective": 0.44120620811534694
+      }
+    },
+    {
+      "fold": 2,
+      "seed": 7,
+      "held_step_count": 559,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.3685152057245081,
+        "next_skill_top3_accuracy": 0.6207513416815742,
+        "risk_auc": 0.8805085839679876,
+        "risk_brier_score": 0.1617606282234192,
+        "binary_utility_auc": 0.5982879105520615,
+        "binary_utility_brier_score": 0.20696143805980682,
+        "utility_probability_brier_score": 0.05909048020839691,
+        "utility_probability_mae": 0.18654896318912506,
+        "preservation_eval_count": 508.0,
+        "preservation_probability_brier_score": 0.08887789398431778,
+        "preservation_probability_mae": 0.2628425061702728,
+        "validation_objective_continuous": 0.4676002009850069,
+        "validation_objective_binary": 0.6154711588364168,
+        "validation_objective": 0.4676002009850069
+      }
+    },
+    {
+      "fold": 3,
+      "seed": 13,
+      "held_step_count": 541,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.3049907578558225,
+        "next_skill_top3_accuracy": 0.6395563770794824,
+        "risk_auc": 0.9201241134751773,
+        "risk_brier_score": 0.08880453556776047,
+        "binary_utility_auc": 0.6936878273158026,
+        "binary_utility_brier_score": 0.24335229396820068,
+        "utility_probability_brier_score": 0.035927217453718185,
+        "utility_probability_mae": 0.14986863732337952,
+        "preservation_eval_count": 485.0,
+        "preservation_probability_brier_score": 0.05850205197930336,
+        "preservation_probability_mae": 0.2074131816625595,
+        "validation_objective_continuous": 0.35698611553682635,
+        "validation_objective_binary": 0.5644111920513089,
+        "validation_objective": 0.35698611553682635
+      }
+    },
+    {
+      "fold": 3,
+      "seed": 21,
+      "held_step_count": 541,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.3123844731977819,
+        "next_skill_top3_accuracy": 0.6358595194085028,
+        "risk_auc": 0.9179787234042553,
+        "risk_brier_score": 0.08630853146314621,
+        "binary_utility_auc": 0.6367452686414142,
+        "binary_utility_brier_score": 0.2648077607154846,
+        "utility_probability_brier_score": 0.041915129870176315,
+        "utility_probability_mae": 0.15578947961330414,
+        "preservation_eval_count": 485.0,
+        "preservation_probability_brier_score": 0.061153724789619446,
+        "preservation_probability_mae": 0.2035800665616989,
+        "validation_objective_continuous": 0.3612812678234965,
+        "validation_objective_binary": 0.5841738986688048,
+        "validation_objective": 0.3612812678234965
+      }
+    },
+    {
+      "fold": 3,
+      "seed": 7,
+      "held_step_count": 541,
+      "reached_epoch_budget": true,
+      "parameter_count": 5952588,
+      "metrics": {
+        "next_skill_accuracy": 0.3419593345656192,
+        "next_skill_top3_accuracy": 0.6876155268022182,
+        "risk_auc": 0.9084042553191489,
+        "risk_brier_score": 0.1081639975309372,
+        "binary_utility_auc": 0.684377511152983,
+        "binary_utility_brier_score": 0.2517527937889099,
+        "utility_probability_brier_score": 0.0364568866789341,
+        "utility_probability_mae": 0.15097926557064056,
+        "preservation_eval_count": 485.0,
+        "preservation_probability_brier_score": 0.055200934410095215,
+        "preservation_probability_mae": 0.21158906817436218,
+        "validation_objective_continuous": 0.3643319849785617,
+        "validation_objective_binary": 0.5796278920885375,
+        "validation_objective": 0.3643319849785617
+      }
+    }
+  ],
+  "interpretation_constraint": "Held-step prediction metrics diagnose training health; they do not establish candidate-level attack or utility ranking quality."
+}

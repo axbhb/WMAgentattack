@@ -66,14 +66,19 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--prompt-profile",
-        choices=["base", "robust"],
+        choices=["base", "format_only", "robust"],
         default="robust",
-        help="Use the unmodified AgentDojo local prompt or a stricter tool-use profile.",
+        help="Use the base prompt, format-only tool repair, or full robust profile.",
     )
     parser.add_argument("--max-input-tokens", type=int, default=8_192)
     parser.add_argument(
         "--protocol",
-        choices=["function_tags", "native"],
+        choices=[
+            "function_tags",
+            "function_tags_repair",
+            "function_tags_repair_retry",
+            "native",
+        ],
         default="native",
     )
     parser.add_argument("--logdir", type=Path, default=PROJECT_ROOT / "runs")

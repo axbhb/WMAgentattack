@@ -1,0 +1,94 @@
+{
+  "decision": "CUSTOM_PANEL_V2_ARCHITECTURE_NO_INCREMENT",
+  "jobs": {
+    "fixed_v1_pretraining_failure": 4786,
+    "fixed_v2_complete": 4787
+  },
+  "archive": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/fixed_v2",
+  "integrity": {
+    "runtime_failures": 0,
+    "tests_passed": 31,
+    "archived_checksums_verified": 34,
+    "training_runs": 9,
+    "predictions": 7902,
+    "task_split_overlap": 0,
+    "new_victim_model_calls": 0,
+    "attack_examples": 0,
+    "dreamer_runs": 0
+  },
+  "hashes": {
+    "protocol": "f4f3cb618ce2a3f229b0f116f0f53933d6fb3e442d1980f1d77125ea2e0df3ce",
+    "dataset": "c01a0c29a8e2ce99e6f3dd81c82f1711131868ebe81da62a0298fe7e42745746",
+    "dataset_audit": "4a9ad30d9311e0693558707bcbecbec73ddd1d248b3389ec1a1258074f424374",
+    "summary": "65077d34d63a8de2beed81da2919da395099172b5ba1b77fa67f50066f9100a1",
+    "run_metrics": "1ab0ec5f270a3d4a4d5dc7f58f802a47a4f999ac657705541848facdf7266427",
+    "predictions": "59e4c34be8871d8e064226bbadbdb3bac14fc487b19f4e13b597e5827dee5519"
+  },
+  "confirmation_metrics": {
+    "semantic_markov": {
+      "action_nll": 3.9882768201807774,
+      "action_accuracy": 0.22628095932973982,
+      "evidence_nll": 1.3423016080840784,
+      "supported_brier": 0.20261091376655418
+    },
+    "observable_execution": {
+      "action_nll": 3.7870210518534613,
+      "action_accuracy": 0.3170746101233906,
+      "evidence_nll": 1.4628389119239642,
+      "supported_brier": 0.2497207969380649
+    },
+    "observable_execution_ledger_v2": {
+      "action_nll": 3.8292439043409563,
+      "action_accuracy": 0.3130005360493165,
+      "evidence_nll": 1.433285378574989,
+      "supported_brier": 0.2177799609144231
+    }
+  },
+  "paired_confirmation": {
+    "observable_vs_semantic_dynamics": {
+      "action_nll_gain": 0.20125576832731618,
+      "positive_seeds": 3,
+      "positive_tasks": 7,
+      "tasks": 12,
+      "bootstrap_95": [-0.05717026282969484, 0.49618986360299766]
+    },
+    "observable_vs_semantic_evidence": {
+      "evidence_nll_gain": -0.12053730383988581,
+      "positive_seeds": 0,
+      "positive_tasks": 8,
+      "tasks": 10,
+      "bootstrap_95": [-0.7745326683832443, 0.4145779504668936]
+    },
+    "ledger_vs_observable_dynamics": {
+      "action_nll_gain": -0.04222285248749502,
+      "positive_seeds": 1,
+      "positive_tasks": 4,
+      "tasks": 12,
+      "bootstrap_95": [-0.1495879747791285, 0.07552178039463125]
+    },
+    "ledger_vs_observable_evidence": {
+      "evidence_nll_gain": 0.029553533348975147,
+      "positive_seeds": 2,
+      "positive_tasks": 6,
+      "tasks": 10,
+      "bootstrap_95": [-0.23892345128361012, 0.3162834767273663]
+    }
+  },
+  "gates": {
+    "observable_dynamics_increment": false,
+    "observable_evidence_increment": false,
+    "ledger_dynamics_increment": false,
+    "ledger_evidence_increment": false
+  },
+  "accepted_heads": {
+    "victim_dynamics": "semantic_markov",
+    "evidence_progress": "semantic_markov"
+  },
+  "permissions": {
+    "small_clean_architecture_followup": false,
+    "completion_or_reporting_training": false,
+    "attack_data": false,
+    "h2_attack_planning": false,
+    "dreamer_training": false
+  }
+}

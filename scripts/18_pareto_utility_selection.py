@@ -55,6 +55,11 @@ def _dedupe_by_pair(rows: list[dict[str, Any]], max_per_user_task: int) -> list[
 
 
 def _objective_score(row: dict[str, Any]) -> float:
+    # A separately trained candidate/trajectory-level ranker can provide a
+    # complete attack objective. In that case, do not mix its calibrated
+    # estimate with the step-level Dreamer heuristics below.
+    if "candidate_objective_score" in row:
+        return float(row["candidate_objective_score"])
     risk = float(row.get("risk_score", 0.0))
     mean_risk = float(row.get("rollout_mean_risk_score", risk))
     target = float(row.get("target_skill_probability", 0.0))
@@ -82,17 +87,25 @@ def _annotate_clean_rates(
     *,
     min_base_success_rate: float,
 ) -> list[dict[str, Any]]:
-    if not clean_rates:
-        return candidates
     output = []
     for row in candidates:
         base_rate = clean_rates.get((row["suite"], row["user_task_id"]))
+        preservation_score = row.get("preservation_score")
+        expected_attacked_utility = (
+            float(base_rate) * float(preservation_score)
+            if base_rate is not None and preservation_score is not None
+            else float(row.get("utility_score", 0.0))
+        )
         output.append(
             {
                 **row,
                 "base_task_success_rate": base_rate,
+                "expected_attacked_utility_score": expected_attacked_utility,
                 "preservation_eval_eligible": (
-                    base_rate is not None and base_rate >= min_base_success_rate
+                    True
+                    if not clean_rates
+                    else base_rate is not None
+                    and base_rate >= min_base_success_rate
                 ),
             }
         )
@@ -237,6 +250,7 @@ def main() -> None:
     parser.add_argument("--max-per-user-task", type=int, default=2)
     parser.add_argument("--clean-solvability-json", type=Path)
     parser.add_argument("--min-base-success-rate", type=float, default=0.5)
+    parser.add_argument("--min-conditional-coverage", type=float, default=0.0)
     args = parser.parse_args()
 
     payload = json.loads(args.candidate_json.read_text(encoding="utf-8"))
@@ -356,8 +370,18 @@ def main() -> None:
             }
         )
 
+    eligible_aggregate = [
+        row
+        for row in aggregate
+        if row["conditional_coverage_mean"] >= args.min_conditional_coverage
+    ]
+    if not eligible_aggregate:
+        raise RuntimeError(
+            "No selector configuration satisfies --min-conditional-coverage="
+            f"{args.min_conditional_coverage}"
+        )
     best = max(
-        aggregate,
+        eligible_aggregate,
         key=lambda row: (
             row["objective_asr_plus_bup_mean"],
             row["observed_bup_mean"],
@@ -378,6 +402,7 @@ def main() -> None:
             else None
         ),
         "min_base_success_rate": args.min_base_success_rate,
+        "min_conditional_coverage": args.min_conditional_coverage,
         "best": best,
         "aggregate": aggregate,
         "rows": rows,

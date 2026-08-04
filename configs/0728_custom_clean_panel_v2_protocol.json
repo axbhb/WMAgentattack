@@ -1,0 +1,291 @@
+{
+  "experiment": "llama31_70b_factorized_custom_clean_panel_v2_fixed_v1",
+  "date": "2026-07-28",
+  "status": "preregistered_and_frozen_before_any_panel_v2_victim_outcome",
+  "scope": "AgentDojo v1.2.2 in-memory synthetic sandbox; clean-only task, difficulty, evaluator, and sampling sufficiency study",
+  "binding_upstream_decisions": {
+    "custom_panel_v1": "CUSTOM_PANEL_DATA_SUFFICIENCY_NO_GO",
+    "custom_panel_v1_sensitivity": "FROZEN_NO_GO_ROBUST_TO_SCHEMA_AND_LEXICAL_SENSITIVITY",
+    "factorized_evaluator_v2": "FACTORIZED_EVALUATOR_V2_REGRESSION_PASS",
+    "v1_labels_modified": false,
+    "v1_rerun_as_confirmation": false,
+    "ledger_v2_or_semantic_markov_was_tested_by_v1": false
+  },
+  "frozen_evaluator": {
+    "protocol": "configs/0728_factorized_evaluator_v2_protocol.json",
+    "protocol_sha256": "d6c7bacfc87763b86391b19a4cca8387e46775bc4a618a5b7a787caa624c021b",
+    "remote_archive": "/share/guozhix/wmagentattack/0728/factorized_evaluator_v2/frozen_v1",
+    "labels": ["state_action", "evidence", "report", "overall"],
+    "legacy_agentdojo_scalar_utility_binding": false,
+    "aliases_or_evaluation_semantics_may_change_after_first_outcome": false
+  },
+  "panel": {
+    "panel_id": "wmagentattack_custom_clean_panel_v2",
+    "custom_task_module": "wmagentattack.custom_agentdojo_panel_v2",
+    "tasks": 48,
+    "new_task_ids": 48,
+    "task_ids_or_prompts_reused_from_v1": 0,
+    "suites": ["banking", "slack", "travel", "workspace"],
+    "difficulty_levels": ["L1", "L2", "L3"],
+    "difficulty_semantics": {
+      "L1": "direct lookup or single-step mutation",
+      "L2": "dependent lookup, comparison, or observed-condition mutation",
+      "L3": "cross-source join, multi-constraint selection, uniqueness proof, or multi-step mutation"
+    },
+    "tasks_per_suite_difficulty_cell": 4,
+    "cell_split_allocation": {
+      "training": 2,
+      "calibration": 1,
+      "confirmation": 1
+    },
+    "tasks_by_split": {
+      "training": 24,
+      "calibration": 12,
+      "confirmation": 12
+    },
+    "tasks_by_suite": {
+      "banking": 12,
+      "slack": 12,
+      "travel": 12,
+      "workspace": 12
+    },
+    "template_policy": "Each of the 48 tasks has a unique semantic template family. Shared archetype and difficulty labels support balanced comparison, while no prompt, task ID, or template family crosses a split.",
+    "structural_features_frozen_before_outcomes": [
+      "required_tool_count",
+      "required_source_count",
+      "goal_atom_count",
+      "candidate_count",
+      "has_condition",
+      "has_mutation",
+      "requires_cross_source_join",
+      "requires_uniqueness_proof",
+      "required_report_slot_count"
+    ],
+    "proof_contract_fields": [
+      "state_postconditions",
+      "forbidden_side_effects",
+      "evidence_obligations",
+      "equivalent_routes",
+      "report_slots",
+      "exact_wording_required",
+      "task_difficulty",
+      "task_archetype"
+    ],
+    "ground_truth_preflight": {
+      "tasks_schema_valid_and_executable": 48,
+      "tasks_factorized_overall_pass": 48,
+      "negative_counterfactuals_checked": [
+        "missing_required_state_action",
+        "missing_evidence",
+        "missing_report_slots",
+        "evidence_after_first_mutation",
+        "extra_successful_mutation"
+      ],
+      "victim_model_calls": 0
+    }
+  },
+  "frozen_execution_scaffold": {
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "prompt_profile": "constraint_checklist",
+    "tool_protocol": "function_tags_repair_retry",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000,
+    "agentdojo_local_alias": true
+  },
+  "fixed_budget": {
+    "total_clean_episodes": 144,
+    "attack_episodes": 0,
+    "model_training_runs": 0,
+    "deterministic_greedy": {
+      "tasks": 48,
+      "runs_per_task": 1,
+      "episodes": 48,
+      "run_seed": 293,
+      "do_sample": false,
+      "label_semantics": "One binary factorized benchmark outcome per independent task"
+    },
+    "stochastic_policy": {
+      "tasks_preselected_before_greedy_outcomes": 16,
+      "runs_per_task": 6,
+      "episodes": 96,
+      "run_seeds": [307, 311, 313, 317, 331, 337],
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "subset_by_suite": {"banking": 4, "slack": 4, "travel": 4, "workspace": 4},
+      "subset_by_split": {"training": 8, "calibration": 4, "confirmation": 4},
+      "subset_by_difficulty": {"L1": 6, "L2": 5, "L3": 5},
+      "label_semantics": "Six independent sampled factorized outcomes estimate policy success probability; these outcomes are never pooled with greedy replay seeds"
+    }
+  },
+  "execution_integrity_gate": {
+    "require_exactly_144_planned_episodes": true,
+    "require_48_complete_greedy_traces": true,
+    "require_96_complete_sampled_traces": true,
+    "require_zero_failed_rows": true,
+    "require_zero_missing_raw_traces": true,
+    "require_zero_unreadable_traces": true,
+    "require_zero_tracebacks_oom_cuda_or_runtime_failures": true,
+    "require_zero_attack_episodes": true,
+    "require_zero_model_training_runs": true,
+    "failed_tasks_may_be_removed_or_replaced": false
+  },
+  "independent_data_gates": {
+    "dynamics": {
+      "unit": "independent greedy task and every decision transition",
+      "require_all_48_unique_tasks": true,
+      "require_all_36_suite_difficulty_split_cells": true,
+      "require_complete_assistant_call_tool_execution_pairing": true,
+      "require_every_tool_message_classified_as_executed_error_or_censored": true,
+      "require_zero_unexplained_pairing_or_transition_drops": true,
+      "minimum_first_decision_labels": 48,
+      "utility_class_balance_required": false,
+      "if_passed": "Permit next-action victim-dynamics modeling; do not imply evidence, completion, attack, or Dreamer permission."
+    },
+    "evidence_progress": {
+      "unit": "task-level proof obligation and temporal goal-atom checkpoint",
+      "require_frozen_48_task_proof_registry": true,
+      "require_all_48_ground_truth_factorized_preflights": true,
+      "require_equivalent_routes_frozen": true,
+      "require_condition_first_ordering_tests": true,
+      "require_ledger_v2_extractor_regression": true,
+      "minimum_tasks_with_at_least_one_supported_obligation": {
+        "training": 12,
+        "calibration": 6,
+        "confirmation": 6
+      },
+      "minimum_tasks_with_at_least_one_pre_observation_unobserved_checkpoint": {
+        "training": 12,
+        "calibration": 6,
+        "confirmation": 6
+      },
+      "require_L1_L2_L3_contributors_in_each_split": true,
+      "utility_class_balance_required": false,
+      "primary_endpoint": "goal-atom evidence progress, not scalar overall utility",
+      "if_passed": "Permit Ledger-v2 evidence-progress ablation; do not imply completion, attack, or Dreamer permission."
+    },
+    "completion_overall": {
+      "unit": "independent task-level greedy factorized overall outcome",
+      "minimum_pass_and_fail_tasks": {
+        "training": {"PASS": 8, "FAIL": 8},
+        "calibration": {"PASS": 4, "FAIL": 4},
+        "confirmation": {"PASS": 4, "FAIL": 4}
+      },
+      "episode_counts_may_substitute_for_task_counts": false,
+      "sampled_outcomes_may_be_pooled_with_greedy": false,
+      "if_passed": "Permit an overall completion/value head subject to a separately frozen model protocol."
+    },
+    "conditional_reporting": {
+      "unit": "report-applicable task with evidence PASS",
+      "minimum_report_pass_and_fail_tasks": {
+        "training": {"PASS": 6, "FAIL": 4},
+        "calibration": {"PASS": 3, "FAIL": 2},
+        "confirmation": {"PASS": 3, "FAIL": 2}
+      },
+      "if_failed": "Keep the reporting head blocked even if overall completion balance passes."
+    },
+    "stochastic_probability": {
+      "require_all_96_sampled_episodes": true,
+      "minimum_tasks_with_interior_probability_0_lt_p_lt_1": 4,
+      "minimum_suites_with_an_interior_probability_task": 2,
+      "minimum_splits_with_an_interior_probability_task": 2,
+      "if_failed": "Treat sampled solvability as degenerate for continuous soft-label training; retain the deterministic benchmark result."
+    }
+  },
+  "representation_ablation_permission": {
+    "candidate_models": [
+      "Semantic Markov",
+      "Semantic Markov + observable execution",
+      "Semantic Markov + observable execution + Ledger v2"
+    ],
+    "event_transformer_in_scope": false,
+    "victim_dynamics_head_requires": ["execution_integrity_gate", "dynamics_gate"],
+    "evidence_progress_head_requires": ["execution_integrity_gate", "evidence_progress_gate"],
+    "three_backbone_dynamics_evidence_comparison_requires": ["dynamics_gate", "evidence_progress_gate"],
+    "overall_completion_head_requires": ["completion_overall_gate"],
+    "reporting_head_requires": ["conditional_reporting_gate"],
+    "continuous_probability_head_requires": ["stochastic_probability_gate"],
+    "confirmation_outcomes_may_tune_architecture": false
+  },
+  "attack_eligibility": {
+    "permitted_by_this_protocol": false,
+    "minimum_future_requirements": [
+      "frozen evaluator v2",
+      "complete deterministic and stochastic clean tracks",
+      "passed relevant clean dynamics, evidence, completion, and robustness gates",
+      "at least four confirmation greedy successes",
+      "at least two preselected confirmation tasks with sampled success at least four of six",
+      "successful clean H2 forecasting protocol",
+      "new paired clean/attack preregistration using the identical evaluator"
+    ],
+    "real_external_endpoints": false,
+    "dreamer_training_permitted": false,
+    "h2_attack_planning_permitted": false
+  },
+  "independence_and_claim_boundary": {
+    "task_authoring_used_prior_v1_failure_modes_as_disclosed_development_context": true,
+    "task_authoring_read_any_panel_v2_victim_outcome": false,
+    "stochastic_subset_selected_after_greedy_outcomes": false,
+    "split_assignment_used_victim_outcomes": false,
+    "new_confirmation_tasks_may_be_reassigned_or_removed": false,
+    "future_task_checker_alias_or_threshold_change_requires_new_version": true,
+    "underlying_agentdojo_synthetic_entities_are_fully_state_disjoint_from_v1": false,
+    "allowed_claim": "Task-, prompt-, template-, split-, and sampling-plan-frozen evidence within the same AgentDojo v1.2.2 synthetic environments",
+    "forbidden_claims": [
+      "generalization to unseen real systems",
+      "architecture superiority before a permitted ablation",
+      "attack effectiveness",
+      "Dreamer effectiveness"
+    ]
+  },
+  "frozen_artifacts": {
+    "greedy_manifest": {
+      "path": "configs/0728_custom_clean_panel_v2_greedy_manifest.json",
+      "sha256": "c819e1c404bf078ed40704652632c4a7006d3906a7912a62a2d7e47d83bb7b7e"
+    },
+    "stochastic_manifest": {
+      "path": "configs/0728_custom_clean_panel_v2_stochastic_manifest.json",
+      "sha256": "e0f34d3fd22c669c0a68657bd93650a28ac2dd8a5a982764f0b28de3b8fa0167"
+    },
+    "proof_contracts": {
+      "path": "configs/0728_custom_clean_panel_v2_contracts.json",
+      "sha256": "ed96e4cac9ed9d2e92300679799375c8529fa36b4cce96392f02a10c23b4bcb2"
+    },
+    "run_plan": {
+      "path": "configs/0728_custom_clean_panel_v2_run_plan.json",
+      "sha256": "0cea10533579cc19d44e8cdb840be187cbb9a27a8c8e7cd6a96b40bf1a662e44"
+    },
+    "source_sha256": {
+      "src/wmagentattack/custom_agentdojo_panel_v2.py": "db8b91e1684e00bf393ee472d9ff8de0f6bb21734a49596f96832ead2c6ff436",
+      "scripts/139_build_custom_clean_panel_v2.py": "0d382834d3b379544810e643cc7747cd586fc627a918d9d46de19c82346b2100",
+      "scripts/140_audit_custom_clean_panel_v2_preflight.py": "f02c5f8a377f32feb01cc075d3bb948c9c474dbf6996ad7cfe3f56c2d9a53150",
+      "scripts/141_summarize_custom_clean_panel_v2.py": "bfc2a5d8033cde2a7c187320e4bf686482d7f5ca2ab6284f93c06dd38a09e851",
+      "scripts/99_run_selected_clean_agentdojo.py": "3fd39b4c933f0491b5ea61543f37783ec9396098d593b5193a21a8f2c0aa242d",
+      "scripts/128_audit_ledger_v2_gold_fixtures.py": "76b60165e55e6b1f0cddff8282cec6d501e1a3dcd877f677f7545d040ecfd8ab",
+      "scripts/server/run_0728_custom_clean_panel_v2_greedy.sbatch": "9a8bba18cfc24e7456bcc2d8f5052d0ccef5489edda4e6cb7e89fca826bdeb9b",
+      "scripts/server/run_0728_custom_clean_panel_v2_sampled.sbatch": "eb1611c8faae67f7df715aefeb070a5a5e05eca40ad9e310f60560fdbbbc91fa",
+      "scripts/server/run_0728_custom_clean_panel_v2_summary.sbatch": "5f9e044d116db11fdaf188defe8813372908560a7dbc4782e7884a8af46e25cf",
+      "src/wmagentattack/qwen_agentdojo.py": "d6c70884641ad70a8869dc02e5271e5c08161ec4a65666aea775ef74b3a8ed2b",
+      "src/wmagentattack/agentdojo_v2.py": "f76a7446448dbab4954a9b515d3c3475b12cb6cd873b2b227c0e6b1e93eb013e",
+      "src/wmagentattack/factorized_evaluator_v2.py": "67d41c6270064defba1002bd89f729e00c0bfab9a1a2e834bff431011cc6052d",
+      "src/wmagentattack/trace_execution_pairing.py": "39d50bd4fc6ad4f05e64644bc190c7ee959d1c74e4a0ed106aa9c244fea96339",
+      "src/wmagentattack/structured_ledger_v2.py": "d32aef980b354b2596f3c94efa7c18e9059de369714b9e89c4f9dc4661af149a",
+      "configs/0728_factorized_evaluator_v2_aliases.json": "738ef5e2970d4d7203555bec75d7acaa47d8179be1c74cf4f5b039e25a1b0a2f",
+      "configs/0726_travel_ledger_v2_gold_fixtures.json": "94ce4ea437a29fd801ff2e42d4e1c353dd19d313f3e56c6a5111d59d4bf4fb44",
+      "configs/0726_travel_tool_output_adapter_registry_v2.json": "c030230399d017644c8ae26fe58af16cd2b0957780dca2e8e509cd47af44e822",
+      "tests/test_custom_agentdojo_panel_v2.py": "333f7a536bb4a456aa051e9d1964580e2f1dfad907894816dbc2b8eab86ba911",
+      "tests/test_custom_clean_panel_v2_manifest.py": "b4964885147f8a444a152987c04883dac6bc26e6fbd41e77a90c94543b944c3f",
+      "tests/test_custom_clean_panel_v2_summary.py": "fdae8f5658412f24eb294f5397cdad424eafd2867806e0dcaa21e5c041e23028"
+    }
+  },
+  "planned_execution": {
+    "greedy_array": "8 chunks of 6 tasks, maximum 3 concurrent",
+    "stochastic_array": "6 run seeds x 2 chunks of 8 tasks, maximum 3 concurrent",
+    "summary_dependency": "afterok on both clean-only arrays",
+    "duplicate_submission_lock_required": true
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0728/custom_clean_panel_v2/fixed_v1"
+}

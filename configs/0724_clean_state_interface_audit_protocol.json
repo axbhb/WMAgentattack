@@ -1,0 +1,72 @@
+{
+  "protocol_id": "0724_clean_state_interface_audit_fixed_v1",
+  "status": "preregistered_before_execution",
+  "prior_decision": "SHORTCUT_NOT_RULED_OUT_CLEAN_GATE_BLOCKED",
+  "research_question": "Which state, argument-link, progress, irreversibility, and candidate-precondition fields can be extracted exactly from AgentDojo without using final outcome labels as model inputs?",
+  "scope": {
+    "benchmark_version": "v1.2.2",
+    "suites": [
+      "banking",
+      "slack",
+      "travel",
+      "workspace"
+    ],
+    "all_registered_clean_user_tasks": true,
+    "ground_truth_replay_only": true,
+    "load_llm": false,
+    "construct_attacks": false,
+    "external_endpoints": false,
+    "create_training_examples": false,
+    "gpu_required": false
+  },
+  "frozen_schema": {
+    "clean_state_schema_version": "wmagentattack.clean_state.v1",
+    "canonical_state_source": "Pydantic AgentDojo TaskEnvironment model_dump before and after exact FunctionsRuntime execution",
+    "state_delta": "deterministic RFC-6901-style structural diff",
+    "argument_entity_links": "type-sensitive exact scalar matching with all ambiguity retained",
+    "goal_slots": "ground-truth outer FunctionCall signatures; target-only audit, forbidden as victim-dynamics input",
+    "raw_tool_output_stored": false,
+    "utility_or_security_stored_in_transition": false,
+    "task_progress_delta_default": null,
+    "irreversible_effect_default": null
+  },
+  "fixed_budget": {
+    "task_replays_per_registered_user_task": 1,
+    "random_seeds": 0,
+    "model_calls": 0,
+    "hyperparameter_grid": false,
+    "rerun_after_result": false
+  },
+  "audit_metrics": [
+    "ground_truth task and call counts",
+    "exact execution errors",
+    "final official utility",
+    "state-changing versus read-only calls",
+    "canonical snapshot and delta size",
+    "argument entity-link unique/ambiguous/no-match counts",
+    "early and non-monotonic official utility behavior",
+    "expert call-slot exact-match coverage",
+    "tool precondition and irreversibility metadata availability"
+  ],
+  "gates_frozen_before_execution": {
+    "zero_ground_truth_execution_errors": true,
+    "all_ground_truth_tasks_pass_final_official_utility": true,
+    "all_expert_traces_match_their_target_only_goal_slots": true,
+    "all_state_snapshots_are_canonical_json": true,
+    "state_delta_adapter_ready_if_all_above_pass": true,
+    "fractional_progress_ready": false,
+    "irreversibility_ready": false,
+    "dynamic_candidate_preconditions_ready": false
+  },
+  "counterevidence_policy": {
+    "report_read_only_tasks_and_calls": true,
+    "report_utility_that_becomes_true_before_final_call": true,
+    "report_non_monotonic_utility": true,
+    "do_not_treat_expert_call_index_as_observed_task_progress": true,
+    "do_not_guess_ambiguous_entity_links": true,
+    "do_not_infer_irreversibility_from_tool_name": true,
+    "do_not_claim_dynamic_candidates_when_only_suite_tool_manifest_exists": true
+  },
+  "decision_rule": "Adopt canonical state snapshots/deltas and tool status only if the exact replay gates pass. Keep progress, irreversibility, and dynamic preconditions unavailable unless the audit finds explicit benchmark support; never fill them from final success labels.",
+  "planned_archive": "/share/guozhix/wmagentattack/0724/clean_state_interface_audit/fixed_v1"
+}

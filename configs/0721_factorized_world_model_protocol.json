@@ -1,0 +1,88 @@
+{
+  "protocol_id": "0721_factorized_world_model_fixed_budget_v1",
+  "source_conversation": "https://chatgpt.com/share/6a5f19d3-6e30-83ee-b08e-62a7df377b72",
+  "research_question": "Does factorizing attacker intervention, victim event dynamics, and exact AgentDojo transitions provide a better low-data world-model basis than the historical monolithic Dreamer adaptation?",
+  "frozen_evidence": {
+    "clean_confirmation_gate": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry_confirmation/function_tag_parser_retry_confirmation_20260716_v1/confirmation_gate.json",
+    "clean_gate_decision": "NO_ATTACK_DATA_EXPAND_VICTIM_OR_TASK_POOL",
+    "confirmation_episodes": 45,
+    "confirmation_stable_tasks": 1,
+    "durable_development_confirmation_tasks": 0
+  },
+  "safety_and_claim_boundary": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "generate_new_attack_data": false,
+    "allow_real_network_endpoints": false,
+    "start_dreamer_training": false,
+    "paper_level_claim_allowed": false,
+    "diagnostic_training_on_existing_v2_data": true
+  },
+  "factorization": {
+    "attacker_action": "static manifest intervention selected before rollout",
+    "victim_action": "tool/skill, normalized argument signature, and stop event",
+    "known_transition": "exact AgentDojo in-memory tool executor and checkers",
+    "learned_dynamics": "victim event distribution only",
+    "utility": "task clean prior plus attack-conditioned logit residual",
+    "outcome_likelihood": "four-cell attack{0,1}_utility{0,1} Dirichlet-multinomial count likelihood"
+  },
+  "fixed_budget": {
+    "W0_io_hmm": {
+      "latent_states": [4, 6, 8],
+      "em_iterations": 50,
+      "restarts": 3,
+      "seed": 7,
+      "counterbaseline": "smoothed context-conditioned first-order Markov"
+    },
+    "W1_event_transformer": {
+      "seeds": [7, 17, 29],
+      "epochs": 8,
+      "hidden_size": 64,
+      "layers": 2,
+      "heads": 4,
+      "batch_size": 64,
+      "actor_critic": false,
+      "imagined_rollout": false
+    },
+    "D0_historical_dreamer": "frozen historical control; no rerun in this cycle"
+  },
+  "frozen_thresholds": {
+    "io_hmm_min_validation_nll_gain_vs_markov": 0.02,
+    "io_hmm_max_test_nll_regression_vs_markov": 0.02,
+    "event_min_validation_accuracy_delta_vs_best_io_hmm": -0.02,
+    "event_max_validation_accuracy_seed_std": 0.05,
+    "event_joint_count_nll_must_beat_train_constant": true
+  },
+  "decision_rule": "Even if all architecture thresholds pass, the result is architecture signal only while the frozen clean eligibility gate remains NO-GO. Do not generate data or launch large training.",
+  "archive": "/share/guozhix/wmagentattack/0721/factorized_refactor/fixed_budget_v1",
+  "execution": {
+    "slurm_job_id": 4696,
+    "completed_at_utc": "2026-07-21T08:05:41+00:00",
+    "runtime_failures": 0,
+    "oom_or_cuda_failures": 0,
+    "archive_checksum_entries_verified": 40,
+    "dataset_checksum_entries_verified": 17,
+    "code_checksum_entries_verified": 9,
+    "summary_sha256": "ff7591583afaa1147fe077f38ae3af55b1f95289be1a353685f93101028fa9e6",
+    "archive_checksums_sha256": "2a1f7aaa356305b4791705e3c0fa1817f498cf7343c9c39458ec25bd1354e3bf",
+    "joint_label_audit_sha256": "f5136d4c4716d17cc262fc7953f9a4693b5fd8f03dabe41cde017669e2bf6b85",
+    "frozen_gate_results": {
+      "io_hmm_validation_beats_markov": false,
+      "io_hmm_test_not_worse_than_markov": false,
+      "event_validation_accuracy_not_materially_below_io_hmm": true,
+      "event_seed_stability": true,
+      "event_joint_count_nll_beats_constant": true,
+      "clean_eligibility_gate": false
+    },
+    "decision": "NO_GO_REVISE_FACTORIZED_MODEL",
+    "posthoc_counterevidence_not_used_to_change_thresholds": {
+      "event_validation_accuracy_mean": 0.43665264142122484,
+      "markov_validation_accuracy": 0.4600280504908836,
+      "event_test_accuracy_mean": 0.37347853939782194,
+      "markov_test_accuracy": 0.3036515054452274,
+      "unseen_attack_context_trajectory_fraction_validation": 0.1941747572815534,
+      "unseen_attack_context_trajectory_fraction_test": 0.1941747572815534,
+      "test_oov_restaurant_generate_events": 17,
+      "teacher_forced_evaluation_only": true
+    }
+  }
+}

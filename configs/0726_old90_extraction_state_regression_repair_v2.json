@@ -1,0 +1,72 @@
+{
+  "protocol_id": "0726_old90_extraction_state_regression_repair_v2",
+  "status": "preregistered_after_v1_diagnosis_before_repair_execution",
+  "prior_archive": "/share/guozhix/wmagentattack/0726/old90_extraction_state_regression/fixed_v1",
+  "prior_decision": "OLD90_EXTRACTION_STATE_REGRESSION_FAIL_ENGINEERING_ONLY",
+  "diagnosed_counterevidence": {
+    "raw_mismatched_episodes": 12,
+    "non_timestamp_semantic_differences_found": 0,
+    "root_cause": "AgentDojo Inbox.send_email assigns datetime.datetime.now(); create_calendar_event invokes Inbox.send_email and send_email returns the same wall-clock field.",
+    "affected_tools": ["create_calendar_event", "send_email"]
+  },
+  "benchmark_version": "v1.2.2",
+  "suite": "travel",
+  "registry": "configs/0726_travel_tool_output_adapter_registry_v2.json",
+  "runtime_metadata_registry": "configs/0726_runtime_metadata_normalization_v2.json",
+  "source_panels": [
+    {"name": "development", "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry/function_tag_parser_retry_20260716_v1", "seeds": [101, 103, 107], "chunks_per_seed": 2, "expected_episodes": 45},
+    {"name": "confirmation", "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry_confirmation/function_tag_parser_retry_confirmation_20260716_v1", "seeds": [109, 113, 127], "chunks_per_seed": 2, "expected_episodes": 45}
+  ],
+  "expected_counts": {
+    "source_chunks": 12,
+    "episodes": 90,
+    "independent_tasks": 15,
+    "proposals": 456,
+    "executed_calls": 455,
+    "terminal_unexecuted": 1,
+    "raw_mismatched_episodes": 12,
+    "registered_metadata_bindings_per_pass": 12
+  },
+  "determinism_passes": 2,
+  "normalization_contract": {
+    "raw_exact_state_retained": true,
+    "raw_runtime_records_retained": true,
+    "only_registered_observed_wall_clock_values_normalized": true,
+    "semantic_tokens_are_episode_local_and_call_indexed": true,
+    "exact_state_roundtrip_remains_raw": true,
+    "semantic_replay_gate_uses_normalized_projection": true
+  },
+  "data_policy": {
+    "engineering_regression_only": true,
+    "outcome_fields_accessed": false,
+    "expert_trajectory_accessed": false,
+    "model_training": false,
+    "model_comparison": false,
+    "victim_model_calls": 0,
+    "attacks": 0,
+    "dreamer": false
+  },
+  "frozen_gates": {
+    "source_chunks_and_episode_counts_exact": true,
+    "task_count_exact": true,
+    "pairing_counts_exact": true,
+    "zero_runtime_or_adapter_failures": true,
+    "logged_execution_status_exact": true,
+    "runtime_metadata_source_markers_exact": true,
+    "raw_mismatch_count_matches_diagnosis": true,
+    "registered_metadata_binding_count_exact": true,
+    "raw_differences_explained_by_registered_metadata": true,
+    "deterministic_two_pass_semantic_replay": true,
+    "state_fingerprint_roundtrip_exact": true,
+    "ledger_replay_idempotent": true,
+    "terminal_unexecuted_updates_zero": true,
+    "unlinked_derived_conflicts_zero": true,
+    "all_records_victim_observed": true,
+    "future_or_outcome_fields_zero": true,
+    "tests_pass": true
+  },
+  "pass_decision": "OLD90_EXTRACTION_STATE_REGRESSION_PASS_ENGINEERING_ONLY_WITH_REGISTERED_METADATA",
+  "failure_decision": "OLD90_EXTRACTION_STATE_REGRESSION_REPAIR_FAIL_ENGINEERING_ONLY",
+  "claim_boundary": "A pass validates deterministic semantic extraction while retaining exact raw simulator state. The old 90 trajectories remain forbidden for utility confirmation, architecture selection, attack generation, or Dreamer training.",
+  "planned_archive": "/share/guozhix/wmagentattack/0726/old90_extraction_state_regression/repair_v2"
+}

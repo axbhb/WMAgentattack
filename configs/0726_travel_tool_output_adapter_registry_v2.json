@@ -1,0 +1,205 @@
+{
+  "schema_version": "wmagentattack.travel_tool_output_adapters.v2",
+  "benchmark_version": "v1.2.2",
+  "suite": "travel",
+  "adapters": {
+    "get_user_information": {
+      "family": "user",
+      "mode": "USER_FIELDS",
+      "entity_type": "user",
+      "fixed_entity_key": {"role": "current_user"}
+    },
+    "get_all_hotels_in_city": {
+      "family": "hotel",
+      "mode": "NAME_LIST_TEXT",
+      "entity_type": "hotel",
+      "text_prefix": "Hotel Names:",
+      "attribute_name": "available_in_city",
+      "attribute_kind": "SINGLE_VALUED",
+      "context_argument_fields": ["city"]
+    },
+    "get_hotels_prices": {
+      "family": "hotel",
+      "mode": "PRICE_RANGE_MAP",
+      "entity_type": "hotel"
+    },
+    "get_hotels_address": {
+      "family": "hotel",
+      "mode": "ENTITY_MAP",
+      "entity_type": "hotel",
+      "attribute_name": "address",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_rating_reviews_for_hotels": {
+      "family": "hotel",
+      "mode": "RATING_REVIEWS_MAP",
+      "entity_type": "hotel"
+    },
+    "get_all_restaurants_in_city": {
+      "family": "restaurant",
+      "mode": "NAME_LIST_TEXT",
+      "entity_type": "restaurant",
+      "text_prefix": "Restaurant in",
+      "attribute_name": "available_in_city",
+      "attribute_kind": "SINGLE_VALUED",
+      "context_argument_fields": ["city"]
+    },
+    "get_restaurants_address": {
+      "family": "restaurant",
+      "mode": "ENTITY_MAP",
+      "entity_type": "restaurant",
+      "attribute_name": "address",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_rating_reviews_for_restaurants": {
+      "family": "restaurant",
+      "mode": "RATING_REVIEWS_MAP",
+      "entity_type": "restaurant"
+    },
+    "get_cuisine_type_for_restaurants": {
+      "family": "restaurant",
+      "mode": "ENTITY_MAP",
+      "entity_type": "restaurant",
+      "attribute_name": "cuisine_type",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_dietary_restrictions_for_all_restaurants": {
+      "family": "restaurant",
+      "mode": "ENTITY_MAP",
+      "entity_type": "restaurant",
+      "attribute_name": "dietary_restrictions",
+      "attribute_kind": "SET_VALUED",
+      "split_set_values": true
+    },
+    "get_contact_information_for_restaurants": {
+      "family": "restaurant",
+      "mode": "ENTITY_MAP",
+      "entity_type": "restaurant",
+      "attribute_name": "contact_information",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_price_for_restaurants": {
+      "family": "restaurant",
+      "mode": "ENTITY_MAP",
+      "entity_type": "restaurant",
+      "attribute_name": "price_per_person",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "check_restaurant_opening_hours": {
+      "family": "restaurant",
+      "mode": "ENTITY_MAP",
+      "entity_type": "restaurant",
+      "attribute_name": "operating_hours",
+      "attribute_kind": "TIME_SCOPED"
+    },
+    "get_all_car_rental_companies_in_city": {
+      "family": "car_rental",
+      "mode": "NAME_LIST_TEXT",
+      "entity_type": "car_rental_company",
+      "text_prefix": "Car Rental Companies in",
+      "attribute_name": "available_in_city",
+      "attribute_kind": "SINGLE_VALUED",
+      "context_argument_fields": ["city"]
+    },
+    "get_car_types_available": {
+      "family": "car_rental",
+      "mode": "ENTITY_MAP",
+      "entity_type": "car_rental_company",
+      "attribute_name": "car_types_available",
+      "attribute_kind": "SET_VALUED"
+    },
+    "get_rating_reviews_for_car_rental": {
+      "family": "car_rental",
+      "mode": "RATING_REVIEWS_MAP",
+      "entity_type": "car_rental_company"
+    },
+    "get_car_rental_address": {
+      "family": "car_rental",
+      "mode": "ENTITY_MAP",
+      "entity_type": "car_rental_company",
+      "attribute_name": "address",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_car_fuel_options": {
+      "family": "car_rental",
+      "mode": "ENTITY_MAP",
+      "entity_type": "car_rental_company",
+      "attribute_name": "fuel_options",
+      "attribute_kind": "SET_VALUED"
+    },
+    "get_car_price_per_day": {
+      "family": "car_rental",
+      "mode": "ENTITY_MAP",
+      "entity_type": "car_rental_company",
+      "attribute_name": "price_per_day",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_flight_information": {
+      "family": "flight",
+      "mode": "FLIGHT_LINES",
+      "entity_type": "flight",
+      "context_argument_fields": ["departure_city", "arrival_city"]
+    },
+    "reserve_hotel": {
+      "family": "reservation",
+      "mode": "MUTATION_ACK",
+      "entity_type": "hotel_reservation",
+      "entity_argument_fields": ["hotel"],
+      "context_argument_fields": ["start_day", "end_day"]
+    },
+    "reserve_restaurant": {
+      "family": "reservation",
+      "mode": "MUTATION_ACK",
+      "entity_type": "restaurant_reservation",
+      "entity_argument_fields": ["restaurant"],
+      "context_argument_fields": ["start_time"]
+    },
+    "reserve_car_rental": {
+      "family": "reservation",
+      "mode": "MUTATION_ACK",
+      "entity_type": "car_reservation",
+      "entity_argument_fields": ["company"],
+      "context_argument_fields": ["start_time", "end_time"]
+    },
+    "get_day_calendar_events": {
+      "family": "calendar",
+      "mode": "OBJECT_LIST",
+      "entity_type": "calendar_event",
+      "entity_key_fields": ["id_"],
+      "context_argument_fields": ["day"],
+      "set_fields": ["participants"],
+      "time_scoped_fields": ["start_time", "end_time"]
+    },
+    "search_calendar_events": {
+      "family": "calendar",
+      "mode": "OBJECT_LIST",
+      "entity_type": "calendar_event",
+      "entity_key_fields": ["id_"],
+      "context_argument_fields": ["query", "date"],
+      "set_fields": ["participants"],
+      "time_scoped_fields": ["start_time", "end_time"]
+    },
+    "create_calendar_event": {
+      "family": "calendar",
+      "mode": "OBJECT",
+      "entity_type": "calendar_event",
+      "entity_key_fields": ["id_"],
+      "set_fields": ["participants"],
+      "time_scoped_fields": ["start_time", "end_time"]
+    },
+    "cancel_calendar_event": {
+      "family": "calendar",
+      "mode": "MUTATION_ACK",
+      "entity_type": "calendar_event",
+      "entity_argument_fields": ["event_id"]
+    },
+    "send_email": {
+      "family": "email",
+      "mode": "OBJECT",
+      "entity_type": "email",
+      "entity_key_fields": ["id_"],
+      "set_fields": ["recipients", "cc", "bcc", "attachments"],
+      "time_scoped_fields": ["timestamp"]
+    }
+  }
+}

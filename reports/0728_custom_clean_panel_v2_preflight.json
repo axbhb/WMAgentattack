@@ -1,0 +1,97 @@
+{
+  "scope": "label-blind clean-panel-v2 structural and ground-truth preflight",
+  "new_victim_runs": 0,
+  "new_attack_runs": 0,
+  "new_model_training_runs": 0,
+  "protocol_sha256": "e29e1af7db38d754ad21260d3955be7bd5ae46c0f7bca0cfef5e9d81e4b0cb56",
+  "artifact_sha256": {
+    "greedy_manifest": "c819e1c404bf078ed40704652632c4a7006d3906a7912a62a2d7e47d83bb7b7e",
+    "stochastic_manifest": "e0f34d3fd22c669c0a68657bd93650a28ac2dd8a5a982764f0b28de3b8fa0167",
+    "proof_contracts": "ed96e4cac9ed9d2e92300679799375c8529fa36b4cce96392f02a10c23b4bcb2",
+    "run_plan": "0cea10533579cc19d44e8cdb840be187cbb9a27a8c8e7cd6a96b40bf1a662e44"
+  },
+  "source_sha256": {
+    "src/wmagentattack/custom_agentdojo_panel_v2.py": "db8b91e1684e00bf393ee472d9ff8de0f6bb21734a49596f96832ead2c6ff436",
+    "scripts/139_build_custom_clean_panel_v2.py": "0d382834d3b379544810e643cc7747cd586fc627a918d9d46de19c82346b2100",
+    "scripts/140_audit_custom_clean_panel_v2_preflight.py": "f02c5f8a377f32feb01cc075d3bb948c9c474dbf6996ad7cfe3f56c2d9a53150",
+    "scripts/141_summarize_custom_clean_panel_v2.py": "bfc2a5d8033cde2a7c187320e4bf686482d7f5ca2ab6284f93c06dd38a09e851",
+    "scripts/99_run_selected_clean_agentdojo.py": "3fd39b4c933f0491b5ea61543f37783ec9396098d593b5193a21a8f2c0aa242d",
+    "scripts/128_audit_ledger_v2_gold_fixtures.py": "76b60165e55e6b1f0cddff8282cec6d501e1a3dcd877f677f7545d040ecfd8ab",
+    "scripts/server/run_0728_custom_clean_panel_v2_greedy.sbatch": "9a8bba18cfc24e7456bcc2d8f5052d0ccef5489edda4e6cb7e89fca826bdeb9b",
+    "scripts/server/run_0728_custom_clean_panel_v2_sampled.sbatch": "eb1611c8faae67f7df715aefeb070a5a5e05eca40ad9e310f60560fdbbbc91fa",
+    "scripts/server/run_0728_custom_clean_panel_v2_summary.sbatch": "5f9e044d116db11fdaf188defe8813372908560a7dbc4782e7884a8af46e25cf",
+    "src/wmagentattack/qwen_agentdojo.py": "d6c70884641ad70a8869dc02e5271e5c08161ec4a65666aea775ef74b3a8ed2b",
+    "src/wmagentattack/agentdojo_v2.py": "f76a7446448dbab4954a9b515d3c3475b12cb6cd873b2b227c0e6b1e93eb013e",
+    "src/wmagentattack/factorized_evaluator_v2.py": "67d41c6270064defba1002bd89f729e00c0bfab9a1a2e834bff431011cc6052d",
+    "src/wmagentattack/trace_execution_pairing.py": "39d50bd4fc6ad4f05e64644bc190c7ee959d1c74e4a0ed106aa9c244fea96339",
+    "src/wmagentattack/structured_ledger_v2.py": "d32aef980b354b2596f3c94efa7c18e9059de369714b9e89c4f9dc4661af149a",
+    "configs/0728_factorized_evaluator_v2_aliases.json": "738ef5e2970d4d7203555bec75d7acaa47d8179be1c74cf4f5b039e25a1b0a2f",
+    "configs/0726_travel_ledger_v2_gold_fixtures.json": "94ce4ea437a29fd801ff2e42d4e1c353dd19d313f3e56c6a5111d59d4bf4fb44",
+    "configs/0726_travel_tool_output_adapter_registry_v2.json": "c030230399d017644c8ae26fe58af16cd2b0957780dca2e8e509cd47af44e822",
+    "tests/test_custom_agentdojo_panel_v2.py": "333f7a536bb4a456aa051e9d1964580e2f1dfad907894816dbc2b8eab86ba911",
+    "tests/test_custom_clean_panel_v2_manifest.py": "b4964885147f8a444a152987c04883dac6bc26e6fbd41e77a90c94543b944c3f",
+    "tests/test_custom_clean_panel_v2_summary.py": "fdae8f5658412f24eb294f5397cdad424eafd2867806e0dcaa21e5c041e23028"
+  },
+  "generated_match": {
+    "greedy_manifest": true,
+    "stochastic_manifest": true,
+    "proof_contracts": true,
+    "run_plan": true
+  },
+  "ground_truth_preflight": {
+    "tasks": 48,
+    "factor_counts": {
+      "state_action": {
+        "N/A": 26,
+        "PASS": 22
+      },
+      "evidence": {
+        "N/A": 6,
+        "PASS": 42
+      },
+      "report": {
+        "N/A": 8,
+        "PASS": 40
+      },
+      "overall": {
+        "PASS": 48
+      }
+    },
+    "all_ground_truth_overall_pass": true,
+    "all_ground_truth_calls_executed_successfully": true,
+    "failed_tasks": [],
+    "unsuccessful_calls": [],
+    "condition_first_contracts": 16
+  },
+  "gates": {
+    "v1_no_go_preserved": true,
+    "evaluator_v2_regression_pass_and_hash_frozen": true,
+    "protocol_is_preoutcome_and_clean_only": true,
+    "frozen_artifact_hashes_match": true,
+    "frozen_source_hashes_match": true,
+    "generated_artifacts_match_source": true,
+    "exactly_48_unique_new_tasks": true,
+    "exactly_48_unique_contracts": true,
+    "task_contract_coverage_exact": true,
+    "suite_difficulty_split_cells_are_2_1_1": true,
+    "manifest_rows_are_outcome_blind": true,
+    "proof_contracts_are_outcome_blind": true,
+    "stochastic_subset_preselected_and_consistent": true,
+    "fixed_budget_is_48_plus_96": true,
+    "sampled_episode_seeds_are_independent_per_task": true,
+    "all_ground_truth_calls_execute": true,
+    "all_ground_truth_factorized_labels_pass": true,
+    "condition_first_contracts_present": true,
+    "legacy_scalar_utility_is_nonbinding": true,
+    "attack_h2_and_dreamer_remain_blocked": true,
+    "no_new_victim_outcomes_generated_by_preflight": true
+  },
+  "passed": true,
+  "decision": "CUSTOM_CLEAN_PANEL_V2_PREFLIGHT_PASS",
+  "permission": {
+    "submit_fixed_144_clean_episode_plan": true,
+    "attack_data": false,
+    "h2_attack_planning": false,
+    "dreamer_training": false
+  }
+}

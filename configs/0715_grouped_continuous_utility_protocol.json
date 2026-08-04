@@ -1,0 +1,128 @@
+{
+  "experiment": "agentdojo_v2_grouped_continuous_utility_ablation",
+  "date": "2026-07-15",
+  "status": "head_only_three_seed_replication_complete_no_go_broader_folds",
+  "motivation": "Two frozen ensemble rounds failed to improve full-data Top-1, while grouped utility Brier remained unchanged with scale and the oracle gap remained 0.39. The next intervention therefore changes utility supervision rather than selection aggregation.",
+  "source_archive": "/share/guozhix/wmagentattack/0715/grouped_oof_20task/formal_20260715_oof_v1",
+  "data_protocol": {
+    "folds": 5,
+    "train_size": "pct100_only",
+    "checkpoint_seeds": [7, 13, 21],
+    "decision_step": "first",
+    "task_grouped_train_val_test": true,
+    "existing_baseline_checkpoints_reused": 15
+  },
+  "new_variants": {
+    "group_utility_detached": {
+      "group_utility_calibration_loss_scale": 1.0,
+      "group_utility_ranking_loss_scale": 0.5,
+      "group_utility_calibration_detach_latent": true,
+      "group_utility_ranking_detach_latent": true
+    },
+    "group_utility_end_to_end": {
+      "group_utility_calibration_loss_scale": 1.0,
+      "group_utility_ranking_loss_scale": 0.5,
+      "group_utility_calibration_detach_latent": false,
+      "group_utility_ranking_detach_latent": false
+    },
+    "group_utility_head_only": {
+      "group_utility_calibration_loss_scale": 1.0,
+      "group_utility_ranking_loss_scale": 0.5,
+      "group_utility_calibration_detach_latent": true,
+      "group_utility_ranking_detach_latent": true,
+      "group_utility_head_only_updates": true,
+      "main_batching": "baseline IID",
+      "auxiliary_batching": "complete task-aware multiseed groups",
+      "shared_latent_gradient_from_group_losses": false
+    }
+  },
+  "loss_definition": {
+    "decision_state": "first trajectory step",
+    "configuration_prediction": "mean sigmoid utility prediction over all victim-model trajectories in one multiseed_group_id",
+    "calibration_target": "utility_probability_target",
+    "calibration_weight": "probability_label_confidence",
+    "ranking_pairs": "within the same user task, compare configuration groups whose continuous utility targets differ by at least 0.1",
+    "ranking_loss": "pairwise logistic softplus on configuration-level prediction differences",
+    "ranking_weight": "absolute target difference times geometric mean posterior confidence",
+    "maximum_pairs_per_task_batch": 8,
+    "binary_trajectory_ranking_loss": 0.0
+  },
+  "fixed_training_budget": {
+    "new_checkpoints": 30,
+    "epochs": 30,
+    "variants": 2,
+    "folds": 5,
+    "seeds_per_fold": 3
+  },
+  "pre_formal_smoke": {
+    "fold": 1,
+    "seed": 7,
+    "epochs": 5,
+    "variants": 2,
+    "gate_uses": "validation grouped utility Brier only",
+    "activation_requirements": [
+      "all tracked losses finite",
+      "nonzero complete configuration groups per update",
+      "nonzero within-task continuous ranking pairs per update"
+    ],
+    "maximum_tolerated_validation_brier_regression": 0.01,
+    "test_outcomes": "diagnostic only and not used to choose the variant"
+  },
+  "baseline_availability_audit": {
+    "finding": "The source archive contains fold0 data but no fold0 checkpoints or prospective results; folds1-4 each contain six checkpoints and two prospective result files.",
+    "smoke_response": "Use fold1, which has the required pct100 seed7 baseline, instead of silently comparing against a missing fold0 baseline.",
+    "formal_response": "Train the missing fold0 baseline before making a five-fold or 20-task formal claim."
+  },
+  "completed_pilot_findings": {
+    "smoke_job": 4559,
+    "matched_30epoch_job": 4561,
+    "selected_coupled_variant": "group_utility_detached",
+    "validation_grouped_utility_brier_improvement": 0.0028872862458229065,
+    "test_grouped_utility_brier_improvement": -0.0362645760178566,
+    "test_risk_auc_delta": -0.102739583766045,
+    "top1_asr_plus_bup_delta": -0.10000000000000009,
+    "top1_asr_delta": -0.15000000000000002,
+    "top1_bup_delta": 0.04999999999999996,
+    "decision": "no_go_for_formal_scaling",
+    "diagnosis": "Complete task-homogeneous batches changed every world-model and actor-critic update even when the new utility losses detached the latent. The next variant preserves baseline IID main updates and applies grouped losses only to the utility head."
+  },
+  "head_only_seed7_findings": {
+    "smoke_job": 4562,
+    "matched_30epoch_job": 4563,
+    "validation_objective_delta": -0.02801320038767042,
+    "validation_grouped_utility_brier_improvement": 0.0007529929280281067,
+    "test_grouped_utility_brier_improvement": 0.029673561453819275,
+    "test_binary_utility_auc_delta": 0.104087782792381,
+    "test_risk_auc_delta": -0.01676930586133841,
+    "top1_asr_plus_bup_delta": 0.15000000000000002,
+    "top1_asr_delta": 0.14999999999999997,
+    "top1_bup_delta": 0.0,
+    "secondary_budget_deltas": {
+      "top2_asr_plus_bup": -0.09999999999999998,
+      "top4_asr_plus_bup": 0.012500000000000011
+    },
+    "decision": "go_to_same_fold_seed13_seed21_replication_without_retuning",
+    "next_gate": "Require three-seed ensemble Top-1 improvement of at least 0.05, nonnegative BUP, mean test risk-AUC loss no worse than 0.05, and utility-Brier improvement in at least two of three seeds before broader folds."
+  },
+  "selection_protocol": {
+    "aggregator": "mean_score",
+    "calibration": "validation-selected identity or reg0 for risk",
+    "recipe": "validation-only existing recipe selection",
+    "budgets_per_task": [1, 2, 4]
+  },
+  "primary_endpoint": {
+    "metric": "Top-1 ASR_plus_BUP",
+    "contrast": "variant minus existing pct100 baseline",
+    "unit": "20 OOF held-out user tasks",
+    "inference": "task bootstrap CI and exact sign-flip"
+  },
+  "secondary_endpoints": [
+    "grouped utility probability Brier",
+    "binary utility AUC",
+    "BUP component",
+    "Top-2 and Top-4 transfer",
+    "domain and attack-family heterogeneity"
+  ],
+  "success_rule": "Proceed only if Top-1 ASR+BUP improves by at least 0.05 without a negative BUP delta, grouped utility Brier improves in at least 10 of 15 paired fold-seed runs, and no domain loses more than 0.10 joint score.",
+  "follow_up_if_no_go": "Completed in configs/0716_semantic_value_protocol.json: semantic and structured features found attack signal but did not preserve BUP reliably; next factor clean task solvability from attack-induced preservation residual."
+}

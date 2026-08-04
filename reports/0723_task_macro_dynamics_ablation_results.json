@@ -1,0 +1,1807 @@
+{
+  "protocol_id": "0723_task_macro_dynamics_ablation_fixed_budget_v1",
+  "scope": "development-only mechanism audit on the frozen AgentDojo-v2 archive",
+  "confirmatory": false,
+  "independent_task_counts": {
+    "validation": 4,
+    "test": 4
+  },
+  "formal_significance_warning": "validation and test each contain only four independent tasks; the one-sided all-positive sign-test floor is 0.0625",
+  "integrity": {
+    "all_nine_runs_present": true,
+    "task_group_overlaps_empty": true,
+    "split_task_counts_match_protocol": true,
+    "all_run_clean_gates_false": true,
+    "ontology_fingerprint_matches_protocol": true,
+    "no_forbidden_outcome_fields_in_ontology": true
+  },
+  "aggregate": {
+    "length_semantic": {
+      "validation": {
+        "teacher_task_macro": {
+          "next_skill_nll": {
+            "values": [
+              1.5501002627410183,
+              1.516158500189229,
+              1.4426517159900956
+            ],
+            "mean": 1.5029701596401142,
+            "std": 0.04484600907216364,
+            "minimum": 1.4426517159900956,
+            "maximum": 1.5501002627410183
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.4690588607043469,
+              0.5436095960322671,
+              0.529389697934825
+            ],
+            "mean": 0.5140193848904797,
+            "std": 0.032317569285599465,
+            "minimum": 0.4690588607043469,
+            "maximum": 0.5436095960322671
+          },
+          "static_joint_count_nll": {
+            "values": [
+              2.7909168064594265,
+              2.7498226135969164,
+              2.8487707018852237
+            ],
+            "mean": 2.796503373980522,
+            "std": 0.04058807991252677,
+            "minimum": 2.7498226135969164,
+            "maximum": 2.8487707018852237
+          },
+          "dynamic_joint_count_nll": {
+            "values": [
+              2.5550671011209487,
+              2.5164862179756162,
+              2.4434745323657996
+            ],
+            "mean": 2.505009283820788,
+            "std": 0.04627465370688987,
+            "minimum": 2.4434745323657996,
+            "maximum": 2.5550671011209487
+          },
+          "dynamic_minus_static_joint_nll": {
+            "values": [
+              -0.2358497053384779,
+              -0.23333639562130004,
+              -0.40529616951942415
+            ],
+            "mean": -0.29149409015973404,
+            "std": 0.0804767632358373,
+            "minimum": -0.40529616951942415,
+            "maximum": -0.23333639562130004
+          }
+        },
+        "teacher_micro": {
+          "next_skill_nll": {
+            "values": [
+              1.6768520731703596,
+              1.6862585963198045,
+              1.6127618680620595
+            ],
+            "mean": 1.6586241791840746,
+            "std": 0.032656131180628635,
+            "minimum": 1.6127618680620595,
+            "maximum": 1.6862585963198045
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.34011220196353437,
+              0.37798036465638146,
+              0.35273492286115005
+            ],
+            "mean": 0.35694249649368864,
+            "std": 0.015743298962583193,
+            "minimum": 0.34011220196353437,
+            "maximum": 0.37798036465638146
+          }
+        },
+        "free_task_macro": {
+          "exact_sequence_accuracy": {
+            "values": [
+              0.36650485436893204,
+              0.5145631067961165,
+              0.5097087378640777
+            ],
+            "mean": 0.4635922330097087,
+            "std": 0.06867974249095213,
+            "minimum": 0.36650485436893204,
+            "maximum": 0.5145631067961165
+          },
+          "normalized_edit_distance": {
+            "values": [
+              0.3880312581162096,
+              0.3156101651854079,
+              0.3134256823273814
+            ],
+            "mean": 0.3390223685429996,
+            "std": 0.03466599134828032,
+            "minimum": 0.3134256823273814,
+            "maximum": 0.3880312581162096
+          }
+        }
+      },
+      "test": {
+        "teacher_task_macro": {
+          "next_skill_nll": {
+            "values": [
+              2.060953607393622,
+              2.051963612621176,
+              2.017364536921489
+            ],
+            "mean": 2.043427252312096,
+            "std": 0.01879102359551805,
+            "minimum": 2.017364536921489,
+            "maximum": 2.060953607393622
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.3717312277736926,
+              0.3485522261783437,
+              0.35344994216322445
+            ],
+            "mean": 0.3579111320384203,
+            "std": 0.009974741101609572,
+            "minimum": 0.3485522261783437,
+            "maximum": 0.3717312277736926
+          },
+          "static_joint_count_nll": {
+            "values": [
+              2.5193914085626603,
+              2.43434474170208,
+              2.7890277981758116
+            ],
+            "mean": 2.5809213161468505,
+            "std": 0.15119405804655225,
+            "minimum": 2.43434474170208,
+            "maximum": 2.7890277981758116
+          },
+          "dynamic_joint_count_nll": {
+            "values": [
+              2.3222910290956493,
+              2.2801609808206558,
+              2.4415232223272327
+            ],
+            "mean": 2.3479917440811793,
+            "std": 0.0683366095592609,
+            "minimum": 2.2801609808206558,
+            "maximum": 2.4415232223272327
+          },
+          "dynamic_minus_static_joint_nll": {
+            "values": [
+              -0.19710037946701098,
+              -0.15418376088142438,
+              -0.3475045758485787
+            ],
+            "mean": -0.23292957206567136,
+            "std": 0.08288961598252262,
+            "minimum": -0.3475045758485787,
+            "maximum": -0.15418376088142438
+          }
+        },
+        "teacher_micro": {
+          "next_skill_nll": {
+            "values": [
+              2.0510244175534003,
+              2.032527662427054,
+              2.026650823972532
+            ],
+            "mean": 2.036734301317662,
+            "std": 0.010385562866412752,
+            "minimum": 2.026650823972532,
+            "maximum": 2.0510244175534003
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.3382447149263293,
+              0.293401665598975,
+              0.29596412556053814
+            ],
+            "mean": 0.30920350202861413,
+            "std": 0.02056186737939052,
+            "minimum": 0.293401665598975,
+            "maximum": 0.3382447149263293
+          }
+        },
+        "free_task_macro": {
+          "exact_sequence_accuracy": {
+            "values": [
+              0.35436893203883496,
+              0.40048543689320387,
+              0.4077669902912621
+            ],
+            "mean": 0.3875404530744337,
+            "std": 0.02364342912006869,
+            "minimum": 0.35436893203883496,
+            "maximum": 0.4077669902912621
+          },
+          "normalized_edit_distance": {
+            "values": [
+              0.41326689761155777,
+              0.40604600361881915,
+              0.39038462212005903
+            ],
+            "mean": 0.40323250778347863,
+            "std": 0.009551141363865706,
+            "minimum": 0.39038462212005903,
+            "maximum": 0.41326689761155777
+          }
+        }
+      }
+    },
+    "event_no_attack_semantics": {
+      "validation": {
+        "teacher_task_macro": {
+          "next_skill_nll": {
+            "values": [
+              1.3061540292114535,
+              1.2449784656494167,
+              1.2226300570479698
+            ],
+            "mean": 1.25792085063628,
+            "std": 0.03530526380350612,
+            "minimum": 1.2226300570479698,
+            "maximum": 1.3061540292114535
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.5351825104971829,
+              0.6261437211919801,
+              0.6219552521477821
+            ],
+            "mean": 0.5944271612789818,
+            "std": 0.04192717736684662,
+            "minimum": 0.5351825104971829,
+            "maximum": 0.6261437211919801
+          },
+          "static_joint_count_nll": {
+            "values": [
+              2.521960315108298,
+              2.561332553625105,
+              2.722038331627846
+            ],
+            "mean": 2.601777066787083,
+            "std": 0.08654333079362107,
+            "minimum": 2.521960315108298,
+            "maximum": 2.722038331627846
+          },
+          "dynamic_joint_count_nll": {
+            "values": [
+              2.4442613887786866,
+              2.4533481556177135,
+              2.495761179327964
+            ],
+            "mean": 2.4644569079081213,
+            "std": 0.022444158701721482,
+            "minimum": 2.4442613887786866,
+            "maximum": 2.495761179327964
+          },
+          "dynamic_minus_static_joint_nll": {
+            "values": [
+              -0.07769892632961148,
+              -0.10798439800739137,
+              -0.2262771522998818
+            ],
+            "mean": -0.13732015887896154,
+            "std": 0.06410570675352618,
+            "minimum": -0.2262771522998818,
+            "maximum": -0.07769892632961148
+          }
+        },
+        "teacher_micro": {
+          "next_skill_nll": {
+            "values": [
+              1.445985746082718,
+              1.3494479819860565,
+              1.323641068219804
+            ],
+            "mean": 1.373024932096193,
+            "std": 0.05265586059637256,
+            "minimum": 1.323641068219804,
+            "maximum": 1.445985746082718
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.4684431977559607,
+              0.5659186535764376,
+              0.5532959326788219
+            ],
+            "mean": 0.5292192613370734,
+            "std": 0.04328302745901188,
+            "minimum": 0.4684431977559607,
+            "maximum": 0.5659186535764376
+          }
+        },
+        "free_task_macro": {
+          "exact_sequence_accuracy": {
+            "values": [
+              0.3859223300970874,
+              0.5315533980582524,
+              0.5315533980582524
+            ],
+            "mean": 0.48300970873786403,
+            "std": 0.06865114380451917,
+            "minimum": 0.3859223300970874,
+            "maximum": 0.5315533980582524
+          },
+          "normalized_edit_distance": {
+            "values": [
+              0.3866808252427184,
+              0.3309364886731392,
+              0.3309364886731392
+            ],
+            "mean": 0.3495179341963322,
+            "std": 0.026278132267396476,
+            "minimum": 0.3309364886731392,
+            "maximum": 0.3866808252427184
+          }
+        }
+      },
+      "test": {
+        "teacher_task_macro": {
+          "next_skill_nll": {
+            "values": [
+              1.9820699328350289,
+              1.9470222983107186,
+              1.9159026961769037
+            ],
+            "mean": 1.9483316424408839,
+            "std": 0.02702852306091332,
+            "minimum": 1.9159026961769037,
+            "maximum": 1.9820699328350289
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.37006772170405633,
+              0.38632375263920604,
+              0.379515299869706
+            ],
+            "mean": 0.37863559140432274,
+            "std": 0.0066655857796688945,
+            "minimum": 0.37006772170405633,
+            "maximum": 0.38632375263920604
+          },
+          "static_joint_count_nll": {
+            "values": [
+              2.3241416931152354,
+              2.2618970721960068,
+              2.5590772271156306
+            ],
+            "mean": 2.3817053308089577,
+            "std": 0.1279692421584538,
+            "minimum": 2.2618970721960068,
+            "maximum": 2.5590772271156306
+          },
+          "dynamic_joint_count_nll": {
+            "values": [
+              2.2411061763763427,
+              2.221815493702888,
+              2.4225247359275817
+            ],
+            "mean": 2.2951488020022706,
+            "std": 0.09041203465988684,
+            "minimum": 2.221815493702888,
+            "maximum": 2.4225247359275817
+          },
+          "dynamic_minus_static_joint_nll": {
+            "values": [
+              -0.08303551673889259,
+              -0.04008157849311883,
+              -0.13655249118804885
+            ],
+            "mean": -0.08655652880668675,
+            "std": 0.0394627030121216,
+            "minimum": -0.13655249118804885,
+            "maximum": -0.04008157849311883
+          }
+        },
+        "teacher_micro": {
+          "next_skill_nll": {
+            "values": [
+              2.05215300580464,
+              2.0446362118931782,
+              2.0364836459737186
+            ],
+            "mean": 2.044424287890512,
+            "std": 0.006398744315093029,
+            "minimum": 2.0364836459737186,
+            "maximum": 2.05215300580464
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.3273542600896861,
+              0.3452914798206278,
+              0.33888532991672005
+            ],
+            "mean": 0.33717702327567795,
+            "std": 0.007421801066403059,
+            "minimum": 0.3273542600896861,
+            "maximum": 0.3452914798206278
+          }
+        },
+        "free_task_macro": {
+          "exact_sequence_accuracy": {
+            "values": [
+              0.3786407766990291,
+              0.39563106796116504,
+              0.39563106796116504
+            ],
+            "mean": 0.38996763754045305,
+            "std": 0.008009300110527234,
+            "minimum": 0.3786407766990291,
+            "maximum": 0.39563106796116504
+          },
+          "normalized_edit_distance": {
+            "values": [
+              0.41401997746051145,
+              0.43820124724250936,
+              0.43820124724250936
+            ],
+            "mean": 0.4301408239818434,
+            "std": 0.011399159893701383,
+            "minimum": 0.41401997746051145,
+            "maximum": 0.43820124724250936
+          }
+        }
+      }
+    },
+    "semantic_event": {
+      "validation": {
+        "teacher_task_macro": {
+          "next_skill_nll": {
+            "values": [
+              1.3480713110450242,
+              1.3065064262309984,
+              1.2223664838046362
+            ],
+            "mean": 1.2923147403602195,
+            "std": 0.05229071848027523,
+            "minimum": 1.2223664838046362,
+            "maximum": 1.3480713110450242
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.5105581811396155,
+              0.5719104796983191,
+              0.5810356458967707
+            ],
+            "mean": 0.5545014355782351,
+            "std": 0.03129509410467065,
+            "minimum": 0.5105581811396155,
+            "maximum": 0.5810356458967707
+          },
+          "static_joint_count_nll": {
+            "values": [
+              2.7809085369110105,
+              2.7483545482158664,
+              2.688952547311782
+            ],
+            "mean": 2.7394052108128863,
+            "std": 0.038070495888177694,
+            "minimum": 2.688952547311782,
+            "maximum": 2.7809085369110105
+          },
+          "dynamic_joint_count_nll": {
+            "values": [
+              2.5538802784681325,
+              2.5113743066787717,
+              2.417368931770325
+            ],
+            "mean": 2.4942078389724096,
+            "std": 0.057037137927537576,
+            "minimum": 2.417368931770325,
+            "maximum": 2.5538802784681325
+          },
+          "dynamic_minus_static_joint_nll": {
+            "values": [
+              -0.2270282584428782,
+              -0.2369802415370944,
+              -0.27158361554145716
+            ],
+            "mean": -0.2451973718404766,
+            "std": 0.01909512825063929,
+            "minimum": -0.27158361554145716,
+            "maximum": -0.2270282584428782
+          }
+        },
+        "teacher_micro": {
+          "next_skill_nll": {
+            "values": [
+              1.4839884819146794,
+              1.426954673642363,
+              1.3499195076431165
+            ],
+            "mean": 1.420287554400053,
+            "std": 0.054936086044303216,
+            "minimum": 1.3499195076431165,
+            "maximum": 1.4839884819146794
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.40953716690042075,
+              0.47335203366058903,
+              0.5091164095371669
+            ],
+            "mean": 0.4640018700327255,
+            "std": 0.04118717891875136,
+            "minimum": 0.40953716690042075,
+            "maximum": 0.5091164095371669
+          }
+        },
+        "free_task_macro": {
+          "exact_sequence_accuracy": {
+            "values": [
+              0.39563106796116504,
+              0.5266990291262136,
+              0.46601941747572817
+            ],
+            "mean": 0.4627831715210356,
+            "std": 0.0535571817586905,
+            "minimum": 0.39563106796116504,
+            "maximum": 0.5266990291262136
+          },
+          "normalized_edit_distance": {
+            "values": [
+              0.3607260794760795,
+              0.3372468214094428,
+              0.3740594660194175
+            ],
+            "mean": 0.35734412230164664,
+            "std": 0.015217773085931424,
+            "minimum": 0.3372468214094428,
+            "maximum": 0.3740594660194175
+          }
+        }
+      },
+      "test": {
+        "teacher_task_macro": {
+          "next_skill_nll": {
+            "values": [
+              1.970655770838072,
+              1.9256942327162587,
+              1.9651279405458566
+            ],
+            "mean": 1.9538259813667291,
+            "std": 0.020019751722316917,
+            "minimum": 1.9256942327162587,
+            "maximum": 1.970655770838072
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.3599512042519705,
+              0.3633500285958779,
+              0.368706246156757
+            ],
+            "mean": 0.36400249300153514,
+            "std": 0.0036038842044965043,
+            "minimum": 0.3599512042519705,
+            "maximum": 0.368706246156757
+          },
+          "static_joint_count_nll": {
+            "values": [
+              2.5094941079616553,
+              2.432393750548362,
+              2.507931071519851
+            ],
+            "mean": 2.483272976676623,
+            "std": 0.03598270426457343,
+            "minimum": 2.432393750548362,
+            "maximum": 2.5094941079616553
+          },
+          "dynamic_joint_count_nll": {
+            "values": [
+              2.3236941725015643,
+              2.2859464091062547,
+              2.266649377942085
+            ],
+            "mean": 2.2920966531833016,
+            "std": 0.023691014798002192,
+            "minimum": 2.266649377942085,
+            "maximum": 2.3236941725015643
+          },
+          "dynamic_minus_static_joint_nll": {
+            "values": [
+              -0.18579993546009121,
+              -0.1464473414421072,
+              -0.2412816935777662
+            ],
+            "mean": -0.19117632349332156,
+            "std": 0.038902165727719575,
+            "minimum": -0.2412816935777662,
+            "maximum": -0.1464473414421072
+          }
+        },
+        "teacher_micro": {
+          "next_skill_nll": {
+            "values": [
+              2.0501455635806063,
+              2.0331624374605006,
+              2.073371625744632
+            ],
+            "mean": 2.052226542261913,
+            "std": 0.016481152059675538,
+            "minimum": 2.0331624374605006,
+            "maximum": 2.073371625744632
+          },
+          "next_skill_accuracy": {
+            "values": [
+              0.3183856502242152,
+              0.3171044202434337,
+              0.32799487508007685
+            ],
+            "mean": 0.3211616485159086,
+            "std": 0.004860049829912884,
+            "minimum": 0.3171044202434337,
+            "maximum": 0.32799487508007685
+          }
+        },
+        "free_task_macro": {
+          "exact_sequence_accuracy": {
+            "values": [
+              0.3567961165048544,
+              0.3932038834951456,
+              0.3616504854368932
+            ],
+            "mean": 0.3705501618122977,
+            "std": 0.01614072600587378,
+            "minimum": 0.3567961165048544,
+            "maximum": 0.3932038834951456
+          },
+          "normalized_edit_distance": {
+            "values": [
+              0.44427172746347504,
+              0.45045503310066415,
+              0.4526001540261249
+            ],
+            "mean": 0.44910897153008805,
+            "std": 0.003530777399402702,
+            "minimum": 0.44427172746347504,
+            "maximum": 0.4526001540261249
+          }
+        }
+      }
+    }
+  },
+  "baselines": {
+    "validation": {
+      "candidate_uniform": {
+        "teacher": {
+          "task_count": 4,
+          "task_macro": {
+            "next_skill_nll": 2.144138798178258,
+            "next_skill_accuracy": 0.02946537710964809
+          },
+          "micro": {
+            "event_count": 1426,
+            "next_skill_nll": 1.9638597975883487,
+            "next_skill_accuracy": 0.07082748948106592
+          },
+          "per_task": {
+            "banking|user_task_7": {
+              "event_count": 211,
+              "next_skill_nll": 2.0794415416798406,
+              "next_skill_accuracy": 0.004739336492890996
+            },
+            "slack|user_task_10": {
+              "event_count": 884,
+              "next_skill_nll": 1.7917594692280547,
+              "next_skill_accuracy": 0.11312217194570136
+            },
+            "travel|user_task_2": {
+              "event_count": 155,
+              "next_skill_nll": 2.3978952727983756,
+              "next_skill_accuracy": 0.0
+            },
+            "workspace|user_task_22": {
+              "event_count": 176,
+              "next_skill_nll": 2.3074589090067614,
+              "next_skill_accuracy": 0.0
+            }
+          }
+        },
+        "free": {
+          "micro": {
+            "trajectory_count": 412,
+            "exact_sequence_accuracy": 0.043689320388349516,
+            "normalized_edit_distance": 0.932471169607092,
+            "mean_correct_prefix_length": 0.043689320388349516,
+            "first_event_accuracy": 0.043689320388349516,
+            "finish_rate": 0.25,
+            "mean_absolute_length_error": 12.580097087378642
+          },
+          "task_count": 4,
+          "task_macro": {
+            "exact_sequence_accuracy": 0.043689320388349516,
+            "normalized_edit_distance": 0.932471169607092
+          },
+          "per_task": {
+            "banking|user_task_7": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 0.9993932038834952
+            },
+            "slack|user_task_10": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.17475728155339806,
+              "normalized_edit_distance": 0.7304914745448725
+            },
+            "travel|user_task_2": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 1.0
+            },
+            "workspace|user_task_22": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 1.0
+            }
+          }
+        }
+      },
+      "candidate_hierarchical_markov": {
+        "teacher": {
+          "task_count": 4,
+          "task_macro": {
+            "next_skill_nll": 1.366816022447495,
+            "next_skill_accuracy": 0.5421133666036294
+          },
+          "micro": {
+            "event_count": 1426,
+            "next_skill_nll": 1.7033081201397688,
+            "next_skill_accuracy": 0.47755960729312763
+          },
+          "per_task": {
+            "banking|user_task_7": {
+              "event_count": 211,
+              "next_skill_nll": 1.2172705957745606,
+              "next_skill_accuracy": 0.4028436018957346
+            },
+            "slack|user_task_10": {
+              "event_count": 884,
+              "next_skill_nll": 2.045352446148963,
+              "next_skill_accuracy": 0.4287330316742081
+            },
+            "travel|user_task_2": {
+              "event_count": 155,
+              "next_skill_nll": 1.1445287242524427,
+              "next_skill_accuracy": 0.8709677419354839
+            },
+            "workspace|user_task_22": {
+              "event_count": 176,
+              "next_skill_nll": 1.0601123236140142,
+              "next_skill_accuracy": 0.4659090909090909
+            }
+          }
+        },
+        "free": {
+          "micro": {
+            "trajectory_count": 412,
+            "exact_sequence_accuracy": 0.28640776699029125,
+            "normalized_edit_distance": 0.42911610032362457,
+            "mean_correct_prefix_length": 0.7233009708737864,
+            "first_event_accuracy": 0.6577669902912622,
+            "finish_rate": 0.75,
+            "mean_absolute_length_error": 2.5242718446601944
+          },
+          "task_count": 4,
+          "task_macro": {
+            "exact_sequence_accuracy": 0.28640776699029125,
+            "normalized_edit_distance": 0.42911610032362457
+          },
+          "per_task": {
+            "banking|user_task_7": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 0.43236245954692554
+            },
+            "slack|user_task_10": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 0.8270631067961165
+            },
+            "travel|user_task_2": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.9029126213592233,
+              "normalized_edit_distance": 0.07775080906148867
+            },
+            "workspace|user_task_22": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.24271844660194175,
+              "normalized_edit_distance": 0.3792880258899677
+            }
+          }
+        }
+      },
+      "candidate_factorized_semantic_markov": {
+        "teacher": {
+          "task_count": 4,
+          "task_macro": {
+            "next_skill_nll": 1.7107162272657472,
+            "next_skill_accuracy": 0.49623550562722707
+          },
+          "micro": {
+            "event_count": 1426,
+            "next_skill_nll": 1.9377949655459659,
+            "next_skill_accuracy": 0.42496493688639553
+          },
+          "per_task": {
+            "banking|user_task_7": {
+              "event_count": 211,
+              "next_skill_nll": 1.5545721718753684,
+              "next_skill_accuracy": 0.33649289099526064
+            },
+            "slack|user_task_10": {
+              "event_count": 884,
+              "next_skill_nll": 2.181864983632493,
+              "next_skill_accuracy": 0.36538461538461536
+            },
+            "travel|user_task_2": {
+              "event_count": 155,
+              "next_skill_nll": 1.9151922644753294,
+              "next_skill_accuracy": 0.6580645161290323
+            },
+            "workspace|user_task_22": {
+              "event_count": 176,
+              "next_skill_nll": 1.1912354890797987,
+              "next_skill_accuracy": 0.625
+            }
+          }
+        },
+        "free": {
+          "micro": {
+            "trajectory_count": 412,
+            "exact_sequence_accuracy": 0.48058252427184467,
+            "normalized_edit_distance": 0.36417371059361353,
+            "mean_correct_prefix_length": 0.49029126213592233,
+            "first_event_accuracy": 0.49029126213592233,
+            "finish_rate": 0.9878640776699029,
+            "mean_absolute_length_error": 2.4441747572815533
+          },
+          "task_count": 4,
+          "task_macro": {
+            "exact_sequence_accuracy": 0.48058252427184467,
+            "normalized_edit_distance": 0.3641737105936135
+          },
+          "per_task": {
+            "banking|user_task_7": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.24271844660194175,
+              "normalized_edit_distance": 0.41197411003236245
+            },
+            "slack|user_task_10": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.1650485436893204,
+              "normalized_edit_distance": 0.736063774413289
+            },
+            "travel|user_task_2": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.9029126213592233,
+              "normalized_edit_distance": 0.07775080906148867
+            },
+            "workspace|user_task_22": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.6116504854368932,
+              "normalized_edit_distance": 0.23090614886731392
+            }
+          }
+        }
+      }
+    },
+    "test": {
+      "candidate_uniform": {
+        "teacher": {
+          "task_count": 4,
+          "task_macro": {
+            "next_skill_nll": 2.1442246994144822,
+            "next_skill_accuracy": 0.07770741686769783
+          },
+          "micro": {
+            "event_count": 1561,
+            "next_skill_nll": 2.028990085234186,
+            "next_skill_accuracy": 0.10377962844330557
+          },
+          "per_task": {
+            "banking|user_task_8": {
+              "event_count": 348,
+              "next_skill_nll": 2.079779998678837,
+              "next_skill_accuracy": 0.16954022988505746
+            },
+            "slack|user_task_16": {
+              "event_count": 729,
+              "next_skill_nll": 1.7930281991031762,
+              "next_skill_accuracy": 0.1412894375857339
+            },
+            "travel|user_task_10": {
+              "event_count": 220,
+              "next_skill_nll": 2.397895272798379,
+              "next_skill_accuracy": 0.0
+            },
+            "workspace|user_task_18": {
+              "event_count": 264,
+              "next_skill_nll": 2.306195327077536,
+              "next_skill_accuracy": 0.0
+            }
+          }
+        },
+        "free": {
+          "micro": {
+            "trajectory_count": 412,
+            "exact_sequence_accuracy": 0.014563106796116505,
+            "normalized_edit_distance": 0.9411318960166047,
+            "mean_correct_prefix_length": 0.014563106796116505,
+            "first_event_accuracy": 0.014563106796116505,
+            "finish_rate": 0.25,
+            "mean_absolute_length_error": 11.5
+          },
+          "task_count": 4,
+          "task_macro": {
+            "exact_sequence_accuracy": 0.014563106796116505,
+            "normalized_edit_distance": 0.9411318960166047
+          },
+          "per_task": {
+            "banking|user_task_8": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 0.9641990291262136
+            },
+            "slack|user_task_16": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.05825242718446602,
+              "normalized_edit_distance": 0.8003285549402055
+            },
+            "travel|user_task_10": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 1.0
+            },
+            "workspace|user_task_18": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 1.0
+            }
+          }
+        }
+      },
+      "candidate_hierarchical_markov": {
+        "teacher": {
+          "task_count": 4,
+          "task_macro": {
+            "next_skill_nll": 2.7140642688534533,
+            "next_skill_accuracy": 0.3564989507677886
+          },
+          "micro": {
+            "event_count": 1561,
+            "next_skill_nll": 2.5932813636127325,
+            "next_skill_accuracy": 0.3183856502242152
+          },
+          "per_task": {
+            "banking|user_task_8": {
+              "event_count": 348,
+              "next_skill_nll": 2.1429966244248475,
+              "next_skill_accuracy": 0.20402298850574713
+            },
+            "slack|user_task_16": {
+              "event_count": 729,
+              "next_skill_nll": 2.427145914910045,
+              "next_skill_accuracy": 0.2825788751714678
+            },
+            "travel|user_task_10": {
+              "event_count": 220,
+              "next_skill_nll": 2.8766869589688495,
+              "next_skill_accuracy": 0.6363636363636364
+            },
+            "workspace|user_task_18": {
+              "event_count": 264,
+              "next_skill_nll": 3.4094275771100713,
+              "next_skill_accuracy": 0.30303030303030304
+            }
+          }
+        },
+        "free": {
+          "micro": {
+            "trajectory_count": 412,
+            "exact_sequence_accuracy": 0.20388349514563106,
+            "normalized_edit_distance": 0.5264637432416559,
+            "mean_correct_prefix_length": 0.4563106796116505,
+            "first_event_accuracy": 0.4441747572815534,
+            "finish_rate": 0.75,
+            "mean_absolute_length_error": 3.4441747572815533
+          },
+          "task_count": 4,
+          "task_macro": {
+            "exact_sequence_accuracy": 0.20388349514563106,
+            "normalized_edit_distance": 0.5264637432416559
+          },
+          "per_task": {
+            "banking|user_task_8": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 0.556892433348744
+            },
+            "slack|user_task_16": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 0.8701456310679612
+            },
+            "travel|user_task_10": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.8155339805825242,
+              "normalized_edit_distance": 0.15641435155998262
+            },
+            "workspace|user_task_18": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.0,
+              "normalized_edit_distance": 0.5224025569899357
+            }
+          }
+        }
+      },
+      "candidate_factorized_semantic_markov": {
+        "teacher": {
+          "task_count": 4,
+          "task_macro": {
+            "next_skill_nll": 2.825342317785708,
+            "next_skill_accuracy": 0.34346662130027394
+          },
+          "micro": {
+            "event_count": 1561,
+            "next_skill_nll": 2.6925326874799937,
+            "next_skill_accuracy": 0.31390134529147984
+          },
+          "per_task": {
+            "banking|user_task_8": {
+              "event_count": 348,
+              "next_skill_nll": 2.389117252260325,
+              "next_skill_accuracy": 0.20402298850574713
+            },
+            "slack|user_task_16": {
+              "event_count": 729,
+              "next_skill_nll": 2.555838944280086,
+              "next_skill_accuracy": 0.2812071330589849
+            },
+            "travel|user_task_10": {
+              "event_count": 220,
+              "next_skill_nll": 3.8561118342169207,
+              "next_skill_accuracy": 0.4681818181818182
+            },
+            "workspace|user_task_18": {
+              "event_count": 264,
+              "next_skill_nll": 2.5003012403855,
+              "next_skill_accuracy": 0.42045454545454547
+            }
+          }
+        },
+        "free": {
+          "micro": {
+            "trajectory_count": 412,
+            "exact_sequence_accuracy": 0.45145631067961167,
+            "normalized_edit_distance": 0.4360936225317293,
+            "mean_correct_prefix_length": 0.4563106796116505,
+            "first_event_accuracy": 0.4538834951456311,
+            "finish_rate": 0.9878640776699029,
+            "mean_absolute_length_error": 2.8737864077669903
+          },
+          "task_count": 4,
+          "task_macro": {
+            "exact_sequence_accuracy": 0.45145631067961167,
+            "normalized_edit_distance": 0.43609362253172934
+          },
+          "per_task": {
+            "banking|user_task_8": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.3106796116504854,
+              "normalized_edit_distance": 0.4875077053475112
+            },
+            "slack|user_task_16": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.04854368932038835,
+              "normalized_edit_distance": 0.8122487275399897
+            },
+            "travel|user_task_10": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.8155339805825242,
+              "normalized_edit_distance": 0.15641435155998262
+            },
+            "workspace|user_task_18": {
+              "trajectory_count": 103,
+              "exact_sequence_accuracy": 0.6310679611650486,
+              "normalized_edit_distance": 0.2882037056794338
+            }
+          }
+        }
+      }
+    }
+  },
+  "prefix_controls": {
+    "validation": {
+      "static_semantic": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.7809085369110105,
+            2.7483545482158664,
+            2.688952547311782
+          ],
+          "mean": 2.7394052108128863,
+          "std": 0.038070495888177694,
+          "minimum": 2.688952547311782,
+          "maximum": 2.7809085369110105
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            1.0627953328192234,
+            1.0555311545729633,
+            1.0195117324590683
+          ],
+          "mean": 1.0459460732837516,
+          "std": 0.01892569421932347,
+          "minimum": 1.0195117324590683,
+          "maximum": 1.0627953328192234
+        }
+      },
+      "observed": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.5538802784681325,
+            2.5113743066787717,
+            2.417368931770325
+          ],
+          "mean": 2.4942078389724096,
+          "std": 0.057037137927537576,
+          "minimum": 2.417368931770325,
+          "maximum": 2.5538802784681325
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.9781993862986565,
+            0.9642706363275646,
+            0.9219066884741188
+          ],
+          "mean": 0.9547922370334466,
+          "std": 0.023938769071323474,
+          "minimum": 0.9219066884741188,
+          "maximum": 0.9781993862986565
+        }
+      },
+      "shuffled": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.5988042050600058,
+            2.5207597255706786,
+            2.4560902595520018
+          ],
+          "mean": 2.5252180633942287,
+          "std": 0.058347951364934,
+          "minimum": 2.4560902595520018,
+          "maximum": 2.5988042050600058
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.9879821542650462,
+            0.9625458546355368,
+            0.9318588279560207
+          ],
+          "mean": 0.9607956122855347,
+          "std": 0.022945652459818243,
+          "minimum": 0.9318588279560207,
+          "maximum": 0.9879821542650462
+        }
+      },
+      "length_only": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.6576138401031493,
+            2.5295934104919433,
+            2.4696549552679063
+          ],
+          "mean": 2.552287401954333,
+          "std": 0.07839387107632964,
+          "minimum": 2.4696549552679063,
+          "maximum": 2.6576138401031493
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            1.0142070285975933,
+            0.9676849719509484,
+            0.9344141470640898
+          ],
+          "mean": 0.9721020492042105,
+          "std": 0.032724699280012697,
+          "minimum": 0.9344141470640898,
+          "maximum": 1.0142070285975933
+        }
+      },
+      "random_length_matched": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.6390243250131604,
+            2.5397908169031145,
+            2.4611272192001348
+          ],
+          "mean": 2.5466474537054697,
+          "std": 0.07278784314862051,
+          "minimum": 2.4611272192001348,
+          "maximum": 2.6390243250131604
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            1.0026777086034415,
+            0.9705141411349179,
+            0.9339257031679153
+          ],
+          "mean": 0.9690391843020917,
+          "std": 0.02808725910557645,
+          "minimum": 0.9339257031679153,
+          "maximum": 1.0026777086034415
+        }
+      },
+      "markov_length_matched": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.6202846986055373,
+            2.534632493853568,
+            2.4812893682718276
+          ],
+          "mean": 2.545402186910311,
+          "std": 0.05725332700694701,
+          "minimum": 2.4812893682718276,
+          "maximum": 2.6202846986055373
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.990510315671563,
+            0.9687993496283891,
+            0.9421259519830346
+          ],
+          "mean": 0.9671452057609956,
+          "std": 0.019787433829520404,
+          "minimum": 0.9421259519830346,
+          "maximum": 0.990510315671563
+        }
+      },
+      "semantic_markov_length_matched": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.5579339349269867,
+            2.5099845677614208,
+            2.4249169135093678
+          ],
+          "mean": 2.4976118053992584,
+          "std": 0.05500421761438984,
+          "minimum": 2.4249169135093678,
+          "maximum": 2.5579339349269867
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.9807619146257638,
+            0.9631019052490593,
+            0.9237974392250177
+          ],
+          "mean": 0.9558870863666136,
+          "std": 0.02380865491161318,
+          "minimum": 0.9237974392250177,
+          "maximum": 0.9807619146257638
+        }
+      }
+    },
+    "test": {
+      "static_semantic": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.5094941079616553,
+            2.432393750548362,
+            2.507931071519851
+          ],
+          "mean": 2.483272976676623,
+          "std": 0.03598270426457343,
+          "minimum": 2.432393750548362,
+          "maximum": 2.5094941079616553
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.9001877244561912,
+            0.8727673795074224,
+            0.8956490632146596
+          ],
+          "mean": 0.8895347223927578,
+          "std": 0.012000213943708088,
+          "minimum": 0.8727673795074224,
+          "maximum": 0.9001877244561912
+        }
+      },
+      "observed": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.3236941725015643,
+            2.2859464091062547,
+            2.266649377942085
+          ],
+          "mean": 2.2920966531833016,
+          "std": 0.023691014798002192,
+          "minimum": 2.266649377942085,
+          "maximum": 2.3236941725015643
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.8204901875182986,
+            0.8065897068753838,
+            0.7912639347091317
+          ],
+          "mean": 0.8061146097009381,
+          "std": 0.011936296223709399,
+          "minimum": 0.7912639347091317,
+          "maximum": 0.8204901875182986
+        }
+      },
+      "shuffled": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.338702620267868,
+            2.2811780267953874,
+            2.26268070757389
+          ],
+          "mean": 2.2941871182123816,
+          "std": 0.032370358323981906,
+          "minimum": 2.26268070757389,
+          "maximum": 2.338702620267868
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.8278508424013851,
+            0.8053223738446833,
+            0.791188643425703
+          ],
+          "mean": 0.8081206198905905,
+          "std": 0.01509750187135168,
+          "minimum": 0.791188643425703,
+          "maximum": 0.8278508424013851
+        }
+      },
+      "length_only": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.3784841561317442,
+            2.301402227282524,
+            2.282813466787338
+          ],
+          "mean": 2.320899950067202,
+          "std": 0.041419327978208326,
+          "minimum": 2.282813466787338,
+          "maximum": 2.3784841561317442
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.8430245434492829,
+            0.8141094722971323,
+            0.7994060888886452
+          ],
+          "mean": 0.81884670154502,
+          "std": 0.01811948123383389,
+          "minimum": 0.7994060888886452,
+          "maximum": 0.8430245434492829
+        }
+      },
+      "random_length_matched": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.3677437543869018,
+            2.2883485513925557,
+            2.2751811981201167
+          ],
+          "mean": 2.310424501299858,
+          "std": 0.040885754478324376,
+          "minimum": 2.2751811981201167,
+          "maximum": 2.3677437543869018
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.838892822228372,
+            0.8074410632625222,
+            0.7967657747492194
+          ],
+          "mean": 0.8143665534133712,
+          "std": 0.017881905989012563,
+          "minimum": 0.7967657747492194,
+          "maximum": 0.838892822228372
+        }
+      },
+      "markov_length_matched": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.325522206425666,
+            2.2729595935344697,
+            2.257413203716278
+          ],
+          "mean": 2.2852983345588047,
+          "std": 0.029142093954347907,
+          "minimum": 2.257413203716278,
+          "maximum": 2.325522206425666
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.8228816381469369,
+            0.8026760741323233,
+            0.7922128481417892
+          ],
+          "mean": 0.8059235201403498,
+          "std": 0.012729312609779794,
+          "minimum": 0.7922128481417892,
+          "maximum": 0.8228816381469369
+        }
+      },
+      "semantic_markov_length_matched": {
+        "task_macro_joint_count_nll": {
+          "values": [
+            2.3370481073856357,
+            2.2877209174633024,
+            2.2701270866394045
+          ],
+          "mean": 2.2982987038294476,
+          "std": 0.028325758921698002,
+          "minimum": 2.2701270866394045,
+          "maximum": 2.3370481073856357
+        },
+        "task_macro_joint_probability_log_score": {
+          "values": [
+            0.8247673404589295,
+            0.8072145135700702,
+            0.7932057583332061
+          ],
+          "mean": 0.8083958707874018,
+          "std": 0.012912011726190022,
+          "minimum": 0.7932057583332061,
+          "maximum": 0.8247673404589295
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "full_vs_markov": {
+      "validation": {
+        "next_skill_nll_gain": 0.07450128208727547,
+        "free_edit_gain": 0.07177197802197793,
+        "task_macro_model_nll": 1.2923147403602195,
+        "task_macro_markov_nll": 1.366816022447495,
+        "task_macro_model_free_edit": 0.35734412230164664,
+        "task_macro_markov_free_edit": 0.42911610032362457
+      },
+      "test": {
+        "next_skill_nll_gain": 0.7602382874867242,
+        "free_edit_gain": 0.07735477171156785,
+        "task_macro_model_nll": 1.9538259813667291,
+        "task_macro_markov_nll": 2.7140642688534533,
+        "task_macro_model_free_edit": 0.44910897153008805,
+        "task_macro_markov_free_edit": 0.5264637432416559
+      }
+    },
+    "full_vs_semantic_markov": {
+      "validation": {
+        "next_skill_nll_gain": 0.4184014869055277,
+        "free_edit_gain": 0.006829588291966837,
+        "task_macro_model_nll": 1.2923147403602195,
+        "task_macro_semantic_markov_nll": 1.7107162272657472,
+        "task_macro_model_free_edit": 0.35734412230164664,
+        "task_macro_semantic_markov_free_edit": 0.3641737105936135
+      },
+      "test": {
+        "next_skill_nll_gain": 0.8715163364189789,
+        "free_edit_gain": -0.013015348998358711,
+        "task_macro_model_nll": 1.9538259813667291,
+        "task_macro_semantic_markov_nll": 2.825342317785708,
+        "task_macro_model_free_edit": 0.44910897153008805,
+        "task_macro_semantic_markov_free_edit": 0.43609362253172934
+      }
+    },
+    "full_vs_components": {
+      "validation": {
+        "length_semantic": {
+          "next_skill_nll_gain": 0.21065541927989462,
+          "component_nll": 1.5029701596401142,
+          "full_nll": 1.2923147403602195
+        },
+        "event_no_attack_semantics": {
+          "next_skill_nll_gain": -0.03439388972393953,
+          "component_nll": 1.25792085063628,
+          "full_nll": 1.2923147403602195
+        }
+      },
+      "test": {
+        "length_semantic": {
+          "next_skill_nll_gain": 0.08960127094536685,
+          "component_nll": 2.043427252312096,
+          "full_nll": 1.9538259813667291
+        },
+        "event_no_attack_semantics": {
+          "next_skill_nll_gain": -0.005494338925845277,
+          "component_nll": 1.9483316424408839,
+          "full_nll": 1.9538259813667291
+        }
+      }
+    },
+    "prefix": {
+      "validation": {
+        "static_semantic": {
+          "observed_nll": 2.4942078389724096,
+          "control_nll": 2.7394052108128863,
+          "observed_nll_gain": 0.24519737184047674
+        },
+        "shuffled": {
+          "observed_nll": 2.4942078389724096,
+          "control_nll": 2.5252180633942287,
+          "observed_nll_gain": 0.03101022442181911
+        },
+        "length_only": {
+          "observed_nll": 2.4942078389724096,
+          "control_nll": 2.552287401954333,
+          "observed_nll_gain": 0.058079562981923516
+        },
+        "random_length_matched": {
+          "observed_nll": 2.4942078389724096,
+          "control_nll": 2.5466474537054697,
+          "observed_nll_gain": 0.052439614733060136
+        },
+        "markov_length_matched": {
+          "observed_nll": 2.4942078389724096,
+          "control_nll": 2.545402186910311,
+          "observed_nll_gain": 0.05119434793790134
+        },
+        "semantic_markov_length_matched": {
+          "observed_nll": 2.4942078389724096,
+          "control_nll": 2.4976118053992584,
+          "observed_nll_gain": 0.0034039664268488146
+        }
+      },
+      "test": {
+        "static_semantic": {
+          "observed_nll": 2.2920966531833016,
+          "control_nll": 2.483272976676623,
+          "observed_nll_gain": 0.19117632349332148
+        },
+        "shuffled": {
+          "observed_nll": 2.2920966531833016,
+          "control_nll": 2.2941871182123816,
+          "observed_nll_gain": 0.0020904650290800575
+        },
+        "length_only": {
+          "observed_nll": 2.2920966531833016,
+          "control_nll": 2.320899950067202,
+          "observed_nll_gain": 0.028803296883900487
+        },
+        "random_length_matched": {
+          "observed_nll": 2.2920966531833016,
+          "control_nll": 2.310424501299858,
+          "observed_nll_gain": 0.0183278481165563
+        },
+        "markov_length_matched": {
+          "observed_nll": 2.2920966531833016,
+          "control_nll": 2.2852983345588047,
+          "observed_nll_gain": -0.0067983186244968685
+        },
+        "semantic_markov_length_matched": {
+          "observed_nll": 2.2920966531833016,
+          "control_nll": 2.2982987038294476,
+          "observed_nll_gain": 0.0062020506461459846
+        }
+      }
+    }
+  },
+  "per_task_directions": {
+    "validation": {
+      "tasks": {
+        "banking|user_task_7": {
+          "full_seed_mean_nll": 1.2011441186329388,
+          "full_seed_std_nll": 0.07318983834476424,
+          "plain_markov_nll": 1.2172705957745606,
+          "semantic_markov_nll": 1.5545721718753684,
+          "strongest_markov_nll": 1.2172705957745606,
+          "strongest_markov": "candidate_hierarchical_markov",
+          "full_minus_strongest_markov_nll": -0.016126477141621853,
+          "materially_improved": false,
+          "not_materially_worse": true
+        },
+        "slack|user_task_10": {
+          "full_seed_mean_nll": 1.552351590465097,
+          "full_seed_std_nll": 0.057188761681750404,
+          "plain_markov_nll": 2.045352446148963,
+          "semantic_markov_nll": 2.181864983632493,
+          "strongest_markov_nll": 2.045352446148963,
+          "strongest_markov": "candidate_hierarchical_markov",
+          "full_minus_strongest_markov_nll": -0.49300085568386587,
+          "materially_improved": true,
+          "not_materially_worse": true
+        },
+        "travel|user_task_2": {
+          "full_seed_mean_nll": 1.2173568971695439,
+          "full_seed_std_nll": 0.08131685337015758,
+          "plain_markov_nll": 1.1445287242524427,
+          "semantic_markov_nll": 1.9151922644753294,
+          "strongest_markov_nll": 1.1445287242524427,
+          "strongest_markov": "candidate_hierarchical_markov",
+          "full_minus_strongest_markov_nll": 0.0728281729171012,
+          "materially_improved": false,
+          "not_materially_worse": false
+        },
+        "workspace|user_task_22": {
+          "full_seed_mean_nll": 1.1984063551732989,
+          "full_seed_std_nll": 0.028357179146051972,
+          "plain_markov_nll": 1.0601123236140142,
+          "semantic_markov_nll": 1.1912354890797987,
+          "strongest_markov_nll": 1.0601123236140142,
+          "strongest_markov": "candidate_hierarchical_markov",
+          "full_minus_strongest_markov_nll": 0.13829403155928466,
+          "materially_improved": false,
+          "not_materially_worse": false
+        }
+      },
+      "materially_improved_count": 1,
+      "not_materially_worse_count": 2,
+      "task_count": 4
+    },
+    "test": {
+      "tasks": {
+        "banking|user_task_8": {
+          "full_seed_mean_nll": 1.6101326711218933,
+          "full_seed_std_nll": 0.026409310465458816,
+          "plain_markov_nll": 2.1429966244248475,
+          "semantic_markov_nll": 2.389117252260325,
+          "strongest_markov_nll": 2.1429966244248475,
+          "strongest_markov": "candidate_hierarchical_markov",
+          "full_minus_strongest_markov_nll": -0.5328639533029542,
+          "materially_improved": true,
+          "not_materially_worse": true
+        },
+        "slack|user_task_16": {
+          "full_seed_mean_nll": 2.3353379424925422,
+          "full_seed_std_nll": 0.04155301808351695,
+          "plain_markov_nll": 2.427145914910045,
+          "semantic_markov_nll": 2.555838944280086,
+          "strongest_markov_nll": 2.427145914910045,
+          "strongest_markov": "candidate_hierarchical_markov",
+          "full_minus_strongest_markov_nll": -0.09180797241750271,
+          "materially_improved": true,
+          "not_materially_worse": true
+        },
+        "travel|user_task_10": {
+          "full_seed_mean_nll": 1.8385884428566153,
+          "full_seed_std_nll": 0.01676046702459758,
+          "plain_markov_nll": 2.8766869589688495,
+          "semantic_markov_nll": 3.8561118342169207,
+          "strongest_markov_nll": 2.8766869589688495,
+          "strongest_markov": "candidate_hierarchical_markov",
+          "full_minus_strongest_markov_nll": -1.0380985161122342,
+          "materially_improved": true,
+          "not_materially_worse": true
+        },
+        "workspace|user_task_18": {
+          "full_seed_mean_nll": 2.0312448689958664,
+          "full_seed_std_nll": 0.06729696713507581,
+          "plain_markov_nll": 3.4094275771100713,
+          "semantic_markov_nll": 2.5003012403855,
+          "strongest_markov_nll": 2.5003012403855,
+          "strongest_markov": "candidate_factorized_semantic_markov",
+          "full_minus_strongest_markov_nll": -0.4690563713896334,
+          "materially_improved": true,
+          "not_materially_worse": true
+        }
+      },
+      "materially_improved_count": 4,
+      "not_materially_worse_count": 4,
+      "task_count": 4
+    }
+  },
+  "seed_prediction_stability": {
+    "validation": {
+      "trajectory_count": 412,
+      "all_seed_full_sequence_agreement": 0.38349514563106796,
+      "mean_pairwise_joint_total_variation": 0.11913021182653444,
+      "maximum_pairwise_joint_total_variation": 0.3842526525259018,
+      "minimum_pairwise_joint_success_ranking_spearman": 0.8351076725246465,
+      "pairwise": [
+        {
+          "left_seed": 7,
+          "right_seed": 17,
+          "mean_joint_total_variation": 0.12187580706877182,
+          "maximum_joint_total_variation": 0.3809165693819523,
+          "joint_success_ranking_spearman": 0.8649460302630324
+        },
+        {
+          "left_seed": 7,
+          "right_seed": 29,
+          "mean_joint_total_variation": 0.11047238998060811,
+          "maximum_joint_total_variation": 0.3842526525259018,
+          "joint_success_ranking_spearman": 0.8351076725246465
+        },
+        {
+          "left_seed": 17,
+          "right_seed": 29,
+          "mean_joint_total_variation": 0.12504243843022336,
+          "maximum_joint_total_variation": 0.3678760714828968,
+          "joint_success_ranking_spearman": 0.8624953452234383
+        }
+      ],
+      "independence_warning": "trajectory-level ranking is a seed-stability diagnostic; repeated configurations are not independent tasks"
+    },
+    "test": {
+      "trajectory_count": 412,
+      "all_seed_full_sequence_agreement": 0.5048543689320388,
+      "mean_pairwise_joint_total_variation": 0.09582106525253227,
+      "maximum_pairwise_joint_total_variation": 0.3861190043389797,
+      "minimum_pairwise_joint_success_ranking_spearman": 0.8718910066147114,
+      "pairwise": [
+        {
+          "left_seed": 7,
+          "right_seed": 17,
+          "mean_joint_total_variation": 0.09299266396895123,
+          "maximum_joint_total_variation": 0.3861190043389797,
+          "joint_success_ranking_spearman": 0.8718910066147114
+        },
+        {
+          "left_seed": 7,
+          "right_seed": 29,
+          "mean_joint_total_variation": 0.0913425881836057,
+          "maximum_joint_total_variation": 0.3164364621043205,
+          "joint_success_ranking_spearman": 0.905281903129094
+        },
+        {
+          "left_seed": 17,
+          "right_seed": 29,
+          "mean_joint_total_variation": 0.10312794360503988,
+          "maximum_joint_total_variation": 0.350188922137022,
+          "joint_success_ranking_spearman": 0.9305267710840792
+        }
+      ],
+      "independence_warning": "trajectory-level ranking is a seed-stability diagnostic; repeated configurations are not independent tasks"
+    }
+  },
+  "micro_task_macro_disagreement": {
+    "validation": {
+      "by_baseline": {
+        "candidate_hierarchical_markov": {
+          "micro_nll_gain": 0.2830205657397158,
+          "task_macro_nll_gain": 0.07450128208727547
+        },
+        "candidate_factorized_semantic_markov": {
+          "micro_nll_gain": 0.5175074111459128,
+          "task_macro_nll_gain": 0.4184014869055277
+        }
+      },
+      "strongest_task_macro_markov": "candidate_hierarchical_markov",
+      "micro_nll_gain_vs_strongest_markov": 0.2830205657397158,
+      "task_macro_nll_gain_vs_strongest_markov": 0.07450128208727547,
+      "direction_disagrees": false
+    },
+    "test": {
+      "by_baseline": {
+        "candidate_hierarchical_markov": {
+          "micro_nll_gain": 0.5410548213508197,
+          "task_macro_nll_gain": 0.7602382874867242
+        },
+        "candidate_factorized_semantic_markov": {
+          "micro_nll_gain": 0.6403061452180809,
+          "task_macro_nll_gain": 0.8715163364189789
+        }
+      },
+      "strongest_task_macro_markov": "candidate_hierarchical_markov",
+      "micro_nll_gain_vs_strongest_markov": 0.5410548213508197,
+      "task_macro_nll_gain_vs_strongest_markov": 0.7602382874867242,
+      "direction_disagrees": false
+    }
+  },
+  "gates": {
+    "representation_integrity": true,
+    "task_macro_predictive_and_free_vs_markov": false,
+    "event_identity_beyond_length": true,
+    "attack_semantics_increment": false,
+    "prefix_content_beyond_static_length_random_markov": false,
+    "prefix_order_beyond_shuffled_multiset": true,
+    "seed_stability": true,
+    "outcome_and_ranking_seed_stability": false,
+    "per_task_direction": false,
+    "clean_eligibility_gate": false
+  },
+  "decision": "SHORTCUT_NOT_RULED_OUT_CLEAN_GATE_BLOCKED",
+  "clean_gate_override": "all outcomes remain CLEAN_GATE_BLOCKED; this experiment cannot authorize attack-data generation, H2 attack planning, selective deployment, or Dreamer training",
+  "next_admissible_stage": "clean-only independent task/victim expansion; retain task-grouped evaluation and do not collect attack trajectories until clean GO"
+}

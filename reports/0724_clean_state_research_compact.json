@@ -1,0 +1,58 @@
+{
+  "status": "fixed_budget_loop_complete",
+  "decision": "OBSERVED_CLEAN_EXECUTED_CALL_PAIRING_READY_CLEAN_GATE_BLOCKED",
+  "state_interface_audit": {
+    "tasks": 97,
+    "ground_truth_calls": 339,
+    "execution_errors": 0,
+    "final_utility_successes": 97,
+    "read_only_calls": 239,
+    "state_mutating_calls": 100,
+    "all_read_only_tasks": 36,
+    "early_utility_true_tasks": 21,
+    "state_delta_adapter_ready": true,
+    "fractional_progress_ready": false,
+    "irreversibility_ready": false,
+    "dynamic_preconditions_ready": false
+  },
+  "observed_clean_replay": {
+    "episodes": 90,
+    "tasks": 15,
+    "seeds": 6,
+    "utility_successes": 14,
+    "tool_proposals": 456,
+    "executed_tool_calls": 455,
+    "terminal_unexecuted_proposals": 1,
+    "utility_recomputation_mismatches": 0,
+    "pairing_defects_after_repair": 0,
+    "runtime_tool_errors": 15,
+    "state_mutating_calls": 13,
+    "read_only_calls": 442,
+    "episodes_with_state_change": 13,
+    "success_expert_slot_coverage_mean": 0.7216836734693877,
+    "failure_expert_slot_coverage_mean": 0.4404970760233918,
+    "expert_slot_coverage_episode_auc": 0.8289473684210527,
+    "mixed_outcome_tasks_with_positive_coverage_delta": 8,
+    "mixed_outcome_tasks": 8,
+    "unique_exact_call_paths": 84,
+    "mixed_utility_same_final_state_groups": 5,
+    "mixed_utility_same_final_state_episodes": 29,
+    "mixed_utility_same_final_state_successes": 8
+  },
+  "permissions": {
+    "observed_clean_state_instrumentation": true,
+    "attack_data": false,
+    "large_dreamer_training": false
+  },
+  "next_step": "clean-only goal-conditioned evidence-ledger ablation followed by a separately frozen stronger victim/task clean panel",
+  "remote_archives": {
+    "interface_audit": "/share/guozhix/wmagentattack/0724/clean_state_interface_audit/fixed_v1",
+    "observed_replay_v1": "/share/guozhix/wmagentattack/0724/observed_clean_state_replay/fixed_v1",
+    "pairing_repair": "/share/guozhix/wmagentattack/0724/observed_clean_state_pairing_repair/fixed_v1"
+  },
+  "artifact_sha256": {
+    "interface_audit_json": "d55508cd6d4bf8676d00bddc3ee900b7021cb2ed6b0a424927eccf65edf77b43",
+    "observed_replay_v1_json": "298ea1177781665ef5b59c0232fc48f59a7ff67a2f326802add4e3ac9c1fc510",
+    "pairing_repair_json": "c9d32917b2c9b5f3a2a609dd1cf2c0bc6a509633b4f2560941997331c957a73d"
+  }
+}

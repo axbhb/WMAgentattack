@@ -1,0 +1,70 @@
+{
+  "experiment": "llama31_70b_function_tag_format_only_repair",
+  "date": "2026-07-16",
+  "status": "fixed_budget_complete_no_go",
+  "sequential_context": "The completed native-tool paired experiment eliminated all zero-tool failures but improved Travel clean success only from 2/45 to 3/45, with candidate wins 3, losses 2, exact two-sided p=1.0, and only one task retained at least two of three seeds.",
+  "hypothesis": "The original function-tags prompt preserves better task reasoning on some Travel tasks, but sampled generations often state an intent to call a tool without emitting the required tag. An output-format-only instruction may restore tool execution without the reasoning distribution shift caused by the native Llama tool template.",
+  "candidate": {
+    "base_protocol": "function_tags",
+    "prompt_profile": "format_only",
+    "added_constraints": [
+      "emit exactly one function tag and no surrounding prose when a tool is needed",
+      "use an empty object for no-argument functions",
+      "do not merely describe an intended tool call",
+      "wait for each tool result before the next call"
+    ],
+    "excluded_hints": [
+      "date handling",
+      "calendar search strategy",
+      "file metadata strategy",
+      "task-specific tool choice"
+    ]
+  },
+  "fixed_clean_only_budget": {
+    "suite": "travel",
+    "tasks": 15,
+    "seeds": [101, 103, 107],
+    "episodes": 45,
+    "baseline": "base function_tags with identical task and seed pairs",
+    "attack_episodes": 0,
+    "hyperparameter_search": 0
+  },
+  "generation": {
+    "quantization": "4bit",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000,
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "success_gate": {
+    "minimum_candidate_retained_tasks": 2,
+    "minimum_paired_success_delta": 0.05,
+    "candidate_wins_must_exceed_losses": true,
+    "exact_two_sided_sign_p_max": 0.05,
+    "zero_tool_failures_must_decrease": true
+  },
+  "jobs": {
+    "array": 4666,
+    "summary": 4667,
+    "archive": "/share/guozhix/wmagentattack/0716/function_tag_format/function_tag_format_20260716_v1",
+    "remote_tests_before_submission": "14 passed"
+  },
+  "results": {
+    "comparison": "/share/guozhix/wmagentattack/0716/function_tag_format/function_tag_format_20260716_v1/format_vs_base_function_tags_comparison.json",
+    "baseline_successes": 2,
+    "candidate_successes": 1,
+    "candidate_wins": 1,
+    "candidate_losses": 2,
+    "ties": 42,
+    "paired_success_delta": -0.022222222222222223,
+    "exact_two_sided_sign_p": 1.0,
+    "baseline_failures_without_tool_call": 36,
+    "candidate_failures_without_tool_call": 14,
+    "baseline_retained_tasks": 0,
+    "candidate_retained_tasks": 0,
+    "decision": "NO_GO_GLOBAL_FORMAT_PROMPT_REDUCES_PARSE_FAILURES_BUT_HARMS_UTILITY"
+  },
+  "claim_boundary": "This is a sequential clean-only execution repair, not an attack or world-model result. It may be used to define a future victim protocol only if the paired gate is met; otherwise it remains counterevidence."
+}

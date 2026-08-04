@@ -1,0 +1,154 @@
+{
+  "protocol_id": "0722_semantic_residual_event_fixed_budget_v1",
+  "source_conversation": "https://chatgpt.com/share/6a5f19d3-6e30-83ee-b08e-62a7df377b72",
+  "status": "preregistered_before_execution",
+  "research_question": "Can semantic attack factorization, a training-candidate compositional skill vocabulary, and a static-value-plus-event-residual model fix the OOV and teacher-forcing failures of the first factorized Event Transformer?",
+  "frozen_prior_evidence": {
+    "clean_confirmation_gate": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry_confirmation/function_tag_parser_retry_confirmation_20260716_v1/confirmation_gate.json",
+    "clean_gate_decision": "NO_ATTACK_DATA_EXPAND_VICTIM_OR_TASK_POOL",
+    "durable_development_confirmation_tasks": 0,
+    "first_factorized_archive": "/share/guozhix/wmagentattack/0721/factorized_refactor/fixed_budget_v1",
+    "first_factorized_decision": "NO_GO_REVISE_FACTORIZED_MODEL",
+    "first_round_counterevidence": {
+      "test_selected_skill_oov_events": 17,
+      "oov_skill": "restaurant_generate",
+      "oov_skill_was_present_in_training_candidate_catalog": true,
+      "validation_test_unseen_exact_attack_context_fraction": 0.1941747572815534,
+      "evaluation_was_teacher_forced_only": true
+    }
+  },
+  "safety_and_claim_boundary": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "use_existing_v2_data_only": true,
+    "generate_new_attack_data": false,
+    "allow_real_network_endpoints": false,
+    "start_dreamer_training": false,
+    "paper_level_claim_allowed": false,
+    "exact_simulator_h2_planning_in_this_round": false
+  },
+  "method": {
+    "learned_component": "victim skill-event distribution and repeated joint outcome distribution",
+    "known_component": "AgentDojo tool execution, environment transition, and checkers remain exact",
+    "skill_vocabulary": "union of candidate_skills in the training split only",
+    "skill_representation": "underscore-delimited compositional name-token embedding plus a small per-skill residual",
+    "candidate_constraint": "mask next-skill logits to the label-blind legal candidate set",
+    "semantic_attack_fields": [
+      "attack_family",
+      "attack_role",
+      "trigger_stage",
+      "payload_position",
+      "knowledge_level",
+      "endpoint_policy",
+      "required_tool_depth_bucket"
+    ],
+    "value_model": "semantic static four-cell Dirichlet-multinomial anchor plus causal event-prefix logit residual",
+    "optimization": "maximum likelihood; no scheduled sampling",
+    "free_rollout_support_rule": {
+      "candidate_source": "initial candidate set only",
+      "minimum_step_probability": 0.35,
+      "unknown_semantic_context_triggers_conservative_truncation": true,
+      "truncation_is_reported_but_not_used_to_hide_naive_rollout_errors": true
+    }
+  },
+  "fixed_budget": {
+    "seeds": [7, 17, 29],
+    "epochs_per_seed": 12,
+    "hidden_size": 64,
+    "layers": 2,
+    "heads": 4,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "maximum_free_generation_steps": 16,
+    "hyperparameter_grid": false,
+    "slurm_jobs": 1
+  },
+  "counterbaselines": {
+    "event_dynamics": "candidate-constrained hierarchical domain/previous-skill Markov model",
+    "joint_value": "training-count constant Dirichlet-multinomial and learned semantic static anchor",
+    "historical_dreamer": "frozen; no rerun"
+  },
+  "evaluation": {
+    "task_group_split_required": true,
+    "teacher_forced_candidate_source": "per-step candidate set produced by the observed exact state",
+    "free_running_candidate_source": "initial candidate set only",
+    "teacher_metrics": [
+      "next_skill_nll",
+      "next_skill_accuracy",
+      "static_joint_count_nll",
+      "dynamic_joint_count_nll"
+    ],
+    "free_metrics": [
+      "exact_sequence_accuracy",
+      "normalized_edit_distance",
+      "mean_correct_prefix_length",
+      "first_event_accuracy",
+      "finish_rate",
+      "free_dynamic_joint_count_nll",
+      "conservative_truncation_fraction"
+    ],
+    "selection_rule": "validation next_skill_nll + 0.25 * validation dynamic_joint_count_nll",
+    "test_split_used_for_selection": false
+  },
+  "thresholds_frozen_before_run": {
+    "selected_skill_oov_events": 0,
+    "teacher_validation_min_nll_gain_vs_candidate_markov": 0.02,
+    "teacher_test_max_nll_regression_vs_candidate_markov": 0.02,
+    "free_validation_min_edit_gain_vs_candidate_markov": 0.02,
+    "free_test_max_edit_regression_vs_candidate_markov": 0.02,
+    "teacher_validation_min_dynamic_joint_nll_gain_vs_static": 0.02,
+    "teacher_test_max_dynamic_joint_nll_regression_vs_static": 0.02,
+    "free_validation_min_dynamic_joint_nll_gain_vs_static": 0.02,
+    "free_test_max_dynamic_joint_nll_regression_vs_static": 0.02,
+    "validation_teacher_accuracy_max_seed_std": 0.05
+  },
+  "decision_rule": "All architecture gates must pass for architecture signal. Regardless of architecture signal, the frozen clean eligibility gate remains authoritative: do not generate new attack data, run exact-simulator H2 attack planning, or launch Dreamer training while it is false.",
+  "counterevidence_policy": {
+    "do_not_change_thresholds_after_results": true,
+    "report_teacher_and_free_metrics_separately": true,
+    "report_all_seed_dispersion": true,
+    "report_oov_and_future_candidate_leakage_audits": true,
+    "stop_after_one_conclusive_fixed_budget_loop": true
+  },
+  "literature_basis": [
+    {
+      "method": "ToolkenGPT",
+      "url": "https://arxiv.org/abs/2305.11554",
+      "use": "tool-name/token representations support transfer beyond observed selected labels"
+    },
+    {
+      "method": "Trajectory Transformer",
+      "url": "https://arxiv.org/abs/2106.02039",
+      "use": "causal trajectory sequence likelihood"
+    },
+    {
+      "method": "SwitchTT",
+      "url": "https://arxiv.org/abs/2203.07413",
+      "use": "distributional trajectory value rather than a noiseless point target"
+    },
+    {
+      "method": "ViLPAct",
+      "url": "https://arxiv.org/abs/2210.05556",
+      "use": "compositional generalization to unseen action sequences"
+    },
+    {
+      "method": "Scheduled Sampling",
+      "url": "https://arxiv.org/abs/1506.03099",
+      "use": "motivates measuring train-generation mismatch"
+    },
+    {
+      "method": "How (not) to Train your Generative Model",
+      "url": "https://arxiv.org/abs/1511.05101",
+      "use": "counterevidence against adopting scheduled sampling as the fix"
+    },
+    {
+      "method": "MOPO/MOPP/TATU",
+      "urls": [
+        "https://arxiv.org/abs/2005.13239",
+        "https://arxiv.org/abs/2105.07351",
+        "https://arxiv.org/abs/2304.04660"
+      ],
+      "use": "conservative support checks and rollout truncation under model uncertainty"
+    }
+  ],
+  "planned_archive": "/share/guozhix/wmagentattack/0722/semantic_residual_event/fixed_budget_v1"
+}

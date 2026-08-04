@@ -1,0 +1,55 @@
+{
+  "scope": "posthoc diagnostics for the frozen fixed-budget run; no thresholds changed",
+  "slurm_job_id": 4696,
+  "archive": "/share/guozhix/wmagentattack/0721/factorized_refactor/fixed_budget_v1",
+  "frozen_summary_sha256": "ff7591583afaa1147fe077f38ae3af55b1f95289be1a353685f93101028fa9e6",
+  "frozen_decision": "NO_GO_REVISE_FACTORIZED_MODEL",
+  "integrity": {
+    "runtime_failures": 0,
+    "oom_or_cuda_failures": 0,
+    "archive_checks_verified": 40,
+    "dataset_checks_verified": 17,
+    "code_checks_verified": 9
+  },
+  "counterevidence": {
+    "io_hmm_best_state_count": 4,
+    "io_hmm_validation_nll_delta_vs_markov": 0.06134472980493699,
+    "io_hmm_test_nll_delta_vs_markov": 0.16281950383076094,
+    "event_validation_accuracy_mean": 0.43665264142122484,
+    "event_validation_accuracy_std": 0.027318243637204944,
+    "markov_validation_accuracy": 0.4600280504908836,
+    "event_validation_accuracy_delta_vs_markov": -0.023375409069658746,
+    "event_test_accuracy_mean": 0.37347853939782194,
+    "markov_test_accuracy": 0.3036515054452274,
+    "event_test_accuracy_delta_vs_markov": 0.06982703395259454,
+    "validation_unseen_attack_context_trajectory_fraction": 0.1941747572815534,
+    "test_unseen_attack_context_trajectory_fraction": 0.1941747572815534,
+    "validation_unseen_attack_context_event_fraction": 0.20196353436185133,
+    "test_unseen_attack_context_event_fraction": 0.15759128763613067,
+    "test_oov_skill_counts": {
+      "restaurant_generate": 17
+    },
+    "train_joint_outcome_counts": {
+      "attack0_utility0": 502,
+      "attack0_utility1": 533,
+      "attack1_utility0": 24,
+      "attack1_utility1": 141
+    },
+    "teacher_forced_value_evaluation_only": true,
+    "free_running_rollout_evaluated": false
+  },
+  "positive_but_insufficient_signal": {
+    "event_validation_joint_nll_delta_vs_constant_mean": -1.6107412974039714,
+    "event_test_joint_nll_delta_vs_constant_mean": -1.9139618873596191,
+    "all_three_event_seeds_beat_constant_joint_nll": true,
+    "interpretation": "The value head uses useful trajectory-conditioned information, but no free-running planning gain has been established."
+  },
+  "next_protocol_requirements": [
+    "semantic hierarchical attack-context features instead of attack-name categorical IDs",
+    "schema-compositional skill representation with no true skill collapsed to a scoreable UNK target",
+    "separate H=0, teacher-forced, and free-running value evaluation",
+    "Event-vs-Markov next-event NLL and accuracy gates",
+    "four-cell classwise calibration and task-clustered bootstrap",
+    "no new attack data or large training before a clean eligibility GO"
+  ]
+}

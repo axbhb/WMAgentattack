@@ -23,11 +23,23 @@ def main() -> None:
     parser.add_argument("--test", type=Path, required=True)
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--validation-group-step", choices=["first", "final"]
+    )
     args = parser.parse_args()
 
     steps = [StepRecord.model_validate(row) for row in read_jsonl(args.test)]
     model = FullSheepRLDreamerV3.load(args.model)
-    metrics = evaluate_full_dreamer_predictions(steps, model.predict(steps))
+    metrics = evaluate_full_dreamer_predictions(
+        steps,
+        model.predict(steps),
+        validation_risk_mode=model.config.validation_risk_mode,
+        validation_utility_mode=model.config.validation_utility_mode,
+        validation_aggregation=model.config.validation_aggregation,
+        validation_group_step=(
+            args.validation_group_step or model.config.validation_group_step
+        ),
+    )
     payload = {
         "backend": "sheeprl_full_dreamer_v3_offline",
         "test_steps": len(steps),

@@ -243,6 +243,17 @@ def _pair_key(row: dict) -> tuple[str, str, str]:
     return (row["suite"], row["user_task_id"], row["injection_task_id"])
 
 
+def _injection_text_from_raw(raw: dict) -> str:
+    injections = raw.get("injections")
+    if isinstance(injections, dict):
+        return "\n".join(
+            f"{name}: {injections[name]}" for name in sorted(injections)
+        )
+    if isinstance(injections, list):
+        return "\n".join(str(item) for item in injections)
+    return str(injections or "")
+
+
 def _without_pairs(rows: list[dict], excluded: set[tuple[str, str, str]]) -> list[dict]:
     return [row for row in rows if _pair_key(row) not in excluded]
 
@@ -337,13 +348,20 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument(
         "--scoring-mode",
-        choices=["attack_trace_state", "clean_prefix", "clean_prefix_rollout"],
+        choices=[
+            "attack_trace_state",
+            "clean_prefix",
+            "clean_prefix_rollout",
+            "injection_conditioned_rollout",
+        ],
         default="attack_trace_state",
         help=(
             "attack_trace_state scores a state from the completed attacked trace; "
             "clean_prefix scores the matching clean user-task state with only "
             "hypothetical attack/target metadata; clean_prefix_rollout performs "
-            "a lightweight multi-step skill rollout from that clean state."
+            "a lightweight multi-step skill rollout from that clean state; "
+            "injection_conditioned_rollout additionally supplies the original "
+            "injection text without using any attacked execution outcome."
         ),
     )
     parser.add_argument("--rollout-horizon", type=int, default=3)
@@ -417,7 +435,11 @@ def main() -> None:
         else ({}, {})
     )
     clean_states = {}
-    if args.scoring_mode in {"clean_prefix", "clean_prefix_rollout"}:
+    if args.scoring_mode in {
+        "clean_prefix",
+        "clean_prefix_rollout",
+        "injection_conditioned_rollout",
+    }:
         clean_states = (
             standardized_clean_states
             if args.standardized_steps
@@ -449,16 +471,34 @@ def main() -> None:
             attack_step = _representative_step(trajectory.steps)
         if attack_step is None:
             continue
-        if args.scoring_mode in {"clean_prefix", "clean_prefix_rollout"}:
+        if args.scoring_mode in {
+            "clean_prefix",
+            "clean_prefix_rollout",
+            "injection_conditioned_rollout",
+        }:
             step = clean_states.get((raw["suite_name"], raw["user_task_id"]))
             if step is None:
+                continue
+            injection_text = (
+                _injection_text_from_raw(raw)
+                if args.scoring_mode == "injection_conditioned_rollout"
+                else ""
+            )
+            if (
+                args.scoring_mode == "injection_conditioned_rollout"
+                and not injection_text
+            ):
                 continue
             step = {
                 **step,
                 "attack_action": f"AGENTDOJO_ATTACK_{raw['attack_type']}",
-                "attack_location": None,
+                "attack_location": (
+                    "|".join(sorted(raw.get("injections", {})))
+                    if isinstance(raw.get("injections"), dict)
+                    else None
+                ),
                 "target_skill": attack_step.target_skill,
-                "untrusted_content": None,
+                "untrusted_content": injection_text or None,
             }
         else:
             step = attack_step
@@ -468,7 +508,8 @@ def main() -> None:
                 step,
                 horizon=args.rollout_horizon,
             )
-            if args.scoring_mode == "clean_prefix_rollout"
+            if args.scoring_mode
+            in {"clean_prefix_rollout", "injection_conditioned_rollout"}
             else _score_step(model, step)
         )
         scores = _apply_selection_weights(

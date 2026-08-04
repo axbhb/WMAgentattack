@@ -1,0 +1,3355 @@
+{
+  "scope": "grouped_train_pairwise_rank_probability_decoupling",
+  "fixed_candidate_budget": 17,
+  "training_task_count": 68,
+  "validation_task_count": 14,
+  "test_task_count": 15,
+  "training_validation_test_task_overlap": 0,
+  "validation_labels_used_for_candidate_selection": true,
+  "test_labels_used_for_fit_selection_or_metrics": false,
+  "training_attack_target": "single historical AgentDojo security outcome",
+  "training_utility_target": "continuous utility_probability_target when available, otherwise historical utility outcome",
+  "probability_calibrator_selection": "five-fold user-task-grouped OOF minimum Brier on training tasks",
+  "ranking_training": "within-user-task pairwise logistic differences only",
+  "selected_probability_calibrators": {
+    "attack": "combined",
+    "utility": "combined"
+  },
+  "selected_text_counterbaseline": "text_pointwise",
+  "selected_world_method": "world_pairwise_c0p03",
+  "gate_status": "NO-GO",
+  "gate_checks": {
+    "pairwise_gain_vs_clean_at_least_0p03": true,
+    "pairwise_gain_vs_best_text_at_least_0p03": false,
+    "pairwise_ci_lower_vs_clean_at_least_minus_0p02": true,
+    "pairwise_ci_lower_vs_text_at_least_minus_0p02": false,
+    "brier_within_0p01_of_best_reference": true,
+    "at_least_6_informative_tasks": true
+  },
+  "protocol_sha256": "19eae75189ce0d77e439812ae6efa0892a8ad65229a5ed17a6cf79e9632f3b12",
+  "train_pair_count": 664,
+  "validation_pair_count": 138,
+  "test_pair_count": 147,
+  "probability_oof_brier": {
+    "attack": {
+      "clean_raw": 0.0686521338724485,
+      "text": 0.07376635249459317,
+      "world": 0.04990960541653951,
+      "combined": 0.04762394051553444
+    },
+    "utility": {
+      "clean_raw": 0.03628706959795915,
+      "text": 0.02941419368491036,
+      "world": 0.020813393050417614,
+      "combined": 0.019817986446648894
+    }
+  },
+  "pairwise_training_pair_counts": {
+    "text_c0p03": 406,
+    "text_c0p1": 406,
+    "text_c0p3": 406,
+    "world_c0p03": 406,
+    "world_c0p1": 406,
+    "world_c0p3": 406,
+    "combined_c0p03": 406,
+    "combined_c0p1": 406,
+    "combined_c0p3": 406
+  },
+  "validation_results": {
+    "clean_raw": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5210711150131695,
+      "mean_pair_soft_brier": 0.058456786725550575,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.6764705882352942,
+          "mean_task_spearman": 0.189465975186167,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.5929270612815711,
+              "brier": 0.30498908337098124
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.5976143046671968,
+              "brier": 0.262464990533404
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.16666666666666666,
+              "spearman": -0.6454972243679028,
+              "brier": 0.2791096395751086
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.625,
+              "spearman": 0.25,
+              "brier": 0.19126893625344749
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.3333333333333333,
+              "spearman": -0.408248290463863,
+              "brier": 0.335192905007719
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.010550674640499375
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.875,
+              "spearman": 0.75,
+              "brier": 0.3173714788620786
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.052971527097943075
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00039319864928402546
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0004231490659301738
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0003948372701861532
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.006636719159004355
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0004049180825161102
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.000436905028882443
+            }
+          }
+        },
+        "pair_soft_brier": 0.08639750735583866
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.030516066095262494
+      }
+    },
+    "text_pointwise": {
+      "primary_mean_within_task_pairwise_accuracy": 0.7103819139596137,
+      "mean_pair_soft_brier": 0.045528259198166096,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8088235294117647,
+          "mean_task_spearman": 0.5208057804505796,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6928203230275508,
+              "brier": 0.1350921975037377
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.7,
+              "spearman": 0.3464101615137754,
+              "brier": 0.2543320563979006
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.20451165409052177
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.18540989330189397
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 0.1108158601519759
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.009649015282702051
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 0.39039894033521566
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.012037938204365614
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.936332885411328e-05
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00011102967068821476
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00013207666175832006
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00015154126248192754
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0006911665727634192
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00011102967068821476
+            }
+          }
+        },
+        "pair_soft_brier": 0.06457328608647801
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.6119402985074627,
+          "mean_task_spearman": 0.012830890844456946,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": -0.3105295017040594,
+              "brier": 0.017174332130537963
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.5,
+              "spearman": 0.0,
+              "brier": 0.027821936980049686
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.7071067811865475,
+              "brier": 0.0007983157281810413
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.49999999999999994,
+              "brier": 0.026135022752942945
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.6708203932499368,
+              "brier": 0.02533711221243979
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0014459896605544386
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.46291004988627577,
+              "brier": 0.01303978959719802
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.02182261326038995
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.007264470932090975
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.9583333333333334,
+              "spearman": 0.3742013362170692,
+              "brier": 0.0018832188679907531
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.11521776642763346
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0005887856980705367
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0030843472456008984
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.46153846153846156,
+              "spearman": -0.034401045807689073,
+              "brier": 0.06726202766216856
+            }
+          }
+        },
+        "pair_soft_brier": 0.026483232309854183
+      }
+    },
+    "dual_raw": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5688652326602283,
+      "mean_pair_soft_brier": 0.06295659041278143,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.7720588235294118,
+          "mean_task_spearman": 0.4042114174133032,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 0.35227788527729964
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.575,
+              "spearman": 0.1304484830218009,
+              "brier": 0.30408640986331176
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.5,
+              "spearman": 0.0,
+              "brier": 0.31266158056887644
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.7071067811865475,
+              "brier": 0.16469859797527198
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.5,
+              "spearman": 0.0,
+              "brier": 0.3523803998922777
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.03703867580893972
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.9166666666666666,
+              "spearman": 0.7216878364870323,
+              "brier": 0.2513009626992155
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.13474440424704845
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.001902016474813412
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00030278369425634327
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0010075041583550884
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.006125661472968222
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00044570392554958547
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0007329006345852714
+            }
+          }
+        },
+        "pair_soft_brier": 0.09539711473030035
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.030516066095262494
+      }
+    },
+    "dual_lcb_1std": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5615122914837577,
+      "mean_pair_soft_brier": 0.06295659041278143,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.7573529411764706,
+          "mean_task_spearman": 0.4282676786295376,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 0.2400643471919597
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.575,
+              "spearman": 0.1304484830218009,
+              "brier": 0.2529063912128369
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.26703627327770796
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.7071067811865475,
+              "brier": 0.14566627312832195
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.32847556439999404
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.0015189250810032455
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.38715476316309516
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.028009948862555385
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 5.567338976489543e-05
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.636154438270631e-05
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.813940711576874e-05
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00024947137640843385
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.00010141152678607667
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 5.484199265399568e-05
+            }
+          }
+        },
+        "pair_soft_brier": 0.09539711473030035
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.030516066095262494
+      }
+    },
+    "dual_borda": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5321005267778753,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.6985294117647058,
+          "mean_task_spearman": 0.289164997706372,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6957252427829381,
+              "brier": 0.11950231481481483
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.525,
+              "spearman": 0.04348282767393363,
+              "brier": 0.29629629629629634
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.3333333333333333,
+              "spearman": -0.28867513459481287,
+              "brier": 0.3111111111111111
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.7071067811865475,
+              "brier": 0.22013888888888894
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.5,
+              "spearman": 0.0,
+              "brier": 0.3034722222222222
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.32319223985890655
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 0.19003527336860673
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.32473544973544977
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.28597257443411295
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.2782239128392975
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3119658119658119
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.31205973513665825
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.26230393538085844
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.31656804733727817
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "text_pairwise_c0p03": {
+      "primary_mean_within_task_pairwise_accuracy": 0.6060140474100087,
+      "mean_pair_soft_brier": 0.045528259198166096,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.7941176470588235,
+          "mean_task_spearman": 0.4871270147478513,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6928203230275508,
+              "brier": 3.5254302548387337
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922193,
+              "brier": 3.242164926149433
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.460805080444345
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 1.0457830332905593
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 0.6227126349149605
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.974306506357291
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 1.7046959639145831
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.750431707430274
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.0228961463994084
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.0740824825438917
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.9592076341576707
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.7012070432933393
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.8423076300420065
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.0740824825438917
+            }
+          }
+        },
+        "pair_soft_brier": 0.06457328608647801
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.417910447761194,
+          "mean_task_spearman": 0.18081329183105793,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": -0.10350983390135313,
+              "brier": 1.4590963215729733
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.5714285714285714,
+              "spearman": 0.10350983390135313,
+              "brier": 2.53894163579068
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.7071067811865475,
+              "brier": 0.6809090643240368
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.3,
+              "brier": 0.5558251303523953
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.7826237921249264,
+              "brier": 0.7865358526594951
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.18769829010311329
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.2700308624336608,
+              "brier": 0.22716622362500866
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.2378529162105991
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.7855841250127387
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.2916666666666667,
+              "spearman": -0.23484359721209166,
+              "brier": 0.8509710460263049
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.8430554709512138
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.7330560890384193
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.7220535125661115
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.07692307692307693,
+              "spearman": -0.3784115038845798,
+              "brier": 0.9155278504116832
+            }
+          }
+        },
+        "pair_soft_brier": 0.026483232309854183
+      }
+    },
+    "text_pairwise_c0p1": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5611281826163301,
+      "mean_pair_soft_brier": 0.045528259198166096,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8088235294117647,
+          "mean_task_spearman": 0.5352395371803201,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6928203230275508,
+              "brier": 6.5151645933127265
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922193,
+              "brier": 5.192120231675677
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 0.5773652469887314
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 1.709863694351045
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 1.238112483528749
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 5.185764675206658
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 2.933434425973846
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 7.037834855188014
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.4319541014453523
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.492559451589863
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.325808211801231
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.7771627151211895
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.131250708422958
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.492559451589863
+            }
+          }
+        },
+        "pair_soft_brier": 0.06457328608647801
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.31343283582089554,
+          "mean_task_spearman": 0.11844822692507977,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": -0.20701966780270625,
+              "brier": 2.4937215950392995
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.42857142857142855,
+              "spearman": -0.10350983390135313,
+              "brier": 4.223759444897052
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.7071067811865475,
+              "brier": 1.430033038062762
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.3,
+              "brier": 1.229632184823184
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.7826237921249264,
+              "brier": 1.4544606989154463
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.686608336285573
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.2700308624336608,
+              "brier": 0.784736345312839
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.7293672706123474
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.738569306735304
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.42323461475585755,
+              "brier": 1.8493938363859013
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.6430802753401195
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.546739179528209
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.5273276844123813
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.07692307692307693,
+              "spearman": -0.3784115038845798,
+              "brier": 1.8825646143151933
+            }
+          }
+        },
+        "pair_soft_brier": 0.026483232309854183
+      }
+    },
+    "text_pairwise_c0p3": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5611281826163301,
+      "mean_pair_soft_brier": 0.045528259198166096,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8088235294117647,
+          "mean_task_spearman": 0.5352395371803201,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6928203230275508,
+              "brier": 11.208746648722627
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922193,
+              "brier": 9.32339898148978
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 1.010621791601878
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 3.138246361755452
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 2.3514889356216235
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 9.663166878268823
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 5.491638735561111
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 13.79102195829695
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.43657111971463
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.427562936382839
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.189353884571159
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 5.3279873512591704
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 5.828991687313715
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.427562936382839
+            }
+          }
+        },
+        "pair_soft_brier": 0.06457328608647801
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.31343283582089554,
+          "mean_task_spearman": 0.10938054599310444,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": -0.3105295017040594,
+              "brier": 3.9157165644439718
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.42857142857142855,
+              "spearman": -0.10350983390135313,
+              "brier": 6.746809712986281
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.7071067811865475,
+              "brier": 2.510606334723735
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.3,
+              "brier": 2.328029855018964
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.7826237921249264,
+              "brier": 2.385804316598067
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.9720204048089514
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.2700308624336608,
+              "brier": 2.175485851205974
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.0101627367983617
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.186568282344489
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.392266228310307,
+              "brier": 3.3570964068601024
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.81550899893215
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.6819476195662304
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.6633768874365202
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.07692307692307693,
+              "spearman": -0.3784115038845798,
+              "brier": 3.3795307500155407
+            }
+          }
+        },
+        "pair_soft_brier": 0.026483232309854183
+      }
+    },
+    "world_pairwise_c0p03": {
+      "primary_mean_within_task_pairwise_accuracy": 0.6129828797190519,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8602941176470589,
+          "mean_task_spearman": 0.6052750309344674,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 1.1974717940583837
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.725,
+              "spearman": 0.3913454490654027,
+              "brier": 2.052754898163071
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 2.0238100647987585
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 11.265434412149384
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 3.517154779942288
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 7.340329252699816
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 11.037574048784846
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.6279467604740228
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.37984819930381214
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3304034567277946
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.35246227532483615
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.7967767893366452
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.17987979130921208
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.17393481534976393
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "world_pairwise_c0p1": {
+      "primary_mean_within_task_pairwise_accuracy": 0.6056299385425812,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8455882352941176,
+          "mean_task_spearman": 0.5571625085019987,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 3.951886425285502
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.725,
+              "spearman": 0.3913454490654027,
+              "brier": 4.270048675031292
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 6.69886649962996
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 32.577061791972895
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 14.159357565993995
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 15.225521443350576
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 21.747859456354657
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.8678231032985155
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.4335445127870556
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.6752121895129107
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.312854203435381
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.9223556939052611
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.40148357406586194
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.29826851243199615
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "world_pairwise_c0p3": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5982769973661106,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8308823529411765,
+          "mean_task_spearman": 0.5090499860695299,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 12.173527071948463
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.725,
+              "spearman": 0.3913454490654027,
+              "brier": 11.577772781835442
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 20.479732860356012
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 67.29273435003196
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 43.050983744499575
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 15.089695553762738
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 21.638144409802436
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.64259561839155
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.6094652217903082
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.8938053095464465
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.0990243255819365
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.8029988926670829
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.950921646830581
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 1.2096336307204318
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "combined_pairwise_c0p03": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5946005267778753,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8235294117647058,
+          "mean_task_spearman": 0.5256170326938264,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 4.450161550126271
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.7,
+              "spearman": 0.3464101615137754,
+              "brier": 4.692410704618323
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 2.0878010361176633
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 13.429475509080575
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 2.664040862718066
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 9.100267046224648
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922194,
+              "brier": 7.653723420155013
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 5.688225406093482
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.4718386154940277
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.583896752539968
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 3.515841934735562
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 4.019247512687083
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.6335169961892584
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 2.807335921623562
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "combined_pairwise_c0p1": {
+      "primary_mean_within_task_pairwise_accuracy": 0.6019534679543459,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8382352941176471,
+          "mean_task_spearman": 0.5400507894235672,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 10.440549766815298
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922193,
+              "brier": 7.740053843010295
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 6.6708149385142335
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 39.421051886838974
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 11.565905743991157
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 27.225686207001555
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922194,
+              "brier": 22.71673185783982
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 13.238528811404478
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.76034630210112
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 9.690580642206212
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 9.055747984661254
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 12.119729096280663
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.4070037651032115
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 6.808581713977966
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "combined_pairwise_c0p3": {
+      "primary_mean_within_task_pairwise_accuracy": 0.6019534679543459,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8382352941176471,
+          "mean_task_spearman": 0.5400507894235672,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 20.89249424633222
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922193,
+              "brier": 12.202380029316412
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 18.71081309406032
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 92.93582050279024
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 40.23368966603935
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 66.04183135278241
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.4330127018922194,
+              "brier": 56.08267247689538
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 27.62050341634005
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 17.619001915419492
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 23.348929089273014
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 21.152299319817633
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 30.913103993032326
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 15.061788949036286
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 15.813569607962133
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "text_borda_alpha_0p25": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5872475856014048,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.8088235294117647,
+          "mean_task_spearman": 0.5208057804505796,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6928203230275508,
+              "brier": 0.12671802662037035
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.7,
+              "spearman": 0.3464101615137754,
+              "brier": 0.2511574074074074
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.2631944444444444
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.24266493055555557
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 1.0,
+              "spearman": 0.8660254037844386,
+              "brier": 0.1064670138888889
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.31806657848324515
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 0.1596946649029982
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.34321263227513227
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.30921415656992585
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.31155636564290407
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3176540340001878
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.31702592279515357
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3001535056823519
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3167265426880812
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "text_borda_alpha_0p5": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5725417032484635,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.7794117647058824,
+          "mean_task_spearman": 0.4582595012883701,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6928203230275508,
+              "brier": 0.12290219907407406
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.65,
+              "spearman": 0.2598076211353316,
+              "brier": 0.26273148148148145
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.2652777777777778
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.22274305555555554
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 0.15503472222222223
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.2973985890652557
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 0.15928130511463845
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.33118386243386244
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.2868707147553301
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.288702216586832
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.30245609091762937
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.30163426317272474
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.27084507372968913
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3019864750633982
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    },
+    "text_borda_alpha_0p75": {
+      "primary_mean_within_task_pairwise_accuracy": 0.5394534679543459,
+      "mean_pair_soft_brier": 0.04999230289839411,
+      "attack": {
+        "within_task": {
+          "comparable_pair_count": 68,
+          "pairwise_accuracy": 0.7132352941176471,
+          "mean_task_spearman": 0.31681338669635484,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.9,
+              "spearman": 0.6928203230275508,
+              "brier": 0.12049696180555555
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 20,
+              "pairwise_accuracy": 0.55,
+              "spearman": 0.08660254037844385,
+              "brier": 0.2777777777777778
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.3333333333333333,
+              "spearman": -0.28867513459481287,
+              "brier": 0.28125
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.875,
+              "spearman": 0.5441071875825088,
+              "brier": 0.215234375
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.6666666666666666,
+              "spearman": 0.28867513459481287,
+              "brier": 0.220703125
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.29910714285714285
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 12,
+              "pairwise_accuracy": 0.8333333333333334,
+              "spearman": 0.5773502691896257,
+              "brier": 0.1693948412698413
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3250248015873015
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.27912352071005914
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.27759139898562973
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3005600169061708
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.29997886728655965
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.25822855029585795
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.3019336432797971
+            }
+          }
+        },
+        "pair_soft_brier": 0.073549281860554
+      },
+      "utility": {
+        "within_task": {
+          "comparable_pair_count": 67,
+          "pairwise_accuracy": 0.3656716417910448,
+          "mean_task_spearman": 0.003937265479806051,
+          "per_task": {
+            "banking::user_task_12": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.2834733547569204,
+              "brier": 0.030391701651111356
+            },
+            "banking::user_task_7": {
+              "comparable_pair_count": 14,
+              "pairwise_accuracy": 0.6428571428571429,
+              "spearman": 0.2857142857142857,
+              "brier": 0.032596972599499285
+            },
+            "slack::user_task_10": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": 0.3952847075210474,
+              "brier": 0.0009145894191082461
+            },
+            "slack::user_task_17": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.35355339059327373,
+              "brier": 0.05243913557891888
+            },
+            "slack::user_task_18": {
+              "comparable_pair_count": 4,
+              "pairwise_accuracy": 0.0,
+              "spearman": -0.7905694150420948,
+              "brier": 0.04027493239361588
+            },
+            "travel::user_task_15": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 8.80117816909778e-05
+            },
+            "travel::user_task_18": {
+              "comparable_pair_count": 6,
+              "pairwise_accuracy": 0.75,
+              "spearman": 0.0,
+              "brier": 0.007731058230631306
+            },
+            "travel::user_task_2": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.018924662218779826
+            },
+            "workspace::user_task_0": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.06665652917778785
+            },
+            "workspace::user_task_11": {
+              "comparable_pair_count": 24,
+              "pairwise_accuracy": 0.08333333333333333,
+              "spearman": -0.3223963305302868,
+              "brier": 0.010892500500916221
+            },
+            "workspace::user_task_22": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.008114878978897812
+            },
+            "workspace::user_task_36": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050426927186049166
+            },
+            "workspace::user_task_39": {
+              "comparable_pair_count": 0,
+              "pairwise_accuracy": null,
+              "spearman": null,
+              "brier": 0.050896335108390235
+            },
+            "workspace::user_task_8": {
+              "comparable_pair_count": 13,
+              "pairwise_accuracy": 0.34615384615384615,
+              "spearman": -0.17356186917469732,
+              "brier": 0.026510660499015737
+            }
+          }
+        },
+        "pair_soft_brier": 0.026435323936234222
+      }
+    }
+  },
+  "validation_comparisons": {
+    "world_pairwise_c0p03__minus__clean_raw": {
+      "pairwise_accuracy_difference": 0.15989583333333335,
+      "pairwise_accuracy_difference_95ci": [
+        0.04722222222222222,
+        0.31597222222222227
+      ],
+      "brier_difference": -0.007333257111714919,
+      "brier_difference_95ci": [
+        -0.026168023558166442,
+        0.013394209736261053
+      ],
+      "informative_pairwise_task_count": 8,
+      "total_task_count": 14
+    },
+    "world_pairwise_c0p03__minus__text_pointwise": {
+      "pairwise_accuracy_difference": -0.0383070054945055,
+      "pairwise_accuracy_difference_95ci": [
+        -0.2392857142857143,
+        0.14603174603174607
+      ],
+      "brier_difference": 0.011490255971499401,
+      "brier_difference_95ci": [
+        0.001136623343980621,
+        0.021687253960140134
+      ],
+      "informative_pairwise_task_count": 8,
+      "total_task_count": 14
+    }
+  },
+  "gate_rule": "GO iff selected world-assisted method gains >=0.03 pairwise against clean and strongest text-only validation comparator, both CI lower >=-0.02, Brier <= best reference +0.01, and >=6 tasks informative"
+}

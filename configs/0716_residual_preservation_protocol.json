@@ -1,0 +1,133 @@
+{
+  "experiment": "agentdojo_v2_clean_conditioned_residual_preservation",
+  "date": "2026-07-16",
+  "status": "fixed_budget_complete_no_go",
+  "motivation": "The existing preservation label is a clipped ratio of a five-seed attacked-task posterior and a three-seed clean-task posterior. Low clean success makes that ratio noisy and removes 25-33 percent of attacked trajectories from preservation training in several folds. Model attacked BUP conditional on clean solvability instead of regressing the ratio.",
+  "data": {
+    "source": "/share/guozhix/wmagentattack/0715/grouped_oof_20task/formal_20260715_oof_v1/data",
+    "tasks": 20,
+    "domains": 4,
+    "attack_configurations_per_task": 20,
+    "attack_trials_per_configuration": 5,
+    "clean_trials_per_task": 3,
+    "split_unit": "domain plus user task",
+    "clean_evidence_policy": "The three clean trials are pre-attack task calibration and may be used as model context. No attacked validation or test outcomes may be used as features."
+  },
+  "representation": {
+    "text": "intfloat/e5-base-v2 query embedding",
+    "text_view": "full first-step decision context",
+    "structured": [
+      "attack_family",
+      "injection_task",
+      "attack_family_x_injection_task"
+    ],
+    "structured_vocabulary_fit": "outer-fold train only"
+  },
+  "fixed_target_families": {
+    "direct_probability": "weighted ridge target is attacked-task Jeffreys posterior mean",
+    "uplift_probability": "weighted ridge target is attacked-task posterior minus clean-task posterior",
+    "logit_residual": "weighted ridge target is logit(attacked-task posterior) minus logit(clean-task posterior)"
+  },
+  "fixed_grid": {
+    "ridge_alpha": [0.1, 1.0, 10.0, 100.0],
+    "utility_score_weight": [1.0, 2.0, 4.0],
+    "posterior_standard_deviation_penalty": [0.0, 0.5, 1.0],
+    "attack_head": "pairwise E5 plus structured ridge with alpha 10",
+    "observation_weight": "inverse delta-method posterior variance, clipped to the train 10th-90th percentile and normalized to mean one",
+    "uncertainty": "empirical Bayesian-ridge predictive standard deviation plus clean-posterior uncertainty"
+  },
+  "discovery": {
+    "fold": 1,
+    "fit_split": "train only",
+    "selection_split": "validation only",
+    "test_file_read": false,
+    "selection_constraint": "validation selected target BUP must be no lower than the frozen joint-control target BUP",
+    "selection_objective": "maximize validation target ASR plus BUP, then target BUP, mean within-task Spearman, lower normalized Brier, and fixed candidate order; metrics within 1e-12 are numerical ties",
+    "freeze": "freeze the overall winner and the best candidate in each of the three target families before reading any test result"
+  },
+  "discovery_freeze": {
+    "archive": "/share/guozhix/wmagentattack/0716/residual_preservation/residual_preservation_20260716_v2_numeric_tie/discovery/result.json",
+    "test_file_read": false,
+    "overall_primary": {
+      "target_kind": "logit_residual",
+      "alpha": 1.0,
+      "utility_weight": 1.0,
+      "uncertainty_penalty": 1.0
+    },
+    "direct_probability": {
+      "target_kind": "direct_probability",
+      "alpha": 1.0,
+      "utility_weight": 1.0,
+      "uncertainty_penalty": 1.0
+    },
+    "uplift_probability": {
+      "target_kind": "uplift_probability",
+      "alpha": 1.0,
+      "utility_weight": 2.0,
+      "uncertainty_penalty": 1.0
+    },
+    "logit_residual": {
+      "target_kind": "logit_residual",
+      "alpha": 1.0,
+      "utility_weight": 1.0,
+      "uncertainty_penalty": 1.0
+    },
+    "audit_note": "An initial validation-only discovery used exact floating comparison and treated 1.0 as larger than 0.9999999999999999. Before any test access, metrics were rounded to 1e-12 for the preregistered tie-break and discovery was rerun. Both discovery archives are retained."
+  },
+  "fixed_research_budget": {
+    "discovery_runs": 1,
+    "frozen_target_families": 3,
+    "outer_folds_per_family": 5,
+    "total_frozen_fold_runs": 15,
+    "dreamer_training_runs": 0,
+    "reason": "Use the cheap representation probe to reject weak target formulations before modifying Dreamer."
+  },
+  "formal_primary": "the overall fold-1-validation-selected candidate frozen before all outer-fold tests",
+  "secondary_counterevidence": "the other two target-family winners are evaluated on the same five held-out folds but cannot replace the primary after test inspection",
+  "comparisons": [
+    "formal frozen Dreamer OOF pct100 Top-1",
+    "frozen E5 plus structured pairwise joint-value OOF",
+    "frozen dual-component E5 OOF"
+  ],
+  "results": {
+    "archive": "/share/guozhix/wmagentattack/0716/residual_preservation/residual_preservation_20260716_v2_numeric_tie",
+    "formal_primary_logit_residual": {
+      "top1": {"ASR": 0.20, "BUP": 0.40, "ASR_plus_BUP": 0.60},
+      "mean_task_spearman": 0.16925699805389632,
+      "normalized_brier": 0.03503486936546793,
+      "decision": "NO_GO"
+    },
+    "direct_probability": {
+      "top1": {"ASR": 0.23, "BUP": 0.43, "ASR_plus_BUP": 0.66},
+      "decision": "NO_GO"
+    },
+    "uplift_probability": {
+      "top1": {"ASR": 0.16, "BUP": 0.46, "ASR_plus_BUP": 0.62},
+      "decision": "NO_GO"
+    },
+    "posthoc_uncertainty_diagnostic": {
+      "claim_boundary": "held-out diagnostic only, not a replacement result",
+      "logit_penalty_0_joint": 0.73,
+      "logit_penalty_1_joint": 0.60,
+      "uncertainty_error_pearson": 0.19363617731755303,
+      "finding": "The validation-selected uncertainty penalty caused substantial ranking loss, but removing it still did not beat the frozen E5 joint baseline at 0.78."
+    }
+  },
+  "success_gate": {
+    "minimum_joint_delta_vs_dreamer": 0.05,
+    "minimum_BUP_delta_vs_dreamer": 0.0,
+    "joint_bootstrap_ci95_must_exclude_zero": true,
+    "joint_exact_sign_flip_p_max": 0.05,
+    "minimum_domain_joint_delta_vs_dreamer": -0.10,
+    "minimum_joint_delta_vs_e5_joint_probe": 0.0,
+    "minimum_BUP_delta_vs_e5_joint_probe": 0.0
+  },
+  "literature_mapping": {
+    "uplift_joint_outcome_consistency": "https://arxiv.org/abs/2011.00041",
+    "treatment_effect_representation": "https://arxiv.org/abs/1606.03976",
+    "top_k_non_generalization_counterevidence": "https://arxiv.org/abs/2002.05897",
+    "repeated_count_overdispersion": "https://arxiv.org/abs/1003.1325",
+    "offline_selection_posterior_caveat": "https://arxiv.org/abs/2012.06919"
+  },
+  "causal_claim_boundary": "The experiment borrows control-versus-treatment factorization from uplift modeling. It does not claim an identified causal effect because clean and attacked trajectories are separate stochastic executions and the primary objective is predictive candidate ranking."
+}

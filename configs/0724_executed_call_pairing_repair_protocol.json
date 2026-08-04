@@ -1,0 +1,87 @@
+{
+  "protocol_id": "0724_observed_clean_state_pairing_repair_fixed_v1",
+  "status": "preregistered_before_execution",
+  "development_status": "minimal repair specified after inspecting the sole frozen v1 alignment failure",
+  "prior_decision": "OBSERVED_CLEAN_STATE_REPLAY_NOT_READY_CLEAN_GATE_BLOCKED",
+  "observed_failure": {
+    "panel": "development",
+    "seed": 107,
+    "task_id": "user_task_19",
+    "mechanism": "the final assistant message proposed a tool call at the rollout limit but no tool message followed, so it was not executed",
+    "frozen_v1_archive_preserved": "/share/guozhix/wmagentattack/0724/observed_clean_state_replay/fixed_v1"
+  },
+  "research_question": "Does strict causal pairing of assistant proposals with following tool messages repair exact-state replay without guessing or changing any archived model output?",
+  "scope": {
+    "benchmark_version": "v1.2.2",
+    "suite": "travel",
+    "existing_clean_traces_only": true,
+    "load_llm": false,
+    "construct_attacks": false,
+    "external_endpoints": false,
+    "create_training_examples": false,
+    "gpu_required": false
+  },
+  "panels": [
+    {
+      "name": "development",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry/function_tag_parser_retry_20260716_v1",
+      "seeds": [101, 103, 107],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45,
+      "expected_utility_successes": 8
+    },
+    {
+      "name": "confirmation",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry_confirmation/function_tag_parser_retry_confirmation_20260716_v1",
+      "seeds": [109, 113, 127],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45,
+      "expected_utility_successes": 6
+    }
+  ],
+  "expected_task_ids": [
+    "user_task_1",
+    "user_task_3",
+    "user_task_6",
+    "user_task_7",
+    "user_task_8",
+    "user_task_9",
+    "user_task_11",
+    "user_task_12",
+    "user_task_13",
+    "user_task_14",
+    "user_task_15",
+    "user_task_16",
+    "user_task_17",
+    "user_task_18",
+    "user_task_19"
+  ],
+  "frozen_pairing_rule": {
+    "executed_transition_requires_following_tool_message": true,
+    "function_and_arguments_must_match_exactly": true,
+    "terminal_unexecuted_proposals_are_recorded_but_not_replayed": true,
+    "midtrajectory_unexecuted_proposals_fail": true,
+    "orphan_tool_messages_fail": true,
+    "signature_mismatches_fail": true,
+    "never_drop_or_infer_a_call_to_force_alignment": true
+  },
+  "fixed_budget": {
+    "episodes": 90,
+    "victim_model_calls": 0,
+    "simulator_replays_per_episode": 1,
+    "hyperparameter_grid": false,
+    "rerun_after_result": false
+  },
+  "frozen_gates": {
+    "exactly_90_complete_source_episodes": true,
+    "all_sources_are_clean_sandbox_traces": true,
+    "all_executed_calls_pair_exactly_with_tool_messages": true,
+    "zero_midtrajectory_or_orphan_pairing_defects": true,
+    "zero_replay_infrastructure_failures": true,
+    "all_recomputed_final_utilities_match_archived_utilities": true,
+    "zero_outcome_labels_inside_transition_records": true,
+    "all_expected_tasks_and_panels_present": true
+  },
+  "decision_rule": "Accept the executed-call pairing layer only if every frozen integrity gate passes. Terminal unexecuted proposals remain victim-policy events but never simulator transitions. The clean-data gate remains blocked regardless of this engineering result.",
+  "planned_archive": "/share/guozhix/wmagentattack/0724/observed_clean_state_pairing_repair/fixed_v1"
+}

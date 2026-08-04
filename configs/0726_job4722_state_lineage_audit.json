@@ -1,0 +1,44 @@
+{
+  "protocol_id": "0726_job4722_state_lineage_audit_fixed_v1",
+  "status": "preregistered_before_execution",
+  "scope": "read-only implementation audit of the exact source snapshot and dataset used by Slurm job 4722",
+  "frozen_job_id": 4722,
+  "frozen_decision": "EVIDENCE_LEDGER_NO_INCREMENT_CLEAN_GATE_BLOCKED",
+  "none_accepted_must_remain": true,
+  "source_snapshot": "/share/guozhix/wmagentattack/0725/clean_evidence_ledger_ablation/source_snapshot_job4722",
+  "dataset": "/share/guozhix/wmagentattack/0725/clean_evidence_ledger_ablation/fixed_v1/data/episodes.jsonl",
+  "dataset_sha256": "543e6c793d3edef1b50a7ad4527c42dd57e410752cb58c2dccf28906101c880b",
+  "expected_episodes": 90,
+  "expected_prefixes": 545,
+  "required_lineage": [
+    "replayed_transition",
+    "prefix_dataset_builder",
+    "state_feature_constructor",
+    "variant_feature_mask",
+    "model_input_tensor"
+  ],
+  "required_field_table": [
+    "state_changed",
+    "state_delta_operation_count",
+    "state_delta_roots",
+    "state_before_fingerprint",
+    "state_after_fingerprint",
+    "full_state_before_canonical_json",
+    "full_state_after_canonical_json",
+    "initial_current_structured_entity_content"
+  ],
+  "frozen_gates": {
+    "source_snapshot_checksums_valid": true,
+    "dataset_hash_valid": true,
+    "all_prefixes_have_canonical_state": true,
+    "state_variants_respond_to_canonical_content_perturbation": true,
+    "non_state_variants_ignore_canonical_content_perturbation": true,
+    "no_job_rerun": true,
+    "no_outcome_comparison": true
+  },
+  "interpretation": {
+    "full_state_used": "JOB4722_FULL_CANONICAL_STATE_HASHED_INPUT_CONFIRMED_NO_RERUN",
+    "summary_only": "JOB4722_STATE_SUMMARY_ONLY_IMMUTABLE_ERRATUM_REQUIRED_NO_RERUN"
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0726/job4722_state_lineage_audit/fixed_v1"
+}

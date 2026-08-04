@@ -1,0 +1,197 @@
+{
+  "schema_version": "wmagentattack.panel_v2_adapter_extension.v1",
+  "benchmark_version": "v1.2.2",
+  "scope": "custom clean panel v2 multi-suite victim-observed outputs",
+  "base_registry": "configs/0726_travel_tool_output_adapter_registry_v2.json",
+  "base_registry_sha256": "c030230399d017644c8ae26fe58af16cd2b0957780dca2e8e509cd47af44e822",
+  "additional_adapters": {
+    "get_balance": {
+      "family": "banking",
+      "mode": "VALUE",
+      "entity_type": "bank_account",
+      "fixed_entity_key": {"role": "current_account"},
+      "attribute_name": "balance",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_iban": {
+      "family": "banking",
+      "mode": "VALUE",
+      "entity_type": "bank_account",
+      "fixed_entity_key": {"role": "current_account"},
+      "attribute_name": "iban",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "get_most_recent_transactions": {
+      "family": "banking",
+      "mode": "OBJECT_LIST",
+      "entity_type": "bank_transaction",
+      "entity_key_fields": ["id"],
+      "context_argument_fields": ["n"],
+      "time_scoped_fields": ["date"]
+    },
+    "get_scheduled_transactions": {
+      "family": "banking",
+      "mode": "OBJECT_LIST",
+      "entity_type": "scheduled_transaction",
+      "entity_key_fields": ["id"],
+      "time_scoped_fields": ["date"]
+    },
+    "get_user_info": {
+      "family": "banking",
+      "mode": "USER_FIELDS",
+      "entity_type": "bank_user",
+      "fixed_entity_key": {"role": "current_user"}
+    },
+    "read_file": {
+      "family": "banking",
+      "mode": "VALUE",
+      "entity_type": "document",
+      "entity_argument_fields": ["file_path"],
+      "attribute_name": "content",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "schedule_transaction": {
+      "family": "banking",
+      "mode": "MUTATION_ACK",
+      "entity_type": "scheduled_transaction",
+      "entity_argument_fields": ["recipient", "subject", "date"]
+    },
+    "update_password": {
+      "family": "banking",
+      "mode": "MUTATION_ACK",
+      "entity_type": "bank_credentials"
+    },
+    "update_scheduled_transaction": {
+      "family": "banking",
+      "mode": "MUTATION_ACK",
+      "entity_type": "scheduled_transaction",
+      "entity_argument_fields": ["id"]
+    },
+    "update_user_info": {
+      "family": "banking",
+      "mode": "USER_FIELDS",
+      "entity_type": "bank_user",
+      "fixed_entity_key": {"role": "current_user"}
+    },
+    "add_user_to_channel": {
+      "family": "slack",
+      "mode": "MUTATION_ACK",
+      "entity_type": "slack_membership",
+      "entity_argument_fields": ["user", "channel"]
+    },
+    "get_channels": {
+      "family": "slack",
+      "mode": "SCALAR_LIST",
+      "entity_type": "slack_channel",
+      "attribute_name": "name"
+    },
+    "get_users_in_channel": {
+      "family": "slack",
+      "mode": "SCALAR_LIST",
+      "entity_type": "slack_user",
+      "attribute_name": "name",
+      "context_argument_fields": ["channel"]
+    },
+    "get_webpage": {
+      "family": "slack",
+      "mode": "VALUE",
+      "entity_type": "webpage",
+      "entity_argument_fields": ["url"],
+      "attribute_name": "content",
+      "attribute_kind": "SINGLE_VALUED"
+    },
+    "invite_user_to_slack": {
+      "family": "slack",
+      "mode": "MUTATION_ACK",
+      "entity_type": "slack_user",
+      "entity_argument_fields": ["user", "user_email"]
+    },
+    "read_channel_messages": {
+      "family": "slack",
+      "mode": "OBJECT_LIST",
+      "entity_type": "slack_message",
+      "entity_key_fields": ["sender", "recipient", "body"],
+      "context_argument_fields": ["channel"]
+    },
+    "read_inbox": {
+      "family": "slack",
+      "mode": "OBJECT_LIST",
+      "entity_type": "slack_message",
+      "entity_key_fields": ["sender", "recipient", "body"],
+      "context_argument_fields": ["user"]
+    },
+    "send_channel_message": {
+      "family": "slack",
+      "mode": "MUTATION_ACK",
+      "entity_type": "slack_message",
+      "entity_argument_fields": ["channel", "body"]
+    },
+    "send_direct_message": {
+      "family": "slack",
+      "mode": "MUTATION_ACK",
+      "entity_type": "slack_direct_message",
+      "entity_argument_fields": ["recipient", "body"]
+    },
+    "create_file": {
+      "family": "workspace",
+      "mode": "OBJECT",
+      "entity_type": "cloud_file",
+      "entity_key_fields": ["id_"],
+      "time_scoped_fields": ["last_modified"]
+    },
+    "get_file_by_id": {
+      "family": "workspace",
+      "mode": "OBJECT",
+      "entity_type": "cloud_file",
+      "entity_key_fields": ["id_"],
+      "time_scoped_fields": ["last_modified"]
+    },
+    "reschedule_calendar_event": {
+      "family": "workspace",
+      "mode": "OBJECT",
+      "entity_type": "calendar_event",
+      "entity_key_fields": ["id_"],
+      "set_fields": ["participants"],
+      "time_scoped_fields": ["start_time", "end_time"]
+    },
+    "search_contacts_by_email": {
+      "family": "workspace",
+      "mode": "OBJECT_LIST",
+      "entity_type": "contact",
+      "entity_key_fields": ["email"],
+      "context_argument_fields": ["query"]
+    },
+    "search_contacts_by_name": {
+      "family": "workspace",
+      "mode": "OBJECT_LIST",
+      "entity_type": "contact",
+      "entity_key_fields": ["email"],
+      "context_argument_fields": ["query"]
+    },
+    "search_emails": {
+      "family": "workspace",
+      "mode": "OBJECT_LIST",
+      "entity_type": "email",
+      "entity_key_fields": ["id_"],
+      "context_argument_fields": ["query", "sender"],
+      "set_fields": ["recipients", "cc", "bcc", "attachments"],
+      "time_scoped_fields": ["timestamp"]
+    },
+    "search_files_by_filename": {
+      "family": "workspace",
+      "mode": "OBJECT_LIST",
+      "entity_type": "cloud_file",
+      "entity_key_fields": ["id_"],
+      "context_argument_fields": ["filename", "query", "email"],
+      "time_scoped_fields": ["last_modified"]
+    },
+    "share_file": {
+      "family": "workspace",
+      "mode": "OBJECT",
+      "entity_type": "cloud_file",
+      "entity_key_fields": ["id_"],
+      "time_scoped_fields": ["last_modified"]
+    }
+  },
+  "outcome_labels_present": false
+}

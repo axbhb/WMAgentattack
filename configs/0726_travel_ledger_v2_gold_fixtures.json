@@ -1,0 +1,717 @@
+{
+  "fixture_id": "0726_travel_ledger_v2_gold_fixed_v1",
+  "status": "preregistered_before_execution",
+  "schema_version": "wmagentattack.ledger_v2_gold_fixtures.v1",
+  "benchmark_version": "v1.2.2",
+  "suite": "travel",
+  "registry": "configs/0726_travel_tool_output_adapter_registry_v2.json",
+  "data_policy": {
+    "outcome_labels_read": false,
+    "expert_trajectory_read": false,
+    "victim_model_calls": 0,
+    "attacks": 0,
+    "dreamer": false,
+    "old_90_model_comparison": false
+  },
+  "expected_registry_families": [
+    "calendar",
+    "car_rental",
+    "email",
+    "flight",
+    "hotel",
+    "reservation",
+    "restaurant",
+    "user"
+  ],
+  "expected_adapter_modes": [
+    "ENTITY_MAP",
+    "FLIGHT_LINES",
+    "MUTATION_ACK",
+    "NAME_LIST_TEXT",
+    "OBJECT",
+    "OBJECT_LIST",
+    "PRICE_RANGE_MAP",
+    "RATING_REVIEWS_MAP",
+    "USER_FIELDS"
+  ],
+  "cases": [
+    {
+      "case_id": "user_fields",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_user_information",
+          "arguments": {},
+          "runtime_output": {
+            "first_name": "Ada",
+            "last_name": "Lovelace",
+            "email": "ada@example.com"
+          },
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "user",
+              "entity_key": {"role": "current_user"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"role": "current_user"}],
+              "attributes": [
+                {"name": "first_name", "value": "Ada", "kind": "SINGLE_VALUED"},
+                {"name": "last_name", "value": "Lovelace", "kind": "SINGLE_VALUED"},
+                {"name": "email", "value": "ada@example.com", "kind": "SINGLE_VALUED"}
+              ],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "hotel_multi_record_modes",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_all_hotels_in_city",
+          "arguments": {"city": "Paris"},
+          "runtime_output": "Hotel Names: Hotel A\nHotel B",
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel A"}],
+              "attributes": [
+                {"name": "available_in_city", "value": true, "kind": "SINGLE_VALUED"}
+              ],
+              "context": {"city": "Paris"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            },
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel B"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel B"}],
+              "attributes": [
+                {"name": "available_in_city", "value": true, "kind": "SINGLE_VALUED"}
+              ],
+              "context": {"city": "Paris"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        },
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A", "Hotel B"]},
+          "runtime_output": {
+            "Hotel A": "Price range: 100 - 120",
+            "Hotel B": "Price range: 200 - 240"
+          },
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel A"}],
+              "attributes": [
+                {"name": "price_range", "value": {"min": 100.0, "max": 120.0}, "kind": "RANGE"}
+              ],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            },
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel B"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel B"}],
+              "attributes": [
+                {"name": "price_range", "value": {"min": 200.0, "max": 240.0}, "kind": "RANGE"}
+              ],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        },
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_rating_reviews_for_hotels",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Rating: 4.5\nReviews: Clean\nQuiet"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel A"}],
+              "attributes": [
+                {"name": "rating", "value": 4.5, "kind": "SINGLE_VALUED"},
+                {"name": "reviews", "value": ["Clean", "Quiet"], "kind": "SET_VALUED"}
+              ],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "restaurant_set_valued",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_dietary_restrictions_for_all_restaurants",
+          "arguments": {"restaurant_names": ["R1"]},
+          "runtime_output": {"R1": "vegan, halal"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "restaurant",
+              "entity_key": {"name": "R1"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "R1"}],
+              "attributes": [
+                {"name": "dietary_restrictions", "value": ["halal", "vegan"], "kind": "SET_VALUED"}
+              ],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "car_rental_set_valued",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_car_fuel_options",
+          "arguments": {"company_name": ["C1"]},
+          "runtime_output": {"C1": ["electric", "hybrid"]},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "car_rental_company",
+              "entity_key": {"name": "C1"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "C1"}],
+              "attributes": [
+                {"name": "fuel_options", "value": ["electric", "hybrid"], "kind": "SET_VALUED"}
+              ],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "flight_line",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_flight_information",
+          "arguments": {"departure_city": "Paris", "arrival_city": "Rome"},
+          "runtime_output": "Airline: Air A, Flight Number: AA1, Departure Time: 2026-08-01 10:00, Arrival Time: 2026-08-01 12:00, Price: 150, Contact Information: +1",
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "flight",
+              "entity_key": {"airline": "Air A", "flight_number": "AA1"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"airline": "Air A", "flight_number": "AA1"}],
+              "attributes": [
+                {"name": "departure_time", "value": "2026-08-01 10:00", "kind": "TIME_SCOPED"},
+                {"name": "arrival_time", "value": "2026-08-01 12:00", "kind": "TIME_SCOPED"},
+                {"name": "price", "value": 150.0, "kind": "SINGLE_VALUED"},
+                {"name": "contact_information", "value": "+1", "kind": "SINGLE_VALUED"}
+              ],
+              "context": {"departure_city": "Paris", "arrival_city": "Rome"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "reservation_mutation",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "reserve_hotel",
+          "arguments": {"hotel": "Hotel A", "start_day": "2026-08-01", "end_day": "2026-08-02"},
+          "runtime_output": "Reservation successful",
+          "state_changed": true,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel_reservation",
+              "entity_key": {"hotel": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"hotel": "Hotel A"}],
+              "attributes": [
+                {"name": "execution_acknowledged", "value": true, "kind": "SINGLE_VALUED"},
+                {"name": "observation", "value": "Reservation successful", "kind": "SINGLE_VALUED"}
+              ],
+              "context": {"start_day": "2026-08-01", "end_day": "2026-08-02"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "mutating"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "calendar_object_list",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_day_calendar_events",
+          "arguments": {"day": "2026-08-01"},
+          "runtime_output": [
+            {
+              "id_": "event-1",
+              "title": "Breakfast",
+              "start_time": "2026-08-01T08:00:00",
+              "end_time": "2026-08-01T09:00:00",
+              "participants": ["b@example.com", "a@example.com"]
+            },
+            {
+              "id_": "event-2",
+              "title": "Dinner",
+              "start_time": "2026-08-01T18:00:00",
+              "end_time": "2026-08-01T20:00:00",
+              "participants": []
+            }
+          ],
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "calendar_event",
+              "entity_key": {"id_": "event-1"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"id_": "event-1"}],
+              "attributes": [
+                {"name": "title", "value": "Breakfast", "kind": "SINGLE_VALUED"},
+                {"name": "start_time", "value": "2026-08-01T08:00:00", "kind": "TIME_SCOPED"},
+                {"name": "end_time", "value": "2026-08-01T09:00:00", "kind": "TIME_SCOPED"},
+                {"name": "participants", "value": ["a@example.com", "b@example.com"], "kind": "SET_VALUED"}
+              ],
+              "context": {"day": "2026-08-01"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            },
+            {
+              "entity_type": "calendar_event",
+              "entity_key": {"id_": "event-2"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"id_": "event-2"}],
+              "attributes": [
+                {"name": "title", "value": "Dinner", "kind": "SINGLE_VALUED"},
+                {"name": "start_time", "value": "2026-08-01T18:00:00", "kind": "TIME_SCOPED"},
+                {"name": "end_time", "value": "2026-08-01T20:00:00", "kind": "TIME_SCOPED"},
+                {"name": "participants", "value": [], "kind": "SET_VALUED"}
+              ],
+              "context": {"day": "2026-08-01"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "email_object",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "send_email",
+          "arguments": {"recipients": ["r@example.com"], "subject": "Hello", "body": "World"},
+          "runtime_output": {
+            "id_": "mail-1",
+            "sender": "me@example.com",
+            "recipients": ["r@example.com"],
+            "subject": "Hello",
+            "timestamp": "2026-08-01T10:00:00"
+          },
+          "state_changed": true,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "email",
+              "entity_key": {"id_": "mail-1"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"id_": "mail-1"}],
+              "attributes": [
+                {"name": "sender", "value": "me@example.com", "kind": "SINGLE_VALUED"},
+                {"name": "recipients", "value": ["r@example.com"], "kind": "SET_VALUED"},
+                {"name": "subject", "value": "Hello", "kind": "SINGLE_VALUED"},
+                {"name": "timestamp", "value": "2026-08-01T10:00:00", "kind": "TIME_SCOPED"}
+              ],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "mutating"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "executed_error_is_local_unlinked",
+      "steps": [
+        {
+          "status": "EXECUTED_ERROR",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": 123},
+          "runtime_output": null,
+          "error_type": "ValidationError",
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "execution_error",
+              "entity_key": {},
+              "link_status": "UNLINKED",
+              "candidate_entity_keys": [],
+              "attributes": [
+                {"name": "error_type", "value": "ValidationError", "kind": "SINGLE_VALUED"}
+              ],
+              "context": {},
+              "execution_status": "error",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        },
+        {
+          "status": "EXECUTED_ERROR",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": 456},
+          "runtime_output": null,
+          "error_type": "RuntimeError",
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "execution_error",
+              "entity_key": {},
+              "link_status": "UNLINKED",
+              "candidate_entity_keys": [],
+              "attributes": [
+                {"name": "error_type", "value": "RuntimeError", "kind": "SINGLE_VALUED"}
+              ],
+              "context": {},
+              "execution_status": "error",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "nonexecuted_channels_are_censored",
+      "steps": [
+        {
+          "status": "PROPOSED",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Price range: 1 - 2"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": []
+        },
+        {
+          "status": "TERMINAL_UNEXECUTED",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Price range: 1 - 2"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": []
+        },
+        {
+          "status": "CENSORED",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Price range: 1 - 2"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": []
+        }
+      ]
+    },
+    {
+      "case_id": "range_nonoverlap_conflict",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Price range: 100 - 120"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel A"}],
+              "attributes": [{"name": "price_range", "value": {"min": 100.0, "max": 120.0}, "kind": "RANGE"}],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        },
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Price range: 300 - 320"},
+          "state_changed": false,
+          "expected_added_conflicts": 1,
+          "expected_conflicts": [{"attribute_name": "price_range", "reason": "non_overlapping_range"}],
+          "expected_records": [
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel A"}],
+              "attributes": [{"name": "price_range", "value": {"min": 300.0, "max": 320.0}, "kind": "RANGE"}],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "range_overlap_not_conflict",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Price range: 100 - 120"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel A"}],
+              "attributes": [{"name": "price_range", "value": {"min": 100.0, "max": 120.0}, "kind": "RANGE"}],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        },
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_hotels_prices",
+          "arguments": {"hotel_names": ["Hotel A"]},
+          "runtime_output": {"Hotel A": "Price range: 110 - 130"},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel",
+              "entity_key": {"name": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "Hotel A"}],
+              "attributes": [{"name": "price_range", "value": {"min": 110.0, "max": 130.0}, "kind": "RANGE"}],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "different_entities_not_conflict",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_price_for_restaurants",
+          "arguments": {"restaurant_names": ["R1"]},
+          "runtime_output": {"R1": 10.0},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "restaurant",
+              "entity_key": {"name": "R1"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "R1"}],
+              "attributes": [{"name": "price_per_person", "value": 10.0, "kind": "SINGLE_VALUED"}],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        },
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "get_price_for_restaurants",
+          "arguments": {"restaurant_names": ["R2"]},
+          "runtime_output": {"R2": 20.0},
+          "state_changed": false,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "restaurant",
+              "entity_key": {"name": "R2"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"name": "R2"}],
+              "attributes": [{"name": "price_per_person", "value": 20.0, "kind": "SINGLE_VALUED"}],
+              "context": {},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "read_only"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "different_context_not_conflict",
+      "steps": [
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "reserve_hotel",
+          "arguments": {"hotel": "Hotel A", "start_day": "2026-08-01", "end_day": "2026-08-02"},
+          "runtime_output": "Reservation one",
+          "state_changed": true,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel_reservation",
+              "entity_key": {"hotel": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"hotel": "Hotel A"}],
+              "attributes": [
+                {"name": "execution_acknowledged", "value": true, "kind": "SINGLE_VALUED"},
+                {"name": "observation", "value": "Reservation one", "kind": "SINGLE_VALUED"}
+              ],
+              "context": {"start_day": "2026-08-01", "end_day": "2026-08-02"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "mutating"
+            }
+          ]
+        },
+        {
+          "status": "EXECUTED_SUCCESS",
+          "tool": "reserve_hotel",
+          "arguments": {"hotel": "Hotel A", "start_day": "2026-09-01", "end_day": "2026-09-02"},
+          "runtime_output": "Reservation two",
+          "state_changed": true,
+          "expected_added_conflicts": 0,
+          "expected_records": [
+            {
+              "entity_type": "hotel_reservation",
+              "entity_key": {"hotel": "Hotel A"},
+              "link_status": "UNIQUE",
+              "candidate_entity_keys": [{"hotel": "Hotel A"}],
+              "attributes": [
+                {"name": "execution_acknowledged", "value": true, "kind": "SINGLE_VALUED"},
+                {"name": "observation", "value": "Reservation two", "kind": "SINGLE_VALUED"}
+              ],
+              "context": {"start_day": "2026-09-01", "end_day": "2026-09-02"},
+              "execution_status": "success",
+              "observation_scope": "VICTIM_OBSERVED",
+              "state_provenance": "mutating"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "linkage_cases": [
+    {
+      "case_id": "one_candidate_is_unique",
+      "entity_key": null,
+      "candidate_entity_keys": [{"name": "Hotel A"}],
+      "expected_link_status": "UNIQUE",
+      "expected_entity_key": {"name": "Hotel A"},
+      "expected_candidate_entity_keys": [{"name": "Hotel A"}],
+      "expected_has_provisional_id": false
+    },
+    {
+      "case_id": "two_candidates_are_ambiguous",
+      "entity_key": null,
+      "candidate_entity_keys": [{"name": "Hotel A"}, {"name": "Hotel B"}],
+      "expected_link_status": "AMBIGUOUS",
+      "expected_entity_key": {},
+      "expected_candidate_entity_keys": [{"name": "Hotel A"}, {"name": "Hotel B"}],
+      "expected_has_provisional_id": true
+    },
+    {
+      "case_id": "no_candidate_is_item_local_unlinked",
+      "entity_key": null,
+      "candidate_entity_keys": [],
+      "expected_link_status": "UNLINKED",
+      "expected_entity_key": {},
+      "expected_candidate_entity_keys": [],
+      "expected_has_provisional_id": true
+    }
+  ],
+  "frozen_gates": {
+    "all_registry_families_covered": true,
+    "all_adapter_modes_covered": true,
+    "gold_record_projection_exact": true,
+    "gold_conflict_projection_exact": true,
+    "item_linkage_projection_exact": true,
+    "deterministic_replay": true,
+    "nonexecuted_updates_zero": true,
+    "unlinked_derived_conflicts_zero": true,
+    "future_or_outcome_fields_zero": true,
+    "all_records_victim_observed": true,
+    "tests_pass": true
+  },
+  "pass_decision": "LEDGER_V2_EXTRACTOR_GOLD_GATE_PASS",
+  "failure_decision": "LEDGER_V2_EXTRACTOR_GOLD_GATE_FAIL",
+  "planned_archive": "/share/guozhix/wmagentattack/0726/ledger_v2_gold_fixtures/fixed_v1"
+}

@@ -1,0 +1,88 @@
+{
+  "scope": "pre_outcome_grouped_unseen_task_fresh_replay_confirmation",
+  "frozen_at_utc": "2026-07-13T06:04:55Z",
+  "research_budget": {
+    "task_count": 8,
+    "pairs_per_task": 4,
+    "fresh_repeats_per_pair": 5,
+    "fresh_outcome_count": 160,
+    "base_replay_seeds": [91, 97, 103, 109, 115],
+    "chunk_substream_rule": "actual_seed = base_seed + 1000 * chunk",
+    "no_early_stopping_from_interim_outcomes": true
+  },
+  "selection": {
+    "path": "/share/guozhix/wmagentattack/0713/grouped_task_confirmation/grouped_task_confirmation_selection.json",
+    "sha256": "48f47d3febb7197195ce7cd6f1c643b22e3650aaca56c8f5f6edb37ab6995a55",
+    "label_blind": true,
+    "uses_only_fixed_model_scores": true,
+    "tasks_per_suite": 2,
+    "task_strata_per_suite": [
+      "high_prediction_span",
+      "high_view_seed_disagreement"
+    ],
+    "pair_rule": "minimum injection-risk anchor plus deterministic farthest-point coverage",
+    "selected_task_overlap_with_grouped_train": 0,
+    "selected_tasks_subset_of_grouped_test": true,
+    "grouped_train_trajectories_sha256": "f66fc58dfcde1496570523bb1e7618746de52222097d9e3cd5fd8d4dfd30ff08",
+    "grouped_test_trajectories_sha256": "f5ef146f80df5c94ba8ff4398fb4fa88d2d4709fdc4b460bf70b295ebb651a1b"
+  },
+  "fixed_world_model": {
+    "architecture": "SheepRL-integrated offline DreamerV3 adaptation",
+    "training_split_unit": ["suite", "user_task_id"],
+    "training_seeds": [7, 13, 21],
+    "checkpoint_selection": "validation-selected checkpoint from the frozen grouped retraining round",
+    "models": {
+      "clean_view": "clean-prefix risk and clean-prefix utility, averaged across seeds",
+      "injection_view": "injection-conditioned risk and injection-conditioned utility, averaged across seeds",
+      "dual_view": "injection-conditioned risk plus clean-prefix utility, averaged across seeds",
+      "symmetric_shrinkage_alpha_0_5": "equal clean/injection probability blend independently for risk and utility"
+    },
+    "no_fit_or_calibration_on_confirmation_labels": true
+  },
+  "outcome_collection": {
+    "victim_model": "Meta-Llama-3.1-70B-Instruct",
+    "quantization": "4bit",
+    "agentdojo_version": "v1.2.2",
+    "prompt_profile": "base",
+    "tool_protocol": "function_tags",
+    "sampling": {
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "max_input_tokens": 8192,
+      "max_new_tokens": 256
+    }
+  },
+  "primary_analysis": {
+    "comparison": "dual_view minus clean_view",
+    "primary_metric": "suite-stratified task-mean attack/utility within-task pairwise accuracy difference",
+    "probability_safety_metric": "mean attack/utility pair-level soft Brier difference",
+    "uncertainty": "20000-sample suite-stratified task bootstrap",
+    "bootstrap_seed": 20260716
+  },
+  "decision_gate": {
+    "pairwise_point_difference_min": 0.03,
+    "pairwise_ci_lower_min": -0.02,
+    "brier_difference_max": 0.01,
+    "informative_task_count_min": 4,
+    "strong_informative_task_count_min": 6,
+    "positive_seed_count_min_secondary": 2,
+    "partial_go_rule": "all point, CI, Brier, and support checks pass",
+    "strong_rule": "partial-go checks pass and pairwise 95% CI lower bound is greater than zero",
+    "no_go_rule": "any primary point, CI, Brier, or support check fails"
+  },
+  "secondary_analyses": [
+    "injection_view minus clean_view",
+    "symmetric_shrinkage_alpha_0_5 minus clean_view",
+    "per-training-seed dual_view minus clean_view",
+    "task-disjoint text/context counterbaseline fit only on the prior repeated-outcome development set after excluding confirmation task identities",
+    "attack-head and utility-head decomposition",
+    "outcome variability and informative-task counts"
+  ],
+  "limitations_declared_before_outcomes": [
+    "The dual-view architecture was developed after inspecting earlier single outcomes on this grouped test split, so this is a fresh stochastic-outcome confirmation rather than a pristine external task test.",
+    "Historical labels for these pair identities are ignored by selection, model fitting, and the primary evaluation.",
+    "Score-span and disagreement enrichment creates a contrast stress test and does not estimate benchmark-wide attack prevalence.",
+    "A general untouched-task claim still requires an outer grouped cross-fit or newly held-out tasks."
+  ]
+}

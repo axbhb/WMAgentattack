@@ -1,0 +1,89 @@
+{
+  "experiment": "llama31_70b_native_tool_protocol_repair",
+  "date": "2026-07-16",
+  "status": "fixed_budget_complete_no_go",
+  "trigger": {
+    "fresh_clean_episodes": 231,
+    "utility_failures": 177,
+    "failures_without_tool_call": 116,
+    "travel_failures": 43,
+    "travel_failures_without_tool_call": 36,
+    "travel_retained_at_least_2_of_3": 0
+  },
+  "diagnosis": "The sampled Llama victim often states an intention to use a tool but emits no custom function tag. The model's native chat template requests a bare JSON object with name and parameters, while the adapter previously parsed only Qwen-style tool_call tags.",
+  "implementation": {
+    "file": "src/wmagentattack/qwen_agentdojo.py",
+    "change": "accept both tagged name/arguments calls and bare name/parameters calls, and reject names outside the active FunctionsRuntime",
+    "remote_unit_tests": "11 passed before smoke; 8 parser tests passed after the single-call repair"
+  },
+  "smoke_results": {
+    "first_job": 4657,
+    "first_result": "failed closed because the model emitted multiple native calls and the Llama template accepts one call per assistant turn",
+    "first_artifact": "/share/guozhix/wmagentattack/0716/native_tool_protocol/native_tool_protocol_20260716_v1/smoke/result_job4657_multiple_call_failure.json",
+    "repair": "retain the first valid runtime-approved tool call and continue remaining work in later turns",
+    "second_job": 4658,
+    "second_result": {
+      "completed": true,
+      "valid_tool_calls": 8,
+      "utility": false
+    }
+  },
+  "paired_jobs": {
+    "array": 4659,
+    "summary": 4660,
+    "archive": "/share/guozhix/wmagentattack/0716/native_tool_protocol/native_tool_protocol_20260716_v1",
+    "completed": true,
+    "execution_errors": 0
+  },
+  "paired_results": {
+    "comparison": "/share/guozhix/wmagentattack/0716/native_tool_protocol/native_tool_protocol_20260716_v1/native_vs_function_tags_comparison.json",
+    "baseline_successes": 2,
+    "candidate_successes": 3,
+    "candidate_wins": 3,
+    "candidate_losses": 2,
+    "ties": 40,
+    "paired_success_delta": 0.022222222222222223,
+    "exact_two_sided_sign_p": 1.0,
+    "baseline_failures_without_tool_call": 36,
+    "candidate_failures_without_tool_call": 0,
+    "baseline_retained_tasks": 0,
+    "candidate_retained_tasks": 1,
+    "candidate_retained_task_ids": ["travel::user_task_13"],
+    "decision": "NO_GO_NATIVE_REPAIRS_EXECUTION_BUT_NOT_CLEAN_UTILITY"
+  },
+  "fixed_clean_only_budget": {
+    "smoke": {
+      "suite": "travel",
+      "task_ids": ["user_task_15"],
+      "seed": 101,
+      "pass_rule": "run completes without parser/runtime error and emits at least one valid tool call"
+    },
+    "paired_protocol_evaluation_if_smoke_passes": {
+      "suite": "travel",
+      "tasks": 15,
+      "seeds": [101, 103, 107],
+      "episodes": 45,
+      "baseline": "base function_tags with identical task and seed pairs",
+      "candidate": "base native with all generation settings unchanged",
+      "primary_metric": "tasks retained at least two clean successes out of three",
+      "secondary_metrics": [
+        "utility successes",
+        "failures without a tool call",
+        "paired episode utility delta"
+      ]
+    },
+    "attack_episodes": 0
+  },
+  "candidate_generation": {
+    "quantization": "4bit",
+    "prompt_profile": "base",
+    "protocol": "native",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000,
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "claim_boundary": "This is an agent execution repair and paired clean-solvability experiment, not an attack-method result. No attack outcome is generated or used."
+}

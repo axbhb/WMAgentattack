@@ -46,12 +46,17 @@ def main():
     parser.add_argument("--max-new-tokens", type=int, default=256)
     parser.add_argument("--max-tool-output-chars", type=int, default=12_000)
     parser.add_argument(
-        "--prompt-profile", choices=["base", "robust"], default="robust"
+        "--prompt-profile", choices=["base", "format_only", "robust"], default="robust"
     )
     parser.add_argument("--max-input-tokens", type=int, default=8_192)
     parser.add_argument(
         "--protocol",
-        choices=["function_tags", "native"],
+        choices=[
+            "function_tags",
+            "function_tags_repair",
+            "function_tags_repair_retry",
+            "native",
+        ],
         default="native",
     )
     parser.add_argument(

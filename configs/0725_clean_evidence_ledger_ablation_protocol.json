@@ -1,0 +1,145 @@
+{
+  "protocol_id": "0725_clean_evidence_ledger_ablation_fixed_v1",
+  "status": "preregistered_before_execution",
+  "frozen_from": "user-supplied analysis eac04ad2-5f19-462c-8315-c3465f1c7d94",
+  "prior_decision": "OBSERVED_CLEAN_EXECUTED_CALL_PAIRING_READY_CLEAN_GATE_BLOCKED",
+  "research_hypothesis": "The apparent long-history dependence in clean Travel victim trajectories is partly missing epistemic state. A goal-conditioned evidence ledger should improve task-macro expert-slot coverage and episode utility beyond event identity, canonical state, output length, and within-task shuffled evidence controls.",
+  "scope": {
+    "benchmark_version": "v1.2.2",
+    "suite": "travel",
+    "existing_clean_traces_only": true,
+    "load_victim_llm": false,
+    "construct_attacks": false,
+    "external_endpoints": false,
+    "dreamer_training": false,
+    "gpu_training_only_for_small_clean_probe": true
+  },
+  "source_panels": [
+    {
+      "name": "development",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry/function_tag_parser_retry_20260716_v1",
+      "seeds": [101, 103, 107],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45,
+      "expected_utility_successes": 8
+    },
+    {
+      "name": "confirmation",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry_confirmation/function_tag_parser_retry_confirmation_20260716_v1",
+      "seeds": [109, 113, 127],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45,
+      "expected_utility_successes": 6
+    }
+  ],
+  "task_folds": {
+    "fold0": ["user_task_1", "user_task_15", "user_task_3"],
+    "fold1": ["user_task_11", "user_task_16", "user_task_6"],
+    "fold2": ["user_task_12", "user_task_17", "user_task_7"],
+    "fold3": ["user_task_13", "user_task_18", "user_task_8"],
+    "fold4": ["user_task_14", "user_task_19", "user_task_9"]
+  },
+  "frozen_variants": [
+    "static_length",
+    "state_only",
+    "semantic_markov",
+    "semantic_markov_state",
+    "semantic_markov_state_evidence",
+    "semantic_markov_state_shuffled_evidence",
+    "semantic_markov_state_output_length",
+    "event_transformer_state_evidence"
+  ],
+  "representation": {
+    "world_state": [
+      "canonical_external_state_summary",
+      "goal_conditioned_evidence_ledger",
+      "execution_error_censoring_state",
+      "completion_state"
+    ],
+    "evidence_item_fields": [
+      "entity_candidates",
+      "attribute",
+      "value",
+      "source_tool",
+      "source_arguments",
+      "step_index",
+      "execution_status",
+      "goal_overlap",
+      "argument_link_status",
+      "novelty",
+      "conflict_status",
+      "state_provenance"
+    ],
+    "ambiguous_links": "retain all candidates",
+    "unmatched_links": "explicit UNLINKED",
+    "expert_slot_coverage": "target-only; forbidden as model input",
+    "official_utility": "episode-end target only; forbidden at prefixes",
+    "terminal_unexecuted": "policy proposal only; no simulator transition",
+    "attack_semantics_in_victim_features": false
+  },
+  "training": {
+    "task_grouped_folds": 5,
+    "training_seeds": [7, 17, 29],
+    "task_balanced_loss": true,
+    "fixed_epochs_progress": 60,
+    "fixed_epochs_utility_head": 40,
+    "batch_size": 64,
+    "learning_rate": 0.0005,
+    "weight_decay": 0.0001,
+    "hidden_size": 64,
+    "hash_dimension": 64,
+    "dropout": 0.1,
+    "transformer_layers": 2,
+    "transformer_heads": 4,
+    "outcome_gradient_into_progress_encoder": false,
+    "model_selection_on_test": false,
+    "hyperparameter_grid": false
+  },
+  "targets": {
+    "evidence_progress": "exact expert-call slot coverage at each executed prefix; target-only diagnostic",
+    "episode_utility": "archived final clean utility; final prefix only"
+  },
+  "counterfactual_controls": {
+    "within_task_shuffled_evidence": "deterministic cyclic donor episode within task; original lengths and non-evidence features retained",
+    "output_length": "evidence item/character/token counts without evidence content",
+    "state_only": "no event or evidence content",
+    "static_length": "trusted goal plus prefix/output length only"
+  },
+  "primary_metrics": [
+    "task_macro_progress_mae",
+    "task_macro_utility_brier",
+    "mixed_outcome_task_direction",
+    "per_seed_gain",
+    "leave_one_task_out_gain",
+    "task_macro_utility_log_loss"
+  ],
+  "frozen_gates": {
+    "complete_source_and_pairing_integrity": true,
+    "evidence_progress_improves_over_event_state": true,
+    "episode_utility_improves_over_event_state": true,
+    "evidence_beats_within_task_shuffle_on_both_primary_targets": true,
+    "evidence_beats_output_length_on_both_primary_targets": true,
+    "positive_progress_and_utility_gain_in_all_three_training_seeds": true,
+    "mixed_outcome_utility_direction_at_least_6_of_8_tasks": true,
+    "leave_one_task_out_progress_and_utility_gains_remain_positive": true
+  },
+  "interpretation": {
+    "both_targets_and_controls_pass": "EVIDENCE_LEDGER_ARCHITECTURE_SIGNAL_CLEAN_GATE_BLOCKED",
+    "progress_only": "EVIDENCE_PROGRESS_ONLY_CLEAN_GATE_BLOCKED",
+    "controls_explain_gain": "EVIDENCE_SHORTCUT_NOT_RULED_OUT_CLEAN_GATE_BLOCKED",
+    "no_increment": "EVIDENCE_LEDGER_NO_INCREMENT_CLEAN_GATE_BLOCKED",
+    "semantic_markov_close_to_transformer": "prefer semantic_markov_state_evidence when paired task-macro differences do not establish transformer superiority"
+  },
+  "fixed_budget": {
+    "episodes": 90,
+    "independent_tasks": 15,
+    "variants": 8,
+    "folds": 5,
+    "training_seeds": 3,
+    "victim_model_calls": 0,
+    "attack_examples": 0,
+    "rerun_after_result": false
+  },
+  "claim_boundary": "Architecture probe only. Even a positive result cannot open attack data or Dreamer training; a separately frozen stronger victim/task clean panel must still pass the durable development-confirmation gate.",
+  "planned_archive": "/share/guozhix/wmagentattack/0725/clean_evidence_ledger_ablation/fixed_v1"
+}

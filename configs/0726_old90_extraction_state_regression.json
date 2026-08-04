@@ -1,0 +1,63 @@
+{
+  "protocol_id": "0726_old90_extraction_state_regression_fixed_v1",
+  "status": "preregistered_before_execution",
+  "purpose": "Engineering-only ledger v2 and exact-state regression; never a model or utility confirmation set.",
+  "benchmark_version": "v1.2.2",
+  "suite": "travel",
+  "registry": "configs/0726_travel_tool_output_adapter_registry_v2.json",
+  "source_panels": [
+    {
+      "name": "development",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry/function_tag_parser_retry_20260716_v1",
+      "seeds": [101, 103, 107],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45
+    },
+    {
+      "name": "confirmation",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry_confirmation/function_tag_parser_retry_confirmation_20260716_v1",
+      "seeds": [109, 113, 127],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45
+    }
+  ],
+  "expected_counts": {
+    "source_chunks": 12,
+    "episodes": 90,
+    "independent_tasks": 15,
+    "proposals": 456,
+    "executed_calls": 455,
+    "terminal_unexecuted": 1
+  },
+  "determinism_passes": 2,
+  "data_policy": {
+    "engineering_regression_only": true,
+    "outcome_fields_accessed": false,
+    "expert_trajectory_accessed": false,
+    "future_calls_used_at_prefix": false,
+    "model_training": false,
+    "model_comparison": false,
+    "victim_model_calls": 0,
+    "attacks": 0,
+    "dreamer": false
+  },
+  "frozen_gates": {
+    "source_chunks_and_episode_counts_exact": true,
+    "task_count_exact": true,
+    "pairing_counts_exact": true,
+    "zero_runtime_or_adapter_failures": true,
+    "logged_execution_status_exact": true,
+    "deterministic_two_pass_replay": true,
+    "state_fingerprint_roundtrip_exact": true,
+    "ledger_replay_idempotent": true,
+    "terminal_unexecuted_updates_zero": true,
+    "unlinked_derived_conflicts_zero": true,
+    "all_records_victim_observed": true,
+    "future_or_outcome_fields_zero": true,
+    "tests_pass": true
+  },
+  "pass_decision": "OLD90_EXTRACTION_STATE_REGRESSION_PASS_ENGINEERING_ONLY",
+  "failure_decision": "OLD90_EXTRACTION_STATE_REGRESSION_FAIL_ENGINEERING_ONLY",
+  "claim_boundary": "A pass validates extraction/state mechanics only. The old 90 trajectories remain forbidden for ledger-v2 utility confirmation, architecture selection, attack generation, or Dreamer training.",
+  "planned_archive": "/share/guozhix/wmagentattack/0726/old90_extraction_state_regression/fixed_v1"
+}

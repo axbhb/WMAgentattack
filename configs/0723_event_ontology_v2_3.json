@@ -1,0 +1,31 @@
+{
+  "event_ontology_version": "wmagentattack.event.v2.3",
+  "candidate_policy_version": "wmagentattack.candidates.current-state.v1",
+  "candidate_sources_allowed": [
+    "initial_manifest",
+    "exact_observed_state"
+  ],
+  "candidate_order": "lexicographic canonical order",
+  "forbid_future_true_candidate_sets_in_free_rollout": true,
+  "fields": {
+    "tool_schema_id": "observed_or_derived",
+    "skill_name": "observed",
+    "normalized_argument_slots": "derived_from_current_action_arguments",
+    "argument_entity_links": "unavailable_in_v2",
+    "tool_execution_status": "derived_without_raw_error_text",
+    "canonical_state_delta": "unavailable_in_v2",
+    "task_progress_delta": "unavailable_in_v2",
+    "irreversible_effect": "unavailable_in_v2",
+    "termination_reason": "agent_finish_or_trace_boundary_unknown",
+    "candidates": "current_state_only"
+  },
+  "model_input_boundary": {
+    "raw_observation": false,
+    "raw_tool_output": false,
+    "final_utility_or_security_label": false,
+    "post_rollout_probability_target": false
+  },
+  "current_candidate_scoring": "candidate-masked tied compositional catalog",
+  "future_candidate_scoring": "dynamic pointer over name, description, schema, precondition, and current-state availability",
+  "release_status": "frozen_for_0723_development_ablation"
+}

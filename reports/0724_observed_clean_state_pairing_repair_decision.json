@@ -1,0 +1,17 @@
+{
+  "gates": {
+    "exactly_90_complete_source_episodes": true,
+    "all_sources_are_clean_sandbox_traces": true,
+    "all_logged_calls_align_with_tool_messages": true,
+    "zero_replay_infrastructure_failures": true,
+    "all_recomputed_final_utilities_match_archived_utilities": true,
+    "zero_outcome_labels_inside_transition_records": true,
+    "all_expected_tasks_and_panels_present": true
+  },
+  "observed_clean_state_replay_ready": true,
+  "clean_data_gate": "BLOCKED",
+  "attack_data_permitted": false,
+  "dreamer_training_permitted": false,
+  "decision": "OBSERVED_CLEAN_EXECUTED_CALL_PAIRING_READY_CLEAN_GATE_BLOCKED",
+  "next_admissible_step": "instrument a separately frozen stronger clean victim/task panel"
+}

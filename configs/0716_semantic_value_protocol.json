@@ -1,0 +1,119 @@
+{
+  "experiment": "agentdojo_v2_semantic_value_and_dreamer_integration",
+  "date": "2026-07-16",
+  "status": "fixed_budget_complete_no_go_for_semantic_dreamer_scaling",
+  "primary_endpoint": "held_out_task_top1_ASR_plus_BUP",
+  "formal_baseline": {
+    "scope": "five-fold frozen Dreamer OOF over 20 held-out tasks",
+    "top1_ASR": 0.23,
+    "top1_BUP": 0.49,
+    "top1_ASR_plus_BUP": 0.72
+  },
+  "fixed_research_budget": [
+    "three-seed utility-head-only replication",
+    "direct configuration-value head pilot",
+    "five-fold frozen E5 plus structured value probe",
+    "dual-component utility and preservation probes",
+    "E5 observation Dreamer smoke and matched 30-epoch pilot",
+    "validation-selected utility calibration",
+    "hash plus E5 plus structured early-fusion smoke"
+  ],
+  "results": {
+    "utility_head_only_seed_replication": {
+      "archive": "/share/guozhix/wmagentattack/0715/grouped_continuous_utility/seedrep_20260715_group_utility_head_only_v1",
+      "baseline_top1": {"ASR": 0.15, "BUP": 0.30, "ASR_plus_BUP": 0.45},
+      "variant_top1": {"ASR": 0.15, "BUP": 0.30, "ASR_plus_BUP": 0.45},
+      "test_utility_brier_improved_seed_count": 2,
+      "mean_test_risk_auc_delta": -0.0033405336545784627,
+      "decision": "no_go_broader_folds"
+    },
+    "direct_configuration_value": {
+      "archive": "/share/guozhix/wmagentattack/0715/configuration_value/pilot30_20260715_configuration_value_v1",
+      "fold1_top1_joint": 0.20,
+      "matched_baseline_top1_joint": 0.45,
+      "decision": "no_go"
+    },
+    "frozen_e5_structured_oof": {
+      "archive": "/share/guozhix/wmagentattack/0715/semantic_value_probe/frozen_e5_structured_oof_components_20260716_v2",
+      "representation": "intfloat/e5-base-v2 query embedding 768 plus structured hash 32",
+      "estimator": "pairwise_ridge_alpha_10",
+      "top1": {"ASR": 0.32, "BUP": 0.46, "ASR_plus_BUP": 0.78},
+      "delta": {"ASR": 0.09, "BUP": -0.03, "ASR_plus_BUP": 0.06},
+      "joint_bootstrap_ci95": [-0.07, 0.21],
+      "joint_exact_sign_flip_p_one_sided": 0.2646484375,
+      "domain_joint_deltas": {"banking": 0.16, "slack": 0.20, "travel": 0.0, "workspace": -0.12},
+      "decision": "no_go_due_to_negative_BUP_and_workspace"
+    },
+    "dual_component_pointwise_oof": {
+      "archive": "/share/guozhix/wmagentattack/0715/dual_component_value/dual_component_pointwise_frozen_oof_20260716_v1",
+      "recipe": "pairwise_attack_plus_2_pointwise_utility",
+      "top1": {"ASR": 0.27, "BUP": 0.48, "ASR_plus_BUP": 0.75},
+      "delta": {"ASR": 0.04, "BUP": -0.01, "ASR_plus_BUP": 0.03},
+      "joint_exact_sign_flip_p_one_sided": 0.359375,
+      "workspace_joint_delta": -0.08,
+      "decision": "no_go"
+    },
+    "semantic_dreamer": {
+      "archive": "/share/guozhix/wmagentattack/0715/semantic_dreamer/semantic_dreamer_pilot30_20260716_v2",
+      "observation_dim": 800,
+      "parameter_count_approx": 5969000,
+      "epochs": 30,
+      "best_epoch": 5,
+      "test_grouped_utility_brier": 0.16467286354914723,
+      "test_binary_utility_auc": 0.7945755771199515,
+      "test_risk_auc": 0.9328838325094504,
+      "downstream": {
+        "top1": {"ASR": 0.25, "BUP": 0.35, "ASR_plus_BUP": 0.60},
+        "top2": {"ASR": 0.225, "BUP": 0.35, "ASR_plus_BUP": 0.575},
+        "top4": {"ASR": 0.2125, "BUP": 0.3125, "ASR_plus_BUP": 0.525}
+      },
+      "decision": "representation_supported_but_primary_endpoint_not_improved"
+    },
+    "utility_calibration": {
+      "archive": "/share/guozhix/wmagentattack/0715/semantic_dreamer/semantic_dreamer_pilot30_20260716_v2/utility_calibration.json",
+      "regularizations": [0.0, 0.001, 0.01, 0.1, 1.0],
+      "selected": "identity",
+      "validation_brier": 0.08913448477098421,
+      "test_brier": 0.16467286354914723,
+      "decision": "global_affine_logit_calibration_no_go"
+    },
+    "hash_e5_structured_fusion": {
+      "archive": "/share/guozhix/wmagentattack/0715/semantic_dreamer/hash_e5_structured_dreamer_smoke5_20260716_v3",
+      "observation_dim": 1568,
+      "parameter_count_approx": 6363000,
+      "epochs": 5,
+      "best_epoch": 4,
+      "test_grouped_utility_brier": 0.142641,
+      "test_binary_utility_auc": 0.709832,
+      "test_risk_auc": 0.945608,
+      "downstream": {
+        "top1": {"ASR": 0.25, "BUP": 0.35, "ASR_plus_BUP": 0.60},
+        "top2": {"ASR": 0.275, "BUP": 0.275, "ASR_plus_BUP": 0.55},
+        "top4": {"ASR": 0.25, "BUP": 0.25, "ASR_plus_BUP": 0.50}
+      },
+      "decision": "no_go_for_30_epoch_repeat"
+    }
+  },
+  "counterevidence": [
+    "single-seed utility gains disappeared in the frozen three-seed ensemble",
+    "best semantic OOF point estimate reduced BUP and harmed workspace",
+    "dual-component utility modeling did not restore preservation transfer",
+    "semantic Dreamer improved AUC but substantially worsened utility probability calibration",
+    "validation rejected every learned global utility calibrator",
+    "early fusion tied Top-1 and weakened semantic utility ranking"
+  ],
+  "next_method": {
+    "name": "clean_solvability_conditioned_residual_preservation",
+    "clean_prior": "cross-fitted task-level clean solvability posterior",
+    "residual": "attack-induced preservation change conditioned on semantic task, attack family, and trajectory state",
+    "likelihood": "beta-binomial or equivalent repeated-trial probability model",
+    "selection_score": "predicted ASR plus conservative posterior BUP",
+    "evaluation": "frozen recipe over five task-held-out folds"
+  },
+  "resume_scaling_gate": {
+    "minimum_top1_joint_delta": 0.05,
+    "minimum_BUP_delta": 0.0,
+    "joint_confidence_interval_must_exclude_zero": true,
+    "minimum_domain_joint_delta": -0.10
+  }
+}

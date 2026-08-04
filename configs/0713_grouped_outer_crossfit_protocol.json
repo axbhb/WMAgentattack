@@ -1,0 +1,61 @@
+{
+  "scope": "grouped_train_outer_crossfit_world_feature_protocol",
+  "frozen_at_utc": "2026-07-13T09:32:54Z",
+  "objective": "remove upstream task leakage before fitting downstream world-assisted rankers",
+  "folds": {
+    "manifest": "/share/guozhix/wmagentattack/0713/grouped_outer_crossfit/folds/fold_manifest.json",
+    "manifest_sha256": "da58322b18913aebcfef7558255c74ff81d4117a4b5fdd5172900e8aaa540cf4",
+    "fold_count": 4,
+    "assignment_seed": 20260722,
+    "task_count": 68,
+    "inner_validation_tasks_per_suite": 2,
+    "source_steps_sha256": "e994793672512680f370a452b814f23bb0a72ad7bc2d80c959cb44953a53b7a1",
+    "source_trajectories_sha256": "9f09b1a37a3aa96a4e4f1cccf2345f90f3ff9a728ad377603b76baead588c079",
+    "every_task_held_exactly_once": true
+  },
+  "research_budget": {
+    "world_model_seeds": [7, 13, 21],
+    "outer_fold_count": 4,
+    "checkpoint_count": 12,
+    "score_views_per_checkpoint": 2,
+    "gpu_array_concurrency": 4,
+    "no_early_stopping_from_downstream_results": true,
+    "llm_replay_outcome_budget": 0
+  },
+  "world_model_training": {
+    "architecture": "SheepRL-integrated offline DreamerV3 adaptation",
+    "epochs": 30,
+    "batch_size": 16,
+    "obs_dim": 768,
+    "dense_units": 256,
+    "recurrent_state_size": 256,
+    "stochastic_size": 32,
+    "discrete_size": 32,
+    "imagination_horizon": 5,
+    "behavior_cloning_scale": 1.0,
+    "risk_reward_scale": 1.0,
+    "utility_reward_scale": 1.0,
+    "target_skill_reward_scale": 0.25,
+    "outer_held_task_used_for_training_or_checkpoint_selection": false
+  },
+  "oof_scoring": {
+    "views": ["clean_prefix_rollout", "injection_conditioned_rollout"],
+    "rollout_horizon": 5,
+    "expected_pair_count": 664,
+    "expected_task_count": 68,
+    "property": "each pair is scored only by a checkpoint whose training and inner validation sets exclude its user task"
+  },
+  "downstream_evaluation": {
+    "fixed_candidate_budget": 17,
+    "probability_selection": "five-fold grouped OOF Brier over task-out-of-model features",
+    "ranking_training": "within-user-task pairwise logistic differences over task-out-of-model features",
+    "validation_split": "existing 14 grouped-val tasks, disjoint from all 68 outer-crossfit tasks",
+    "test_labels_used": false,
+    "primary_gate": "same predeclared 0.03 pairwise gain, -0.02 CI lower, and +0.01 Brier tolerance versus clean and strongest text"
+  },
+  "interpretation_constraints": [
+    "Grouped validation and all grouped-test outcomes have already been inspected, so this is a mechanism-correction experiment rather than pristine external confirmation.",
+    "A positive post-hoc result on the 15 fresh tasks would still require new tasks or an outer benchmark for confirmation.",
+    "No additional Llama-70B replay is authorized by this protocol."
+  ]
+}

@@ -46,6 +46,15 @@ def _aggregate(rows: list[dict]) -> dict:
     }
 
 
+def _replay_key(row: dict) -> tuple[str, str, str, str]:
+    return (
+        str(row["suite"]),
+        str(row["attack"]),
+        str(row["user_task_id"]),
+        str(row["injection_task_id"]),
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--selection", type=Path, required=True)
@@ -55,14 +64,25 @@ def main() -> None:
     parser.add_argument("--benchmark-version", default="v1.2.2")
     parser.add_argument("--max-new-tokens", type=int, default=256)
     parser.add_argument("--max-tool-output-chars", type=int, default=12_000)
-    parser.add_argument("--prompt-profile", choices=["base", "robust"], default="base")
+    parser.add_argument("--prompt-profile", choices=["base", "format_only", "robust"], default="base")
     parser.add_argument("--max-input-tokens", type=int, default=8_192)
     parser.add_argument(
-        "--protocol", choices=["function_tags", "native"], default="function_tags"
+        "--protocol",
+        choices=[
+            "function_tags",
+            "function_tags_repair",
+            "function_tags_repair_retry",
+            "native",
+        ],
+        default="function_tags",
     )
     parser.add_argument("--quantization", choices=["bf16", "4bit"], default="4bit")
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--trust-remote-code", action="store_true")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--do-sample", action="store_true")
+    parser.add_argument("--temperature", type=float, default=0.7)
+    parser.add_argument("--top-p", type=float, default=0.95)
     parser.add_argument("--agentdojo-local-alias", action="store_true")
     parser.add_argument("--logdir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
@@ -88,6 +108,10 @@ def main() -> None:
         protocol=args.protocol,
         model_label=args.model_label,
         trust_remote_code=args.trust_remote_code,
+        seed=args.seed,
+        do_sample=args.do_sample,
+        temperature=args.temperature,
+        top_p=args.top_p,
     )
     pipeline = AgentPipeline.from_config(
         PipelineConfig(
@@ -109,35 +133,53 @@ def main() -> None:
         "model_label": args.model_label,
         "pipeline_name": pipeline.name,
         "benchmark_version": args.benchmark_version,
+        "seed": args.seed,
+        "do_sample": args.do_sample,
+        "temperature": args.temperature if args.do_sample else None,
+        "top_p": args.top_p if args.do_sample else None,
+        "selection_pair_count": sum(
+            len(selection_payload["selections"][name]) for name in selection_names
+        ),
+        "unique_pair_count": len(
+            {
+                _replay_key(row)
+                for name in selection_names
+                for row in selection_payload["selections"][name]
+            }
+        ),
         "results": {},
     }
 
     with OutputLogger(str(args.logdir)):
+        replay_cache: dict[tuple[str, str, str, str], dict] = {}
         for selection_name in selection_names:
             rows = selection_payload["selections"][selection_name]
             replayed = []
             for row in rows:
-                suite = get_suite(args.benchmark_version, row["suite"])
-                attack = load_attack(row["attack"], suite, pipeline)
-                results = benchmark_suite_with_injections(
-                    pipeline,
-                    suite,
-                    attack,
-                    logdir=args.logdir / selection_name,
-                    force_rerun=args.force_rerun,
-                    user_tasks=[row["user_task_id"]],
-                    injection_tasks=[row["injection_task_id"]],
-                    verbose=False,
-                    benchmark_version=args.benchmark_version,
-                )
+                key = _replay_key(row)
+                if key not in replay_cache:
+                    suite = get_suite(args.benchmark_version, row["suite"])
+                    attack = load_attack(row["attack"], suite, pipeline)
+                    results = benchmark_suite_with_injections(
+                        pipeline,
+                        suite,
+                        attack,
+                        logdir=args.logdir / "unique_pairs",
+                        force_rerun=args.force_rerun,
+                        user_tasks=[row["user_task_id"]],
+                        injection_tasks=[row["injection_task_id"]],
+                        verbose=False,
+                        benchmark_version=args.benchmark_version,
+                    )
+                    replay_cache[key] = _pair_result(
+                        results,
+                        row["user_task_id"],
+                        row["injection_task_id"],
+                    )
                 replayed.append(
                     {
                         **row,
-                        **_pair_result(
-                            results,
-                            row["user_task_id"],
-                            row["injection_task_id"],
-                        ),
+                        **replay_cache[key],
                     }
                 )
             output["results"][selection_name] = {

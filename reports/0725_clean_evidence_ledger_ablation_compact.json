@@ -1,0 +1,69 @@
+{
+  "protocol_id": "0725_clean_evidence_ledger_ablation_fixed_v1",
+  "slurm_job_id": 4722,
+  "decision": "EVIDENCE_LEDGER_NO_INCREMENT_CLEAN_GATE_BLOCKED",
+  "clean_gate_blocked": true,
+  "attack_data_authorized": false,
+  "dreamer_training_authorized": false,
+  "integrity": {
+    "episodes": 90,
+    "tasks": 15,
+    "prefixes": 545,
+    "executed_calls": 455,
+    "proposals": 456,
+    "terminal_unexecuted": 1,
+    "utility_successes": 14,
+    "oof_prediction_rows": 13080,
+    "grid_runs": 120,
+    "archived_job_full_tests_passed": 251,
+    "current_repo_full_tests_passed": 254,
+    "archive_checksum_failures": 0
+  },
+  "task_macro_seed_averaged_metrics": {
+    "static_length": {"progress_mae": 0.148961, "utility_brier": 0.131627, "utility_log_loss": 0.432730},
+    "state_only": {"progress_mae": 0.140651, "utility_brier": 0.135470, "utility_log_loss": 0.446180},
+    "semantic_markov": {"progress_mae": 0.133791, "utility_brier": 0.132244, "utility_log_loss": 0.434929},
+    "semantic_markov_state": {"progress_mae": 0.142200, "utility_brier": 0.133874, "utility_log_loss": 0.440083},
+    "semantic_markov_state_evidence": {"progress_mae": 0.153147, "utility_brier": 0.133823, "utility_log_loss": 0.440482},
+    "semantic_markov_state_shuffled_evidence": {"progress_mae": 0.136688, "utility_brier": 0.133310, "utility_log_loss": 0.438345},
+    "semantic_markov_state_output_length": {"progress_mae": 0.136004, "utility_brier": 0.134483, "utility_log_loss": 0.444333},
+    "event_transformer_state_evidence": {"progress_mae": 0.166392, "utility_brier": 0.138123, "utility_log_loss": 0.457070}
+  },
+  "primary_comparisons": {
+    "evidence_vs_event_state": {"progress_gain": -0.010947, "utility_brier_gain": 0.000051, "progress_sign_flip_p": 0.120667, "utility_sign_flip_p": 0.986145, "positive_progress_tasks": 4, "positive_utility_tasks": 5},
+    "evidence_vs_shuffled_evidence": {"progress_gain": -0.016459, "utility_brier_gain": -0.000513, "progress_sign_flip_p": 0.083496, "utility_sign_flip_p": 0.702820, "positive_progress_tasks": 6, "positive_utility_tasks": 8},
+    "evidence_vs_output_length": {"progress_gain": -0.017143, "utility_brier_gain": 0.000659, "progress_sign_flip_p": 0.038757, "utility_sign_flip_p": 0.824280, "positive_progress_tasks": 4, "positive_utility_tasks": 5},
+    "evidence_vs_transformer": {"progress_gain": 0.013245, "utility_brier_gain": 0.004299, "progress_sign_flip_p": 0.067810, "utility_sign_flip_p": 0.263245, "positive_progress_tasks": 9, "positive_utility_tasks": 7}
+  },
+  "robustness": {
+    "mixed_outcome_positive_direction": 5,
+    "mixed_outcome_tasks": 8,
+    "leave_one_task_out_minimum_progress_gain": -0.013974723023094493,
+    "leave_one_task_out_minimum_utility_gain": -0.001744573327354734,
+    "all_three_training_seeds_positive": false
+  },
+  "posthoc_mechanism_diagnostic": {
+    "status": "exploratory_posthoc_does_not_change_frozen_gate",
+    "evidence_items": 1568,
+    "conflict_fraction": 0.32142857142857145,
+    "unlinked_conflict_items": 504,
+    "zero_goal_overlap_fraction": 0.32334183673469385,
+    "within_task_shuffle_nonempty_median_token_jaccard": 0.7111111111111111,
+    "within_task_shuffle_exact_nonempty_fraction": 0.2716627634660422
+  },
+  "reporting_erratum": {
+    "archived_preferred_clean_architecture": "semantic_markov_state_evidence",
+    "corrected_preferred_clean_architecture": "none_accepted",
+    "reason": "A NO-INCREMENT result cannot recommend an architecture that failed the frozen acceptance gates."
+  },
+  "archives": {
+    "fixed_result": "/share/guozhix/wmagentattack/0725/clean_evidence_ledger_ablation/fixed_v1",
+    "source_snapshot": "/share/guozhix/wmagentattack/0725/clean_evidence_ledger_ablation/source_snapshot_job4722",
+    "posthoc_counterevidence": "/share/guozhix/wmagentattack/0725/clean_evidence_ledger_counterevidence/posthoc_v1"
+  },
+  "sha256": {
+    "dataset": "543e6c793d3edef1b50a7ad4527c42dd57e410752cb58c2dccf28906101c880b",
+    "frozen_summary": "9c02fce6ec39aa675b227f48acdb8b913274d7272eaafde095c8bd0c0861ea70",
+    "posthoc_diagnostic": "33d808ce9e3aac1fdfb91dd4c989733b4d915c55b844c969072d881c84d253b0"
+  }
+}

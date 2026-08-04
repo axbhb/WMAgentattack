@@ -1,0 +1,171 @@
+{
+  "protocol_id": "0722_semantic_residual_event_fixed_budget_v1",
+  "execution": {
+    "slurm_job_id": 4715,
+    "archive": "/share/guozhix/wmagentattack/0722/semantic_residual_event/fixed_budget_v1",
+    "started_at_utc": "2026-07-21T11:39:42+00:00",
+    "finished_at_utc": "2026-07-21T11:40:39+00:00",
+    "gpu": "NVIDIA RTX 6000 Ada Generation, 49140 MiB",
+    "runtime_failures": 0,
+    "traceback_oom_cuda_errors": 0,
+    "slurm_accounting_available": false,
+    "completion_evidence": "atomic COMPLETE present, FAILED absent, runtime_failures=0",
+    "remote_full_regression": "211 passed, 4 warnings",
+    "archive_checksum_entries_verified": 22,
+    "prerun_code_checksum_entries_verified": 6,
+    "prerun_data_checksum_entries_verified": 17,
+    "posthoc_checksum_entries_verified": 4
+  },
+  "integrity": {
+    "preregistered_protocol_sha256": "e3c6df9637e400046a54e61603cf839b0d6b374e283f13b5467774e3fab73060",
+    "summary_sha256": "c7feade47dbfa9e1d931fdda91bd56f3e3dfff237256c55e25878454b2df9b91",
+    "counterevidence_sha256": "8a62359bba38bc435ed49885534ea105633e5f1a65bba5bd54ebfd66ab8062b8",
+    "archive_checksums_sha256": "b2ff9afb5566155ccb46b31f16c6946cf5ebcad139c2fc88b82bf10b1bf256d0",
+    "posthoc_results_sha256": "d9aec35d2a580689fb9f20b511fa85d40ad112184c08bc96ae8ad65b84597dd8"
+  },
+  "data_audit": {
+    "trajectories": {
+      "train": 1236,
+      "validation": 412,
+      "test": 412
+    },
+    "events": {
+      "train": 3776,
+      "validation": 1426,
+      "test": 1561
+    },
+    "independent_task_groups": {
+      "validation": 4,
+      "test": 4
+    },
+    "selected_skill_oov_events": 0,
+    "candidate_skill_oov_mentions": 0,
+    "future_selected_not_in_initial_candidate_set": {
+      "validation": 0,
+      "test": 1
+    },
+    "unknown_semantic_context_trajectories": {
+      "validation": 80,
+      "test": 80
+    }
+  },
+  "main_results": {
+    "teacher_next_skill": {
+      "validation": {
+        "model_nll_mean": 1.4209089221214235,
+        "model_nll_seed_std": 0.06465016156742634,
+        "markov_nll": 1.703308120139768,
+        "model_minus_markov_nll": -0.2823991980183445,
+        "model_accuracy_mean": 0.48644226273959795,
+        "model_accuracy_seed_std": 0.037082270356209236,
+        "markov_accuracy": 0.47755960729312763
+      },
+      "test": {
+        "model_nll_mean": 2.0364924481147733,
+        "model_nll_seed_std": 0.009993334626796004,
+        "markov_nll": 2.593281363612724,
+        "model_minus_markov_nll": -0.5567889154979508,
+        "model_accuracy_mean": 0.3286354900704676,
+        "model_accuracy_seed_std": 0.004085228799852434,
+        "markov_accuracy": 0.3183856502242152
+      }
+    },
+    "free_skill_rollout": {
+      "validation": {
+        "model_exact_mean": 0.436084142394822,
+        "markov_exact": 0.28640776699029125,
+        "exact_delta": 0.14967637540453074,
+        "model_normalized_edit_mean": 0.36984300085028243,
+        "markov_normalized_edit": 0.42911610032362457,
+        "edit_delta": -0.05927309947334219,
+        "task_cluster_bootstrap_edit_delta_ci95": [
+          -0.09480852211434736,
+          -0.022333468176914777
+        ],
+        "task_cluster_bootstrap_exact_delta_ci95": [0.0, 0.2993527508090615]
+      },
+      "test": {
+        "model_exact_mean": 0.36812297734627836,
+        "markov_exact": 0.20388349514563106,
+        "exact_delta": 0.16423948220064727,
+        "model_normalized_edit_mean": 0.4358831387957602,
+        "markov_normalized_edit": 0.5264637432416559,
+        "edit_delta": -0.0905806044458957,
+        "task_cluster_bootstrap_edit_delta_ci95": [
+          -0.1670774209609161,
+          -0.024205629636454878
+        ],
+        "task_cluster_bootstrap_exact_delta_ci95": [
+          0.0016181229773462782,
+          0.4085760517799353
+        ]
+      }
+    },
+    "joint_outcome_nll": {
+      "validation": {
+        "constant": 4.386394023895264,
+        "semantic_static": 2.724172592163086,
+        "dynamic_teacher": 2.5163091023763022,
+        "dynamic_free": 2.6230870882670083
+      },
+      "test": {
+        "constant": 4.091266632080078,
+        "semantic_static": 2.422892967859904,
+        "dynamic_teacher": 2.2495031356811523,
+        "dynamic_free": 2.213573376337687
+      }
+    }
+  },
+  "historical_context_only": {
+    "validation_teacher_accuracy_delta_vs_first_event_model": 0.04978962131837311,
+    "test_teacher_accuracy_delta_vs_first_event_model": -0.044843049327354334,
+    "comparability_warning": "The first model used a selected-only vocabulary with UNK targets and no candidate mask; this is counterevidence, not a direct confirmatory comparison."
+  },
+  "counterevidence": {
+    "validation_and_test_have_only_four_independent_tasks_each": true,
+    "all_seed_supported_coverage": {
+      "validation": 0.22572815533980584,
+      "test": 0.35436893203883496
+    },
+    "mean_single_seed_conservative_truncation_fraction": {
+      "validation": 0.5922330097087379,
+      "test": 0.5275080906148867
+    },
+    "full_sequence_all_seed_agreement": {
+      "validation": 0.4684466019417476,
+      "test": 0.5412621359223301
+    },
+    "maximum_pairwise_joint_total_variation": {
+      "validation": 0.38446090184152126,
+      "test": 0.43300137482583523
+    },
+    "five_to_sixteen_step_exact_sequence_accuracy": 0.0,
+    "travel_domain_gain_vs_markov": 0.0,
+    "validation_two_to_four_step_edit_delta_is_worse": 0.01390229730937696,
+    "unknown_context_is_always_conservatively_truncated": true,
+    "fixed_max_probability_support_rule_is_not_validated": true,
+    "changes_are_bundled_so_component_attribution_is_not_identified": true
+  },
+  "frozen_gates": {
+    "zero_selected_skill_oov": true,
+    "teacher_validation_nll_beats_candidate_markov": true,
+    "teacher_test_nll_not_worse_than_candidate_markov": true,
+    "free_validation_edit_beats_candidate_markov": true,
+    "free_test_edit_not_worse_than_candidate_markov": true,
+    "teacher_validation_dynamic_value_beats_static": true,
+    "teacher_test_dynamic_value_not_worse_than_static": true,
+    "free_validation_dynamic_value_beats_static": true,
+    "free_test_dynamic_value_not_worse_than_static": true,
+    "validation_teacher_accuracy_seed_stable": true,
+    "clean_eligibility_gate": false
+  },
+  "decision": "ARCHITECTURE_SIGNAL_ONLY_CLEAN_GATE_BLOCKED",
+  "method_status": {
+    "candidate_constrained_semantic_residual_event_model": "retain as the new diagnostic event-model baseline",
+    "fixed_0_35_support_rule": "reject pending independent selective-risk calibration",
+    "exact_simulator_h2_planning": "not authorized",
+    "new_attack_data": "not authorized",
+    "dreamer_training": "not authorized"
+  },
+  "next_preregistered_question": "After restoring clean eligibility and increasing unique task coverage, does the event model still beat candidate Markov under task-held-out ablations, calibrated coverage-risk evaluation, and exact-simulator H2 rollouts?"
+}

@@ -1,0 +1,172 @@
+{
+  "protocol_id": "0723_task_macro_dynamics_ablation_fixed_budget_v1",
+  "status": "preregistered_before_execution",
+  "research_scope": "development-only mechanism audit on the frozen AgentDojo-v2 archive",
+  "research_questions": [
+    "Does the semantic event model beat a legal-candidate hierarchical Markov baseline when every held-out task receives equal weight?",
+    "Does observed event identity and order improve the joint utility/security distribution beyond static semantics, sequence length, a shuffled event multiset, random legal events, and a Markov-generated prefix?",
+    "Do the attack-semantic fields add held-out-task information beyond domain, clean prior, and event history?"
+  ],
+  "frozen_prior_decision": "ARCHITECTURE_SIGNAL_ONLY_CLEAN_GATE_BLOCKED",
+  "claim_boundary": {
+    "confirmatory_generalization_claim": false,
+    "reason": "validation and test each contain only four independent tasks; the one-sided all-positive sign-test floor is 0.0625",
+    "agentdojo_synthetic_sandbox_only": true,
+    "use_existing_v2_data_only": true,
+    "generate_new_attack_data": false,
+    "run_exact_simulator_attack_h2": false,
+    "start_dreamer_training": false,
+    "selective_risk_calibration": false,
+    "fixed_0_35_probability_cutoff_is_accepted": false
+  },
+  "frozen_representation": {
+    "event_ontology_version": "wmagentattack.event.v2.3",
+    "event_ontology_fingerprint": "62171756d5051d395da68cc20a1b9ac2118ea8404d08eba8835d4d5bfb08ef4d",
+    "candidate_policy_version": "wmagentattack.candidates.current-state.v1",
+    "candidate_sources": {
+      "teacher_forced": "exact observed current-state candidate set",
+      "free_running": "initial current-state candidate set only"
+    },
+    "fields_explicitly_unavailable_in_v2": [
+      "argument_entity_links",
+      "canonical_state_delta",
+      "task_progress_delta",
+      "irreversible_effect"
+    ],
+    "forbidden_as_model_input": [
+      "final utility or attack outcome",
+      "joint probability target",
+      "future true candidate set in free rollout",
+      "raw tool output",
+      "raw observation"
+    ]
+  },
+  "data": {
+    "source": "/share/guozhix/wmagentattack/0721/factorized_refactor/fixed_budget_v1/data/v2_joint_labels",
+    "train_tasks": 12,
+    "validation_tasks": 4,
+    "test_tasks": 4,
+    "trajectories_per_task": 103,
+    "task_group_overlap_allowed": false,
+    "test_used_for_checkpoint_selection": false
+  },
+  "fixed_budget": {
+    "variants": [
+      "length_semantic",
+      "event_no_attack_semantics",
+      "semantic_event"
+    ],
+    "seeds": [7, 17, 29],
+    "epochs_per_variant_seed": 12,
+    "hidden_size": 64,
+    "layers": 2,
+    "heads": 4,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "maximum_free_generation_steps": 16,
+    "hyperparameter_grid": false,
+    "slurm_jobs": 1
+  },
+  "training_objective": {
+    "trajectory_sampling": "uniform without replacement each epoch",
+    "event_losses": "unbiased equal-task mean using inverse per-task event count",
+    "joint_outcome_losses": "unbiased equal-task mean using inverse per-task joint-support weight",
+    "checkpoint_selection": "validation task-macro next_skill_nll + 0.25 * validation task-macro dynamic_joint_count_nll",
+    "optimization": "maximum likelihood",
+    "scheduled_sampling": false
+  },
+  "learned_variants": {
+    "length_semantic": "attack semantics, domain, clean prior, and sequence position/length; every attended event identity is replaced with BOS",
+    "event_no_attack_semantics": "observed event history, domain, and clean prior; every attack-semantic field is replaced with its training UNK token",
+    "semantic_event": "full frozen semantic event model"
+  },
+  "prefix_value_controls_on_full_model": {
+    "observed": "true observed event prefix",
+    "static_semantic": "static joint head with no event residual",
+    "shuffled": "deterministic shuffle preserving prefix length and event multiset",
+    "length_only": "BOS at every observed event position",
+    "random_length_matched": "deterministic samples from the initial legal candidate set",
+    "markov_length_matched": "candidate-constrained hierarchical Markov generation at the observed length",
+    "semantic_markov_length_matched": "field-factorized semantic candidate Markov generation at the observed length"
+  },
+  "counterbaselines": {
+    "candidate_uniform": "uniform probability over the legal current-state candidates",
+    "candidate_hierarchical_markov": "domain and previous-event hierarchical Markov restricted to legal candidates",
+    "candidate_factorized_semantic_markov": "training-only field-factorized attack semantics plus domain and previous event, restricted to legal candidates"
+  },
+  "stage_b_component_coverage": {
+    "candidate_mask_only": "candidate_uniform",
+    "static_semantic": "length_semantic next-skill condition plus static_semantic joint head",
+    "markov_semantic": "candidate_factorized_semantic_markov",
+    "event_history_without_attack_semantics": "event_no_attack_semantics",
+    "semantic_event": "semantic_event",
+    "shuffled_prefix": "implemented",
+    "tool_name_only_prefix": "current event identity is normalized selected skill/tool name",
+    "argument_slots": "available only as an auxiliary prediction target; no causal argument-input ablation is claimed",
+    "state_delta": "not run because canonical_state_delta is unavailable in the frozen v2 archive",
+    "outcome_head": "static semantic head versus dynamic prefix-residual head",
+    "random_initialization_ensemble": "three frozen seeds with sequence, outcome-TV, and trajectory-ranking stability diagnostics"
+  },
+  "primary_metrics": {
+    "teacher": [
+      "task_macro_next_skill_nll",
+      "task_macro_next_skill_accuracy",
+      "task_macro_dynamic_joint_count_nll",
+      "per_task_direction"
+    ],
+    "free": [
+      "task_macro_exact_sequence_accuracy",
+      "task_macro_normalized_edit_distance"
+    ],
+    "prefix_value": [
+      "task_macro_joint_count_nll",
+      "task_macro_joint_probability_log_score"
+    ],
+    "micro_metrics": "reported as diagnostics only"
+  },
+  "thresholds_frozen_before_execution": {
+    "full_validation_min_next_skill_nll_gain_vs_markov": 0.02,
+    "full_test_max_next_skill_nll_regression_vs_markov": 0.02,
+    "full_validation_min_free_edit_gain_vs_markov": 0.02,
+    "full_test_max_free_edit_regression_vs_markov": 0.02,
+    "full_validation_min_next_skill_nll_gain_vs_semantic_markov": 0.02,
+    "full_test_max_next_skill_nll_regression_vs_semantic_markov": 0.02,
+    "full_validation_min_free_edit_gain_vs_semantic_markov": 0.02,
+    "full_test_max_free_edit_regression_vs_semantic_markov": 0.02,
+    "full_validation_min_next_skill_nll_gain_vs_length_semantic": 0.02,
+    "full_test_max_next_skill_nll_regression_vs_length_semantic": 0.02,
+    "full_validation_min_next_skill_nll_gain_vs_no_attack_semantics": 0.01,
+    "full_test_max_next_skill_nll_regression_vs_no_attack_semantics": 0.02,
+    "validation_min_observed_prefix_joint_nll_gain_vs_each_static_length_random_markov_control": 0.02,
+    "validation_min_observed_prefix_joint_nll_gain_vs_shuffled": 0.02,
+    "test_max_observed_prefix_joint_nll_regression_vs_any_control": 0.02,
+    "validation_full_next_skill_nll_max_seed_std": 0.10,
+    "validation_full_free_edit_max_seed_std": 0.08,
+    "validation_min_all_seed_sequence_agreement": 0.40,
+    "test_min_all_seed_sequence_agreement": 0.40,
+    "validation_max_mean_pairwise_joint_total_variation": 0.10,
+    "test_max_mean_pairwise_joint_total_variation": 0.10,
+    "validation_min_pairwise_joint_success_ranking_spearman": 0.80,
+    "test_min_pairwise_joint_success_ranking_spearman": 0.80,
+    "validation_min_tasks_improved_vs_strongest_markov": 3,
+    "test_min_tasks_not_materially_worse_than_strongest_markov": 3,
+    "per_task_material_nll_margin": 0.02
+  },
+  "decision_rule": {
+    "full_mechanism_signal": "all predictive, component, prefix-content, prefix-order, stability, and per-task-direction gates pass",
+    "content_without_order_signal": "predictive and prefix-content gates pass but observed does not beat shuffled prefix",
+    "architecture_without_mechanism_identification": "full model beats Markov but one or more component/negative-control gates fail",
+    "shortcut_not_ruled_out": "full model does not retain task-macro predictive advantage over Markov",
+    "clean_gate_override": "all outcomes remain CLEAN_GATE_BLOCKED; this experiment cannot authorize attack-data generation, H2 attack planning, selective deployment, or Dreamer training"
+  },
+  "counterevidence_policy": {
+    "do_not_change_thresholds_after_results": true,
+    "report_every_variant_and_seed": true,
+    "report_validation_and_test_per_task_directions": true,
+    "report_micro_task_macro_disagreement": true,
+    "report_prefix_controls_even_if_primary_model_fails": true,
+    "do_not_interpret_four_task_results_as_formal_significance": true,
+    "stop_after_one_fixed_budget_cycle": true
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0723/task_macro_dynamics_ablation/fixed_budget_v1"
+}

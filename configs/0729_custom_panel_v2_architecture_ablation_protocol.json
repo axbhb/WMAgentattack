@@ -1,0 +1,179 @@
+{
+  "protocol_id": "0729_custom_panel_v2_architecture_ablation_fixed_v1",
+  "status": "preregistered_before_training",
+  "prior_binding_decisions": {
+    "custom_panel_v1": "CUSTOM_PANEL_DATA_SUFFICIENCY_NO_GO",
+    "custom_panel_v2": "CUSTOM_PANEL_V2_INDEPENDENT_GATES_EVALUATED",
+    "conditional_reporting_gate": false,
+    "dynamics_gate": true,
+    "evidence_progress_gate": true
+  },
+  "research_question": "On the fresh difficulty-balanced custom clean panel-v2, do causal observable execution and cumulative Structured Ledger-v2 representations add task-disjoint victim-dynamics or evidence-progress signal beyond a Semantic Markov representation?",
+  "scope": {
+    "clean_only": true,
+    "agentdojo_synthetic_sandbox_only": true,
+    "existing_frozen_trajectories_only": true,
+    "load_victim_llm": false,
+    "new_victim_model_calls": 0,
+    "external_endpoints": false,
+    "completion_or_reporting_training": false,
+    "attack_data": false,
+    "h2_attack_planning": false,
+    "dreamer_training": false
+  },
+  "source": {
+    "panel_v2_summary": "/share/guozhix/wmagentattack/0728/custom_clean_panel_v2/fixed_v1/custom_clean_panel_v2_summary.json",
+    "panel_v2_summary_sha256": "3e40d4bf51110af2690e04a9c98e079302cff0770437c545e9911d556373e59e",
+    "dataset": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v1/panel_v2_architecture_dataset.json",
+    "dataset_sha256": "d776fe118ca9146ad192c2d99f3d94900c111e03ef2a57058e1408c5a008427b",
+    "dataset_audit": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v1/dataset_audit.json",
+    "dataset_audit_sha256": "10a90d6ed6512d079e02da2e61bf86a7cabbcaf7bdddb79173c12841ab4be729",
+    "dataset_rebuild_byte_identical": true,
+    "episodes": 144,
+    "independent_tasks": 48,
+    "prefixes": 467,
+    "executed_calls": 323,
+    "evidence_rows": 411,
+    "splits": {
+      "training": {"tasks": 24, "episodes": 72},
+      "calibration": {"tasks": 12, "episodes": 36},
+      "confirmation": {"tasks": 12, "episodes": 36}
+    }
+  },
+  "frozen_variants": [
+    "semantic_markov",
+    "observable_execution",
+    "observable_execution_ledger_v2"
+  ],
+  "representation_contract": {
+    "strict_nesting": true,
+    "semantic_markov": [
+      "trusted goal",
+      "policy track",
+      "previous canonical action",
+      "legal tool candidate set",
+      "causal prefix index"
+    ],
+    "observable_execution_adds": [
+      "last victim-visible tool observation",
+      "executed/error status and error type",
+      "causal state-change counts and delta roots"
+    ],
+    "ledger_v2_adds": [
+      "cumulative typed entity/attribute records",
+      "link status and candidate entities",
+      "source tool and canonical arguments",
+      "execution receipts and conflict relations"
+    ],
+    "candidate_scoring": "Shared semantic scorer over tool name, description, and parameter schema; legal-suite mask applied before softmax so unseen held-out tools are not fixed-class memorization.",
+    "forbidden_inputs": [
+      "legacy scalar utility",
+      "factorized final labels",
+      "final assistant report",
+      "expert calls",
+      "future calls or observations",
+      "attack/security labels"
+    ],
+    "episode_local_record_ids_removed": true
+  },
+  "targets": {
+    "victim_dynamics_primary": "next legal tool or STOP at every causal decision prefix",
+    "victim_dynamics_secondary": [
+      "next argument-key multilabel",
+      "stop/continue accuracy",
+      "error-recovery next-action NLL"
+    ],
+    "evidence_progress_primary": "per-obligation UNOBSERVED/SUPPORTED/AMBIGUOUS/CONTRADICTED status",
+    "evidence_status_rule": {
+      "SUPPORTED": "at least one frozen equivalent route is fully matched by successful canonical executed calls",
+      "AMBIGUOUS": "at least one route is only partially matched",
+      "CONTRADICTED": "a required route tool errors or a before-mutation route is completed only after mutation",
+      "UNOBSERVED": "no route evidence has yet been observed"
+    },
+    "reporting_and_overall_completion_excluded": true
+  },
+  "training": {
+    "train_split_only": "training",
+    "no_calibration_or_confirmation_gradient": true,
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs_dynamics": 120,
+    "fixed_epochs_evidence": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "argument_loss_weight": 0.2,
+    "task_balanced_loss": true,
+    "cpu_threads": 8,
+    "hyperparameter_grid": false,
+    "model_selection": false,
+    "early_stopping": false
+  },
+  "primary_metrics": {
+    "dynamics": [
+      "task_macro_action_nll",
+      "task_macro_action_accuracy"
+    ],
+    "evidence_progress": [
+      "task_macro_evidence_status_nll",
+      "task_macro_supported_brier"
+    ],
+    "report_separately": [
+      "calibration",
+      "confirmation",
+      "each training seed",
+      "paired held-out tasks"
+    ]
+  },
+  "frozen_gates": {
+    "minimum_action_nll_gain": 0.02,
+    "minimum_evidence_nll_gain": 0.02,
+    "maximum_cross_head_nll_regression": 0.02,
+    "minimum_positive_training_seeds": 2,
+    "minimum_confirmation_positive_tasks": 6,
+    "evaluate_observable_vs_semantic_independently_by_head": true,
+    "evaluate_ledger_vs_observable_independently_by_head": true,
+    "do_not_accept_mean_only_if_fewer_than_half_confirmation_tasks_improve": true,
+    "do_not_change_thresholds_after_training": true
+  },
+  "uncertainty": {
+    "paired_task_bootstrap_draws": 10000,
+    "bootstrap_seed": 20260729,
+    "bootstrap_interval_is_required_counterevidence_but_not_a_hard_gate": true,
+    "reason": "The sealed confirmation set has 12 independent tasks, so requiring a positive 95% lower bound would turn this explicitly small architecture probe into a low-power null test."
+  },
+  "interpretation": {
+    "head_specific_selection": true,
+    "ledger_evidence_pass": "Adopt Ledger-v2 provisionally for the evidence-progress head only if its frozen evidence gate passes and dynamics remains non-inferior.",
+    "ledger_dynamics_pass": "Adopt Ledger-v2 provisionally for victim dynamics only if its independent action-NLL gate passes and evidence remains non-inferior.",
+    "no_increment": "Retain Semantic Markov or observable execution per head and preserve all negative paired-task evidence; do not add capacity or rerun thresholds.",
+    "completion_reporting": "The failed panel-v2 conditional-reporting gate remains binding regardless of this ablation.",
+    "attack_dreamer": "No result in this probe opens attack data, H2, or Dreamer training."
+  },
+  "fixed_budget": {
+    "episodes": 144,
+    "prefixes": 467,
+    "evidence_rows": 411,
+    "variants": 3,
+    "training_seeds": 3,
+    "training_runs": 9,
+    "new_victim_model_calls": 0,
+    "attack_examples": 0,
+    "dreamer_runs": 0,
+    "rerun_after_result": false
+  },
+  "implementation_sha256": {
+    "src/wmagentattack/structured_ledger_v2.py": "829223baa03cbbca79c0460087049ba02db040939cea64b7c6a58f04fd20f9af",
+    "src/wmagentattack/factorized_evaluator_v2.py": "aaf842a9052f6b581c6108825bf36bdb2ffb12467b4c461e379114a05d6a2ed4",
+    "src/wmagentattack/panel_v2_architecture_probe.py": "f6bb7e4c41288994cabf838f53f0616add02aa0024e773a99847654eaf59e752",
+    "configs/0729_custom_panel_v2_adapter_extension.json": "edeb7dd0541e043776ef48fc0e9783951d124e58a6eff31b46449e9733bfd8e5",
+    "scripts/142_build_custom_panel_v2_architecture_dataset.py": "0d1b8fff1216fcf5645f17aa84d3bc95821d82fd658d0b750da274444a72ec40",
+    "scripts/143_train_custom_panel_v2_architecture_ablation.py": "8434ab5db7d00504ef9a49ef47a2951b2709c724d67d272b8ff95e5d9aec7623",
+    "scripts/144_summarize_custom_panel_v2_architecture_ablation.py": "a69e88b0f24348715ff23b280eced84450b1bd4ad3302e8a29b6d387846a1017",
+    "tests/test_panel_v2_architecture_probe.py": "d14dfcbea53bf1124d1150e987488e8fb972aad51c483d02fb5ba6762daf7411",
+    "tests/test_custom_panel_v2_architecture_summary.py": "fdcdf0bf9643a3e4c3fb726c0c6b28600208d42cac41ef226981fba143120dfb"
+  },
+  "claim_boundary": "Fixed small clean-only architecture probe on 48 independent synthetic AgentDojo tasks. A positive result is provisional head-level representation evidence, not proof of attack planning, large-scale world-model value learning, H2, or Dreamer effectiveness.",
+  "planned_archive": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/fixed_v1"
+}

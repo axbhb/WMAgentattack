@@ -1,0 +1,42 @@
+{
+  "protocol_id": "0726_state_storage_visibility_contract_v2_fixed_v1",
+  "status": "preregistered_before_execution",
+  "scope": "label-blind engineering gate for content-addressed exact state storage and hard tower visibility separation",
+  "visibility_scopes": [
+    "VICTIM_OBSERVED",
+    "PLANNER_PRIVILEGED",
+    "SIMULATOR_INTERNAL"
+  ],
+  "tower_access": {
+    "VICTIM_PROPOSAL": ["VICTIM_OBSERVED"],
+    "KNOWLEDGE_PROGRESS": ["VICTIM_OBSERVED"],
+    "ENVIRONMENT_PROGRESS": ["VICTIM_OBSERVED", "PLANNER_PRIVILEGED"],
+    "COMPLETION_VALUE": ["VICTIM_OBSERVED", "PLANNER_PRIVILEGED"],
+    "PLANNER_VALUE": ["VICTIM_OBSERVED", "PLANNER_PRIVILEGED"],
+    "SIMULATOR": ["VICTIM_OBSERVED", "PLANNER_PRIVILEGED", "SIMULATOR_INTERNAL"]
+  },
+  "storage_contract": {
+    "content_addressed": true,
+    "canonical_json_roundtrip": true,
+    "deduplicate_identical_states": true,
+    "prefixes_store_references_not_blobs": true,
+    "initial_before_after_references": true,
+    "exact_delta_retained": true,
+    "state_fingerprints_retained": true,
+    "outcome_labels_allowed": false
+  },
+  "frozen_gates": {
+    "identical_state_deduplication": true,
+    "changed_state_new_fingerprint": true,
+    "state_blob_roundtrip": true,
+    "victim_tower_privileged_access_rejected": true,
+    "value_tower_internal_blob_access_rejected": true,
+    "simulator_internal_access_allowed": true,
+    "transition_records_have_no_outcome_fields": true,
+    "tests_pass": true
+  },
+  "failure_decision": "STATE_STORAGE_VISIBILITY_V2_NOT_READY",
+  "pass_decision": "STATE_STORAGE_VISIBILITY_V2_READY_FOR_LEDGER_V2",
+  "old_panel_usage": "state/extraction regression only; no utility or model comparison",
+  "planned_archive": "/share/guozhix/wmagentattack/0726/state_storage_visibility_v2/fixed_v1"
+}

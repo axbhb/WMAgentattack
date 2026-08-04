@@ -1,0 +1,91 @@
+{
+  "protocol_id": "0724_observed_clean_state_replay_fixed_v1",
+  "status": "preregistered_before_execution",
+  "prior_decision": "STATE_DELTA_ADAPTER_READY_CLEAN_GATE_BLOCKED",
+  "research_question": "Can exact AgentDojo state transitions be reconstructed from the frozen observed clean victim traces without leaking episode outcomes into transition records, and what counterevidence limits state-only utility modeling?",
+  "scope": {
+    "benchmark_version": "v1.2.2",
+    "suite": "travel",
+    "victim_protocol": "llama31_70b_function_tags_parser_v2_retry",
+    "existing_clean_traces_only": true,
+    "load_llm": false,
+    "construct_attacks": false,
+    "external_endpoints": false,
+    "create_training_examples": false,
+    "gpu_required": false
+  },
+  "panels": [
+    {
+      "name": "development",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry/function_tag_parser_retry_20260716_v1",
+      "seeds": [101, 103, 107],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45,
+      "expected_utility_successes": 8
+    },
+    {
+      "name": "confirmation",
+      "archive_root": "/share/guozhix/wmagentattack/0716/function_tag_parser_retry_confirmation/function_tag_parser_retry_confirmation_20260716_v1",
+      "seeds": [109, 113, 127],
+      "chunks_per_seed": 2,
+      "expected_episodes": 45,
+      "expected_utility_successes": 6
+    }
+  ],
+  "expected_task_ids": [
+    "user_task_1",
+    "user_task_3",
+    "user_task_6",
+    "user_task_7",
+    "user_task_8",
+    "user_task_9",
+    "user_task_11",
+    "user_task_12",
+    "user_task_13",
+    "user_task_14",
+    "user_task_15",
+    "user_task_16",
+    "user_task_17",
+    "user_task_18",
+    "user_task_19"
+  ],
+  "fixed_budget": {
+    "episodes": 90,
+    "victim_model_calls": 0,
+    "simulator_replays_per_episode": 1,
+    "hyperparameter_grid": false,
+    "rerun_after_result": false
+  },
+  "transition_contract": {
+    "schema_version": "wmagentattack.clean_state.v1",
+    "exact_initial_environment": true,
+    "exact_logged_function_and_arguments": true,
+    "raw_tool_output_stored": false,
+    "assistant_text_stored": false,
+    "episode_utility_stored_only_outside_transition_records": true,
+    "ground_truth_goal_slots_target_only": true,
+    "task_progress_delta": null,
+    "irreversible_effect": null
+  },
+  "frozen_gates": {
+    "exactly_90_complete_source_episodes": true,
+    "all_sources_are_clean_sandbox_traces": true,
+    "all_logged_calls_align_with_tool_messages": true,
+    "zero_replay_infrastructure_failures": true,
+    "all_recomputed_final_utilities_match_archived_utilities": true,
+    "zero_outcome_labels_inside_transition_records": true,
+    "all_expected_tasks_and_panels_present": true
+  },
+  "counterevidence_metrics": [
+    "read-only versus state-mutating observed calls",
+    "state mutation rates by final utility",
+    "exact expert-slot match coverage as target-only diagnostic",
+    "argument entity-link ambiguity",
+    "per-task final-state and call-path diversity across six seeds",
+    "same final-state groups with mixed utility",
+    "same exact call-path and final-state groups with mixed utility",
+    "runtime tool errors and no-tool episodes"
+  ],
+  "decision_rule": "Adopt observed clean state replay only if every frozen integrity gate passes. Regardless of the replay result, keep the clean-data gate blocked and do not construct attacks or start Dreamer training. State deltas, expert slots, and final utility must remain separate signals.",
+  "planned_archive": "/share/guozhix/wmagentattack/0724/observed_clean_state_replay/fixed_v1"
+}

@@ -1,0 +1,17 @@
+{
+  "protocol_id": "0724_clean_state_interface_audit_fixed_v1",
+  "gates": {
+    "zero_ground_truth_execution_errors": true,
+    "all_ground_truth_tasks_pass_final_official_utility": true,
+    "all_expert_traces_match_their_target_only_goal_slots": true,
+    "all_state_snapshots_are_canonical_json": true,
+    "safety_contract_holds": true
+  },
+  "state_delta_adapter_ready": true,
+  "fractional_progress_ready": false,
+  "irreversibility_ready": false,
+  "dynamic_candidate_preconditions_ready": false,
+  "clean_data_gate": "BLOCKED",
+  "decision": "STATE_DELTA_ADAPTER_READY_CLEAN_GATE_BLOCKED",
+  "next_admissible_step": "fixed-budget clean observed-victim instrumentation pilot"
+}

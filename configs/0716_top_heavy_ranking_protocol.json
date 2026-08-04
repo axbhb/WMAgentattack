@@ -1,0 +1,69 @@
+{
+  "experiment": "agentdojo_v2_top_heavy_semantic_ranking",
+  "date": "2026-07-16",
+  "status": "fixed_budget_complete_no_go",
+  "adaptive_context": "This sequential experiment was designed after the completed residual-preservation OOF test showed that uncertainty penalties were not rank-calibrated and that residual predictions had negligible complementarity with the E5 joint-value baseline. It is exploratory rather than a pristine independent confirmation.",
+  "fixed_representation": "intfloat/e5-base-v2 full first-step text plus train-only attack-family, injection-task, and family-by-injection structured fields",
+  "fixed_model": {
+    "class": "linear weighted pairwise ridge",
+    "alpha": 10.0,
+    "fit_scope": "outer-fold train plus validation",
+    "evaluation_scope": "held-out outer-fold test tasks",
+    "test_retuning": false
+  },
+  "fixed_pair_schemes": {
+    "largest_gap_control": "The existing E5 control: up to 64 largest target-gap pairs per training task.",
+    "top_anchor": "Only oracle-top-tier versus lower-tier pairs are retained, up to 64 per training task.",
+    "lambda_ndcg3": "Pairs are weighted by the ideal-list NDCG@3 loss caused by swapping them; weights are normalized within each training task."
+  },
+  "formal_primary": "lambda_ndcg3",
+  "secondary_counterevidence": [
+    "top_anchor",
+    "largest_gap_control"
+  ],
+  "fixed_research_budget": {
+    "schemes": 3,
+    "outer_folds_per_scheme": 5,
+    "total_fold_runs": 15,
+    "hyperparameter_search": 0,
+    "dreamer_training_runs": 0
+  },
+  "comparisons": [
+    "formal frozen Dreamer OOF pct100 Top-1",
+    "frozen E5 plus structured largest-gap pairwise ridge"
+  ],
+  "results": {
+    "archive": "/share/guozhix/wmagentattack/0716/top_heavy_ranking/top_heavy_ranking_20260716_v1",
+    "largest_gap_control": {
+      "top1": {"ASR": 0.32, "BUP": 0.46, "ASR_plus_BUP": 0.78}
+    },
+    "formal_primary_lambda_ndcg3": {
+      "top1": {"ASR": 0.34, "BUP": 0.46, "ASR_plus_BUP": 0.80},
+      "joint_delta_vs_e5": 0.02,
+      "changed_tasks_vs_e5": 1,
+      "decision": "NO_GO"
+    },
+    "secondary_top_anchor": {
+      "top1": {"ASR": 0.34, "BUP": 0.47, "ASR_plus_BUP": 0.81},
+      "joint_delta_vs_e5": 0.03,
+      "joint_ci95_vs_e5": [-0.03, 0.10],
+      "exact_sign_flip_p_vs_e5": 0.28125,
+      "changed_tasks_vs_e5": 5,
+      "decision": "NO_GO_SECONDARY_SIGNAL_ONLY"
+    }
+  },
+  "success_gate": {
+    "minimum_joint_delta_vs_e5": 0.05,
+    "minimum_BUP_delta_vs_e5": 0.0,
+    "joint_bootstrap_ci95_must_exclude_zero_vs_dreamer": true,
+    "joint_exact_sign_flip_p_max_vs_dreamer": 0.05,
+    "minimum_domain_joint_delta_vs_dreamer": -0.10
+  },
+  "claim_boundary": "No scheme may replace the fixed lambda_ndcg3 primary after test inspection. The two other schemes are reported as counterevidence, and all claims remain sequentially exploratory.",
+  "literature_mapping": {
+    "lambda_rank_metric_weighting": "https://www.microsoft.com/en-us/research/publication/on-the-optimality-of-lambdarank/",
+    "lambda_loss_framework": "https://research.google/pubs/the-lambdaloss-framework-for-ranking-metric-optimization/",
+    "listwise_top_weighting_and_ties": "https://arxiv.org/abs/2001.01828",
+    "top_k_non_generalization_counterevidence": "https://arxiv.org/abs/2002.05897"
+  }
+}
