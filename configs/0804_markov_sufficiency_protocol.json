@@ -1,0 +1,126 @@
+{
+  "protocol_id": "0804_markov_sufficiency_v1",
+  "run_tag": "aug4-semantic-wm-v3",
+  "stage": 3,
+  "status": "preregistered_before_training",
+  "research_question": "Does Structured Semantic State v3 provide task-disjoint predictive signal beyond the old Semantic Markov state while remaining non-inferior to a causal full visible-history diagnostic for both victim actions and next evidence deltas?",
+  "scope": {
+    "clean_only": true,
+    "agentdojo_synthetic_sandbox_only": true,
+    "existing_frozen_trajectories_only": true,
+    "victim_llm_calls": 0,
+    "attack_generation": false,
+    "completion_utility_value_planning": false,
+    "dreamer_training": false
+  },
+  "source": {
+    "raw_dataset": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v2/panel_v2_architecture_dataset.json",
+    "raw_dataset_sha256": "c01a0c29a8e2ce99e6f3dd81c82f1711131868ebe81da62a0298fe7e42745746",
+    "semantic_dataset": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage1/rebuild_a/semantic_state_v3_dataset.json",
+    "semantic_dataset_sha256": "099aecb7ab70b5d822f44e9007fb95c1d6ed78569505dbc32621efdd88f82a53",
+    "episodes": 144,
+    "tasks": 48,
+    "prefixes": 467,
+    "evidence_transitions": 323,
+    "splits": {
+      "training": 24,
+      "calibration": 12,
+      "confirmation": 12
+    },
+    "task_disjoint": true,
+    "confirmation_caveat": "The task-disjoint confirmation identities are frozen but were examined in earlier July representation studies; this is not a never-before-seen final test surface."
+  },
+  "frozen_variants": [
+    "semantic_markov",
+    "structured_markov_v3",
+    "full_history_diagnostic"
+  ],
+  "representation_contract": {
+    "equal_input_dimension": "7 * hash_dimension + 18 for every arm",
+    "semantic_markov": "Trusted goal, policy track, previous canonical action, legal candidates, and prefix index; all additional blocks are zero padded.",
+    "structured_markov_v3": "The frozen causal, label-blind, entity-preserving v3 state.",
+    "full_history_diagnostic": "Trusted goal/interface plus every actually observed action, raw tool observation, and execution receipt at or before the current prefix; no future row or hidden simulator delta.",
+    "same_model": "HybridSemanticWorldModel with equal hidden size, candidate encoder, optimizer, epoch count, and seed.",
+    "forbidden_inputs": [
+      "hidden simulator state or state-change oracle",
+      "proof contracts, required calls, or expert paths",
+      "future actions or observations",
+      "final output, checker, reward, utility, security, or attack labels"
+    ]
+  },
+  "targets": {
+    "victim_primary": [
+      "task_macro_action_nll",
+      "task_macro_action_accuracy"
+    ],
+    "victim_secondary": [
+      "task_macro_argument_key_f1",
+      "task_macro_stop_accuracy"
+    ],
+    "evidence_primary": [
+      "task_macro_evidence_bce",
+      "task_macro_evidence_brier"
+    ],
+    "evidence_deltas": [
+      "record_added",
+      "goal_term_newly_matched",
+      "conflict_added",
+      "execution_error",
+      "ambiguous_or_unlinked_added"
+    ],
+    "rare_label_rule": "Use capped training-only positive weights, but evaluate unweighted proper BCE/Brier and report every target separately."
+  },
+  "training": {
+    "train_split_only": "training",
+    "no_calibration_or_confirmation_gradient": true,
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "argument_loss_weight": 0.2,
+    "evidence_loss_weight": 1.0,
+    "evidence_positive_weight_cap": 20.0,
+    "task_balanced_loss": true,
+    "cpu_threads": 8,
+    "hyperparameter_grid": false,
+    "early_stopping": false,
+    "model_selection": false
+  },
+  "acceptance_gate": {
+    "split": "confirmation",
+    "minimum_action_nll_gain": 0.02,
+    "minimum_evidence_bce_gain": 0.01,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_confirmation_positive_tasks": 6,
+    "maximum_action_nll_gap_to_full_history": 0.05,
+    "maximum_evidence_bce_gap_to_full_history": 0.02,
+    "require_both_action_and_evidence_incremental_gates": true,
+    "require_both_full_history_noninferiority_gates": true,
+    "do_not_change_thresholds_after_training": true
+  },
+  "uncertainty": {
+    "paired_task_bootstrap_draws": 10000,
+    "bootstrap_seed": 8042026,
+    "paired_sign_test": true,
+    "intervals_and_p_values_are_counterevidence_not_additional_hard_gates": true
+  },
+  "fixed_budget": {
+    "episodes": 144,
+    "tasks": 48,
+    "prefixes": 467,
+    "evidence_transitions": 323,
+    "variants": 3,
+    "training_seeds": 3,
+    "training_runs": 9,
+    "post_result_reruns": 0,
+    "victim_llm_calls": 0,
+    "attack_examples": 0,
+    "dreamer_runs": 0
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage3/fixed_v1",
+  "next_if_go": "Freeze durable clean task IDs and preregister the small same-task/same-seed AgentDojo sandbox paired attack-selection pilot.",
+  "next_if_no_go": "Record Stage 4 as NOT_AUTHORIZED; do not generate attacks or start Dreamer/value training."
+}
