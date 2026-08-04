@@ -1,0 +1,47 @@
+{
+  "protocol_id": "0804_structured_semantic_state_v3_v1",
+  "run_tag": "aug4-semantic-wm-v3",
+  "stage": 1,
+  "research_question": "Can the frozen clean panel be represented by a deterministic, entity-preserving, causal semantic state without hidden simulator, expert, future, or outcome information?",
+  "source_dataset": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v2/panel_v2_architecture_dataset.json",
+  "source_dataset_sha256": "c01a0c29a8e2ce99e6f3dd81c82f1711131868ebe81da62a0298fe7e42745746",
+  "output_root": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage1",
+  "schema_version": "wmagentattack.semantic_state.v3",
+  "allowed_inputs": [
+    "trusted_goal",
+    "policy track",
+    "prefix index",
+    "legal tool IDs",
+    "previous canonical action",
+    "observed execution receipt",
+    "observed output summary",
+    "entity-preserving ledger records and conflicts"
+  ],
+  "ignored_or_forbidden_inputs": [
+    "hidden causal_state_summary and canonical simulator deltas",
+    "runtime and episode identifiers",
+    "state_provenance derived from hidden state comparison",
+    "proof contracts and required calls",
+    "expert or future calls and observations",
+    "final output, utility, security, checker, reward, or target labels"
+  ],
+  "fixed_budget": {
+    "semantic_schema_candidates": 1,
+    "maximum_nonsemantic_implementation_repairs": 3,
+    "model_training_runs": 0,
+    "victim_llm_calls": 0,
+    "attack_generations": 0
+  },
+  "acceptance_gate": {
+    "expected_episodes": 144,
+    "expected_states": 467,
+    "required_task_disjoint_splits": true,
+    "maximum_leakage_failures": 0,
+    "maximum_hidden_oracle_invariance_failures": 0,
+    "maximum_runtime_identifier_invariance_failures": 0,
+    "require_byte_identical_independent_rebuild": true,
+    "require_all_stage1_tests_pass": true
+  },
+  "next_if_go": "Freeze the schema and implement the exact-transition plus learned victim/evidence hybrid world model.",
+  "next_if_no_go": "Do not train models; preserve the failure and repair only the causal state representation within the fixed implementation-repair budget."
+}
