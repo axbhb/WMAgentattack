@@ -1,0 +1,24 @@
+{
+  "protocol_id": "0804_conditional_paired_attack_pilot_v1",
+  "run_tag": "aug4-semantic-wm-v3",
+  "stage": 4,
+  "status": "completed_without_execution",
+  "decision": "NOT_AUTHORIZED__STAGE3_EVIDENCE_SUFFICIENCY_GATE_FAILED",
+  "authorization_condition": "Stage 3 must return GO__STRUCTURED_MARKOV_V3_SUFFICIENT_FOR_PAIRED_PILOT.",
+  "observed_stage3_decision": "NO_GO__STRUCTURED_MARKOV_V3_SUFFICIENCY_NOT_ESTABLISHED",
+  "stage3_summary_sha256": "db37c1418afdd54d627b9f96d978e673f4813ea0122a92f5686c1ab8dfcbd3c5",
+  "failed_stage3_clauses": [
+    "structured_evidence_mean_gain",
+    "structured_evidence_seed_replication"
+  ],
+  "execution_counts": {
+    "durable_task_ids_frozen": 0,
+    "attack_examples_generated": 0,
+    "clean_attack_pairs_executed": 0,
+    "victim_llm_calls": 0,
+    "external_endpoint_calls": 0,
+    "dreamer_runs": 0,
+    "value_or_planner_runs": 0
+  },
+  "binding_boundary": "Do not create attack data or run selector comparisons under this protocol. A future pilot requires a separately preregistered clean evidence-data and modelling loop to pass on a genuinely fresh confirmation surface."
+}
