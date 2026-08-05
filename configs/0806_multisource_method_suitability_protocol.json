@@ -137,7 +137,8 @@
     "action_pass_full_world_model_fail": "GO_ACTION_ONLY__COLLECT_MULTISTEP_TRANSITIONS_BEFORE_SCALE",
     "injecagent_action_fail_but_paired_surface_valid": "AUXILIARY_ROBUSTNESS_ONLY__DO_NOT_USE_AS_WORLD_MODEL_CORE",
     "action_fail": "NO_GO_SOURCE_SCALE",
-    "combined_model_degrades_source_specific": "RETAIN_SOURCE_SPECIFIC_ADAPTERS"
+    "combined_model_degrades_source_specific": "RETAIN_SOURCE_SPECIFIC_ADAPTERS",
+    "combined_model_degradation_threshold_nll": 0.05
   },
   "uncertainty": {
     "paired_task_bootstrap_draws": 10000,

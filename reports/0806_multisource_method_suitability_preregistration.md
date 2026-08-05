@@ -12,4 +12,6 @@ Where the preflight contains at least 50 exact executions with adequate success/
 
 The fixed budget is 36 small neural runs, four TF-IDF fits, four frequency fits, two deterministic dataset builds, and zero new LLM or tool calls. No threshold or split may change after model results are observed.
 
+The combined Structured-v3 model is compared back to each source-specific Structured-v3 model on identical confirmation tasks. A task-macro action-NLL degradation greater than `0.05` for any source triggers the frozen `RETAIN_SOURCE_SPECIFIC_ADAPTERS` decision; this comparison cannot rescue a source that fails its own action gate.
+
 The frozen second preflight produced byte-identical independent builds (dataset SHA256 `3c2c3b60c757b17be14e52c45fa5bee79038d1d559f795727c9af70dd23f644b`) with zero task or causal-input fingerprint overlap. The immutable first preflight is retained as counterevidence: it exposed a tau3 same-name/different-schema candidate collision. The label-blind repair namespaces candidates by schema hash and was committed as `fe03a9e` before model training.
