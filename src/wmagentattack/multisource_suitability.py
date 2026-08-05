@@ -99,8 +99,13 @@ def split_task_fingerprints(
     return output
 
 
-def candidate_id(source: str, tool_name: str) -> str:
-    return f"{source}::{tool_name}"
+def candidate_id(
+    source: str, tool_name: str, schema: Mapping[str, Any] | None = None
+) -> str:
+    if schema is None:
+        return f"{source}::{tool_name}"
+    signature = stable_hash(schema["function"])[:12]
+    return f"{source}::{signature}::{tool_name}"
 
 
 def _tool_name(schema: Mapping[str, Any]) -> str:
@@ -300,7 +305,7 @@ def build_suitability_dataset(
         legal = []
         for schema in causal["tool_schemas"]:
             name = _tool_name(schema)
-            key = candidate_id(source, name)
+            key = candidate_id(source, name, schema)
             descriptor = {
                 "source": source,
                 "kind": "tool",
@@ -329,7 +334,19 @@ def build_suitability_dataset(
             if record["decision"]["kind"] == "tool_call"
             else TEXT_ACTION
         )
-        target = candidate_id(source, target_name)
+        if target_name == TEXT_ACTION:
+            target = text_key
+        else:
+            matching = [
+                key
+                for key, schema in zip(legal, causal["tool_schemas"])
+                if _tool_name(schema) == target_name
+            ]
+            if len(matching) != 1:
+                raise ValueError(
+                    f"target tool schema is not unique in the legal interface: {target_name}"
+                )
+            target = matching[0]
         execution = record["execution"]
         exact = execution.get("tier") == "exact"
         replica = execution.get("replica_0", {}) if exact else {}

@@ -100,7 +100,11 @@ def test_injecagent_pairs_remain_in_one_goal_disjoint_split():
 
 
 def test_target_and_outcome_do_not_change_causal_representation():
-    records = [_record("injecagent", f"goal {index}", index) for index in range(5)]
+    records = [
+        _record("injecagent", f"goal {index}", index, variant)
+        for index in range(5)
+        for variant in ("clean", "poisoned")
+    ]
     dataset, audit = build_suitability_dataset(records, _protocol(records))
     assert audit["passed"]
     row = dataset["rows"][0]
