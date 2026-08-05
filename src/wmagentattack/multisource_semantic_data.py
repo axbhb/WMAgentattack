@@ -9,6 +9,7 @@ upstream benchmark locally.
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import re
 from collections import Counter
@@ -168,6 +169,8 @@ def parse_function_tag_completion(
 ) -> dict[str, Any]:
     """Parse strict and unambiguous repaired function-tag serializations."""
 
+    completion = html.unescape(completion)
+
     def accepted(name: Any, arguments: Any) -> dict[str, Any] | None:
         if not isinstance(name, str) or name not in allowed_functions:
             return None
@@ -194,6 +197,42 @@ def parse_function_tag_completion(
         if parsed is not None:
             return {"kind": "tool_call", **parsed, "repair": "strict"}
 
+    # Llama frequently serializes the tool name as an XML attribute while
+    # keeping the arguments as the tag body.  This is unambiguous and remains
+    # constrained to the tool names presented in the prompt.
+    attribute_call = re.search(
+        r"<function\s+name\s*=\s*[\"']?([A-Za-z_]\w*)[\"']?\s*/?\s*>"
+        r"\s*(\{.*?\})\s*</function>",
+        completion,
+        re.DOTALL,
+    )
+    if attribute_call is not None:
+        parsed = accepted(attribute_call.group(1), attribute_call.group(2))
+        if parsed is not None:
+            return {"kind": "tool_call", **parsed, "repair": "name_attribute"}
+
+    # A second observed Llama serialization emits the literal field name in a
+    # tag, followed by a JSON parameters object.  Do not infer arguments from
+    # free text when that object is absent or malformed.
+    tagged_name = re.search(
+        r"<function\s*=\s*name>\s*([A-Za-z_]\w*)\s*</function>", completion
+    )
+    if tagged_name is not None:
+        remainder = completion[tagged_name.end() :]
+        object_start = remainder.find("{")
+        if object_start >= 0:
+            try:
+                arguments, _ = json.JSONDecoder().raw_decode(remainder, object_start)
+            except json.JSONDecodeError:
+                arguments = None
+            parsed = accepted(tagged_name.group(1), arguments)
+            if parsed is not None:
+                return {
+                    "kind": "tool_call",
+                    **parsed,
+                    "repair": "tagged_name_parameters",
+                }
+
     decoder = json.JSONDecoder()
     position = 0
     while True:
@@ -206,9 +245,22 @@ def parse_function_tag_completion(
             position = start + 1
             continue
         if isinstance(payload, dict):
+            name = payload.get("name", payload.get("function"))
+            if "arguments" in payload:
+                arguments = payload["arguments"]
+            elif "parameters" in payload:
+                arguments = payload["parameters"]
+            elif isinstance(name, str):
+                arguments = {
+                    key: value
+                    for key, value in payload.items()
+                    if key not in {"name", "function"}
+                }
+            else:
+                arguments = {}
             parsed = accepted(
-                payload.get("name", payload.get("function")),
-                payload.get("arguments", payload.get("parameters", {})),
+                name,
+                arguments,
             )
             if parsed is not None:
                 return {"kind": "tool_call", **parsed, "repair": "bare_json"}

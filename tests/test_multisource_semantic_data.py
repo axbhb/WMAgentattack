@@ -72,6 +72,23 @@ def test_parser_accepts_only_presented_unambiguous_tools():
         '{"function":"lookup","parameters":{"record_id":"b"}}', {"lookup"}
     )
     assert repaired["kind"] == "tool_call"
+    attribute = parse_function_tag_completion(
+        '<function name="lookup">{"record_id":"c"}</function>', {"lookup"}
+    )
+    assert attribute["repair"] == "name_attribute"
+    assert attribute["arguments"] == {"record_id": "c"}
+    direct_arguments = parse_function_tag_completion(
+        '<function=name>{"name":"lookup","record_id":"d"}</function>',
+        {"lookup"},
+    )
+    assert direct_arguments["arguments"] == {"record_id": "d"}
+    html_parameters = parse_function_tag_completion(
+        "<function=name>lookup</function><function>parameters&gt;"
+        "{&quot;record_id&quot;:&quot;e&quot;}",
+        {"lookup"},
+    )
+    assert html_parameters["repair"] == "tagged_name_parameters"
+    assert html_parameters["arguments"] == {"record_id": "e"}
     rejected = parse_function_tag_completion(
         '<function=delete_everything>{}</function>', {"lookup"}
     )

@@ -304,6 +304,11 @@ def main() -> None:
     parser.add_argument("--audit", type=Path, required=True)
     parser.add_argument("--chunk-index", type=int, default=0)
     parser.add_argument("--num-chunks", type=int, default=1)
+    parser.add_argument(
+        "--cached-input",
+        type=Path,
+        help="Reparse frozen completions without making new LLM calls.",
+    )
     args = parser.parse_args()
 
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
@@ -323,7 +328,15 @@ def main() -> None:
         for index, row in enumerate(manifest["rows"])
         if index % args.num_chunks == args.chunk_index
     ]
-    agent = FrozenSharedToolAgent(contract)
+    cached_by_row = None
+    if args.cached_input is not None:
+        cached_payload = json.loads(args.cached_input.read_text(encoding="utf-8"))
+        cached_by_row = {row["row_id"]: row for row in cached_payload["records"]}
+        if set(cached_by_row) != {row["row_id"] for row in rows}:
+            raise ValueError("cached completions do not exactly match this manifest chunk")
+        agent = None
+    else:
+        agent = FrozenSharedToolAgent(contract)
     cache: dict[str, Any] = {
         "enumeration_seed": protocol["sources"]["tool_sandbox"]["enumeration_seed"],
         "frozen_logical_clock_iso": protocol["sources"]["tool_sandbox"][
@@ -343,7 +356,28 @@ def main() -> None:
             "runtime_error": None,
         }
         try:
-            generated = agent.query(row["model_input"], int(row["run_seed"]))
+            if cached_by_row is None:
+                assert agent is not None
+                generated = agent.query(row["model_input"], int(row["run_seed"]))
+            else:
+                cached = cached_by_row[row["row_id"]]
+                completion = str(cached["completion"])
+                retry_completion = cached.get("retry_completion")
+                allowed = {
+                    tool["function"]["name"]
+                    for tool in row["model_input"]["tool_schemas"]
+                }
+                decision = parse_function_tag_completion(completion, allowed)
+                if decision["kind"] != "tool_call" and retry_completion:
+                    decision = parse_function_tag_completion(
+                        str(retry_completion), allowed
+                    )
+                generated = {
+                    "completion": completion,
+                    "retry_completion": retry_completion,
+                    "decision": decision,
+                    "prompt_sha256": stable_hash(function_tag_prompt(row["model_input"])),
+                }
             record.update(generated)
             record["execution"] = _execution(
                 manifest["source"],
@@ -382,6 +416,9 @@ def main() -> None:
             "protocol_file_sha256": _file_sha256(args.protocol),
             "llm_contract_sha256": contract_hash,
             "output_file_sha256": _file_sha256(args.output),
+            "cached_input_sha256": (
+                _file_sha256(args.cached_input) if args.cached_input else None
+            ),
         }
     )
     _write(args.audit, audit)
