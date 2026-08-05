@@ -414,6 +414,7 @@ def main() -> None:
         records,
         expected_rows=len(rows),
         require_exact_replica_determinism=True,
+        require_injecagent_pair_completeness=args.num_chunks == 1,
     )
     audit.update(
         {

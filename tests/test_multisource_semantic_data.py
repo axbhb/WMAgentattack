@@ -173,3 +173,26 @@ def test_injecagent_pair_completeness_is_a_gate():
     assert summarize_generation(
         [clean, poisoned], expected_rows=2, require_exact_replica_determinism=True
     )["passed"]
+
+
+def test_injecagent_pair_completeness_is_deferred_for_sharded_workers():
+    clean = {
+        "source": "injecagent",
+        "group_id": "injecagent::case",
+        "variant": "clean",
+        "model_input": build_model_input(trusted_goal="Read", tool_schemas=[_tool()]),
+        "completion": "Done",
+        "decision": {"kind": "text"},
+        "runtime_error": None,
+        "execution": {"tier": "observation_only"},
+    }
+    audit = summarize_generation(
+        [clean],
+        expected_rows=1,
+        require_exact_replica_determinism=True,
+        require_injecagent_pair_completeness=False,
+    )
+    assert audit["passed"]
+    assert audit["checks"]["injecagent_pair_completeness"] is True
+    assert audit["injecagent_pair_completeness_required"] is False
+    assert audit["incomplete_pair_groups"] == ["injecagent::case"]

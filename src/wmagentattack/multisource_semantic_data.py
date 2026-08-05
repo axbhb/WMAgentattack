@@ -365,6 +365,7 @@ def summarize_generation(
     *,
     expected_rows: int,
     require_exact_replica_determinism: bool,
+    require_injecagent_pair_completeness: bool = True,
 ) -> dict[str, Any]:
     """Summarize a source without imposing a performance-selected ASR gate."""
 
@@ -398,7 +399,12 @@ def summarize_generation(
         "exact_replica_determinism": (
             not nondeterministic if require_exact_replica_determinism else True
         ),
-        "injecagent_pair_completeness": not incomplete_pairs,
+        # A modulo-sharded worker does not contain both members of every
+        # InjecAgent clean/poison pair. Pair completeness is therefore a
+        # release gate only after all chunks have been merged.
+        "injecagent_pair_completeness": (
+            not incomplete_pairs if require_injecagent_pair_completeness else True
+        ),
     }
     return {
         "checks": checks,
@@ -412,4 +418,5 @@ def summarize_generation(
         "exact_executions": len(exact),
         "nondeterministic_exact_executions": len(nondeterministic),
         "incomplete_pair_groups": incomplete_pairs,
+        "injecagent_pair_completeness_required": require_injecagent_pair_completeness,
     }
