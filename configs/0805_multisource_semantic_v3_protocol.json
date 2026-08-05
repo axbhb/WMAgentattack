@@ -56,6 +56,7 @@
       "repository": "https://github.com/apple/ToolSandbox",
       "commit": "165848b9a78cead7ca7fe7c89c688b58e6501219",
       "enumeration_seed": 80531,
+      "frozen_logical_clock_iso": "2026-08-05T00:00:00",
       "selection_seed": "0805-toolsandbox-pilot-v1",
       "pilot_per_stratum": 4,
       "pilot_seeds": [307, 311, 313],

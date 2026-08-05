@@ -168,8 +168,14 @@ def _toolsandbox_state(context: Any) -> dict[str, Any]:
     return state
 
 
-def _execute_toolsandbox_once(scenario: Any, decision: dict[str, Any], seed: int) -> dict[str, Any]:
+def _execute_toolsandbox_once(
+    scenario: Any,
+    decision: dict[str, Any],
+    seed: int,
+    logical_clock_iso: str,
+) -> dict[str, Any]:
     from tool_sandbox.common.execution_context import get_current_context, set_current_context
+    from wmagentattack.counterfactual_execution import frozen_sandbox_clock
 
     random.seed(seed)
     np.random.seed(seed)
@@ -180,7 +186,8 @@ def _execute_toolsandbox_once(scenario: Any, decision: dict[str, Any], seed: int
     output: Any = None
     error: dict[str, str] | None = None
     try:
-        output = tools[decision["name"]](**decision["arguments"])
+        with frozen_sandbox_clock(logical_clock_iso):
+            output = tools[decision["name"]](**decision["arguments"])
     except Exception as exception:
         error = {"type": type(exception).__name__, "message": str(exception)}
     after = _toolsandbox_state(get_current_context())
@@ -266,8 +273,13 @@ def _execution(
             random.seed(int(cache["enumeration_seed"]))
             cache["scenarios"] = named_scenarios(ToolBackend.DEFAULT)
         scenario = cache["scenarios"][row["metadata"]["scenario_name"]]
-        first = _execute_toolsandbox_once(scenario, decision, seed)
-        second = _execute_toolsandbox_once(scenario, decision, seed)
+        logical_clock_iso = str(cache["frozen_logical_clock_iso"])
+        first = _execute_toolsandbox_once(
+            scenario, decision, seed, logical_clock_iso
+        )
+        second = _execute_toolsandbox_once(
+            scenario, decision, seed, logical_clock_iso
+        )
     elif source == "tau3":
         sys.path.insert(0, str(source_root / "src"))
         first = _execute_tau_once(row, decision, seed)
@@ -313,7 +325,10 @@ def main() -> None:
     ]
     agent = FrozenSharedToolAgent(contract)
     cache: dict[str, Any] = {
-        "enumeration_seed": protocol["sources"]["tool_sandbox"]["enumeration_seed"]
+        "enumeration_seed": protocol["sources"]["tool_sandbox"]["enumeration_seed"],
+        "frozen_logical_clock_iso": protocol["sources"]["tool_sandbox"][
+            "frozen_logical_clock_iso"
+        ],
     }
     records = []
     for index, row in enumerate(rows):

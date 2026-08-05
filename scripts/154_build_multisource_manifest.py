@@ -241,8 +241,11 @@ def _toolsandbox_state(context: Any) -> dict[str, Any]:
     return state
 
 
-def _run_toolsandbox_reference(scenario: Any, calls: list[dict[str, Any]]) -> dict[str, Any]:
+def _run_toolsandbox_reference(
+    scenario: Any, calls: list[dict[str, Any]], logical_clock_iso: str
+) -> dict[str, Any]:
     from tool_sandbox.common.execution_context import get_current_context, set_current_context
+    from wmagentattack.counterfactual_execution import frozen_sandbox_clock
 
     context = copy.deepcopy(scenario.starting_context)
     set_current_context(context)
@@ -253,7 +256,8 @@ def _run_toolsandbox_reference(scenario: Any, calls: list[dict[str, Any]]) -> di
         output: Any = None
         error: dict[str, str] | None = None
         try:
-            output = tools[call["name"]](**call["arguments"])
+            with frozen_sandbox_clock(logical_clock_iso):
+                output = tools[call["name"]](**call["arguments"])
         except Exception as exception:  # benchmark errors are data
             error = {"type": type(exception).__name__, "message": str(exception)}
         after = _toolsandbox_state(get_current_context())
@@ -349,8 +353,12 @@ def build_toolsandbox(
         tools = scenario.starting_context.get_available_tools(False)
         schemas = _toolsandbox_tool_schemas(tools)
         reference_calls = _toolsandbox_reference_calls(scenario)
-        first = _run_toolsandbox_reference(scenario, reference_calls)
-        second = _run_toolsandbox_reference(scenario, reference_calls)
+        first = _run_toolsandbox_reference(
+            scenario, reference_calls, source_config["frozen_logical_clock_iso"]
+        )
+        second = _run_toolsandbox_reference(
+            scenario, reference_calls, source_config["frozen_logical_clock_iso"]
+        )
         replica_identical = stable_hash(first) == stable_hash(second)
         deterministic += int(replica_identical)
         reference_errors += sum(
