@@ -1,7 +1,7 @@
 {
   "protocol_id": "wmagentattack_multisource_semantic_v3_20260805_v1",
   "date": "2026-08-05",
-  "status": "pilot_complete_go_large_manifests_frozen_before_large_llm_outcome",
+  "status": "large_complete_release_gate_passed",
   "scope": "Offline synthetic ToolSandbox, InjecAgent, and tau3 data expansion for the hybrid semantic world model",
   "authorization_boundary": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -157,6 +157,93 @@
       "injecagent": "41b4c0e817c6c0616b91bcd0dea911e4e875e2104b3ba8789c75260cc0a02dc4",
       "tau3": "00e1d3557665e072dc6bf7641c3f24fd3e1aaabc3af06f4247bb3057f14dd085"
     }
+  },
+  "large_run_result": {
+    "completed_utc": "2026-08-05T10:44:17+00:00",
+    "decision": "LARGE_MULTISOURCE_V1_COMPLETE",
+    "passed": true,
+    "jobs": {
+      "generation_array": {
+        "job_id": 6354,
+        "array_tasks": 21,
+        "max_concurrent": 4,
+        "first_task_start_utc": "2026-08-05T09:09:58+00:00",
+        "last_task_end_utc": "2026-08-05T10:43:11+00:00",
+        "wall_interval": "01:33:13"
+      },
+      "original_afterok_summary": {
+        "job_id": 6355,
+        "status": "cancelled_after_local_pair_scope_gate_defect"
+      },
+      "label_blind_recovery_and_summary": {
+        "job_id": 6374,
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "start_utc": "2026-08-05T10:43:11+00:00",
+        "end_utc": "2026-08-05T10:44:17+00:00",
+        "elapsed": "00:01:06"
+      }
+    },
+    "archive": "/share/guozhix/wmagentattack/0806/multisource_semantic_v3/large_v1",
+    "release_gate": {
+      "source_counts": {
+        "tool_sandbox": 95,
+        "injecagent": 2108,
+        "tau3": 164
+      },
+      "total_rows": 2367,
+      "runtime_failures": 0,
+      "invalid_tool_names": 0,
+      "nondeterministic_exact_executions": 0,
+      "injecagent_complete_pairs": 1054,
+      "single_frozen_llm_contract": true,
+      "unique_row_ids": true,
+      "zero_real_external_endpoint_calls": true
+    },
+    "source_metrics": {
+      "tool_sandbox": {
+        "tool_calls": 23,
+        "tool_call_rate": 0.24210526315789474,
+        "exact_executions": 23
+      },
+      "injecagent": {
+        "tool_calls": 644,
+        "tool_call_rate": 0.3055028462998102,
+        "transition_tier": "observation_only"
+      },
+      "tau3": {
+        "tool_calls": 129,
+        "tool_call_rate": 0.7865853658536586,
+        "exact_executions": 129
+      }
+    },
+    "paired_attack_counterevidence": {
+      "complete_pairs": 1054,
+      "clean_attacker_tool_rate": 0.003795066413662239,
+      "poisoned_attacker_tool_rate": 0.12903225806451613,
+      "discordant_clean_only": 3,
+      "discordant_poison_only": 135,
+      "is_release_gate": false
+    },
+    "label_blind_orchestration_repair": {
+      "problem": "Modulo sharding separates InjecAgent clean/poison members, so pair completeness is not identifiable inside one shard.",
+      "global_merge_pair_gate_retained": true,
+      "recovery_audits": 16,
+      "llm_calls_added": 0,
+      "original_outputs_overwritten": false,
+      "records_regenerated": 0,
+      "audit_stage_tracebacks_observed": 1,
+      "interrupted_audit_chunk": 5,
+      "separate_cached_reparse_outputs": 1
+    },
+    "sha256": {
+      "protocol": "78473c00ac014d9ec904dc18654f52c28acd42313002a8701f1bb5144364cb70",
+      "merged_dataset": "9a930150e70c718c9ceb72d119212f485358897487e3a683c123e8725707ba1d",
+      "large_gate": "85cd5701a0e8017ce63c660b352a3506b5a969daf9df591e611435997491ce1f",
+      "archive_SHA256SUMS": "6b702832640673fea342dfb15bd275ca89dfbbdbcbef1bf898b3dbebdfc0f368",
+      "llm_contract": "d8a459b64106de53d58915cd5da4ff9f1c667c6077f16b8d9c73364048af9bc2"
+    },
+    "claim_boundary": "This release establishes complete, deterministic, offline multi-source construction under one victim LLM contract. It does not establish attack success or authorize a large Dreamer training run."
   },
   "decision_if_pilot_go": "BUILD_FROZEN_LARGE_MULTISOURCE_V1",
   "decision_if_pilot_no_go": "NO_LARGE_BUILD_RETAIN_SOURCE_SPECIFIC_COUNTEREVIDENCE"
