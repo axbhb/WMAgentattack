@@ -313,6 +313,15 @@ def main() -> None:
 
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+    implementation_hashes = protocol.get("execution_adapter", {}).get(
+        "implementation_sha256", {}
+    )
+    for relative_path, expected_hash in implementation_hashes.items():
+        implementation_path = ROOT / relative_path
+        if _file_sha256(implementation_path) != expected_hash:
+            raise ValueError(
+                f"frozen execution implementation differs: {relative_path}"
+            )
     contract = protocol["shared_llm_contract"]
     contract_hash = stable_hash(contract)
     if manifest["llm_contract_sha256"] != contract_hash:

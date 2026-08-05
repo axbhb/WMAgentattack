@@ -1,7 +1,7 @@
 {
   "protocol_id": "wmagentattack_multisource_semantic_v3_20260805_v1",
   "date": "2026-08-05",
-  "status": "pilot_manifests_frozen_before_any_multisource_llm_outcome",
+  "status": "pilot_complete_go_large_manifests_frozen_before_large_llm_outcome",
   "scope": "Offline synthetic ToolSandbox, InjecAgent, and tau3 data expansion for the hybrid semantic world model",
   "authorization_boundary": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -50,6 +50,24 @@
       "top_p"
     ],
     "prompt_profile_may_be_source_adapter_specific": true
+  },
+  "execution_adapter": {
+    "revision": "multisource_function_tags_label_blind_repair_v2",
+    "repair_scope": [
+      "XML name attribute with JSON body",
+      "tagged literal tool name followed by JSON parameters",
+      "bare JSON with tool name and direct argument fields"
+    ],
+    "outcome_labels_read": false,
+    "tasks_seeds_or_completions_regenerated_for_repair": false,
+    "development_counterevidence_archive": "/share/guozhix/wmagentattack/0805/multisource_semantic_v3/pilot_v1",
+    "frozen_reparse_archive": "/share/guozhix/wmagentattack/0805/multisource_semantic_v3/pilot_parser_v2",
+    "frozen_reparse_gate_sha256": "2a2fe9b624720b85171829b1ae05356d036d10915659b4842bca8bf9ade3cf0a",
+    "frozen_reparse_dataset_sha256": "32d99fc73f2a6f7766a1fb97c158deb10822afca943d193fc46d90bf71f56f38",
+    "implementation_sha256": {
+      "src/wmagentattack/multisource_semantic_data.py": "e5cabd1e912d33de95dff81f1f624e5eff04ff65d3296783e650c4dd93aa8d8c",
+      "scripts/155_run_multisource_llm.py": "712a6489742a8d1247570a728960dc3174fb6b08220f1a10509d0aa742727ca9"
+    }
   },
   "sources": {
     "tool_sandbox": {
@@ -134,7 +152,11 @@
       "injecagent": "86752c26f3ea39a33b2647a386f4547e083310a7fe5ce4b7a4bd6e17e9f1c9d8",
       "tau3": "a585c96c45c1aff45bf8b3c99e7ce884f72507f0b202a4a6ee9f6ff94f9d2e7f"
     },
-    "large": {}
+    "large": {
+      "tool_sandbox": "b57ea379b2a4f6d8cf0bb0675ed36fadfac595b877b09bfdc41f0bfa956b182e",
+      "injecagent": "41b4c0e817c6c0616b91bcd0dea911e4e875e2104b3ba8789c75260cc0a02dc4",
+      "tau3": "00e1d3557665e072dc6bf7641c3f24fd3e1aaabc3af06f4247bb3057f14dd085"
+    }
   },
   "decision_if_pilot_go": "BUILD_FROZEN_LARGE_MULTISOURCE_V1",
   "decision_if_pilot_no_go": "NO_LARGE_BUILD_RETAIN_SOURCE_SPECIFIC_COUNTEREVIDENCE"
