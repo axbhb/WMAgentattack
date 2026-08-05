@@ -159,6 +159,21 @@
     "tfidf_fits": 1,
     "frequency_fits": 1
   },
+  "method_training_definition": {
+    "action_loss_weight": 1.0,
+    "transition_loss_weight": 1.0,
+    "task_balanced_training_weights": true,
+    "transition_class_reweighting": false,
+    "frequency_action_smoothing_per_candidate": 1.0,
+    "frequency_transition_beta_prior": [1.0, 1.0],
+    "tfidf_max_features": 20000,
+    "tfidf_ngram_range": [1, 2],
+    "tfidf_logistic_C": 1.0,
+    "tfidf_uses_only_causal_prefix_and_candidate_text": true,
+    "two_step_metric": "task_macro_fraction_of_adjacent_decision_pairs_both_correct",
+    "transition_metric": "task_macro_brier_averaged_over_supported_targets",
+    "calibration_split_changes_no_threshold_or_hyperparameter": true
+  },
   "method_acceptance_gate": {
     "split": "confirmation",
     "minimum_candidate_nll_gain_over_frequency": 0.05,
