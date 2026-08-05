@@ -1,0 +1,140 @@
+{
+  "protocol_id": "wmagentattack_multisource_semantic_v3_20260805_v1",
+  "date": "2026-08-05",
+  "status": "preregistered_before_multisource_pilot",
+  "scope": "Offline synthetic ToolSandbox, InjecAgent, and tau3 data expansion for the hybrid semantic world model",
+  "authorization_boundary": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "external_benchmarks_offline_or_in_memory_only": true,
+    "real_external_endpoint_calls": 0,
+    "novel_attack_generation": 0,
+    "dreamer_training_runs": 0,
+    "large_scale_allowed_only_after_all_three_pilot_adapter_gates_pass": true
+  },
+  "agentdojo_llm_reference": {
+    "config": "configs/0728_custom_clean_panel_v2_protocol.json",
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "tool_protocol": "function_tags_repair_retry",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "shared_llm_contract": {
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "tool_protocol": "function_tags_repair_retry",
+    "prompt_profile": "multisource_constraint_checklist_untrusted_observation_v1",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000,
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "trust_remote_code": false
+  },
+  "same_llm_gate": {
+    "fields_required_equal_to_agentdojo": [
+      "model",
+      "model_snapshot",
+      "quantization",
+      "tool_protocol",
+      "max_input_tokens",
+      "max_new_tokens",
+      "do_sample",
+      "temperature",
+      "top_p"
+    ],
+    "prompt_profile_may_be_source_adapter_specific": true
+  },
+  "sources": {
+    "tool_sandbox": {
+      "repository": "https://github.com/apple/ToolSandbox",
+      "commit": "165848b9a78cead7ca7fe7c89c688b58e6501219",
+      "enumeration_seed": 80531,
+      "selection_seed": "0805-toolsandbox-pilot-v1",
+      "pilot_per_stratum": 4,
+      "pilot_seeds": [307, 311, 313],
+      "large_seeds": [307],
+      "pilot_expected_rows": 36,
+      "large_expected_rows": 95,
+      "prohibited_tool_module": "rapid_api_search_tools",
+      "pilot_strata": [
+        "STATE_DEPENDENCY",
+        "INSUFFICIENT_INFORMATION",
+        "DISAMBIGUATION_OR_CANONICALIZATION"
+      ]
+    },
+    "injecagent": {
+      "repository": "https://github.com/uiuc-focal-lab/InjecAgent",
+      "commit": "f19c9f2c79a41046eb13c03c51a24c567a8ffa07",
+      "selection_seed": "0805-injecagent-pilot-v1",
+      "pilot_per_family": 4,
+      "pilot_seeds": [307, 311, 313],
+      "large_seeds": [307],
+      "pilot_expected_rows": 48,
+      "large_expected_rows": 2108,
+      "families": ["direct_harm", "data_stealing"],
+      "variants": ["clean", "poisoned"],
+      "transition_tier": "observation_only",
+      "attack_payload_policy": "Published payloads only; no generated payloads and no tool execution"
+    },
+    "tau3": {
+      "repository": "https://github.com/sierra-research/tau2-bench",
+      "commit": "1eceb0453fe2effa1ba26b6a51fc52b966944ec1",
+      "selection_seed": "0805-tau3-pilot-v1",
+      "pilot_per_domain": 4,
+      "pilot_seeds": [307, 311, 313],
+      "large_seeds": [307],
+      "pilot_expected_rows": 24,
+      "large_expected_rows": 164,
+      "domains": ["retail", "airline"],
+      "splits": ["train", "test"],
+      "python_311_source_compatibility_shim": true,
+      "exclude_voice_user_simulator": true,
+      "exclude_knowledge_api_domains": true
+    }
+  },
+  "pilot_budget": {
+    "underlying_toolsandbox_tasks": 12,
+    "underlying_injecagent_cases": 8,
+    "underlying_tau3_tasks": 8,
+    "llm_decisions": 108,
+    "fresh_exact_replicas_per_executable_model_action": 2,
+    "hyperparameter_searches": 0
+  },
+  "pilot_adapter_gate": {
+    "all_expected_outputs_present": true,
+    "zero_runtime_traceback_oom_or_cuda_failures": true,
+    "all_model_completions_nonempty": true,
+    "parsed_tool_names_must_exist_in_presented_schema": true,
+    "all_exact_model_actions_replica_identical": true,
+    "all_reference_replays_replica_identical": true,
+    "injecagent_clean_poison_pair_completeness": true,
+    "zero_real_external_endpoint_calls": true,
+    "same_llm_contract_for_all_sources_and_agentdojo": true,
+    "performance_or_attack_success_rate_is_not_a_release_gate": true
+  },
+  "large_budget_if_pilot_go": {
+    "toolsandbox_rows": 95,
+    "injecagent_rows": 2108,
+    "tau3_rows": 164,
+    "total_llm_decisions": 2367,
+    "seeds": [307],
+    "hyperparameter_searches": 0
+  },
+  "frozen_manifests": {
+    "pilot": {
+      "tool_sandbox": null,
+      "injecagent": null,
+      "tau3": null
+    },
+    "large": {}
+  },
+  "decision_if_pilot_go": "BUILD_FROZEN_LARGE_MULTISOURCE_V1",
+  "decision_if_pilot_no_go": "NO_LARGE_BUILD_RETAIN_SOURCE_SPECIFIC_COUNTEREVIDENCE"
+}
