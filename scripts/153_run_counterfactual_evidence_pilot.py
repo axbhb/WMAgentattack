@@ -15,7 +15,10 @@ sys.path.insert(0, str(ROOT / "src"))
 from agentdojo.task_suite.load_suites import get_suite
 from wmagentattack import custom_agentdojo_panel_v2 as panel
 from wmagentattack.counterfactual_evidence import build_tool_binding_specs
-from wmagentattack.counterfactual_execution import execute_frozen_manifest
+from wmagentattack.counterfactual_execution import (
+    apply_label_blind_adapter_repair,
+    execute_frozen_manifest,
+)
 from wmagentattack.panel_v2_architecture_probe import (
     load_panel_v2_adapter_registry,
 )
@@ -44,6 +47,7 @@ def main() -> None:
     parser.add_argument("--raw-dataset", type=Path, required=True)
     parser.add_argument("--semantic-dataset", type=Path, required=True)
     parser.add_argument("--adapter-extension", type=Path, required=True)
+    parser.add_argument("--adapter-repair", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--audit", type=Path, required=True)
     args = parser.parse_args()
@@ -70,6 +74,21 @@ def main() -> None:
         suites, mutating_tools=set(panel.MUTATING_TOOLS)
     )
     registry = load_panel_v2_adapter_registry(args.adapter_extension)
+    if args.adapter_repair is not None:
+        if _sha256(args.adapter_repair) != protocol["source"][
+            "adapter_repair_sha256"
+        ]:
+            raise ValueError(
+                f"frozen input hash mismatch: {args.adapter_repair}"
+            )
+        repair = json.loads(args.adapter_repair.read_text(encoding="utf-8"))
+        if repair.get("base_adapter_extension_sha256") != _sha256(
+            args.adapter_extension
+        ):
+            raise ValueError("adapter repair base-extension hash mismatch")
+        registry = apply_label_blind_adapter_repair(registry, repair)
+    elif "adapter_repair_sha256" in protocol["source"]:
+        raise ValueError("frozen protocol requires --adapter-repair")
     dataset, audit = execute_frozen_manifest(
         raw,
         semantic,

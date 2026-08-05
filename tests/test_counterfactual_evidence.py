@@ -8,7 +8,12 @@ from wmagentattack.counterfactual_evidence import (
     build_query_universe,
 )
 from wmagentattack.counterfactual_execution import replica_comparison_payload
+from wmagentattack.counterfactual_execution import (
+    adapter_coverage_for_manifest,
+    apply_label_blind_adapter_repair,
+)
 from wmagentattack.semantic_state_v3 import semantic_state_v3_payload
+from wmagentattack.structured_ledger_v2 import AdapterRegistry
 
 
 class _NoArgs(BaseModel):
@@ -217,3 +222,88 @@ def test_replica_comparison_ignores_only_replica_index():
         "simulator_audit_only": {"state_after_fingerprint": "b"},
     }
     assert replica_comparison_payload(first) != replica_comparison_payload(changed)
+
+
+def test_label_blind_adapter_repair_and_preexecution_coverage():
+    raw, _ = _datasets(terminal_only=True)
+    manifest = {
+        "rows": [
+            {
+                "query": {
+                    "candidate_id": "demo::read",
+                    "metadata": {
+                        "suite": "demo",
+                        "episode_id": "greedy::task-a",
+                        "prefix_index": 0,
+                    },
+                }
+            }
+        ]
+    }
+    base = AdapterRegistry(
+        schema_version="base",
+        benchmark_version="v1.2.2",
+        suite="demo",
+        adapters={},
+    )
+    missing = adapter_coverage_for_manifest(raw, manifest, base)
+    assert missing["missing_tools"] == ["read"]
+    assert missing["complete"] is False
+
+    repaired = apply_label_blind_adapter_repair(
+        base,
+        {
+            "schema_version": "repair",
+            "benchmark_version": "v1.2.2",
+            "outcome_labels_present": False,
+            "additional_adapters": {
+                "read": {
+                    "family": "demo",
+                    "mode": "VALUE",
+                    "entity_type": "context",
+                    "fixed_entity_key": {"role": "environment"},
+                    "attribute_name": "value",
+                    "attribute_kind": "SINGLE_VALUED",
+                }
+            },
+        },
+    )
+    assert adapter_coverage_for_manifest(raw, manifest, repaired)["complete"] is True
+
+
+def test_adapter_repair_rejects_labels_and_shadowing():
+    base = AdapterRegistry(
+        schema_version="base",
+        benchmark_version="v1.2.2",
+        suite="demo",
+        adapters={
+            "read": {
+                "family": "demo",
+                "mode": "VALUE",
+                "entity_type": "context",
+            }
+        },
+    )
+    repair = {
+        "schema_version": "repair",
+        "benchmark_version": "v1.2.2",
+        "outcome_labels_present": True,
+        "additional_adapters": {},
+    }
+    try:
+        apply_label_blind_adapter_repair(base, repair)
+    except ValueError as error:
+        assert "outcome-label blind" in str(error)
+    else:  # pragma: no cover
+        raise AssertionError("outcome-labeled repair was accepted")
+
+    repair["outcome_labels_present"] = False
+    repair["additional_adapters"] = {
+        "read": {"family": "demo", "mode": "VALUE", "entity_type": "context"}
+    }
+    try:
+        apply_label_blind_adapter_repair(base, repair)
+    except ValueError as error:
+        assert "shadows" in str(error)
+    else:  # pragma: no cover
+        raise AssertionError("shadowing adapter repair was accepted")

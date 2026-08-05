@@ -22,6 +22,7 @@ from .semantic_state_v3 import (
 from .structured_ledger_v2 import (
     AdapterMode,
     AdapterRegistry,
+    AdapterSpec,
     ExecutionChannelStatus,
     StructuredEvidenceLedgerV2,
     update_structured_ledger,
@@ -31,6 +32,28 @@ from .structured_ledger_v2 import (
 COUNTERFACTUAL_OUTCOME_SCHEMA_VERSION = (
     "wmagentattack.counterfactual_evidence_outcomes.v1"
 )
+
+
+def apply_label_blind_adapter_repair(
+    registry: AdapterRegistry, repair: Mapping[str, Any]
+) -> AdapterRegistry:
+    """Apply a frozen, outcome-blind adapter-only repair without shadowing."""
+
+    if repair.get("outcome_labels_present") is not False:
+        raise ValueError("counterfactual adapter repair must remain outcome-label blind")
+    additions = {
+        str(name): AdapterSpec.model_validate(spec)
+        for name, spec in repair.get("additional_adapters", {}).items()
+    }
+    overlap = sorted(set(registry.adapters) & set(additions))
+    if overlap:
+        raise ValueError(f"counterfactual adapter repair shadows tools: {overlap}")
+    return AdapterRegistry(
+        schema_version=str(repair["schema_version"]),
+        benchmark_version=str(repair["benchmark_version"]),
+        suite="counterfactual_clean_multi_suite",
+        adapters={**registry.adapters, **additions},
+    )
 
 
 def _tool_result_to_str(tool_result: Any) -> str:
@@ -160,6 +183,40 @@ def _candidate_tool(candidate_id: str, suite: str) -> str:
     if prefix != suite:
         raise ValueError("candidate suite prefix mismatch")
     return tool_name
+
+
+def adapter_coverage_for_manifest(
+    raw_dataset: Mapping[str, Any], manifest: Mapping[str, Any], registry: AdapterRegistry
+) -> dict[str, Any]:
+    """Audit every candidate and observed replay tool before any execution."""
+
+    raw_by_episode = {
+        str(row["episode_id"]): row for row in raw_dataset["episodes"]
+    }
+    candidate_tools: set[str] = set()
+    replay_tools: set[str] = set()
+    for row in manifest["rows"]:
+        query = row["query"]
+        metadata = query["metadata"]
+        suite = str(metadata["suite"])
+        candidate_tools.add(_candidate_tool(str(query["candidate_id"]), suite))
+        episode = raw_by_episode[str(metadata["episode_id"])]
+        for prefix_index in range(int(metadata["prefix_index"])):
+            replay_tools.add(
+                _candidate_tool(
+                    str(episode["prefixes"][prefix_index]["targets"]["next_action"]),
+                    suite,
+                )
+            )
+    required_tools = candidate_tools | replay_tools
+    missing = sorted(required_tools - set(registry.adapters))
+    return {
+        "candidate_tools": sorted(candidate_tools),
+        "replay_tools": sorted(replay_tools),
+        "required_tools": sorted(required_tools),
+        "missing_tools": missing,
+        "complete": not missing,
+    }
 
 
 def _ledger_update(
@@ -518,6 +575,12 @@ def execute_frozen_manifest(
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     if replicas != 2:
         raise ValueError("the frozen pilot requires exactly two replicas")
+    adapter_coverage = adapter_coverage_for_manifest(raw_dataset, manifest, registry)
+    if not adapter_coverage["complete"]:
+        raise KeyError(
+            "missing counterfactual ledger adapters: "
+            + ", ".join(adapter_coverage["missing_tools"])
+        )
     raw_by_episode = {str(row["episode_id"]): row for row in raw_dataset["episodes"]}
     semantic_by_episode = {
         str(row["episode_id"]): row for row in semantic_dataset["episodes"]
@@ -677,6 +740,7 @@ def execute_frozen_manifest(
         - len(canonical_outcomes),
     }
     audit = {
+        "adapter_coverage": adapter_coverage,
         "manifest_rows": len(manifest["rows"]),
         "counterfactual_executions": len(all_replicas),
         "prior_observed_replay_executions": sum(

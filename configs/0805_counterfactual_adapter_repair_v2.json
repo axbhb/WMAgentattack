@@ -1,0 +1,21 @@
+{
+  "schema_version": "wmagentattack.counterfactual_adapter_repair.v2",
+  "benchmark_version": "v1.2.2",
+  "scope": "label-blind adapter coverage repair for the frozen clean counterfactual manifest",
+  "base_adapter_extension": "configs/0729_custom_panel_v2_adapter_extension.json",
+  "base_adapter_extension_sha256": "edeb7dd0541e043776ef48fc0e9783951d124e58a6eff31b46449e9733bfd8e5",
+  "additional_adapters": {
+    "get_current_day": {
+      "family": "temporal_context",
+      "mode": "VALUE",
+      "entity_type": "calendar_context",
+      "fixed_entity_key": {"role": "current_environment"},
+      "attribute_name": "current_day",
+      "attribute_kind": "TIME_SCOPED"
+    }
+  },
+  "outcome_labels_present": false,
+  "manifest_selection_changed": false,
+  "scientific_gate_changed": false,
+  "repair_reason": "The first frozen execution found that get_current_day was the only selected or replayed tool absent from the label-blind ledger registry. The failed v1 archive is retained unchanged."
+}
