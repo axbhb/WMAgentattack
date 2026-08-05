@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_interaction_faithful_repair_v1",
-  "status": "preregistered_before_manifest_or_interactive_outcomes",
+  "status": "manifest_frozen_before_interactive_outcomes",
   "research_question": "Does restoring tau3's official half-duplex user-agent-environment interaction, while sharing the same frozen Llama-3.1-70B model across both roles, repair state-changing transition support enough to authorize the already-frozen predictive-method comparison?",
   "parent_no_go": {
     "protocol_id": "0806_tau3_multistep_scale_readiness_v1",
@@ -248,6 +248,40 @@
     "post_result_collection_reruns": 0,
     "attack_examples": 0,
     "dreamer_or_planner_runs": 0
+  },
+  "frozen_manifest": {
+    "remote_path": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1/manifest.json",
+    "preflight_build_a": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1/manifest_builds/build1.json",
+    "preflight_build_b": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1/manifest_builds/build2.json",
+    "sha256": "d635d46ada7f189e91d3737216877f78197082f9bc7ce623539114fdda0596d5",
+    "content_sha256": "fa59396bff8efb4a1e6d53f8f07b9301eb2f3b8c9feb7bd7d14bccce4488d0fa",
+    "build_a_audit_sha256": "362d9f8fcd9e9494cc2f4f1da08202f8a4ae937cb0d400ac01178d0dccc5780c",
+    "build_b_audit_sha256": "362d9f8fcd9e9494cc2f4f1da08202f8a4ae937cb0d400ac01178d0dccc5780c",
+    "preregistered_protocol_sha256": "31c7b15f87ae7d1357aa26fd485a80d7cacd43d229560117fb7c5e2dca72f39b",
+    "byte_identical_double_build": true,
+    "tasks": 48,
+    "episodes": 96,
+    "split_task_counts": {
+      "training": 30,
+      "calibration": 9,
+      "confirmation": 9
+    },
+    "domain_episode_counts": {
+      "airline": 32,
+      "retail": 32,
+      "telecom": 32
+    }
+  },
+  "implementation_sha256": {
+    "src/wmagentattack/tau3_interactive.py": "758298490eb10626d93525e6f477eb06ad41d52008e0306f61240490b2f55e9b",
+    "src/wmagentattack/tau3_multistep.py": "2298b70d824ee79e269b362b3f31e488b3e48a88cb460516b4f9723c0a59fe35",
+    "src/wmagentattack/semantic_state_v3.py": "27ce6d651e83d9f2637c82d0ac13d76743d271e4be4d7b4089143919b62645bd",
+    "src/wmagentattack/multisource_semantic_data.py": "e5cabd1e912d33de95dff81f1f624e5eff04ff65d3296783e650c4dd93aa8d8c",
+    "scripts/167_build_tau3_interactive_manifest.py": "a3a105f928772d351d811e7fec9266d838c10124c14a0393f5e460a9f0a2993c",
+    "scripts/168_run_tau3_interactive_llm.py": "fff3fd7cf18d6f441c7fff227cbf6a666de25599bc6a48282b232c1954b1ccdc",
+    "scripts/169_summarize_tau3_interactive_pilot.py": "33d49add66cf60333a65544d0d5db506c7a000478a423eb749db8a0962c99ed2",
+    "scripts/server/run_0806_tau3_interactive_pilot.sbatch": "bfb0370c465716b52a61bcc7dec4387023d43ffa05de224998cd39de254417be",
+    "scripts/server/run_0806_tau3_interactive_summary.sbatch": "fa99c70ba14c91bf7fe0d4ee7540e3970aa0b15c6364a832f5231b9b62ed472e"
   },
   "mutable_files": [
     "configs/0806_tau3_interaction_faithful_repair_protocol.json",
