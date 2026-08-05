@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_multisource_method_suitability_v1",
-  "status": "preflight_passed_and_frozen_before_model_training",
+  "status": "completed__no_source_passed_current_method_action_gate",
   "research_question": "Do ToolSandbox, InjecAgent, and tau3 provide task-disjoint predictive signal for the frozen Semantic Markov / Structured Semantic State v3 hybrid method, and which sources are suitable for further large-scale world-model data collection?",
   "scope": {
     "offline_synthetic_data_only": true,
@@ -160,5 +160,32 @@
     "attack_examples": 0,
     "dreamer_runs": 0
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0806/multisource_method_suitability/fixed_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0806/multisource_method_suitability/fixed_v1",
+  "postrun_record": {
+    "slurm_job_id": 6399,
+    "git_commit": "bbef0e5250cb328cab420d26c2c6af03b137fc95",
+    "completed_at": "2026-08-05T11:38:04+00:00",
+    "runtime_failures": 0,
+    "prediction_rows": 52074,
+    "neural_training_runs": 36,
+    "tfidf_fits": 4,
+    "frequency_fits": 4,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "preregistered_protocol_sha256": "6dc32945e66bde87d90b1e49fb3ee6ef67a56b3ff8f8506130e6c81c9977e840",
+    "summary_sha256": "20606cfdcf983af85c23b4edb7d7b9e3e02d357d14ae6d9a329224a5ee72e22d",
+    "results_markdown_sha256": "43abaf8ab52306b5b08f8e5dee3193772a1a8e78938b14c6686506d01aa1e7bf",
+    "run_metrics_sha256": "576f1f762a1573bd0859d4889a29ef311bb413a99dce2e1a65a34ffaa8c60354",
+    "predictions_sha256": "86090d4781eaeea8ae4ad18caf4abd882caf7d16f658a841984a6824c8d2c531",
+    "checksums_manifest_sha256": "e7b3a92def98ca7dbf3934a20f9e9b4f1d3ca51baa6f2a32a4546179d8f301be",
+    "overall_decision": "NO_SOURCE_PASSES_CURRENT_METHOD_ACTION_GATE__DO_NOT_SCALE",
+    "source_decisions": {
+      "tool_sandbox": "NO_GO_SOURCE_SCALE",
+      "injecagent": "AUXILIARY_ROBUSTNESS_ONLY__DO_NOT_USE_AS_WORLD_MODEL_CORE",
+      "tau3": "NO_GO_SOURCE_SCALE"
+    },
+    "combined_adapter_decision": "COMBINED_ADAPTER_NOT_MATERIALLY_WORSE",
+    "full_world_model_structural_gate": "FAIL__ZERO_ADJACENT_SEMANTIC_TRANSITIONS",
+    "archive_checksum_verification": "PASS"
+  }
 }
