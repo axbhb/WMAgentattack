@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_multistep_scale_readiness_v1",
-  "status": "manifest_frozen_before_victim_outcomes",
+  "status": "data_gate_no_go__method_test_not_authorized",
   "research_question": "Can an action-balanced, task-disjoint tau3 multi-step dataset plus an observation-aware Semantic Markov representation satisfy the frozen data and predictive gates required before large-scale WMagentattack trajectory construction?",
   "authorization_boundary": {
     "tau3_in_memory_sandbox_only": true,
@@ -240,6 +240,35 @@
     "scripts/164_summarize_tau3_multistep_pilot.py": "83ca9b7219507f431a158e7a9b3a9927525421c29cd22d1637004a417106f3e3",
     "scripts/server/run_0806_tau3_multistep_pilot.sbatch": "90a5c5e460dd50df358d0db92a938c6b94378f444ac27a36439e2d4e18e539ab",
     "scripts/server/run_0806_tau3_multistep_summary.sbatch": "74b32d6fc8c914a39b69c80614a3abda944a567194dd18e62b584cb7e8ea5c94"
+  },
+  "final_pilot_result": {
+    "decision": "DATA_FORM_NO_GO__DO_NOT_SCALE_OR_RUN_METHOD_TEST",
+    "generation_job": 6404,
+    "summary_job": 6405,
+    "completed_at": "2026-08-05T13:10:34+00:00",
+    "episodes": 96,
+    "prefixes": 259,
+    "adjacent_transitions": 163,
+    "episodes_with_two_or_more_transitions": 46,
+    "tasks_with_at_least_one_transition": 42,
+    "unique_executed_tools": 19,
+    "tool_decision_rate": 0.6525096525096525,
+    "dominant_action_fraction": 0.12355212355212356,
+    "state_changed_transitions": 5,
+    "state_unchanged_transitions": 158,
+    "runtime_failures": 0,
+    "nondeterministic_transitions": 0,
+    "supported_transition_target_names": [
+      "execution_error",
+      "goal_overlap_gained",
+      "output_nonempty"
+    ],
+    "failed_gate_clauses": ["minimum_state_changed_transitions"],
+    "dataset_sha256": "9973ec2d1756e441b30f1ad03b2452a524f6e8e3d5678386f4ddfef4bb865acc",
+    "dataset_audit_sha256": "305ec5ef95b9f644909fc7e32ad47e9d436a12b0ee7a0a0d1783dd3e92398053",
+    "pilot_gate_sha256": "ef5273491193b841a0a82cc6ffa91538066e5ed11d1d0fbb6b1339e8ea4a48cd",
+    "method_test_authorized": false,
+    "large_scale_authorized": false
   },
   "mutable_files": [
     "configs/0806_tau3_multistep_scale_readiness_protocol.json",
