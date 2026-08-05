@@ -7,6 +7,7 @@ from wmagentattack.counterfactual_evidence import (
     bind_query,
     build_query_universe,
 )
+from wmagentattack.counterfactual_execution import replica_comparison_payload
 from wmagentattack.semantic_state_v3 import semantic_state_v3_payload
 
 
@@ -200,3 +201,19 @@ def test_required_query_without_any_clean_donor_remains_unbound():
         )
         is None
     )
+
+
+def test_replica_comparison_ignores_only_replica_index():
+    first = {
+        "replica_index": 0,
+        "model_visible": {"events": {"execution_status": "success"}},
+        "simulator_audit_only": {"state_after_fingerprint": "a"},
+    }
+    second = {**first, "replica_index": 1}
+    assert replica_comparison_payload(first) == replica_comparison_payload(second)
+
+    changed = {
+        **second,
+        "simulator_audit_only": {"state_after_fingerprint": "b"},
+    }
+    assert replica_comparison_payload(first) != replica_comparison_payload(changed)

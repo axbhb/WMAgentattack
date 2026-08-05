@@ -1,6 +1,6 @@
 {
   "protocol_id": "0805_counterfactual_evidence_execution_pilot_v1",
-  "status": "preregistered_before_manifest_build",
+  "status": "manifest_frozen_before_counterfactual_execution",
   "research_question": "Can a metadata-balanced set of legal alternative tools be executed reproducibly from exact clean AgentDojo prefix states to obtain causal candidate-by-constraint labels without any victim-model or attack calls?",
   "supersedes": {
     "protocol_id": "0805_candidate_constraint_evidence_schema_pilot_v1",
@@ -71,6 +71,7 @@
     "query_suite_difficulty_cells": 12,
     "eligible_action_queries": 293,
     "selected_action_queries": 24,
+    "selected_constraint_rows": 254,
     "selected_unique_tasks": 12,
     "selected_unique_states": 22,
     "selected_unique_tools": 20,
@@ -82,14 +83,19 @@
     }
   },
   "manifest": {
-    "path": "configs/0805_counterfactual_evidence_manifest.json",
-    "sha256": null,
+    "path": "/share/guozhix/wmagentattack/0805/counterfactual_evidence_execution_pilot/manifest_preflight_v1/a/manifest.json",
+    "sha256": "a7e99a9c821757d200c6e943f0a22c764a22564a956897b68e384c7a25229569",
+    "audit_path": "/share/guozhix/wmagentattack/0805/counterfactual_evidence_execution_pilot/manifest_preflight_v1/a/audit.json",
+    "audit_sha256": "d9bcb1fd6da9120742220bcad7442cd6d866683f40be450bfc7a2ac40af00442",
+    "independent_builds_byte_identical": true,
     "freeze_required_before_any_counterfactual_execution": true
   },
   "execution": {
     "unique_bound_queries": 24,
     "fresh_state_replicas_per_query": 2,
     "total_counterfactual_tool_executions": 48,
+    "observed_prefix_replay_tool_executions": 36,
+    "total_sandbox_tool_executions": 84,
     "reconstruct_prefix_from_default_environment_and_observed_prior_calls": true,
     "require_prefix_ledger_and_semantic_state_match": true,
     "require_replica_outcomes_byte_identical": true,
@@ -127,6 +133,8 @@
     "unique_bound_queries": 24,
     "fresh_state_replicas": 2,
     "counterfactual_tool_executions": 48,
+    "observed_prefix_replay_tool_executions": 36,
+    "total_sandbox_tool_executions": 84,
     "victim_llm_calls": 0,
     "attack_examples": 0,
     "model_training_runs": 0,

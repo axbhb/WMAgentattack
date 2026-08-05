@@ -2,7 +2,7 @@
 
 Date: 2026-08-05
 
-Status: frozen before manifest construction; the exact manifest hash must be committed before any counterfactual tool execution.
+Status: exact manifest frozen before any counterfactual tool execution. Manifest SHA256: `a7e99a9c821757d200c6e943f0a22c764a22564a956897b68e384c7a25229569`.
 
 ## Erratum that motivates v2
 
@@ -14,7 +14,7 @@ The corrected universe includes every causal prefix, including terminal prefixes
 
 The corrected development universe contains 12 tasks, 31 states, 12 terminal decisions, 19 observed transitions, 553 executable alternative state-action queries, and 6,079 candidate × constraint relations. Candidate arguments are bound without an LLM: use schema-valid empty/default arguments first, then argument-only donors from a different clean training task, then a same-task clean donor if no cross-task payload exists. Donor outputs and outcomes are forbidden.
 
-Select exactly one read-only and one mutating query from each of the 12 suite × difficulty cells using the frozen hash seed. This yields 24 bound queries over 22 states and 20 tools. Each query will be executed twice from independently reconstructed clean prefix state, for a total budget of 48 synthetic sandbox tool calls.
+Select exactly one read-only and one mutating query from each of the 12 suite × difficulty cells using the frozen hash seed. This yields 24 bound queries over 22 states and 20 tools, producing 254 candidate × constraint labels. Each query will be executed twice from independently reconstructed clean prefix state. The exact budget is 48 counterfactual calls plus 36 prior observed calls needed to reconstruct the selected prefixes, or 84 total synthetic sandbox tool calls.
 
 ## Gates
 
