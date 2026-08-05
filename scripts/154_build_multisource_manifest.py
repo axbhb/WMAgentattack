@@ -446,8 +446,11 @@ def build_injecagent(
     rows = []
     missing_tools: set[str] = set()
     clean_pair_differences = []
+    duplicate_tool_name_groups = 0
     for family, source_index, case in selected:
-        names = [case["User Tool"], *case["Attacker Tools"]]
+        raw_names = [case["User Tool"], *case["Attacker Tools"]]
+        names = list(dict.fromkeys(raw_names))
+        duplicate_tool_name_groups += int(len(names) != len(raw_names))
         schemas = []
         for name in names:
             if name not in tools:
@@ -500,6 +503,7 @@ def build_injecagent(
         "published_cases": len(cases),
         "selected_groups": len(selected),
         "missing_tool_schemas": sorted(missing_tools),
+        "duplicate_tool_name_groups_deduplicated": duplicate_tool_name_groups,
         "clean_poison_observation_diff_groups": sum(clean_pair_differences),
         "observation_only_groups": len(selected),
         "real_external_endpoint_calls": 0,
