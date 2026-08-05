@@ -1,0 +1,146 @@
+{
+  "protocol_id": "0806_multisource_method_suitability_v1",
+  "status": "preregistered_before_split_build_or_model_training",
+  "research_question": "Do ToolSandbox, InjecAgent, and tau3 provide task-disjoint predictive signal for the frozen Semantic Markov / Structured Semantic State v3 hybrid method, and which sources are suitable for further large-scale world-model data collection?",
+  "scope": {
+    "offline_synthetic_data_only": true,
+    "existing_frozen_records_only": true,
+    "new_victim_llm_calls": 0,
+    "new_tool_executions": 0,
+    "attack_generation": 0,
+    "dreamer_runs": 0,
+    "utility_value_or_planner_heads": false
+  },
+  "source": {
+    "dataset": "/share/guozhix/wmagentattack/0806/multisource_semantic_v3/large_v1/multisource_large_records.jsonl",
+    "dataset_sha256": "9a930150e70c718c9ceb72d119212f485358897487e3a683c123e8725707ba1d",
+    "expected_rows": 2367,
+    "expected_source_counts": {
+      "tool_sandbox": 95,
+      "injecagent": 2108,
+      "tau3": 164
+    },
+    "shared_llm_contract_sha256": "d8a459b64106de53d58915cd5da4ff9f1c667c6077f16b8d9c73364048af9bc2"
+  },
+  "split": {
+    "seed": "0806-multisource-suitability-task-v1",
+    "unit": "source plus normalized trusted goal",
+    "ratios": {
+      "training": 0.6,
+      "calibration": 0.2,
+      "confirmation": 0.2
+    },
+    "assignment": "Sort task fingerprints by SHA256(seed, source, task fingerprint), then allocate floor(0.6N), floor(0.2N), and the remainder.",
+    "injecagent_pair_rule": "Both clean and poisoned rows for a group must remain in one split.",
+    "selection_uses_targets_or_outcomes": false,
+    "task_disjoint": true
+  },
+  "representations": {
+    "frequency_prior": "Training-only selected-action frequency with legal-candidate masking and Laplace smoothing.",
+    "tfidf_candidate_logistic": "Binary TF-IDF candidate scorer over causal visible state plus candidate schema; scores are normalized only across legal candidates.",
+    "semantic_markov": "Frozen Semantic Markov representation and HybridSemanticWorldModel action head.",
+    "structured_markov_v3": "Frozen Structured Semantic State v3 representation with a label-blind source adapter and the same hybrid action head.",
+    "full_history_diagnostic": "Frozen causal full-visible-history diagnostic with the same hybrid action head; one visible prefix per record.",
+    "same_neural_capacity": true,
+    "forbidden_features": [
+      "completion or retry completion",
+      "decision target inside the state representation",
+      "execution outcome inside the action representation",
+      "simulator_audit_only fields",
+      "variant, attack family, security, utility, reward, or checker labels",
+      "row, group, task, source-index, or prompt identifiers as model features"
+    ]
+  },
+  "targets": {
+    "primary": [
+      "task_macro_action_nll",
+      "task_macro_action_accuracy"
+    ],
+    "diagnostic": [
+      "tool_vs_text_brier",
+      "paired_task_action_nll_gain",
+      "legal_prediction_rate"
+    ],
+    "execution_error_probe": "Train the existing candidate-conditional evidence-error head only for scopes that pass the frozen exact-outcome support gate.",
+    "not_available": "No source contains adjacent multi-step semantic states, so the full five-label evidence-transition head and free-running rollout are structural NO-GO diagnostics rather than trained endpoints."
+  },
+  "training": {
+    "scopes": [
+      "tool_sandbox",
+      "injecagent",
+      "tau3",
+      "combined"
+    ],
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "evidence_error_loss_weight": 1.0,
+    "task_balanced_loss": true,
+    "tfidf_max_features": 20000,
+    "tfidf_ngram_range": [1, 2],
+    "tfidf_logistic_C": 1.0,
+    "early_stopping": false,
+    "model_selection": false,
+    "hyperparameter_grid": false
+  },
+  "preflight_gate": {
+    "minimum_task_units_per_source": 15,
+    "minimum_confirmation_tasks_per_source": 3,
+    "require_zero_task_overlap": true,
+    "require_zero_causal_input_fingerprint_overlap": true,
+    "require_target_in_legal_candidates": true,
+    "require_all_injecagent_pairs_within_split": true,
+    "minimum_exact_rows_for_error_probe": 50,
+    "minimum_exact_errors_for_error_probe": 10,
+    "minimum_exact_successes_for_error_probe": 10,
+    "minimum_each_error_class_per_training_and_confirmation": 2
+  },
+  "action_acceptance_gate": {
+    "split": "confirmation",
+    "minimum_structured_nll_gain_over_frequency": 0.05,
+    "minimum_structured_accuracy_gain_over_frequency": 0.02,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.5,
+    "maximum_structured_nll_gap_to_tfidf": 0.02,
+    "require_legal_prediction_rate": 1.0
+  },
+  "full_world_model_readiness_gate": {
+    "minimum_adjacent_semantic_transitions": 50,
+    "minimum_positive_rows_per_evidence_delta": 10,
+    "require_execution_error_probe_gate": true,
+    "require_action_acceptance_gate": true,
+    "interpretation": "A source can pass action-only suitability while remaining unsuitable for full world-model scaling."
+  },
+  "decision_policy": {
+    "action_and_full_world_model_pass": "GO_FULL_WORLD_MODEL_SCALE",
+    "action_pass_full_world_model_fail": "GO_ACTION_ONLY__COLLECT_MULTISTEP_TRANSITIONS_BEFORE_SCALE",
+    "injecagent_action_fail_but_paired_surface_valid": "AUXILIARY_ROBUSTNESS_ONLY__DO_NOT_USE_AS_WORLD_MODEL_CORE",
+    "action_fail": "NO_GO_SOURCE_SCALE",
+    "combined_model_degrades_source_specific": "RETAIN_SOURCE_SPECIFIC_ADAPTERS"
+  },
+  "uncertainty": {
+    "paired_task_bootstrap_draws": 10000,
+    "bootstrap_seed": 8062026,
+    "paired_sign_test": true,
+    "intervals_and_p_values_are_counterevidence_not_additional_hard_gates": true
+  },
+  "fixed_budget": {
+    "independent_dataset_builds": 2,
+    "neural_variants": 3,
+    "training_scopes": 4,
+    "training_seeds": 3,
+    "neural_training_runs": 36,
+    "tfidf_fits": 4,
+    "frequency_fits": 4,
+    "post_result_reruns": 0,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "attack_examples": 0,
+    "dreamer_runs": 0
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0806/multisource_method_suitability/fixed_v1"
+}
