@@ -1,0 +1,95 @@
+{
+  "protocol_id": "0805_candidate_constraint_evidence_schema_pilot_v1",
+  "run_tag": "aug5-candidate-constraint-evidence-pilot",
+  "status": "preregistered_before_pilot_build",
+  "research_question": "Can a small balanced development subset be converted into a causal candidate-by-goal-constraint dataset that keeps observed outcomes separate from unlabeled counterfactual queries?",
+  "scope": {
+    "clean_only": true,
+    "agentdojo_synthetic_sandbox_only": true,
+    "existing_frozen_trajectories_only": true,
+    "development_training_split_only": true,
+    "victim_llm_calls": 0,
+    "counterfactual_tool_executions": 0,
+    "attack_examples": 0,
+    "model_training_runs": 0,
+    "dreamer_runs": 0
+  },
+  "source": {
+    "raw_dataset": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v2/panel_v2_architecture_dataset.json",
+    "raw_dataset_sha256": "c01a0c29a8e2ce99e6f3dd81c82f1711131868ebe81da62a0298fe7e42745746",
+    "semantic_dataset": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage1/rebuild_a/semantic_state_v3_dataset.json",
+    "semantic_dataset_sha256": "099aecb7ab70b5d822f44e9007fb95c1d6ed78569505dbc32621efdd88f82a53"
+  },
+  "selection": {
+    "split": "training",
+    "track": "deterministic_greedy",
+    "suites": ["banking", "slack", "travel", "workspace"],
+    "difficulties": ["L1", "L2", "L3"],
+    "tasks_per_suite_difficulty_cell": 1,
+    "rule": "lexicographically_first_task_id_per_suite_difficulty_cell",
+    "selection_uses_outcomes": false
+  },
+  "representation": {
+    "state": "frozen Structured Semantic State v3 at prefix t",
+    "candidate": "the actually executed legal action with observed arguments",
+    "constraint": "one trusted_goal.fact_terms atom",
+    "target": "ALREADY_SUPPORTED, NEWLY_SUPPORTED, or UNCHANGED_UNSUPPORTED between adjacent observed states; ALREADY_SUPPORTED rows are STATE_CONSISTENCY_ONLY and must be excluded from transition-gain training",
+    "transition_events": [
+      "execution status",
+      "record count delta",
+      "conflict count delta",
+      "unresolved entity count delta",
+      "newly matched goal terms"
+    ],
+    "counterfactual_policy": "Emit every non-executed legal candidate × constraint as UNLABELED_COUNTERFACTUAL with unbound arguments; never treat it as a negative target.",
+    "forbidden_features": [
+      "proof contracts or required calls",
+      "future actions or observations",
+      "hidden simulator deltas",
+      "final reports, checker results, utility, security, or attack labels",
+      "task, episode, state, row, or transition IDs as encoded model features"
+    ]
+  },
+  "expected_counts": {
+    "tasks": 12,
+    "episodes": 12,
+    "states": 19,
+    "constraints": 98,
+    "transitions": 19,
+    "observed_rows": 203,
+    "counterfactual_queries": 3834,
+    "total_query_space": 4037
+  },
+  "schema_gate": {
+    "minimum_rows_per_progress": 20,
+    "minimum_tasks_per_progress": 6,
+    "require_all_three_progress_classes": true,
+    "require_zero_state_leakage": true,
+    "require_observed_counterfactual_disjointness": true,
+    "require_counterfactuals_unlabeled": true,
+    "require_byte_identical_independent_rebuild": true,
+    "require_all_tests_pass": true
+  },
+  "training_readiness_gate": {
+    "minimum_observed_candidate_fraction": 0.25,
+    "minimum_execution_errors": 5,
+    "minimum_conflicts": 5,
+    "minimum_ambiguity_events": 5,
+    "interpretation": "This is only a small model-smoke readiness gate, not a formal evidence-sufficiency gate."
+  },
+  "decision_policy": {
+    "schema_pass_and_readiness_pass": "Permit a separately frozen tiny relational evidence model smoke test.",
+    "schema_pass_and_readiness_fail": "Freeze the schema, do not train; next collect labeled clean counterfactual executions and rare evidence events.",
+    "schema_fail": "Do not collect more data until the schema or leakage failure is repaired within a new version."
+  },
+  "fixed_budget": {
+    "schema_candidates": 1,
+    "nonsemantic_repairs": 3,
+    "dataset_builds": 2,
+    "new_victim_llm_calls": 0,
+    "counterfactual_tool_executions": 0,
+    "model_training_runs": 0,
+    "attack_examples": 0
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0805/candidate_constraint_evidence_pilot/fixed_v1"
+}
