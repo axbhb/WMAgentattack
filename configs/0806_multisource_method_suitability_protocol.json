@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_multisource_method_suitability_v1",
-  "status": "preregistered_before_split_build_or_model_training",
+  "status": "preflight_passed_and_frozen_before_model_training",
   "research_question": "Do ToolSandbox, InjecAgent, and tau3 provide task-disjoint predictive signal for the frozen Semantic Markov / Structured Semantic State v3 hybrid method, and which sources are suitable for further large-scale world-model data collection?",
   "scope": {
     "offline_synthetic_data_only": true,
@@ -21,6 +21,16 @@
       "tau3": 164
     },
     "shared_llm_contract_sha256": "d8a459b64106de53d58915cd5da4ff9f1c667c6077f16b8d9c73364048af9bc2"
+  },
+  "frozen_adapter_dataset": {
+    "path": "/share/guozhix/wmagentattack/0806/multisource_method_suitability/preflight_v2/a/dataset.json",
+    "sha256": "3c2c3b60c757b17be14e52c45fa5bee79038d1d559f795727c9af70dd23f644b",
+    "audit_path": "/share/guozhix/wmagentattack/0806/multisource_method_suitability/preflight_v2/a/audit.json",
+    "audit_sha256": "9181bcf10e256c1591f808efce91c6c4f8974b130b641e5e9e2057a2f455d586",
+    "independent_builds_byte_identical": true,
+    "adapter_commit": "fe03a9e",
+    "failed_preflight_v1_retained": true,
+    "failed_preflight_v1_reason": "tau3 reused a tool name across distinct schemas; candidate identifiers were repaired to include the frozen schema hash before any model result was observed"
   },
   "split": {
     "seed": "0806-multisource-suitability-task-v1",
@@ -107,6 +117,13 @@
     "minimum_positive_task_fraction": 0.5,
     "maximum_structured_nll_gap_to_tfidf": 0.02,
     "require_legal_prediction_rate": 1.0
+  },
+  "execution_error_acceptance_gate": {
+    "split": "confirmation",
+    "minimum_bce_gain_over_frequency": 0.01,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.5,
+    "applies_only_after_preflight_support_gate": true
   },
   "full_world_model_readiness_gate": {
     "minimum_adjacent_semantic_transitions": 50,
