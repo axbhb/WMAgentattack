@@ -580,16 +580,13 @@ def main() -> None:
         raise ValueError("frequency fit budget is incomplete")
     if run_metrics["tfidf_fits"] != int(protocol["fixed_budget"]["tfidf_fits"]):
         raise ValueError("TF-IDF fit budget is incomplete")
-    expected_predictions = sum(
-        (2 + len(NEURAL_VARIANTS) * len(protocol["training"]["training_seeds"]))
-        * (
-            len(audit["source_audits"])
-            and (
-                audit["source_audits"][scope]["rows"]
-                if scope != "combined"
-                else int(protocol["source"]["expected_rows"])
-            )
-        )
+    predictions_per_row = 2 + len(NEURAL_VARIANTS) * len(
+        protocol["training"]["training_seeds"]
+    )
+    expected_predictions = predictions_per_row * sum(
+        audit["source_audits"][scope]["rows"]
+        if scope != "combined"
+        else int(protocol["source"]["expected_rows"])
         for scope in TRAINING_SCOPES
     )
     if len(predictions) != expected_predictions:

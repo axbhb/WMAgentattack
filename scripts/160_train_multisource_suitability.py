@@ -206,9 +206,10 @@ def _frequency_probabilities(
     candidates = arrays["candidates"]
     index = arrays["candidate_index"]
     counts = np.ones(len(candidates), dtype=np.float64)
-    for row in rows:
-        if row["split"] == "training":
-            counts[index[str(row["target_candidate_id"])]] += 1.0
+    training_rows = [row for row in rows if row["split"] == "training"]
+    weights = task_balanced_weights([row["task_key"] for row in training_rows])
+    for row, weight in zip(training_rows, weights):
+        counts[index[str(row["target_candidate_id"])]] += float(weight)
     probabilities = np.zeros_like(arrays["legal"], dtype=np.float64)
     for row_index, legal in enumerate(arrays["legal"]):
         values = counts * legal
@@ -239,15 +240,17 @@ def _tfidf_probabilities(
 ) -> tuple[np.ndarray, dict[str, Any]]:
     training_pairs: list[str] = []
     labels: list[int] = []
-    for row in rows:
-        if row["split"] != "training":
-            continue
+    pair_weights: list[float] = []
+    training_rows = [row for row in rows if row["split"] == "training"]
+    row_weights = task_balanced_weights([row["task_key"] for row in training_rows])
+    for row, row_weight in zip(training_rows, row_weights):
         state = tfidf_state_text(row)
         for candidate in row["legal_candidate_ids"]:
             training_pairs.append(
                 state + "\nCANDIDATE " + candidate_text(catalog[candidate])
             )
             labels.append(int(candidate == row["target_candidate_id"]))
+            pair_weights.append(float(row_weight) / len(row["legal_candidate_ids"]))
     vectorizer = TfidfVectorizer(
         max_features=int(protocol["training"]["tfidf_max_features"]),
         ngram_range=tuple(protocol["training"]["tfidf_ngram_range"]),
@@ -261,7 +264,11 @@ def _tfidf_probabilities(
         max_iter=1000,
         random_state=0,
     )
-    estimator.fit(matrix, np.asarray(labels, dtype=np.int64))
+    estimator.fit(
+        matrix,
+        np.asarray(labels, dtype=np.int64),
+        sample_weight=np.asarray(pair_weights, dtype=np.float64),
+    )
     probabilities = np.zeros_like(arrays["legal"], dtype=np.float64)
     candidates = arrays["candidates"]
     for row_index, row in enumerate(rows):

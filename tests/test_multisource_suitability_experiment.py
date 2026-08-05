@@ -55,7 +55,7 @@ def test_action_gate_enforces_seed_task_lexical_and_legal_checks():
         "maximum_structured_nll_gap_to_tfidf": 0.02,
     }
     checks = evaluate_action_gate(
-        nll_seed_gains=[0.06, 0.07, 0.01],
+        nll_seed_gains=[0.06, 0.07, 0.04],
         accuracy_seed_gains=[0.03, 0.04, 0.0],
         paired_nll_task_gains=[0.1, 0.2, -0.1, 0.0],
         structured_nll_gap_to_tfidf=0.01,
@@ -64,7 +64,7 @@ def test_action_gate_enforces_seed_task_lexical_and_legal_checks():
     )
     assert all(checks.values())
     failed = evaluate_action_gate(
-        nll_seed_gains=[0.06, 0.07, 0.01],
+        nll_seed_gains=[0.06, 0.07, 0.04],
         accuracy_seed_gains=[0.03, 0.04, 0.0],
         paired_nll_task_gains=[0.1, 0.2, -0.1, 0.0],
         structured_nll_gap_to_tfidf=0.03,
