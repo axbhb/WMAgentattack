@@ -30,3 +30,13 @@ noninferior to full history, improve two-step sequence consistency and
 transition calibration, and replicate across seeds and tasks.  Planning,
 attacks, Dreamer, and large-scale collection remain disabled until the whole
 gate passes.
+
+## Preflight freeze
+
+Before any new victim-model outcome, two independent manifest builds were
+byte-identical (`ae31d21...a01e`) and both audits passed.  The frozen manifest
+contains 48 tasks and 96 episodes: 16 tasks from each domain and task-disjoint
+training/calibration/confirmation splits of 30/9/9.  Local and remote related
+test surfaces each passed 22 tests.  The manifest, implementation files, and
+Slurm wrappers are now hash-locked; subsequent changes require a new protocol
+version rather than mutation of this pilot.

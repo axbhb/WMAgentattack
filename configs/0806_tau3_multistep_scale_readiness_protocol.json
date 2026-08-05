@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_multistep_scale_readiness_v1",
-  "status": "preregistered_before_manifest_build_or_victim_outcomes",
+  "status": "manifest_frozen_before_victim_outcomes",
   "research_question": "Can an action-balanced, task-disjoint tau3 multi-step dataset plus an observation-aware Semantic Markov representation satisfy the frozen data and predictive gates required before large-scale WMagentattack trajectory construction?",
   "authorization_boundary": {
     "tau3_in_memory_sandbox_only": true,
@@ -180,6 +180,51 @@
     "post_result_collection_reruns": 0,
     "attack_examples": 0,
     "dreamer_or_planner_runs": 0
+  },
+  "preflight_validation": {
+    "manifest_builds_completed": 2,
+    "byte_identical": true,
+    "both_manifest_audits_passed": true,
+    "tests": {
+      "local_related": "22 passed",
+      "remote_related": "22 passed"
+    },
+    "eligible_strata": {
+      "airline::reference_mutating": 18,
+      "airline::reference_read_only": 7,
+      "retail::reference_mutating": 85,
+      "retail::reference_read_only": 7,
+      "telecom::reference_mutating": 32
+    }
+  },
+  "frozen_manifest": {
+    "remote_path": "/share/guozhix/wmagentattack/0806/tau3_multistep_scale_readiness/pilot_v1/manifest.json",
+    "preflight_build_a": "/share/guozhix/wmagentattack/0806/tau3_multistep_scale_readiness/manifest_preflight_v1/build_a/manifest.json",
+    "preflight_build_b": "/share/guozhix/wmagentattack/0806/tau3_multistep_scale_readiness/manifest_preflight_v1/build_b/manifest.json",
+    "sha256": "ae31d21babab8e88b5e308fb0aec9b59a90a15ad8fc9233663168fea8c18a01e",
+    "content_sha256": "23da94133ba0edf0e6cc51fbce8d717fbe85957247672100ea91f1f48a81efc3",
+    "audit_sha256": "4328ae3f403edbfcebd51244ec4f362e8f4d58ad741d0373c9927215720d8244",
+    "preregistered_protocol_sha256": "d4de544b9119bb55a3b1f2ea432373e9902dc8f0173349d8260a179d9a6d216f",
+    "tasks": 48,
+    "episodes": 96,
+    "split_task_counts": {
+      "training": 30,
+      "calibration": 9,
+      "confirmation": 9
+    },
+    "domain_task_counts": {
+      "airline": 16,
+      "retail": 16,
+      "telecom": 16
+    }
+  },
+  "implementation_sha256": {
+    "src/wmagentattack/tau3_multistep.py": "2298b70d824ee79e269b362b3f31e488b3e48a88cb460516b4f9723c0a59fe35",
+    "scripts/162_build_tau3_multistep_manifest.py": "443b7a8aac09a9380a2fd559d78d13cba2caba56a668cb8ea030581fa51f6180",
+    "scripts/163_run_tau3_multistep_llm.py": "5bb45420722613c7912d84ff41524d176b1a91505b911e3dca1300232f89abba",
+    "scripts/164_summarize_tau3_multistep_pilot.py": "83ca9b7219507f431a158e7a9b3a9927525421c29cd22d1637004a417106f3e3",
+    "scripts/server/run_0806_tau3_multistep_pilot.sbatch": "90a5c5e460dd50df358d0db92a938c6b94378f444ac27a36439e2d4e18e539ab",
+    "scripts/server/run_0806_tau3_multistep_summary.sbatch": "74b32d6fc8c914a39b69c80614a3abda944a567194dd18e62b584cb7e8ea5c94"
   },
   "mutable_files": [
     "configs/0806_tau3_multistep_scale_readiness_protocol.json",
