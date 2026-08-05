@@ -1,0 +1,201 @@
+{
+  "protocol_id": "0806_tau3_multistep_scale_readiness_v1",
+  "status": "preregistered_before_manifest_build_or_victim_outcomes",
+  "research_question": "Can an action-balanced, task-disjoint tau3 multi-step dataset plus an observation-aware Semantic Markov representation satisfy the frozen data and predictive gates required before large-scale WMagentattack trajectory construction?",
+  "authorization_boundary": {
+    "tau3_in_memory_sandbox_only": true,
+    "real_external_endpoint_calls": 0,
+    "attack_generation": 0,
+    "dreamer_or_planner_runs": 0,
+    "large_scale_collection_only_after_both_data_and_method_gates_pass": true
+  },
+  "literature_to_repository_hypotheses": [
+    {
+      "source": "https://arxiv.org/abs/2506.07982",
+      "finding": "tau2/tau3 is intrinsically multi-turn and stateful rather than a one-step tool-choice benchmark.",
+      "repository_hypothesis": "Collect adjacent exact tau3 transitions instead of adding replicas of the one-step adapter."
+    },
+    {
+      "source": "https://arxiv.org/abs/2411.06559",
+      "finding": "Model-based language-agent planning depends on candidate-action outcome fidelity.",
+      "repository_hypothesis": "Keep planning disabled and gate scale on action/effect prediction before any downstream attack selector."
+    },
+    {
+      "source": "https://arxiv.org/abs/2606.30639",
+      "finding": "Real transition memory and confidence-selective foresight can be safer than unconditional imagined outcomes.",
+      "repository_hypothesis": "Retain exact simulator transitions, evaluate calibration, and prefer the simpler causal state unless structured residual information yields replicated gains."
+    }
+  ],
+  "source": {
+    "repository": "https://github.com/sierra-research/tau2-bench",
+    "commit": "1eceb0453fe2effa1ba26b6a51fc52b966944ec1",
+    "commit_date": "2026-08-04T17:30:09-07:00",
+    "remote_root": "/share/guozhix/WMagentattack-multisource-aug5/external/tau3",
+    "domains": ["retail", "airline", "telecom"],
+    "source_splits": ["train", "test"],
+    "minimum_reference_assistant_actions_for_structural_eligibility": 2,
+    "reference_actions_or_outcomes_are_never_model_inputs": true
+  },
+  "shared_llm_contract": {
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "tool_protocol": "function_tags_repair_retry",
+    "prompt_profile": "tau3_multistep_visible_transcript_v1",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "trust_remote_code": false
+  },
+  "task_selection": {
+    "selection_seed": "0806-tau3-multistep-task-v1",
+    "selection_before_victim_outcomes": true,
+    "per_domain": 16,
+    "retail_and_airline_strata": {
+      "reference_mutating": 12,
+      "reference_read_only": 4
+    },
+    "telecom_strata": {
+      "reference_mutating": 16,
+      "reference_read_only": 0
+    },
+    "experimental_split_counts_within_each_12_task_stratum": {
+      "training": 8,
+      "calibration": 2,
+      "confirmation": 2
+    },
+    "experimental_split_counts_within_each_4_task_stratum": {
+      "training": 2,
+      "calibration": 1,
+      "confirmation": 1
+    },
+    "experimental_split_counts_within_telecom_16_task_stratum": {
+      "training": 10,
+      "calibration": 3,
+      "confirmation": 3
+    },
+    "expected_tasks": 48,
+    "expected_task_counts": {
+      "training": 30,
+      "calibration": 9,
+      "confirmation": 9
+    },
+    "require_zero_task_overlap": true
+  },
+  "trajectory_collection": {
+    "llm_seeds": [401, 409],
+    "expected_episodes": 96,
+    "maximum_executed_tool_transitions_per_episode": 5,
+    "maximum_decisions_per_episode": 6,
+    "step_seed_formula": "episode_seed * 1009 + prefix_index",
+    "full_visible_tool_transcript_in_prompt": true,
+    "fresh_environment_replay_for_each_prefix": true,
+    "exact_execution_replicas": 2,
+    "continue_after_execution_error": true,
+    "text_response_terminates_episode": true,
+    "tool_decision_at_horizon_is_censored_not_executed": true,
+    "user_voice_and_external_knowledge_domains": false
+  },
+  "data_sufficiency_gate": {
+    "expected_episodes_complete": 96,
+    "zero_runtime_failures": true,
+    "all_completions_nonempty": true,
+    "all_tool_names_in_presented_schema": true,
+    "all_executed_actions_exact_replica_identical": true,
+    "zero_real_external_endpoint_calls": true,
+    "minimum_adjacent_transitions": 100,
+    "minimum_episodes_with_two_or_more_transitions": 36,
+    "minimum_tasks_with_at_least_one_transition": 30,
+    "minimum_unique_executed_tools": 10,
+    "minimum_tool_decision_rate": 0.35,
+    "maximum_tool_decision_rate": 0.9,
+    "maximum_dominant_action_fraction": 0.65,
+    "minimum_state_changed_transitions": 15,
+    "minimum_state_unchanged_transitions": 30,
+    "require_task_disjoint_splits": true,
+    "require_causal_label_blind_states": true
+  },
+  "method_hypothesis": {
+    "accepted_candidate": "observed_semantic_markov_v4",
+    "mechanism": "Fill the three unused Semantic Markov hash channels with the current visible observation, exact execution receipt, and cumulative causal ledger summary; retain the same vector width and HybridSemanticWorldModel capacity.",
+    "controls": [
+      "frequency_prior",
+      "tfidf_candidate_logistic",
+      "semantic_markov",
+      "structured_markov_v3",
+      "full_history_diagnostic"
+    ],
+    "prefer_simpler_semantic_markov_if_candidate_is_indistinguishable": true
+  },
+  "transition_targets": {
+    "names": [
+      "state_changed",
+      "execution_error",
+      "output_nonempty",
+      "goal_overlap_gained",
+      "novel_observation"
+    ],
+    "state_changed_is_transition_target_not_model_input": true,
+    "goal_overlap_gained_uses_only_new_victim_visible_output_tokens": true,
+    "novel_observation_compares_only_victim_visible_output_fingerprints": true,
+    "minimum_scored_targets": 3,
+    "minimum_each_class_in_training_and_confirmation": 2,
+    "unsupported_targets_are_reported_not_fabricated": true
+  },
+  "method_training_budget_if_data_gate_passes": {
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "dropout": 0.1,
+    "early_stopping": false,
+    "hyperparameter_searches": 0,
+    "neural_variants": 4,
+    "neural_training_runs": 12,
+    "tfidf_fits": 1,
+    "frequency_fits": 1
+  },
+  "method_acceptance_gate": {
+    "split": "confirmation",
+    "minimum_candidate_nll_gain_over_frequency": 0.05,
+    "minimum_candidate_accuracy_gain_over_frequency": 0.03,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.6,
+    "maximum_candidate_nll_gap_to_full_history": 0.02,
+    "minimum_two_step_sequence_accuracy_gain_over_frequency": 0.03,
+    "minimum_transition_brier_gain_over_frequency": 0.01,
+    "require_legal_prediction_rate": 1.0,
+    "require_data_sufficiency_gate": true
+  },
+  "fixed_pilot_budget": {
+    "tasks": 48,
+    "episodes": 96,
+    "maximum_victim_llm_calls": 576,
+    "maximum_exact_prefix_replay_runs": 960,
+    "manifest_builds": 2,
+    "post_result_collection_reruns": 0,
+    "attack_examples": 0,
+    "dreamer_or_planner_runs": 0
+  },
+  "mutable_files": [
+    "configs/0806_tau3_multistep_scale_readiness_protocol.json",
+    "reports/0806_tau3_multistep_scale_readiness_preregistration.md",
+    "src/wmagentattack/tau3_multistep.py",
+    "scripts/162_build_tau3_multistep_manifest.py",
+    "scripts/163_run_tau3_multistep_llm.py",
+    "scripts/164_summarize_tau3_multistep_pilot.py",
+    "src/wmagentattack/tau3_multistep_experiment.py",
+    "scripts/165_train_tau3_multistep_scale_readiness.py",
+    "scripts/166_summarize_tau3_multistep_scale_readiness.py",
+    "scripts/server/run_0806_tau3_multistep_pilot.sbatch",
+    "scripts/server/run_0806_tau3_multistep_summary.sbatch",
+    "scripts/server/run_0806_tau3_multistep_method.sbatch",
+    "tests/test_tau3_multistep.py",
+    "tests/test_tau3_multistep_experiment.py"
+  ],
+  "planned_archive": "/share/guozhix/wmagentattack/0806/tau3_multistep_scale_readiness/pilot_v1"
+}
