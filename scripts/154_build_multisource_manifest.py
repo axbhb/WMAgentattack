@@ -113,15 +113,21 @@ def _toolsandbox_reference_calls(scenario: Any) -> list[dict[str, Any]]:
                     trace = json.loads(raw)
                 except (TypeError, json.JSONDecodeError):
                     continue
-                name = trace.get("tool_name")
-                arguments = trace.get("arguments", trace.get("tool_arguments", {}))
-                if not isinstance(name, str) or not isinstance(arguments, dict):
-                    continue
-                call = {"name": name, "arguments": arguments}
-                fingerprint = stable_hash(call)
-                if fingerprint not in seen:
-                    calls.append(call)
-                    seen.add(fingerprint)
+                traces = trace if isinstance(trace, list) else [trace]
+                for item in traces:
+                    if not isinstance(item, dict):
+                        continue
+                    name = item.get("tool_name")
+                    arguments = item.get(
+                        "arguments", item.get("tool_arguments", {})
+                    )
+                    if not isinstance(name, str) or not isinstance(arguments, dict):
+                        continue
+                    call = {"name": name, "arguments": arguments}
+                    fingerprint = stable_hash(call)
+                    if fingerprint not in seen:
+                        calls.append(call)
+                        seen.add(fingerprint)
     return calls
 
 
