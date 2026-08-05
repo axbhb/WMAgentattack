@@ -40,3 +40,5 @@ checkpoints/
 Thumbs.db
 *.tmp
 *.log
+logs/*.out
+logs/*.err
