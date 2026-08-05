@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import inspect
 import json
 import random
 import subprocess
@@ -11,6 +12,8 @@ import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
+
+from pydantic import create_model
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -122,6 +125,34 @@ def _toolsandbox_reference_calls(scenario: Any) -> list[dict[str, Any]]:
     return calls
 
 
+def _toolsandbox_tool_schemas(tools: dict[str, Any]) -> list[dict[str, Any]]:
+    """Build schemas directly, avoiding ToolSandbox's legacy LangChain shim."""
+
+    schemas = []
+    for name, tool in sorted(tools.items()):
+        fields = {}
+        for parameter_name, parameter in inspect.signature(tool).parameters.items():
+            annotation = parameter.annotation
+            if annotation is inspect.Parameter.empty:
+                annotation = Any
+            default = parameter.default
+            if default is inspect.Parameter.empty:
+                default = ...
+            fields[parameter_name] = (annotation, default)
+        parameter_model = create_model(f"{name}_parameters", **fields)
+        schemas.append(
+            {
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "description": inspect.getdoc(tool) or "",
+                    "parameters": parameter_model.model_json_schema(),
+                },
+            }
+        )
+    return schemas
+
+
 def _toolsandbox_state(context: Any) -> dict[str, Any]:
     from tool_sandbox.common.execution_context import DatabaseNamespace
 
@@ -172,7 +203,6 @@ def build_toolsandbox(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     sys.path.insert(0, str(source_root))
     from tool_sandbox.common.execution_context import ScenarioCategories
-    from tool_sandbox.common.tool_conversion import convert_to_openai_tools
     from tool_sandbox.common.tool_discovery import ToolBackend
     from tool_sandbox.scenarios import named_scenarios
 
@@ -243,7 +273,7 @@ def build_toolsandbox(
     reference_errors = 0
     for name, scenario, primary in sorted(selected, key=lambda row: row[0]):
         tools = scenario.starting_context.get_available_tools(False)
-        schemas = convert_to_openai_tools(tools)
+        schemas = _toolsandbox_tool_schemas(tools)
         reference_calls = _toolsandbox_reference_calls(scenario)
         first = _run_toolsandbox_reference(scenario, reference_calls)
         second = _run_toolsandbox_reference(scenario, reference_calls)
