@@ -1,0 +1,264 @@
+{
+  "protocol_id": "0806_tau3_interaction_faithful_repair_v1",
+  "status": "preregistered_before_manifest_or_interactive_outcomes",
+  "research_question": "Does restoring tau3's official half-duplex user-agent-environment interaction, while sharing the same frozen Llama-3.1-70B model across both roles, repair state-changing transition support enough to authorize the already-frozen predictive-method comparison?",
+  "parent_no_go": {
+    "protocol_id": "0806_tau3_multistep_scale_readiness_v1",
+    "decision": "DATA_FORM_NO_GO__DO_NOT_SCALE_OR_RUN_METHOD_TEST",
+    "dataset": "/share/guozhix/wmagentattack/0806/tau3_multistep_scale_readiness/pilot_v1/tau3_multistep_dataset.json",
+    "dataset_sha256": "9973ec2d1756e441b30f1ad03b2452a524f6e8e3d5678386f4ddfef4bb865acc",
+    "gate": "/share/guozhix/wmagentattack/0806/tau3_multistep_scale_readiness/pilot_v1/pilot_gate.json",
+    "gate_sha256": "ef5273491193b841a0a82cc6ffa91538066e5ed11d1d0fbb6b1339e8ea4a48cd",
+    "episodes": 96,
+    "adjacent_transitions": 163,
+    "state_changed_transitions": 5,
+    "state_unchanged_transitions": 158,
+    "failed_gate_clauses": ["minimum_state_changed_transitions"],
+    "method_test_was_not_run": true
+  },
+  "counterevidence_to_repository_hypothesis": [
+    {
+      "source": "https://github.com/sierra-research/tau2-bench",
+      "finding": "The official text benchmark is half-duplex tool-agent-user interaction with separate agent and user simulator roles.",
+      "repository_hypothesis": "Replace the one-agent adapter with official turn-taking while retaining the same local model snapshot and exact sandbox."
+    },
+    {
+      "source": "https://arxiv.org/abs/2506.07982",
+      "finding": "tau2 telecom is a dual-control Dec-POMDP whose user simulator is coupled to tools and observable state.",
+      "repository_hypothesis": "Allow the user role to converse and use task-authorized user tools; keep those private instructions out of the agent prompt."
+    },
+    {
+      "source": "parent_no_go_domain_audit",
+      "finding": "Only airline cancel_reservation changed state; retail and telecom produced 118 transitions and zero state changes.",
+      "repository_hypothesis": "Measure paired mutation recovery on the identical 48 tasks and two seeds instead of adding more one-agent samples."
+    }
+  ],
+  "authorization_boundary": {
+    "tau3_in_memory_sandbox_only": true,
+    "real_external_endpoint_calls": 0,
+    "same_local_llm_for_agent_and_user": true,
+    "attack_generation": 0,
+    "dreamer_or_planner_runs": 0,
+    "method_training_only_after_interaction_data_gate_passes": true,
+    "large_scale_only_after_data_and_method_gates_pass": true
+  },
+  "source": {
+    "repository": "https://github.com/sierra-research/tau2-bench",
+    "commit": "1eceb0453fe2effa1ba26b6a51fc52b966944ec1",
+    "remote_root": "/share/guozhix/WMagentattack-multisource-aug5/external/tau3",
+    "parent_manifest": "/share/guozhix/wmagentattack/0806/tau3_multistep_scale_readiness/pilot_v1/manifest.json",
+    "parent_manifest_sha256": "ae31d21babab8e88b5e308fb0aec9b59a90a15ad8fc9233663168fea8c18a01e",
+    "reuse_identical_tasks_splits_and_agent_seeds": true,
+    "domains": ["airline", "retail", "telecom"],
+    "tasks": 48,
+    "episodes": 96
+  },
+  "shared_model_identity": {
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "single_loaded_model_instance_shared_across_roles": true,
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "trust_remote_code": false
+  },
+  "role_contracts": {
+    "agent": {
+      "prompt": "official_tau3_agent_policy_plus_function_tags_v1",
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "maximum_generation_calls_per_episode": 8,
+      "private_user_scenario_visible": false,
+      "visible_inputs": [
+        "official_agent_instruction",
+        "domain_policy",
+        "agent_tool_schemas",
+        "natural_user_messages",
+        "own_text_messages",
+        "own_tool_calls_and_receipts"
+      ]
+    },
+    "user": {
+      "prompt": "official_tau3_user_simulator_system_prompt_plus_function_tags_v1",
+      "do_sample": true,
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "maximum_generation_calls_per_episode": 8,
+      "private_user_scenario_visible": true,
+      "task_authorized_user_tools_visible": true,
+      "agent_tool_calls_or_private_receipts_visible": false
+    }
+  },
+  "interaction": {
+    "orchestrator": "tau2.orchestrator.orchestrator.Orchestrator",
+    "mode": "half_duplex",
+    "default_first_agent_message": true,
+    "maximum_orchestrator_steps": 32,
+    "maximum_consecutive_tool_errors": 5,
+    "validate_communication": true,
+    "agent_seed_formula": "episode_seed * 1009 + agent_generation_index",
+    "user_seed_formula": "episode_seed * 2003 + user_generation_index",
+    "text_agent_message_returns_control_to_user": true,
+    "official_user_stop_markers": true,
+    "user_tool_calls_executed_with_requestor_user": true,
+    "agent_tool_calls_executed_with_requestor_assistant": true
+  },
+  "exact_execution": {
+    "record_live_combined_agent_and_user_tool_sequence": true,
+    "fresh_replay_replicas": 2,
+    "compare_live_and_both_replays": true,
+    "state_fingerprint_includes_agent_and_user_databases": true,
+    "assistant_transition_labels_exclude_user_tool_calls": true,
+    "user_tool_calls_remain_exogenous_causal_context": true
+  },
+  "agent_state_contract": {
+    "trusted_goal_is_cumulative_natural_user_messages": true,
+    "user_private_scenario_never_serialized_into_agent_state": true,
+    "agent_visible_dialogue_hash_recorded_per_prefix": true,
+    "same_semantic_state_v3_and_observed_v4_width": true,
+    "future_expert_final_utility_and_security_labels_excluded": true
+  },
+  "transition_targets": {
+    "names": [
+      "state_changed",
+      "execution_error",
+      "output_nonempty",
+      "goal_overlap_gained",
+      "novel_observation"
+    ],
+    "state_changed_is_transition_target_not_model_input": true,
+    "goal_overlap_gained_uses_only_new_agent_visible_output_tokens": true,
+    "novel_observation_compares_only_agent_visible_output_fingerprints": true,
+    "minimum_scored_targets": 4,
+    "minimum_each_class_in_training_and_confirmation": 2,
+    "unsupported_targets_are_reported_not_fabricated": true
+  },
+  "data_sufficiency_gate": {
+    "expected_episodes_complete": 96,
+    "zero_runtime_failures": true,
+    "zero_agent_private_scenario_exposures": true,
+    "all_agent_and_user_completions_nonempty": true,
+    "all_tool_names_in_role_presented_schema": true,
+    "all_complete_tool_sequences_live_and_replicas_identical": true,
+    "zero_real_external_endpoint_calls": true,
+    "zero_communication_error_terminations": true,
+    "maximum_forced_budget_stop_episodes": 24,
+    "minimum_natural_user_messages": 96,
+    "minimum_adjacent_assistant_tool_transitions": 100,
+    "minimum_episodes_with_two_or_more_assistant_transitions": 36,
+    "minimum_tasks_with_at_least_one_assistant_transition": 30,
+    "minimum_unique_executed_assistant_tools": 10,
+    "minimum_agent_tool_decision_rate": 0.35,
+    "maximum_agent_tool_decision_rate": 0.9,
+    "maximum_dominant_agent_action_fraction": 0.65,
+    "minimum_state_changed_assistant_transitions": 15,
+    "minimum_state_unchanged_assistant_transitions": 30,
+    "minimum_tasks_with_state_changed_assistant_transition": 8,
+    "minimum_domains_with_state_changed_assistant_transition": 2,
+    "minimum_paired_state_changed_transition_gain_over_parent": 10,
+    "minimum_supported_transition_targets": 4,
+    "minimum_each_transition_class_in_training_and_confirmation": 2,
+    "require_task_disjoint_splits": true,
+    "require_causal_label_blind_states": true
+  },
+  "paired_counterevidence": {
+    "same_task_and_agent_seed_parent_comparison": true,
+    "report_state_changed_transitions_and_episodes": true,
+    "report_per_domain_and_per_tool": true,
+    "report_user_simulator_stop_error_and_tool_rates": true,
+    "report_agent_action_distribution_and_tool_errors": true,
+    "paired_metrics_are_not_allowed_to_replace_absolute_gates": true
+  },
+  "method_if_data_gate_passes": {
+    "candidate": "observed_semantic_markov_v4",
+    "controls": [
+      "frequency_prior",
+      "tfidf_candidate_logistic",
+      "semantic_markov",
+      "structured_markov_v3",
+      "full_history_diagnostic"
+    ],
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "dropout": 0.1,
+    "neural_runs": 12,
+    "acceptance_gate_identical_to_0806_tau3_multistep_scale_readiness_v1": true
+  },
+  "method_training_definition": {
+    "action_loss_weight": 1.0,
+    "transition_loss_weight": 1.0,
+    "task_balanced_training_weights": true,
+    "transition_class_reweighting": false,
+    "frequency_action_smoothing_per_candidate": 1.0,
+    "frequency_transition_beta_prior": [1.0, 1.0],
+    "tfidf_max_features": 20000,
+    "tfidf_ngram_range": [1, 2],
+    "tfidf_logistic_C": 1.0,
+    "tfidf_uses_only_causal_prefix_and_candidate_text": true,
+    "two_step_metric": "task_macro_fraction_of_adjacent_decision_pairs_both_correct",
+    "transition_metric": "task_macro_brier_averaged_over_supported_targets",
+    "calibration_split_changes_no_threshold_or_hyperparameter": true
+  },
+  "method_training_budget_if_data_gate_passes": {
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "dropout": 0.1,
+    "early_stopping": false,
+    "hyperparameter_searches": 0,
+    "neural_variants": 4,
+    "neural_training_runs": 12,
+    "tfidf_fits": 1,
+    "frequency_fits": 1
+  },
+  "method_acceptance_gate": {
+    "split": "confirmation",
+    "minimum_candidate_nll_gain_over_frequency": 0.05,
+    "minimum_candidate_accuracy_gain_over_frequency": 0.03,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.6,
+    "maximum_candidate_nll_gap_to_full_history": 0.02,
+    "minimum_two_step_sequence_accuracy_gain_over_frequency": 0.03,
+    "minimum_transition_brier_gain_over_frequency": 0.01,
+    "require_legal_prediction_rate": 1.0,
+    "require_data_sufficiency_gate": true
+  },
+  "method_freeze": null,
+  "result": null,
+  "fixed_budget": {
+    "manifest_builds": 2,
+    "tasks": 48,
+    "episodes": 96,
+    "maximum_agent_llm_calls": 768,
+    "maximum_user_llm_calls": 768,
+    "maximum_logical_llm_calls": 1536,
+    "maximum_serialization_retry_calls_per_episode": 4,
+    "maximum_serialization_retry_calls": 384,
+    "maximum_total_physical_llm_calls": 1920,
+    "maximum_orchestrator_steps_per_episode": 32,
+    "maximum_exact_tool_replay_calls": 3072,
+    "post_result_collection_reruns": 0,
+    "attack_examples": 0,
+    "dreamer_or_planner_runs": 0
+  },
+  "mutable_files": [
+    "configs/0806_tau3_interaction_faithful_repair_protocol.json",
+    "reports/0806_tau3_interaction_faithful_repair_preregistration.md",
+    "src/wmagentattack/tau3_interactive.py",
+    "scripts/167_build_tau3_interactive_manifest.py",
+    "scripts/168_run_tau3_interactive_llm.py",
+    "scripts/169_summarize_tau3_interactive_pilot.py",
+    "scripts/server/run_0806_tau3_interactive_pilot.sbatch",
+    "scripts/server/run_0806_tau3_interactive_summary.sbatch",
+    "tests/test_tau3_interactive.py"
+  ],
+  "planned_archive": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1"
+}
