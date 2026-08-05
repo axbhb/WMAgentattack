@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import datetime
+
 from pydantic import BaseModel
 
 from wmagentattack.counterfactual_evidence import (
@@ -11,6 +13,7 @@ from wmagentattack.counterfactual_execution import replica_comparison_payload
 from wmagentattack.counterfactual_execution import (
     adapter_coverage_for_manifest,
     apply_label_blind_adapter_repair,
+    frozen_sandbox_clock,
 )
 from wmagentattack.semantic_state_v3 import semantic_state_v3_payload
 from wmagentattack.structured_ledger_v2 import AdapterRegistry
@@ -307,3 +310,14 @@ def test_adapter_repair_rejects_labels_and_shadowing():
         assert "shadows" in str(error)
     else:  # pragma: no cover
         raise AssertionError("shadowing adapter repair was accepted")
+
+
+def test_frozen_sandbox_clock_is_exact_and_restored():
+    original = datetime.datetime
+    with frozen_sandbox_clock("2024-05-15T12:00:00"):
+        assert datetime.datetime.now().isoformat() == "2024-05-15T12:00:00"
+        assert datetime.datetime.utcnow().isoformat() == "2024-05-15T12:00:00"
+        assert datetime.datetime.today().isoformat() == "2024-05-15T12:00:00"
+        parsed = datetime.datetime.strptime("2024-05-16", "%Y-%m-%d")
+        assert parsed.date().isoformat() == "2024-05-16"
+    assert datetime.datetime is original

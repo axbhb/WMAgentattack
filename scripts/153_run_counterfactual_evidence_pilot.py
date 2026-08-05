@@ -99,6 +99,7 @@ def main() -> None:
         selected_task_ids=protocol["selection"]["task_ids"],
         replicas=int(protocol["execution"]["fresh_state_replicas_per_query"]),
         readiness_gate=protocol["training_readiness_gate"],
+        logical_clock_iso=protocol["execution"].get("frozen_logical_clock_iso"),
     )
     budget_checks = {
         "counterfactual_tool_executions": audit["counterfactual_executions"]

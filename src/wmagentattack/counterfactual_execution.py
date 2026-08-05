@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import ast
 import copy
+import datetime
 from collections import Counter
 from collections.abc import Mapping, Sequence
+from contextlib import contextmanager
 from typing import Any
 
 import yaml
@@ -32,6 +34,47 @@ from .structured_ledger_v2 import (
 COUNTERFACTUAL_OUTCOME_SCHEMA_VERSION = (
     "wmagentattack.counterfactual_evidence_outcomes.v1"
 )
+
+
+@contextmanager
+def frozen_sandbox_clock(logical_clock_iso: str | None):
+    """Freeze AgentDojo's process-global wall clock for paired replay.
+
+    Some synthetic tools stamp mutations with ``datetime.now()``.  A frozen
+    logical clock preserves the observable timestamp while preventing host
+    timing noise from making otherwise identical fresh-state replicas differ.
+    """
+
+    if logical_clock_iso is None:
+        yield
+        return
+    original_datetime = datetime.datetime
+    fixed = original_datetime.fromisoformat(logical_clock_iso)
+
+    class _FrozenDateTime(original_datetime):
+        @classmethod
+        def now(cls, tz=None):
+            if tz is None:
+                return fixed.replace(tzinfo=None)
+            if fixed.tzinfo is None:
+                return fixed.replace(tzinfo=tz)
+            return fixed.astimezone(tz)
+
+        @classmethod
+        def utcnow(cls):
+            if fixed.tzinfo is None:
+                return fixed
+            return fixed.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+
+        @classmethod
+        def today(cls):
+            return fixed.replace(tzinfo=None)
+
+    datetime.datetime = _FrozenDateTime
+    try:
+        yield
+    finally:
+        datetime.datetime = original_datetime
 
 
 def apply_label_blind_adapter_repair(
@@ -270,6 +313,7 @@ def replay_to_prefix(
     suite: Any,
     registry: AdapterRegistry,
     prefix_index: int,
+    logical_clock_iso: str | None = None,
 ) -> tuple[
     Any,
     Any,
@@ -302,13 +346,14 @@ def replay_to_prefix(
         arguments = canonical_json_value(
             following["features"]["last_action"].get("arguments", {})
         )
-        transition, runtime_output = instrument_function_call(
-            runtime,
-            environment,
-            event_index=index,
-            function=tool_name,
-            arguments=arguments,
-        )
+        with frozen_sandbox_clock(logical_clock_iso):
+            transition, runtime_output = instrument_function_call(
+                runtime,
+                environment,
+                event_index=index,
+                function=tool_name,
+                arguments=arguments,
+            )
         formatted_output = _tool_result_to_str(runtime_output)
         if following["features"]["last_action"].get("function") != tool_name:
             mismatches.append(f"call_{index}_action")
@@ -434,6 +479,7 @@ def execute_manifest_row(
     suite: Any,
     registry: AdapterRegistry,
     replica_index: int,
+    logical_clock_iso: str | None = None,
 ) -> dict[str, Any]:
     query = row["query"]
     metadata = query["metadata"]
@@ -443,6 +489,7 @@ def execute_manifest_row(
         suite=suite,
         registry=registry,
         prefix_index=int(metadata["prefix_index"]),
+        logical_clock_iso=logical_clock_iso,
     )
     if not replay["passed"]:
         raise ValueError(f"prefix replay mismatch: {replay['mismatches']}")
@@ -458,13 +505,14 @@ def execute_manifest_row(
             mode="json"
         )
     )
-    transition, runtime_output = instrument_function_call(
-        runtime,
-        environment,
-        event_index=int(metadata["prefix_index"]),
-        function=tool_name,
-        arguments=arguments,
-    )
+    with frozen_sandbox_clock(logical_clock_iso):
+        transition, runtime_output = instrument_function_call(
+            runtime,
+            environment,
+            event_index=int(metadata["prefix_index"]),
+            function=tool_name,
+            arguments=arguments,
+        )
     formatted_output = _tool_result_to_str(runtime_output)
     ledger = _ledger_update(
         ledger,
@@ -572,6 +620,7 @@ def execute_frozen_manifest(
     selected_task_ids: Sequence[str],
     replicas: int,
     readiness_gate: Mapping[str, float | int],
+    logical_clock_iso: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     if replicas != 2:
         raise ValueError("the frozen pilot requires exactly two replicas")
@@ -608,6 +657,7 @@ def execute_frozen_manifest(
                         suite=suites[row["query"]["metadata"]["suite"]],
                         registry=registry,
                         replica_index=replica_index,
+                        logical_clock_iso=logical_clock_iso,
                     )
                 )
         except Exception as error:
@@ -741,6 +791,7 @@ def execute_frozen_manifest(
     }
     audit = {
         "adapter_coverage": adapter_coverage,
+        "frozen_logical_clock_iso": logical_clock_iso,
         "manifest_rows": len(manifest["rows"]),
         "counterfactual_executions": len(all_replicas),
         "prior_observed_replay_executions": sum(
