@@ -9,11 +9,12 @@ import json
 import random
 import subprocess
 import sys
+import types
 from collections import Counter
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, Union, get_args, get_origin
 
-from pydantic import create_model
+from pydantic import BaseModel
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -134,25 +135,92 @@ def _toolsandbox_reference_calls(scenario: Any) -> list[dict[str, Any]]:
 def _toolsandbox_tool_schemas(tools: dict[str, Any]) -> list[dict[str, Any]]:
     """Build schemas directly, avoiding ToolSandbox's legacy LangChain shim."""
 
+    primitive_types = {
+        str: "string",
+        int: "integer",
+        float: "number",
+        bool: "boolean",
+    }
+
+    def annotation_schema(annotation: Any) -> dict[str, Any]:
+        if annotation in primitive_types:
+            return {"type": primitive_types[annotation]}
+        if annotation in {Any, inspect.Parameter.empty}:
+            return {}
+        if isinstance(annotation, type) and issubclass(annotation, BaseModel):
+            return annotation.model_json_schema()
+        origin = get_origin(annotation)
+        arguments = get_args(annotation)
+        if origin is Literal:
+            values = list(arguments)
+            schema: dict[str, Any] = {"enum": values}
+            if values and type(values[0]) in primitive_types:
+                schema["type"] = primitive_types[type(values[0])]
+            return schema
+        if origin in {list, tuple, set}:
+            return {
+                "type": "array",
+                "items": annotation_schema(arguments[0]) if arguments else {},
+            }
+        if origin is dict:
+            return {"type": "object", "additionalProperties": True}
+        if origin in {Union, types.UnionType}:
+            real = [
+                item
+                for item in arguments
+                if item is not type(None) and getattr(item, "__name__", "") != "NotGiven"
+            ]
+            if len(real) == 1:
+                return annotation_schema(real[0])
+            if real and all(item in {int, float} for item in real):
+                return {"type": "number"}
+            variants = [annotation_schema(item) for item in real]
+            return {"anyOf": variants} if variants else {}
+        return {}
+
+    def descriptions(tool: Any) -> tuple[str, dict[str, str]]:
+        doc = inspect.getdoc(tool) or ""
+        blocks = doc.split("\n\n")
+        description_parts = []
+        arguments: dict[str, str] = {}
+        for block in blocks:
+            if block.startswith("Args:"):
+                current = None
+                for line in block.splitlines()[1:]:
+                    if ":" in line:
+                        current, text = line.split(":", 1)
+                        current = current.strip()
+                        arguments[current] = text.strip()
+                    elif current:
+                        arguments[current] += " " + line.strip()
+            elif not block.startswith(("Returns:", "Raises:", "Example:")):
+                description_parts.append(block)
+        return " ".join(description_parts), arguments
+
     schemas = []
     for name, tool in sorted(tools.items()):
-        fields = {}
+        description, arg_descriptions = descriptions(tool)
+        properties = {}
+        required = []
         for parameter_name, parameter in inspect.signature(tool).parameters.items():
-            annotation = parameter.annotation
-            if annotation is inspect.Parameter.empty:
-                annotation = Any
-            default = parameter.default
-            if default is inspect.Parameter.empty:
-                default = ...
-            fields[parameter_name] = (annotation, default)
-        parameter_model = create_model(f"{name}_parameters", **fields)
+            properties[parameter_name] = annotation_schema(parameter.annotation)
+            if parameter_name in arg_descriptions:
+                properties[parameter_name]["description"] = arg_descriptions[
+                    parameter_name
+                ]
+            if parameter.default is inspect.Parameter.empty:
+                required.append(parameter_name)
         schemas.append(
             {
                 "type": "function",
                 "function": {
                     "name": name,
-                    "description": inspect.getdoc(tool) or "",
-                    "parameters": parameter_model.model_json_schema(),
+                    "description": description,
+                    "parameters": {
+                        "type": "object",
+                        "properties": properties,
+                        "required": required,
+                    },
                 },
             }
         )
