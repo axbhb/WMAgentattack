@@ -683,7 +683,11 @@ def main() -> None:
     args = parser.parse_args()
 
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
-    if protocol["status"] != "preregistered_before_multisource_pilot":
+    if protocol["status"] not in {
+        "preregistered_before_multisource_pilot",
+        "pilot_manifests_frozen_before_any_multisource_llm_outcome",
+        "pilot_complete_go_large_manifests_frozen_before_large_llm_outcome",
+    }:
         raise ValueError("multi-source protocol is not frozen")
     reference_path = ROOT / protocol["agentdojo_llm_reference"]["config"]
     agentdojo_protocol = json.loads(reference_path.read_text(encoding="utf-8"))

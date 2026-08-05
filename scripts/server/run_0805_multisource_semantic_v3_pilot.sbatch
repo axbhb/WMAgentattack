@@ -13,8 +13,8 @@ set -euo pipefail
 
 ROOT=/share/guozhix/WMagentattack-multisource-aug5
 PY=/share/guozhix/software/venvs/wmagentattack_multisource_aug5/bin/python
-PROTOCOL=$ROOT/configs/0805_multisource_semantic_v3_protocol.json
 ARCHIVE=/share/guozhix/wmagentattack/0805/multisource_semantic_v3/pilot_v1
+PROTOCOL=$ARCHIVE/frozen_protocol.json
 SOURCES=(tool_sandbox injecagent tau3)
 SOURCE=${SOURCES[$SLURM_ARRAY_TASK_ID]}
 
@@ -26,6 +26,7 @@ esac
 
 cd "$ROOT"
 mkdir -p "$ARCHIVE/outputs/$SOURCE" "$ARCHIVE/audits/$SOURCE" logs
+test -s "$PROTOCOL"
 export PYTHONPATH="$ROOT/src:$ROOT/external/agentdojo/src:$ROOT/external/tool_sandbox:$ROOT/external/tau3/src:${PYTHONPATH:-}"
 export TRANSFORMERS_OFFLINE=1
 export HF_HUB_OFFLINE=1

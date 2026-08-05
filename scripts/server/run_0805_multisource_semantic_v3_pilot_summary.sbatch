@@ -11,8 +11,8 @@ set -euo pipefail
 
 ROOT=/share/guozhix/WMagentattack-multisource-aug5
 PY=/share/guozhix/software/venvs/wmagentattack_multisource_aug5/bin/python
-PROTOCOL=$ROOT/configs/0805_multisource_semantic_v3_protocol.json
 ARCHIVE=/share/guozhix/wmagentattack/0805/multisource_semantic_v3/pilot_v1
+PROTOCOL=$ARCHIVE/frozen_protocol.json
 
 cd "$ROOT"
 export PYTHONPATH="$ROOT/src:$ROOT/external/agentdojo/src:${PYTHONPATH:-}"

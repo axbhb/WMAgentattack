@@ -1,7 +1,7 @@
 {
   "protocol_id": "wmagentattack_multisource_semantic_v3_20260805_v1",
   "date": "2026-08-05",
-  "status": "preregistered_before_multisource_pilot",
+  "status": "pilot_manifests_frozen_before_any_multisource_llm_outcome",
   "scope": "Offline synthetic ToolSandbox, InjecAgent, and tau3 data expansion for the hybrid semantic world model",
   "authorization_boundary": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -130,9 +130,9 @@
   },
   "frozen_manifests": {
     "pilot": {
-      "tool_sandbox": null,
-      "injecagent": null,
-      "tau3": null
+      "tool_sandbox": "bd9550b537703c1cde1197416b8690fe0b6b2e7823925244438304625d0a7ff3",
+      "injecagent": "86752c26f3ea39a33b2647a386f4547e083310a7fe5ce4b7a4bd6e17e9f1c9d8",
+      "tau3": "a585c96c45c1aff45bf8b3c99e7ce884f72507f0b202a4a6ee9f6ff94f9d2e7f"
     },
     "large": {}
   },

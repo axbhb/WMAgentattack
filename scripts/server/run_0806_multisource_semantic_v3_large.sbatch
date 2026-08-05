@@ -13,8 +13,8 @@ set -euo pipefail
 
 ROOT=/share/guozhix/WMagentattack-multisource-aug5
 PY=/share/guozhix/software/venvs/wmagentattack_multisource_aug5/bin/python
-PROTOCOL=$ROOT/configs/0805_multisource_semantic_v3_protocol.json
 ARCHIVE=/share/guozhix/wmagentattack/0806/multisource_semantic_v3/large_v1
+PROTOCOL=$ARCHIVE/frozen_protocol.json
 PILOT_GATE=/share/guozhix/wmagentattack/0805/multisource_semantic_v3/pilot_v1/pilot_gate.json
 
 "$PY" -c 'import json,sys; p=json.load(open(sys.argv[1])); assert p["decision"] == "PILOT_GO__BUILD_FROZEN_LARGE_MULTISOURCE_V1"' "$PILOT_GATE"
@@ -38,6 +38,7 @@ fi
 
 cd "$ROOT"
 mkdir -p "$ARCHIVE/outputs/$SOURCE" "$ARCHIVE/audits/$SOURCE" logs
+test -s "$PROTOCOL"
 export PYTHONPATH="$ROOT/src:$ROOT/external/agentdojo/src:$ROOT/external/tool_sandbox:$ROOT/external/tau3/src:${PYTHONPATH:-}"
 export TRANSFORMERS_OFFLINE=1
 export HF_HUB_OFFLINE=1
