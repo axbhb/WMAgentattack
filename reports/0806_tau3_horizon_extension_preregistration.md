@@ -39,4 +39,3 @@ and cannot be relabeled as assistant outcomes to pass this gate.
 A pilot GO authorizes only a full 96-episode horizon confirmation. It does not
 authorize method training, large-scale collection, attacks, Dreamer, a planner,
 or any real endpoint.
-
