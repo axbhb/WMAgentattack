@@ -1,0 +1,133 @@
+{
+  "protocol_id": "0806_tau3_horizon_extension_pilot_v1",
+  "status": "preregistered_not_run",
+  "research_question": "Does a paired, label-blind extension of the official tau3 interaction horizon reduce forced truncation and restore assistant-side state-changing support without changing the victim, prompt, tools, or transition targets?",
+  "parent_result": {
+    "protocol_id": "0806_tau3_interaction_faithful_repair_v1",
+    "decision": "INTERACTION_DATA_NO_GO__DO_NOT_SCALE_OR_RUN_METHOD_TEST",
+    "archive": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1",
+    "gate_sha256": "cf6ce03a9b5399ef6ab856153b997297934c052efb9271c70e126de549d70afd",
+    "dataset_sha256": "c1d3aaca520d82da4d1cf69247f47ce25d77150840b3b9ac9c1893241a79c631",
+    "episodes": 96,
+    "forced_budget_stop_episodes": 78,
+    "state_changed_assistant_transitions": 1,
+    "assistant_tool_errors": 79
+  },
+  "single_mutable_mechanism": {
+    "name": "role_horizon_extension",
+    "agent_generation_calls_per_episode_parent": 8,
+    "agent_generation_calls_per_episode_candidate": 16,
+    "user_generation_calls_per_episode_parent": 8,
+    "user_generation_calls_per_episode_candidate": 16,
+    "orchestrator_steps_parent": 32,
+    "orchestrator_steps_candidate": 64,
+    "all_other_generation_and_data_contracts_identical": true
+  },
+  "held_fixed": {
+    "source_commit": "1eceb0453fe2effa1ba26b6a51fc52b966944ec1",
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "single_loaded_model_shared_across_roles": true,
+    "agent_prompt": "official_tau3_agent_policy_plus_function_tags_v1",
+    "user_prompt": "official_tau3_user_simulator_system_prompt_plus_function_tags_v1",
+    "agent_decoding": {"temperature": 0.7, "top_p": 0.95, "max_new_tokens": 256},
+    "user_decoding": {"temperature": 0.3, "top_p": 0.9, "max_new_tokens": 256},
+    "half_duplex_orchestrator": true,
+    "maximum_consecutive_tool_errors": 5,
+    "serialization_retries_per_episode": 4,
+    "private_user_scenario_hidden_from_agent": true,
+    "complete_live_tool_sequence_replay_replicas": 2,
+    "assistant_only_transition_targets": true,
+    "user_tool_events_are_exogenous_context": true,
+    "transition_targets": [
+      "state_changed",
+      "execution_error",
+      "output_nonempty",
+      "goal_overlap_gained",
+      "novel_observation"
+    ]
+  },
+  "pilot_panel": {
+    "tasks": 12,
+    "episodes": 24,
+    "domains": ["airline", "retail", "telecom"],
+    "tasks_per_domain": 4,
+    "seeds": [401, 409],
+    "source_manifest": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1/manifest.json",
+    "selection": "Within each domain, choose four task keys by ascending SHA256 rank after preserving the frozen structural-stratum proportions as closely as integer counts allow; include both frozen seeds for every selected task.",
+    "selection_inputs_allowed": [
+      "domain",
+      "task_key",
+      "structural_stratum",
+      "experimental_split",
+      "llm_seed"
+    ],
+    "selection_inputs_forbidden": [
+      "parent completion text",
+      "parent forced-stop outcome",
+      "tool execution status",
+      "state_changed labels",
+      "utility or final outcome labels"
+    ],
+    "same_task_same_seed_parent_pairs_required": true,
+    "task_disjoint_split_metadata_preserved": true
+  },
+  "paired_controls": {
+    "parent_episode_is_exact_interaction_v1_episode": true,
+    "candidate_first_eight_role_calls_must_match_parent_until_parent_natural_stop_or_cap": true,
+    "compare_forced_stop_rate": true,
+    "compare_assistant_tool_error_rate": true,
+    "compare_assistant_state_changed_transitions": true,
+    "compare_by_domain_and_task": true
+  },
+  "pilot_gate": {
+    "expected_complete_episodes": 24,
+    "zero_runtime_failures": true,
+    "zero_agent_private_scenario_exposures": true,
+    "zero_real_external_endpoint_calls": true,
+    "all_complete_tool_sequences_replica_identical": true,
+    "maximum_forced_budget_stop_episodes": 6,
+    "minimum_relative_forced_stop_reduction_vs_paired_parent": 0.5,
+    "minimum_adjacent_assistant_tool_transitions": 25,
+    "minimum_state_changed_assistant_transitions": 4,
+    "minimum_state_unchanged_assistant_transitions": 8,
+    "minimum_tasks_with_state_changed_assistant_transition": 2,
+    "minimum_domains_with_state_changed_assistant_transition": 2,
+    "minimum_paired_state_changed_transition_gain": 3,
+    "minimum_supported_transition_targets": 4,
+    "minimum_each_transition_class_in_training_and_confirmation": 1,
+    "maximum_assistant_tool_error_rate_increase_over_paired_parent": 0.05,
+    "require_parent_prefix_equivalence": true,
+    "require_label_blind_panel_selection": true,
+    "all_clauses_required": true
+  },
+  "fixed_budget": {
+    "manifest_builds": 2,
+    "episodes": 24,
+    "maximum_agent_logical_calls": 384,
+    "maximum_user_logical_calls": 384,
+    "maximum_logical_llm_calls": 768,
+    "maximum_serialization_retry_calls": 96,
+    "maximum_physical_llm_calls": 864,
+    "maximum_orchestrator_steps_per_episode": 64,
+    "maximum_exact_replay_calls": 3072,
+    "post_result_reruns": 0,
+    "hyperparameter_searches": 0,
+    "attack_examples": 0,
+    "dreamer_or_planner_runs": 0
+  },
+  "authorization_boundary": {
+    "pilot_go_authorizes_only_full_96_episode_horizon_confirmation": true,
+    "pilot_go_does_not_authorize_method_training": true,
+    "pilot_go_does_not_authorize_large_scale_collection": true,
+    "full_data_gate_and_later_method_gate_required_before_scale": true,
+    "real_external_endpoints_forbidden": true,
+    "attack_generation_forbidden": true,
+    "dreamer_or_planner_training_forbidden": true
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/pilot_v1",
+  "jobs": null,
+  "result": null
+}
+

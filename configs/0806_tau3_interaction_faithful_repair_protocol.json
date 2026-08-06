@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_interaction_faithful_repair_v1",
-  "status": "manifest_frozen_before_interactive_outcomes",
+  "status": "completed_no_go_do_not_scale_or_run_method_test",
   "research_question": "Does restoring tau3's official half-duplex user-agent-environment interaction, while sharing the same frozen Llama-3.1-70B model across both roles, repair state-changing transition support enough to authorize the already-frozen predictive-method comparison?",
   "parent_no_go": {
     "protocol_id": "0806_tau3_multistep_scale_readiness_v1",
@@ -232,7 +232,89 @@
     "require_data_sufficiency_gate": true
   },
   "method_freeze": null,
-  "result": null,
+  "result": {
+    "decision": "INTERACTION_DATA_NO_GO__DO_NOT_SCALE_OR_RUN_METHOD_TEST",
+    "passed": false,
+    "jobs": {
+      "generation_array": 6457,
+      "summary": 6532
+    },
+    "archive": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1",
+    "code_commit": "f53bc5f7fad76ade08f6e7675ea8005178908127",
+    "frozen_protocol_sha256": "6cae3ea5583dba82a62713163e89d845791184c5d405943e31d5448bfac8e641",
+    "manifest_sha256": "d635d46ada7f189e91d3737216877f78197082f9bc7ce623539114fdda0596d5",
+    "dataset_sha256": "c1d3aaca520d82da4d1cf69247f47ce25d77150840b3b9ac9c1893241a79c631",
+    "dataset_audit_sha256": "a45fe84370507904df814d241b2ae390de65dc9e7dfadeafbd732018738c961a",
+    "interaction_gate_sha256": "cf6ce03a9b5399ef6ab856153b997297934c052efb9271c70e126de549d70afd",
+    "archived_result_report_sha256": "997a88f1085d5d802c662b4ea82e18577bf4cc884bd0f7a08ec552f4c41b25a8",
+    "archive_sha256s_sha256": "c5ae7eaf74e4f2f5beb4d8f50387772efb4571973e15ad56296619fd93c376da",
+    "metrics": {
+      "episodes_complete": 96,
+      "natural_user_messages": 510,
+      "adjacent_assistant_tool_transitions": 254,
+      "episodes_with_two_or_more_assistant_transitions": 50,
+      "tasks_with_at_least_one_assistant_transition": 37,
+      "unique_executed_assistant_tools": 18,
+      "agent_tool_decision_rate": 0.3547486033519553,
+      "dominant_agent_action_fraction": 0.31424581005586594,
+      "state_changed_assistant_transitions": 1,
+      "state_unchanged_assistant_transitions": 253,
+      "tasks_with_state_changed_assistant_transition": 1,
+      "domains_with_state_changed_assistant_transition": 1,
+      "paired_state_changed_transition_gain_over_parent": -4,
+      "supported_transition_targets": 3,
+      "forced_budget_stop_episodes": 78,
+      "assistant_tool_errors": 79,
+      "user_tool_events": 24,
+      "runtime_failures": 0,
+      "nondeterministic_tool_events": 0,
+      "real_external_endpoint_calls": 0
+    },
+    "failed_gate_clauses": [
+      "forced_budget_stop_episodes",
+      "state_changed_assistant_transitions",
+      "tasks_with_state_changed_assistant_transition",
+      "domains_with_state_changed_assistant_transition",
+      "paired_state_changed_transition_gain_over_parent",
+      "supported_transition_targets"
+    ],
+    "integrity": {
+      "complete_chunks": 6,
+      "all_chunk_audits_passed": true,
+      "all_exact_replays_identical": true,
+      "task_disjoint_splits": true,
+      "causal_label_blind_states": true,
+      "zero_agent_private_scenario_exposures": true,
+      "zero_real_external_endpoint_calls": true,
+      "zero_runtime_failures": true
+    },
+    "posthoc_counterevidence": {
+      "forced_stop_role_counts": {
+        "agent_only": 47,
+        "user_only": 31,
+        "neither": 18
+      },
+      "forced_stop_by_domain": {
+        "airline": {"agent": 19, "user": 5},
+        "retail": {"agent": 22, "user": 1},
+        "telecom": {"agent": 6, "user": 25}
+      },
+      "user_state_changed_tool_events": 9,
+      "user_tool_events_remain_exogenous": true,
+      "interpretation": "Official turn-taking repaired dialogue and tool coverage but the eight-call role cap truncated 78 episodes. It did not recover assistant-side mutations: one changed transition was observed versus five in the paired parent. Counting nine user-side mutations as assistant targets would violate the frozen target contract and is not used to rescue the gate."
+    },
+    "method_test_run": false,
+    "large_scale_collection_run": false,
+    "attack_generation_run": false,
+    "dreamer_or_planner_run": false
+  },
+  "next_preregistered_candidate": {
+    "protocol_id": "0806_tau3_horizon_extension_pilot_v1",
+    "config": "configs/0806_tau3_horizon_extension_protocol.json",
+    "preregistration": "reports/0806_tau3_horizon_extension_preregistration.md",
+    "single_mechanism": "paired label-blind extension of each role's generation horizon from 8 to 16 calls",
+    "authorized_now": "pilot_preparation_only"
+  },
   "fixed_budget": {
     "manifest_builds": 2,
     "tasks": 48,
