@@ -45,4 +45,6 @@ visible jobs and the frozen six-way array passed `sbatch --test-only`, Slurm
 accepted the unique confirmation array as job `6565`. The guarded dependent
 summary was not accepted because the array consumed the remaining job-record
 capacity. The array marker is frozen; subsequent heartbeats must never resubmit
-it and may submit only one `afterok:6565` summary when a slot becomes available.
+it. At 2026-08-06T14:11Z, a summary dry-run passed and Slurm accepted the
+unique dependent summary as job `6568` with `afterok:6565`. Both submission
+markers are now frozen; subsequent heartbeats may only monitor these jobs.
