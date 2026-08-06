@@ -40,4 +40,9 @@ attempts on 2026-08-06 were not accepted by Slurm: the first timed out without
 creating a queue entry, marker, log, or output, and the second and third returned
 `Resource temporarily unavailable`. Post-attempt checks found no matching job
 or lingering `sbatch` process. No job ID has been recorded and no experiment
-was duplicated; the next heartbeat may retry only after repeating those guards.
+was duplicated. At 2026-08-06T14:01Z, after the global queue dropped to 17
+visible jobs and the frozen six-way array passed `sbatch --test-only`, Slurm
+accepted the unique confirmation array as job `6565`. The guarded dependent
+summary was not accepted because the array consumed the remaining job-record
+capacity. The array marker is frozen; subsequent heartbeats must never resubmit
+it and may submit only one `afterok:6565` summary when a slot becomes available.

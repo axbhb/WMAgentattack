@@ -269,6 +269,9 @@
     "dreamer_or_planner_training_forbidden": true
   },
   "planned_archive": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/confirmation_v1",
-  "jobs": null,
+  "jobs": {
+    "generation_array": 6565,
+    "summary": null
+  },
   "result": null
 }

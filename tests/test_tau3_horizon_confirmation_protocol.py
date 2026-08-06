@@ -16,7 +16,8 @@ def _protocol():
 def test_confirmation_manifest_is_frozen_and_not_run():
     protocol = _protocol()
     assert protocol["status"] == "manifest_frozen_before_interactive_outcomes"
-    assert protocol["jobs"] is None
+    assert protocol["jobs"]["generation_array"] == 6565
+    assert protocol["jobs"]["summary"] is None
     assert protocol["result"] is None
     assert (
         protocol["pilot_go"]["decision"]
