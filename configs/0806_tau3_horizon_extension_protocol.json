@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_horizon_extension_pilot_v1",
-  "status": "preregistered_not_run",
+  "status": "manifest_frozen_before_interactive_outcomes",
   "research_question": "Does a paired, label-blind extension of the official tau3 interaction horizon reduce forced truncation and restore assistant-side state-changing support without changing the victim, prompt, tools, or transition targets?",
   "parent_result": {
     "protocol_id": "0806_tau3_interaction_faithful_repair_v1",
@@ -49,6 +49,76 @@
       "goal_overlap_gained",
       "novel_observation"
     ]
+  },
+  "source": {
+    "repository": "https://github.com/sierra-research/tau2-bench",
+    "commit": "1eceb0453fe2effa1ba26b6a51fc52b966944ec1",
+    "remote_root": "/share/guozhix/WMagentattack-multisource-aug5/external/tau3",
+    "parent_manifest": "/share/guozhix/wmagentattack/0806/tau3_interaction_faithful_repair/pilot_v1/manifest.json",
+    "parent_manifest_sha256": "d635d46ada7f189e91d3737216877f78197082f9bc7ce623539114fdda0596d5",
+    "reuse_identical_tasks_splits_and_role_seeds": true,
+    "domains": ["airline", "retail", "telecom"],
+    "tasks": 12,
+    "episodes": 24
+  },
+  "shared_model_identity": {
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "single_loaded_model_instance_shared_across_roles": true,
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "trust_remote_code": false
+  },
+  "role_contracts": {
+    "agent": {
+      "prompt": "official_tau3_agent_policy_plus_function_tags_v1",
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "maximum_generation_calls_per_episode": 16,
+      "private_user_scenario_visible": false,
+      "visible_inputs": [
+        "official_agent_instruction",
+        "domain_policy",
+        "agent_tool_schemas",
+        "natural_user_messages",
+        "own_text_messages",
+        "own_tool_calls_and_receipts"
+      ]
+    },
+    "user": {
+      "prompt": "official_tau3_user_simulator_system_prompt_plus_function_tags_v1",
+      "do_sample": true,
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "maximum_generation_calls_per_episode": 16,
+      "private_user_scenario_visible": true,
+      "task_authorized_user_tools_visible": true,
+      "agent_tool_calls_or_private_receipts_visible": false
+    }
+  },
+  "interaction": {
+    "orchestrator": "tau2.orchestrator.orchestrator.Orchestrator",
+    "mode": "half_duplex",
+    "default_first_agent_message": true,
+    "maximum_orchestrator_steps": 64,
+    "maximum_consecutive_tool_errors": 5,
+    "validate_communication": true,
+    "agent_seed_formula": "episode_seed * 1009 + agent_generation_index",
+    "user_seed_formula": "episode_seed * 2003 + user_generation_index",
+    "text_agent_message_returns_control_to_user": true,
+    "official_user_stop_markers": true,
+    "user_tool_calls_executed_with_requestor_user": true,
+    "agent_tool_calls_executed_with_requestor_assistant": true
+  },
+  "exact_execution": {
+    "record_live_combined_agent_and_user_tool_sequence": true,
+    "fresh_replay_replicas": 2,
+    "compare_live_and_both_replays": true,
+    "state_fingerprint_includes_agent_and_user_databases": true,
+    "assistant_transition_labels_exclude_user_tool_calls": true,
+    "user_tool_calls_remain_exogenous_causal_context": true
   },
   "pilot_panel": {
     "tasks": 12,
@@ -128,6 +198,43 @@
     "real_external_endpoints_forbidden": true,
     "attack_generation_forbidden": true,
     "dreamer_or_planner_training_forbidden": true
+  },
+  "pre_outcome_operational_amendments": {
+    "original_preregistered_protocol_sha256": "4cc046987cca1620d3df4bb1e145cd9182e5083d33db79df4f415385a9273adc",
+    "manifest_build_protocol_sha256": "a698866e00f62a41f36aaa38e83235ce430f87c50fd403ed3de3dd51ee9d6e26",
+    "changes": [
+      "recorded the already-frozen parent manifest path and SHA256 required by the builder",
+      "made the inherited four-retry per-episode cap explicit for the unchanged runner"
+    ],
+    "selection_rule_gate_thresholds_and_outcome_access_unchanged": true
+  },
+  "frozen_manifest": {
+    "remote_path": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/pilot_v1/manifest.json",
+    "sha256": "5669e24c37ae2f5de5f9c1fb0eb1e07cafbd7f8587b4b4668ab67dba71d35ac0",
+    "content_sha256": "3f412363f4d79484cbfd0ea53001fd66e4fd5b300ba76b135f5fcff0c6c00ff2",
+    "episodes": 24,
+    "tasks": 12,
+    "domain_episode_counts": {"airline": 8, "retail": 8, "telecom": 8},
+    "split_task_counts": {"training": 6, "calibration": 2, "confirmation": 4},
+    "preflight_build_a": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/pilot_v1/manifest_builds/build1.json",
+    "preflight_build_b": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/pilot_v1/manifest_builds/build2.json",
+    "build_a_audit_sha256": "2161c4e9865c7df15442c826b89f968ffee2708eb19302c8bf94a210837f746f",
+    "build_b_audit_sha256": "2161c4e9865c7df15442c826b89f968ffee2708eb19302c8bf94a210837f746f",
+    "byte_identical_double_build": true,
+    "label_blind_selection_audit_passed": true
+  },
+  "implementation_commit": "60f6ae26796712f9d553de40e3526f7f0c0caed8",
+  "implementation_sha256": {
+    "scripts/168_run_tau3_interactive_llm.py": "fff3fd7cf18d6f441c7fff227cbf6a666de25599bc6a48282b232c1954b1ccdc",
+    "scripts/170_build_tau3_horizon_manifest.py": "a8cb0f728e60575430f6b61e801c47344225b206d8fdc4d4f45ab1e70e92b481",
+    "scripts/171_summarize_tau3_horizon_pilot.py": "023b0c430a095c66064cc4f766993e737b492c40eb9fcc01d4b19a0fa3cd1d96",
+    "scripts/server/run_0806_tau3_horizon_pilot.sbatch": "09cea569268d7f7679f5ffa3667a01fc7c350ed156190d9f428408cbae363f4e",
+    "scripts/server/run_0806_tau3_horizon_summary.sbatch": "82a797ae1793d0cfa1f83eed1c193b7d31528b4872b0bc164229fe503ea2b88d",
+    "src/wmagentattack/multisource_semantic_data.py": "e5cabd1e912d33de95dff81f1f624e5eff04ff65d3296783e650c4dd93aa8d8c",
+    "src/wmagentattack/semantic_state_v3.py": "27ce6d651e83d9f2637c82d0ac13d76743d271e4be4d7b4089143919b62645bd",
+    "src/wmagentattack/tau3_interactive.py": "758298490eb10626d93525e6f477eb06ad41d52008e0306f61240490b2f55e9b",
+    "src/wmagentattack/tau3_multistep.py": "2298b70d824ee79e269b362b3f31e488b3e48a88cb460516b4f9723c0a59fe35",
+    "src/wmagentattack/tau3_horizon.py": "c168bd0a6bed6b5c153d0ded5a819e75166a00ffa7b875ad87501d06be67f74d"
   },
   "planned_archive": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/pilot_v1",
   "jobs": null,
