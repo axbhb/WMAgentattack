@@ -31,3 +31,13 @@ A confirmation GO authorizes only the already-specified task-disjoint
 frequency/TF-IDF/Semantic Markov/Structured v3/full-history/observed-v4
 comparison. It does not authorize large collection, attacks, Dreamer, a
 planner, or any real endpoint. Large collection requires a later method GO.
+
+## Execution status
+
+The 96-episode manifest was frozen after two byte-identical label-blind builds,
+and the remote implementation passed 17 focused tests. Two guarded submission
+attempts on 2026-08-06 were not accepted by Slurm: the first timed out without
+creating a queue entry, marker, log, or output, and the second returned
+`Resource temporarily unavailable`. Post-attempt checks found no matching job
+or lingering `sbatch` process. No job ID has been recorded and no experiment
+was duplicated; the next heartbeat may retry only after repeating those guards.
