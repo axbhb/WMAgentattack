@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_horizon_confirmation_v1",
-  "status": "preregistered_not_run",
+  "status": "manifest_frozen_before_interactive_outcomes",
   "research_question": "Does the horizon-only repair reproduce over the complete 96-episode interaction-v1 surface, including the 72 out-of-pilot episodes, while preserving exact parent prefixes and the original full-data sufficiency gate?",
   "pilot_go": {
     "protocol_id": "0806_tau3_horizon_extension_pilot_v1",
@@ -221,6 +221,40 @@
     "generation_chunks": 6,
     "maximum_concurrent_gpu_chunks": 4,
     "summary_chunks_expected": 6
+  },
+  "frozen_manifest": {
+    "remote_path": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/confirmation_v1/manifest.json",
+    "sha256": "bea0961bcd1208af3df41057bf27826a94ceef0e77c28f6f3cc691472c034ea8",
+    "content_sha256": "970983134b7dc74bd1e561c7aee35ff1ca3c8b08dd7a95a66b4d83e2c9102284",
+    "episodes": 96,
+    "tasks": 48,
+    "domain_episode_counts": {"airline": 32, "retail": 32, "telecom": 32},
+    "split_task_counts": {"training": 30, "calibration": 9, "confirmation": 9},
+    "pilot_overlap_episodes": 24,
+    "pilot_overlap_tasks": 12,
+    "out_of_pilot_episodes": 72,
+    "out_of_pilot_tasks": 36,
+    "preflight_build_a": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/confirmation_v1/manifest_builds/build1.json",
+    "preflight_build_b": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/confirmation_v1/manifest_builds/build2.json",
+    "build_a_audit_sha256": "1b6cfae5a2c30390537dcbaddce6df74581521e8c4a8e68da4bcd907fef2fbae",
+    "build_b_audit_sha256": "1b6cfae5a2c30390537dcbaddce6df74581521e8c4a8e68da4bcd907fef2fbae",
+    "byte_identical_double_build": true,
+    "label_blind_selection_audit_passed": true,
+    "forbidden_outcome_inputs_read": []
+  },
+  "implementation_commit": "1750af88683c13e969fecfd6e2e386f4810c2173",
+  "implementation_sha256": {
+    "scripts/168_run_tau3_interactive_llm.py": "fff3fd7cf18d6f441c7fff227cbf6a666de25599bc6a48282b232c1954b1ccdc",
+    "scripts/172_build_tau3_horizon_confirmation_manifest.py": "19b10070ae67b04792c3ae6d9903f37146405b854888305ed512b5fe1ddb5ca9",
+    "scripts/173_summarize_tau3_horizon_confirmation.py": "4c0a1ac1a3b2528eec8936d4d95ada9f55092f7931ca94306f71b582e14d0533",
+    "scripts/server/run_0806_tau3_horizon_confirmation.sbatch": "08025c610a291001bdaa904c05cef0453cfc50aab1a86853b7338d81a1022a3a",
+    "scripts/server/run_0806_tau3_horizon_confirmation_summary.sbatch": "f394cafd06af06564ee753ba5363c85700476ae03c7a1400a709fe7bd33e77e3",
+    "src/wmagentattack/multisource_semantic_data.py": "e5cabd1e912d33de95dff81f1f624e5eff04ff65d3296783e650c4dd93aa8d8c",
+    "src/wmagentattack/semantic_state_v3.py": "27ce6d651e83d9f2637c82d0ac13d76743d271e4be4d7b4089143919b62645bd",
+    "src/wmagentattack/tau3_horizon.py": "c168bd0a6bed6b5c153d0ded5a819e75166a00ffa7b875ad87501d06be67f74d",
+    "src/wmagentattack/tau3_horizon_confirmation.py": "37fbd5d23cddabdb8a0348a1302849c057472bf5983f48bea52c4b8ecaf60865",
+    "src/wmagentattack/tau3_interactive.py": "758298490eb10626d93525e6f477eb06ad41d52008e0306f61240490b2f55e9b",
+    "src/wmagentattack/tau3_multistep.py": "2298b70d824ee79e269b362b3f31e488b3e48a88cb460516b4f9723c0a59fe35"
   },
   "decisions": {
     "go": "HORIZON_CONFIRMATION_GO__AUTHORIZE_FROZEN_METHOD_COMPARISON",

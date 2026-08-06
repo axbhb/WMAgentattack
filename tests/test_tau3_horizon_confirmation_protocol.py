@@ -13,15 +13,29 @@ def _protocol():
     )
 
 
-def test_confirmation_is_preregistered_and_not_run():
+def test_confirmation_manifest_is_frozen_and_not_run():
     protocol = _protocol()
-    assert protocol["status"] == "preregistered_not_run"
+    assert protocol["status"] == "manifest_frozen_before_interactive_outcomes"
     assert protocol["jobs"] is None
     assert protocol["result"] is None
     assert (
         protocol["pilot_go"]["decision"]
         == "HORIZON_PILOT_GO__AUTHORIZE_FULL_96_CONFIRMATION"
     )
+
+
+def test_confirmation_manifest_and_implementation_are_frozen():
+    protocol = _protocol()
+    manifest = protocol["frozen_manifest"]
+    assert manifest["sha256"] == (
+        "bea0961bcd1208af3df41057bf27826a94ceef0e77c28f6f3cc691472c034ea8"
+    )
+    assert manifest["byte_identical_double_build"]
+    assert manifest["label_blind_selection_audit_passed"]
+    assert manifest["forbidden_outcome_inputs_read"] == []
+    assert manifest["pilot_overlap_episodes"] == 24
+    assert manifest["out_of_pilot_episodes"] == 72
+    assert len(protocol["implementation_sha256"]) == 11
 
 
 def test_confirmation_reuses_the_exact_passed_horizon_contract():
