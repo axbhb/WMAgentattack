@@ -24,11 +24,16 @@ def _parent_protocol():
     )
 
 
-def test_horizon_candidate_is_frozen_before_outcomes_and_not_run():
+def test_horizon_pilot_completed_and_only_authorizes_confirmation():
     protocol = _protocol()
-    assert protocol["status"] == "manifest_frozen_before_interactive_outcomes"
-    assert protocol["jobs"] is None
-    assert protocol["result"] is None
+    assert protocol["status"] == "completed_go_authorize_full_96_confirmation_only"
+    assert protocol["jobs"] == {"generation_array": 6534, "summary": 6535}
+    assert protocol["result"]["passed"]
+    assert (
+        protocol["result"]["decision"]
+        == "HORIZON_PILOT_GO__AUTHORIZE_FULL_96_CONFIRMATION"
+    )
+    assert protocol["result"]["failed_gate_clauses"] == []
     assert (
         protocol["parent_result"]["decision"]
         == "INTERACTION_DATA_NO_GO__DO_NOT_SCALE_OR_RUN_METHOD_TEST"

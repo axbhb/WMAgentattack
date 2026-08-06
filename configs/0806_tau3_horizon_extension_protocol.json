@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_horizon_extension_pilot_v1",
-  "status": "manifest_frozen_before_interactive_outcomes",
+  "status": "completed_go_authorize_full_96_confirmation_only",
   "research_question": "Does a paired, label-blind extension of the official tau3 interaction horizon reduce forced truncation and restore assistant-side state-changing support without changing the victim, prompt, tools, or transition targets?",
   "parent_result": {
     "protocol_id": "0806_tau3_interaction_faithful_repair_v1",
@@ -237,6 +237,60 @@
     "src/wmagentattack/tau3_horizon.py": "c168bd0a6bed6b5c153d0ded5a819e75166a00ffa7b875ad87501d06be67f74d"
   },
   "planned_archive": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/pilot_v1",
-  "jobs": null,
-  "result": null
+  "jobs": {
+    "generation_array": 6534,
+    "summary": 6535
+  },
+  "result": {
+    "decision": "HORIZON_PILOT_GO__AUTHORIZE_FULL_96_CONFIRMATION",
+    "passed": true,
+    "archive": "/share/guozhix/wmagentattack/0806/tau3_horizon_extension/pilot_v1",
+    "execution_commit": "69e23927f57e444befc77a92ebda367e1c3aac8d",
+    "frozen_protocol_sha256": "537e5221236cc1f93e86ab6550f2d1a3cb01cfd30ac24589be3e948e82d32d69",
+    "manifest_sha256": "5669e24c37ae2f5de5f9c1fb0eb1e07cafbd7f8587b4b4668ab67dba71d35ac0",
+    "dataset_sha256": "23e368d8185b8ca8db151f3cf9b831cdca594d05c3c73b062fa2836353799327",
+    "dataset_audit_sha256": "568c1f615977c56e6eb6c3edd16b2faff1160d050633a8952da79307f53454ff",
+    "gate_sha256": "4e870450406a1c4a32f6cdfc4ab5b0ed416cccb29f6528a918e333c4a74c4048",
+    "archived_report_sha256": "39b78e4b59ab3a8eff6ac29dc419dc8c34c9221a90c558b34a46a66927155db4",
+    "archive_checksum_file_sha256": "534e1a93facdbcbf061172d950cf733cab680eae93365ae9d1594558ba1fb750",
+    "metrics": {
+      "episodes": 24,
+      "adjacent_assistant_tool_transitions": 103,
+      "forced_budget_stop_episodes": 5,
+      "parent_forced_budget_stop_episodes": 18,
+      "relative_forced_stop_reduction": 0.7222222222222222,
+      "state_changed_assistant_transitions": 10,
+      "state_unchanged_assistant_transitions": 93,
+      "tasks_with_state_changed_assistant_transition": 6,
+      "domains_with_state_changed_assistant_transition": 2,
+      "paired_state_changed_transition_gain": 9,
+      "supported_transition_targets": 4,
+      "assistant_tool_error_rate": 0.22330097087378642,
+      "parent_assistant_tool_error_rate": 0.25675675675675674,
+      "assistant_tool_error_rate_increase": -0.033455785882970324,
+      "runtime_failures": 0,
+      "nondeterministic_tool_events": 0,
+      "parent_prefix_mismatches": 0,
+      "real_external_endpoint_calls": 0
+    },
+    "supported_transition_target_names": [
+      "execution_error",
+      "goal_overlap_gained",
+      "novel_observation",
+      "state_changed"
+    ],
+    "paired_state_changes_by_domain": {
+      "airline": {"candidate": 5, "parent": 1, "gain": 4},
+      "retail": {"candidate": 5, "parent": 0, "gain": 5},
+      "telecom": {"candidate": 0, "parent": 0, "gain": 0}
+    },
+    "failed_gate_clauses": [],
+    "all_integrity_checks_passed": true,
+    "counterevidence": [
+      "telecom produced no assistant-side state-changing transition",
+      "output_nonempty remained constant-positive and therefore unsupported",
+      "five of twenty-four episodes still reached a role-generation cap"
+    ],
+    "authorization": "freeze and run the same-contract 96-episode confirmation only; method training and large collection remain forbidden"
+  }
 }
