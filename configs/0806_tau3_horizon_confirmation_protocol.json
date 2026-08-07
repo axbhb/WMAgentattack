@@ -1,6 +1,6 @@
 {
   "protocol_id": "0806_tau3_horizon_confirmation_v1",
-  "status": "manifest_frozen_before_interactive_outcomes",
+  "status": "completed_no_go",
   "research_question": "Does the horizon-only repair reproduce over the complete 96-episode interaction-v1 surface, including the 72 out-of-pilot episodes, while preserving exact parent prefixes and the original full-data sufficiency gate?",
   "pilot_go": {
     "protocol_id": "0806_tau3_horizon_extension_pilot_v1",
@@ -273,5 +273,112 @@
     "generation_array": 6565,
     "summary": 6568
   },
-  "result": null
+  "result": {
+    "completed_at_utc": "2026-08-06T19:36:21+00:00",
+    "decision": "HORIZON_CONFIRMATION_NO_GO__DO_NOT_RUN_METHOD_TEST_OR_SCALE",
+    "passed": false,
+    "gate_sha256": "d4936d31edcee855a0be42ae75f9e673616c85ff4a344a87d94cbfc1452d8521",
+    "protocol_sha256": "6eef4d484095deba86ff6777a314bd05d931467bcb21542a4a8678df5a5a66cc",
+    "manifest_sha256": "bea0961bcd1208af3df41057bf27826a94ceef0e77c28f6f3cc691472c034ea8",
+    "dataset_sha256": "6d570ca8fc3ab7d556fa3faf4e470c6f326fdbcf59d6f7e686929f7856134498",
+    "dataset_audit_sha256": "3b4ede0d31d38e7970511ecf94ecc3554ebd7eba9f145bd0774c4fbc4c03193c",
+    "archived_report_sha256": "7fb18082f715a9281d47812b26ba883d389c21e31cfe9287424ddec6acfd08ee",
+    "archive_checksum_file_sha256": "d33d03d92caad5bc29805aba858aa98848f738a680d6d927b2a401b8a904a916",
+    "archive_checksum_entries_verified": 25,
+    "job_exit_evidence": {
+      "slurm_accounting_storage": "disabled",
+      "generation_array": {
+        "job_id": 6565,
+        "expected_tasks": 6,
+        "completion_sentinels": 6,
+        "passing_chunk_audits": 6,
+        "fatal_log_signatures": 0,
+        "terminal_state": "success_evidenced_after_accounting_record_expiry"
+      },
+      "summary": {
+        "job_id": 6568,
+        "dependency": "afterok:6565",
+        "completion_sentinel": true,
+        "stderr_bytes": 0,
+        "terminal_state": "success_evidenced_after_accounting_record_expiry"
+      }
+    },
+    "metrics": {
+      "episodes_complete": 96,
+      "forced_budget_stop_episodes": 26,
+      "parent_forced_budget_stop_episodes": 78,
+      "relative_forced_stop_reduction_vs_parent": 0.6666666666666666,
+      "natural_user_messages": 753,
+      "adjacent_assistant_tool_transitions": 367,
+      "episodes_with_two_or_more_assistant_transitions": 50,
+      "tasks_with_at_least_one_assistant_transition": 39,
+      "unique_executed_assistant_tools": 26,
+      "agent_tool_decision_rate": 0.33454876937101186,
+      "dominant_agent_action_fraction": 0.33363719234275296,
+      "state_changed_assistant_transitions": 21,
+      "state_unchanged_assistant_transitions": 346,
+      "tasks_with_state_changed_assistant_transition": 11,
+      "domains_with_state_changed_assistant_transition": 2,
+      "paired_state_changed_transition_gain": 20,
+      "supported_transition_targets": 4,
+      "assistant_tool_error_rate": 0.24795640326975477,
+      "parent_assistant_tool_error_rate": 0.3110236220472441,
+      "assistant_tool_error_rate_increase_over_parent": -0.06306721877748933,
+      "out_of_pilot_episodes": 72,
+      "out_of_pilot_tasks": 36,
+      "out_of_pilot_state_changed_assistant_transitions": 11,
+      "out_of_pilot_tasks_with_state_changed_assistant_transition": 5,
+      "out_of_pilot_domains_with_state_changed_assistant_transition": 2,
+      "pilot_overlap_episodes_reproduced": 0,
+      "runtime_failures": 0,
+      "communication_error_terminations": 0,
+      "real_external_endpoint_calls": 0,
+      "logical_llm_calls": 1959,
+      "physical_llm_calls": 2079,
+      "serialization_retry_calls": 120,
+      "exact_replay_calls": 822
+    },
+    "failed_gate_clauses": [
+      "forced_budget_stop_episodes",
+      "minimum_agent_tool_decision_rate",
+      "pilot_overlap_reproducibility",
+      "integrity::all_pilot_overlap_episodes_reproduced"
+    ],
+    "post_gate_counterevidence": {
+      "current_decision_recomputed": false,
+      "pilot_overlap_episodes_compared": 24,
+      "pilot_overlap_agent_decision_records_identical": 24,
+      "pilot_overlap_user_generation_records_identical": 24,
+      "pilot_overlap_full_raw_episode_records_identical": 0,
+      "mismatched_top_level_fields": ["trajectory"],
+      "observed_trajectory_difference": "trajectory[*].timestamp only",
+      "domain_agent_tool_decision_rates": {
+        "airline": 0.42777777777777776,
+        "retail": 0.5647382920110193,
+        "telecom": 0.0213903743315508
+      },
+      "telecom_tool_events": {
+        "assistant": 8,
+        "user": 44
+      },
+      "user_tool_events_remain_exogenous": true
+    },
+    "chunk_output_sha256": {
+      "outputs/chunk0.json": "b7ce9744e29e43d37f0eddb123a157506adf9e59d5a66a9906aad68172199dd1",
+      "outputs/chunk1.json": "93859227ab7427e100cdcee8cafde84b1733f5ba8c6f9ce6d9be08b2e55b3ce7",
+      "outputs/chunk2.json": "d3c9ac4ba853bfaa032a2b24129531d1e00639dbcb64724dc16666ccc8a88f95",
+      "outputs/chunk3.json": "40975ad158837371c6877298670aa9eb6fcb0da1397264b88f950bb3619a4111",
+      "outputs/chunk4.json": "da133cbce83f9dfff397052b6b1c37b95a01f8eff0259d2b54988b15561dca9e",
+      "outputs/chunk5.json": "111dd0c567ac411d46f8532a77f064555fe67140b6e9510eff5f35af48223015"
+    },
+    "chunk_audit_sha256": {
+      "audits/chunk0.json": "1939f50e69181ff06cb238c444303b700481b7d180df3a8117c2724afc88d69d",
+      "audits/chunk1.json": "35f365544d3703159e454d7620bff1706390f5a1c84a1f653ac74b814185f970",
+      "audits/chunk2.json": "f013d64c6af4a0e98019f73472b16b25ba25ed03b845668787143ac7f38b6275",
+      "audits/chunk3.json": "b4210d5126f46220114f8adf6fc16ba4e693dee9570c75d3764f08c2276b11e2",
+      "audits/chunk4.json": "bb2a72e96fe0cc791a9288c2fcf19ee319fd6c87579c27d0329c9236b403c973",
+      "audits/chunk5.json": "0ad117ae44b7020414f63fb19b63aceb01673978fd2437ffa5d7fc22f3f31d65"
+    },
+    "authorization": "No predictive-method test, confirmation rerun, or scale-up is authorized."
+  }
 }

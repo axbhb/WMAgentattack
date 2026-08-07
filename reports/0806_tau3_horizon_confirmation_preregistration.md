@@ -48,3 +48,18 @@ capacity. The array marker is frozen; subsequent heartbeats must never resubmit
 it. At 2026-08-06T14:11Z, a summary dry-run passed and Slurm accepted the
 unique dependent summary as job `6568` with `afterok:6565`. Both submission
 markers are now frozen; subsequent heartbeats may only monitor these jobs.
+
+## Completed outcome
+
+Both jobs completed and the frozen gate returned
+`HORIZON_CONFIRMATION_NO_GO__DO_NOT_RUN_METHOD_TEST_OR_SCALE`. The confirmation
+completed all 96 episodes, but recorded 26 forced stops against a maximum of
+24, an agent tool-decision rate of 33.45% against a minimum of 35%, and 0/24
+raw pilot-overlap reproductions. The overlap mismatch was subsequently traced
+to runtime trajectory timestamps only; this post-gate diagnosis does not alter
+the binding NO-GO. The full result and preserved counterevidence are recorded
+in `reports/0806_tau3_horizon_confirmation_results.md`.
+
+No predictive-method comparison or scale-up was run. Only the next smallest
+label-blind bounded-tail mechanism is preregistered, with no implementation or
+new Slurm submission.
