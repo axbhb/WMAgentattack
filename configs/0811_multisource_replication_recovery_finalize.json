@@ -1,0 +1,30 @@
+{
+  "protocol_id": "0811_multisource_replication_recovery_finalize_v1",
+  "status": "post_outcome_measurement_recovery_finalize_frozen_before_injecagent_chunk3",
+  "research_question": "After preserving the raw ToolSandbox failure and applying the separately gated representation-level recovery, is the entire frozen 4,406-row auxiliary multi-seed expansion complete and internally valid?",
+  "scope": {
+    "auxiliary_probability_and_robustness_data_only": true,
+    "does_not_increase_independent_task_count": true,
+    "does_not_overturn_current_method_scale_no_go": true,
+    "tau3_excluded_after_tail_horizon_no_go": true,
+    "paired_attack_diagnostics_not_acceptance_gate": true
+  },
+  "immutable_inputs": {
+    "parent_protocol_sha256": "c942219ba33e43aac0055ba313fe67f1a8bffe989058226407a7d3d82b93c598"
+  },
+  "acceptance_gate": [
+    "preserve original ToolSandbox raw audit failure",
+    "require separate ToolSandbox semantic replica recovery pass",
+    "require 190 complete ToolSandbox records",
+    "require four passing InjecAgent chunks totaling 4216 records",
+    "require every InjecAgent clean/poison pair within seed",
+    "require zero runtime failures and real endpoint calls",
+    "require one frozen LLM contract and exactly 4406 total records"
+  ],
+  "planned_output": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1/replication_gate_recovery.json",
+  "implementation_sha256": {
+    "scripts/180_finalize_multisource_replication_recovery.py": "c3fcb7db2f159dbfa7aeac16f0e0b40c14340fd10123c237f50b7353cac7185e",
+    "scripts/server/run_0811_multisource_replication_recovery_summary.sbatch": "86a659eda8562cbbc035ac0765522a4d5970c42083b67002f7af20c28f2624aa",
+    "tests/test_multisource_replication_recovery_finalize.py": "9f546edb53650e2f222493c85b68543b817a4b01ac0718ec13ebc57c51fd5b22"
+  }
+}

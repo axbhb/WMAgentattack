@@ -51,6 +51,7 @@
   "implementation_sha256": {
     "src/wmagentattack/toolsandbox_replica_recovery.py": "a1975623f503f0b0dc1e2e1901d72c5a4f6bfcae03fc32356782ad670d9370ed",
     "scripts/179_reaudit_toolsandbox_runtime_ids.py": "4bd3b6b1c267864123d2617894d50284945695b52b4618fa9ec0974593259aba",
+    "scripts/server/run_0811_toolsandbox_replica_recovery.sbatch": "6807b3adb4a07157bc61fd3c3108d65bb1ec134328a189577869b201941baa22",
     "tests/test_toolsandbox_replica_recovery.py": "74f39e97ad514315c72365fca1f1f336e69162a8288eb853e0b0f079f60e4c03"
   }
 }
