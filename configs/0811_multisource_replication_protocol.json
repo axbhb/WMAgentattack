@@ -62,16 +62,22 @@
   "frozen_manifests": {
     "replication": {
       "tool_sandbox": "c3d34e59f8cc03231af081f86ac11a500f0966c2daa3c4d60952b6dc6d480ce2",
-      "injecagent": "f0929a6181f4ff228edf81585811935b1c123b39ba313149f66aa0db96956a89"
+      "injecagent": "f2c5d65c834050571dc86b8b9813e876fd0b915a58ca92a85ad9ec24d488f555"
     }
   },
+  "frozen_manifest_audits": {
+    "tool_sandbox": "31208450c5670fceb72c8a192c3d30e1155df445d71c03213e3939cb9c497a07",
+    "injecagent": "cc58e05fefcce03af2cacf5c61c14c51ddba2961b424cbe8e6fce48e35969626",
+    "byte_identical_double_build": true,
+    "clean_poison_pairs_preserved_within_each_of_four_serial_shards": true
+  },
   "planned_archive": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1",
-  "implementation_commit": "4dcdb401d6c64f2991e03b3c9cfe6a6999134e9c",
+  "implementation_commit": "31a06f8375271e0b669e8264fb47411ffebf18bd",
   "implementation_sha256": {
-    "scripts/177_build_multisource_replication_manifests.py": "010275d5a3dd1c940a95c4d26765661a1c9d85ed8333b92d8bf12779c5d04950",
-    "scripts/178_summarize_multisource_replication.py": "60c29d2da2c93590684f48e9630dc0779609b16fa4a53f35eaa53e24ed1385df",
+    "scripts/177_build_multisource_replication_manifests.py": "74254a4b1c24a617f09535de6ec803399c18e4fc60dec74d743d615fc1f66684",
+    "scripts/178_summarize_multisource_replication.py": "95d504de28b34694bacd8984d807e7d6d3f9e95dd3fde5b76f08fad3a749c2a8",
     "scripts/server/run_0811_toolsandbox_replication.sbatch": "c47193e6852ef3841df9242bd4325c773f1ef461f9ad54675f1c97f93bd3a195",
-    "scripts/server/run_0811_injecagent_replication.sbatch": "818f73052fe7e906ffb36dd020a96a8c408c30290d059d7685790359774da2e3",
+    "scripts/server/run_0811_injecagent_replication.sbatch": "ac0d5279310f4e543712b3ba814e02ecc5a5a70c4d2b0ba866e310da51aeb6bd",
     "scripts/server/run_0811_multisource_replication_summary.sbatch": "98fe0816e4450c61ea90ad5c37abfba3c5fb2288f8082e715f64fc85b28f3119"
   },
   "jobs": {
