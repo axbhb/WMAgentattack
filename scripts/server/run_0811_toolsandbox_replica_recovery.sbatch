@@ -9,7 +9,7 @@
 
 set -euo pipefail
 ROOT=/share/guozhix/WMagentattack-tau3-interactive-aug5
-SOURCE_ROOT=/share/guozhix/WMagentattack-multisource-aug5/external/tool-sandbox
+SOURCE_ROOT=/share/guozhix/WMagentattack-multisource-aug5/external/tool_sandbox
 PY=/share/guozhix/software/venvs/wmagentattack_multisource_aug5/bin/python
 ARCHIVE=/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1
 cd "$ROOT"

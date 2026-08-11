@@ -26,6 +26,7 @@
     "injecagent_array": 6660,
     "toolsandbox_cpu_recovery": 6683,
     "recovery_summary": 6684,
+    "recovery_preflight_failure": "6683 failed before replay due source-root spelling; 6684 was dependency-never-satisfied and produced no summary",
     "superseded_summary_cancelled_after_unsatisfied_dependency": 6661
   },
   "implementation_sha256": {
