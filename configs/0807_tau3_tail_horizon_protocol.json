@@ -1,6 +1,6 @@
 {
   "protocol_id": "0807_tau3_tail_horizon_pilot_v1",
-  "status": "preregistered_not_implemented_or_submitted",
+  "status": "manifest_frozen_before_interactive_outcomes",
   "research_question": "Does a fixed four-call tail extension beyond the 16/16 role caps reduce residual truncation and restore the frozen agent action-rate floor while preserving the confirmed two-domain assistant transition signal?",
   "binding_parent_result": {
     "protocol_id": "0806_tau3_horizon_confirmation_v1",
@@ -71,7 +71,7 @@
   },
   "execution_base": {
     "path": "configs/0806_tau3_horizon_confirmation_protocol.json",
-    "sha256": "TO_BE_FROZEN_AFTER_IMPLEMENTATION"
+    "sha256": "b120897c41130d4aba3bbcaff985f27c91eb3006d10103465a7c99c4d230a8ca"
   },
   "pilot_panel": {
     "tasks": 12,
@@ -185,9 +185,30 @@
     "maximum_concurrent_gpu_chunks": 1,
     "summary_chunks_expected": 2
   },
-  "implementation_commit": null,
-  "implementation_sha256": null,
-  "frozen_manifest": null,
+  "implementation_commit": "4dcdb401d6c64f2991e03b3c9cfe6a6999134e9c",
+  "implementation_sha256": {
+    "scripts/168_run_tau3_interactive_llm.py": "fff3fd7cf18d6f441c7fff227cbf6a666de25599bc6a48282b232c1954b1ccdc",
+    "scripts/171_summarize_tau3_horizon_pilot.py": "023b0c430a095c66064cc4f766993e737b492c40eb9fcc01d4b19a0fa3cd1d96",
+    "scripts/174_build_tau3_tail_horizon_manifest.py": "a01770ed644d798c68682567517adc4f696f38cb7399380513813c53236c61f5",
+    "scripts/175_run_tau3_tail_horizon.py": "86d669f368e956b36133080f2cebcffebbff11b35fc129f0f6552e0203bee5d4",
+    "scripts/176_finalize_tau3_tail_horizon.py": "a8247954feb7e35f2db36f2a534fc8e6d76507ec64e4913b22a3ae041ca77cc2",
+    "scripts/server/run_0807_tau3_tail_horizon.sbatch": "fe9d946378565a822d37efdef98c2d3bb18b10bf1dc95a54f11904bc07a7f1d1",
+    "scripts/server/run_0807_tau3_tail_horizon_summary.sbatch": "121b9185aa070a612a7ea1e5422dfac4a2871353bad54622286b24ce9cc60703",
+    "src/wmagentattack/tau3_tail_horizon.py": "4c99df38d547515e57ce20661b574145ae8b644849f954a29af0e0a6411b08e0",
+    "src/wmagentattack/multisource_semantic_data.py": "e5cabd1e912d33de95dff81f1f624e5eff04ff65d3296783e650c4dd93aa8d8c",
+    "src/wmagentattack/tau3_interactive.py": "758298490eb10626d93525e6f477eb06ad41d52008e0306f61240490b2f55e9b",
+    "src/wmagentattack/tau3_multistep.py": "2298b70d824ee79e269b362b3f31e488b3e48a88cb460516b4f9723c0a59fe35"
+  },
+  "frozen_manifest": {
+    "remote_path": "/share/guozhix/wmagentattack/0807/tau3_tail_horizon/pilot_v1/manifest.json",
+    "sha256": "9ae420035d5345dd9a9349566ac4c42bb129b1cf70f9c3a2ec4f2b94e6db0aed",
+    "audit_sha256": "fc448fb061b3aaf362767f19702d36a5b87dc0a8d5ce005df9486e26511c950e",
+    "content_sha256": "f30a01e735743baee2b14ed1a884c7859f3223c0c2c344e9b34bc0c736787f72",
+    "episodes": 24,
+    "tasks": 12,
+    "byte_identical_double_build": true,
+    "label_blind_selection_audit_passed": true
+  },
   "jobs": {
     "generation_array": null,
     "summary": null

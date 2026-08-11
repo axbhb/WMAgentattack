@@ -13,12 +13,14 @@ def _protocol():
     )
 
 
-def test_tail_horizon_is_only_preregistered():
+def test_tail_horizon_manifest_is_frozen_before_outcomes():
     protocol = _protocol()
-    assert protocol["status"] == "preregistered_not_implemented_or_submitted"
-    assert protocol["implementation_commit"] is None
-    assert protocol["implementation_sha256"] is None
-    assert protocol["frozen_manifest"] is None
+    assert protocol["status"] == "manifest_frozen_before_interactive_outcomes"
+    assert protocol["implementation_commit"]
+    assert protocol["implementation_sha256"]
+    assert protocol["frozen_manifest"]["episodes"] == 24
+    assert protocol["frozen_manifest"]["tasks"] == 12
+    assert protocol["frozen_manifest"]["byte_identical_double_build"]
     assert protocol["jobs"] == {"generation_array": None, "summary": None}
     assert protocol["result"] is None
 

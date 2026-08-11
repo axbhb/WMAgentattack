@@ -1,6 +1,6 @@
 {
   "protocol_id": "0811_toolsandbox_injecagent_multiseed_replication_v1",
-  "status": "preregistered_before_replication_manifest_build",
+  "status": "manifests_frozen_before_replication_outcomes",
   "research_question": "Can two additional frozen Llama-3.1-70B seeds provide a complete stochastic-response replication surface for ToolSandbox and InjecAgent while using at most one GPU at a time?",
   "scientific_scope": {
     "role": "auxiliary_probability_and_robustness_data",
@@ -25,7 +25,10 @@
     "trust_remote_code": false
   },
   "execution_adapter": {
-    "implementation_sha256": {}
+    "implementation_sha256": {
+      "src/wmagentattack/multisource_semantic_data.py": "e5cabd1e912d33de95dff81f1f624e5eff04ff65d3296783e650c4dd93aa8d8c",
+      "scripts/155_run_multisource_llm.py": "712a6489742a8d1247570a728960dc3174fb6b08220f1a10509d0aa742727ca9"
+    }
   },
   "sources": {
     "tool_sandbox": {
@@ -56,12 +59,19 @@
   },
   "frozen_manifests": {
     "replication": {
-      "tool_sandbox": null,
-      "injecagent": null
+      "tool_sandbox": "c3d34e59f8cc03231af081f86ac11a500f0966c2daa3c4d60952b6dc6d480ce2",
+      "injecagent": "f0929a6181f4ff228edf81585811935b1c123b39ba313149f66aa0db96956a89"
     }
   },
   "planned_archive": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1",
-  "implementation_commit": null,
+  "implementation_commit": "4dcdb401d6c64f2991e03b3c9cfe6a6999134e9c",
+  "implementation_sha256": {
+    "scripts/177_build_multisource_replication_manifests.py": "010275d5a3dd1c940a95c4d26765661a1c9d85ed8333b92d8bf12779c5d04950",
+    "scripts/178_summarize_multisource_replication.py": "60c29d2da2c93590684f48e9630dc0779609b16fa4a53f35eaa53e24ed1385df",
+    "scripts/server/run_0811_toolsandbox_replication.sbatch": "c47193e6852ef3841df9242bd4325c773f1ef461f9ad54675f1c97f93bd3a195",
+    "scripts/server/run_0811_injecagent_replication.sbatch": "818f73052fe7e906ffb36dd020a96a8c408c30290d059d7685790359774da2e3",
+    "scripts/server/run_0811_multisource_replication_summary.sbatch": "98fe0816e4450c61ea90ad5c37abfba3c5fb2288f8082e715f64fc85b28f3119"
+  },
   "jobs": {
     "tool_sandbox": null,
     "injecagent": null,
