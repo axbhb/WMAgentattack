@@ -1,0 +1,56 @@
+{
+  "protocol_id": "0811_toolsandbox_replica_measurement_recovery_v1",
+  "status": "post_outcome_measurement_recovery_preregistered_before_cpu_replay",
+  "research_question": "Are all four frozen ToolSandbox raw replica mismatches caused solely by allowlisted representation-level runtime identifiers rather than semantic execution nondeterminism?",
+  "scope": {
+    "preserve_original_failed_gate": true,
+    "immutable_llm_completions_and_decisions": true,
+    "cpu_only_exact_replay": true,
+    "no_attack_generation": true,
+    "no_real_external_endpoints": true,
+    "does_not_change_scale_claim": true
+  },
+  "normalization_allowlist": {
+    "python_memory_address": "Only hexadecimal addresses immediately following the literal token 'at ' in exception-message strings.",
+    "runtime_uuid": "Only RFC-4122 UUID values present after replay but absent from the exact starting state; map by deterministic first structural path.",
+    "prohibited": [
+      "tool name",
+      "arguments",
+      "status",
+      "exception type",
+      "state_changed",
+      "pre-existing identifiers",
+      "non-UUID output content"
+    ]
+  },
+  "fixed_budget": {
+    "exact_tool_calls": 93,
+    "fresh_replicas_per_call": 2,
+    "total_cpu_replays": 186,
+    "llm_calls": 0,
+    "gpu_count": 0,
+    "hyperparameter_searches": 0
+  },
+  "immutable_inputs": {
+    "parent_protocol_sha256": "c942219ba33e43aac0055ba313fe67f1a8bffe989058226407a7d3d82b93c598",
+    "manifest_sha256": "c3d34e59f8cc03231af081f86ac11a500f0966c2daa3c4d60952b6dc6d480ce2",
+    "immutable_output_sha256": "ab98716f04f8897818e524cc868d4cba8ec56d88cf190872e9cea193c8c97e3a",
+    "original_audit_sha256": "7f7b2376255155a75977237049866901cef844fe33e38d6434a2d9aa46b1e0dc"
+  },
+  "acceptance_gate": [
+    "all immutable hashes match",
+    "the original failed audit remains preserved",
+    "all 93 exact decisions are replayed twice without LLM calls",
+    "the fresh raw mismatch set exactly reproduces the original raw mismatch set",
+    "all canonical replica pairs are identical",
+    "every repaired mismatch contains at least one allowlisted runtime identifier",
+    "status, exception type, and state_changed agree within every pair",
+    "no generation output is overwritten and no real external endpoint is called"
+  ],
+  "planned_output": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1/recovery/tool_sandbox_semantic_replica_audit.json",
+  "implementation_sha256": {
+    "src/wmagentattack/toolsandbox_replica_recovery.py": "a1975623f503f0b0dc1e2e1901d72c5a4f6bfcae03fc32356782ad670d9370ed",
+    "scripts/179_reaudit_toolsandbox_runtime_ids.py": "4bd3b6b1c267864123d2617894d50284945695b52b4618fa9ec0974593259aba",
+    "tests/test_toolsandbox_replica_recovery.py": "74f39e97ad514315c72365fca1f1f336e69162a8288eb853e0b0f079f60e4c03"
+  }
+}
