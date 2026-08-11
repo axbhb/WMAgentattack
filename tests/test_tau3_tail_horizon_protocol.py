@@ -21,7 +21,7 @@ def test_tail_horizon_manifest_is_frozen_before_outcomes():
     assert protocol["frozen_manifest"]["episodes"] == 24
     assert protocol["frozen_manifest"]["tasks"] == 12
     assert protocol["frozen_manifest"]["byte_identical_double_build"]
-    assert protocol["jobs"] == {"generation_array": None, "summary": None}
+    assert protocol["jobs"] == {"generation_array": 6657, "summary": 6658}
     assert protocol["result"] is None
 
 

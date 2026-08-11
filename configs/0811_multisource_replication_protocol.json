@@ -81,9 +81,11 @@
     "scripts/server/run_0811_multisource_replication_summary.sbatch": "98fe0816e4450c61ea90ad5c37abfba3c5fb2288f8082e715f64fc85b28f3119"
   },
   "jobs": {
-    "tool_sandbox": null,
-    "injecagent": null,
-    "summary": null
+    "tool_sandbox": 6659,
+    "injecagent": 6660,
+    "summary": 6661,
+    "gpu_dependency_chain": "6657 -> 6659 -> 6660",
+    "maximum_concurrent_gpus": 1
   },
   "result": null
 }
