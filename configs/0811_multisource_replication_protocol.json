@@ -37,6 +37,7 @@
       "parent_manifest_sha256": "b57ea379b2a4f6d8cf0bb0675ed36fadfac595b877b09bfdc41f0bfa956b182e",
       "replication_seeds": [311, 313],
       "replication_expected_rows": 190,
+      "generation_chunks": 1,
       "enumeration_seed": 80531,
       "frozen_logical_clock_iso": "2026-08-05T00:00:00"
     },
@@ -46,6 +47,7 @@
       "parent_manifest_sha256": "41b4c0e817c6c0616b91bcd0dea911e4e875e2104b3ba8789c75260cc0a02dc4",
       "replication_seeds": [311, 313],
       "replication_expected_rows": 4216,
+      "generation_chunks": 4,
       "transition_tier": "observation_only"
     }
   },

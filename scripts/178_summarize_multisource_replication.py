@@ -25,13 +25,18 @@ def main() -> None:
     source_metrics = {}
     checks = {}
     for source in ("tool_sandbox", "injecagent"):
-        output = json.loads((args.archive / "outputs" / f"{source}.json").read_text(encoding="utf-8"))
-        audit = json.loads((args.archive / "audits" / f"{source}.json").read_text(encoding="utf-8"))
-        records = output["records"]
+        output_paths = sorted((args.archive / "outputs").glob(f"{source}*.json"))
+        audit_paths = sorted((args.archive / "audits").glob(f"{source}*.json"))
+        expected_chunks = int(protocol["sources"][source].get("generation_chunks", 1))
+        if len(output_paths) != expected_chunks or len(audit_paths) != expected_chunks:
+            raise ValueError(f"{source} chunk surface is incomplete")
+        outputs = [json.loads(path.read_text(encoding="utf-8")) for path in output_paths]
+        audits = [json.loads(path.read_text(encoding="utf-8")) for path in audit_paths]
+        records = [row for output in outputs for row in output["records"]]
         expected = int(protocol["sources"][source]["replication_expected_rows"])
         source_checks = {
-            "complete": bool(output["complete"]) and len(records) == expected,
-            "audit_passed": bool(audit["passed"]),
+            "complete": all(bool(output["complete"]) for output in outputs) and len(records) == expected,
+            "audit_passed": all(bool(audit["passed"]) for audit in audits),
             "zero_runtime_failures": all(row.get("runtime_error") is None for row in records),
             "nonempty_completions": all(str(row.get("completion", "")).strip() for row in records),
             "zero_external_endpoints": all(int(row.get("execution", {}).get("real_external_endpoint_calls", 0)) == 0 for row in records),

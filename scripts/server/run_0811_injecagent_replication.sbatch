@@ -5,8 +5,9 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=96G
 #SBATCH --time=24:00:00
-#SBATCH --output=/share/guozhix/WMagentattack-tau3-interactive-aug5/logs/%x-%j.out
-#SBATCH --error=/share/guozhix/WMagentattack-tau3-interactive-aug5/logs/%x-%j.err
+#SBATCH --array=0-3%1
+#SBATCH --output=/share/guozhix/WMagentattack-tau3-interactive-aug5/logs/%x-%A_%a.out
+#SBATCH --error=/share/guozhix/WMagentattack-tau3-interactive-aug5/logs/%x-%A_%a.err
 
 set -euo pipefail
 ROOT=/share/guozhix/WMagentattack-tau3-interactive-aug5
@@ -19,6 +20,7 @@ export PYTHONPATH="$ROOT/src:${PYTHONPATH:-}"
 export TRANSFORMERS_OFFLINE=1 HF_HUB_OFFLINE=1 TOKENIZERS_PARALLELISM=false PYTHONUNBUFFERED=1
 "$PY" scripts/155_run_multisource_llm.py \
   --protocol "$ARCHIVE/frozen_protocol.json" --manifest "$ARCHIVE/manifests/injecagent.json" \
-  --source-root "$SOURCE_ROOT" --chunk-index 0 --num-chunks 1 \
-  --output "$ARCHIVE/outputs/injecagent.json" --audit "$ARCHIVE/audits/injecagent.json"
-echo "INJECAGENT_REPLICATION_DONE $(date -Is)"
+  --source-root "$SOURCE_ROOT" --chunk-index "$SLURM_ARRAY_TASK_ID" --num-chunks 4 \
+  --output "$ARCHIVE/outputs/injecagent_chunk${SLURM_ARRAY_TASK_ID}.json" \
+  --audit "$ARCHIVE/audits/injecagent_chunk${SLURM_ARRAY_TASK_ID}.json"
+echo "INJECAGENT_REPLICATION_DONE chunk=$SLURM_ARRAY_TASK_ID $(date -Is)"
