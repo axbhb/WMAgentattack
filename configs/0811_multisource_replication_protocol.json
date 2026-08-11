@@ -1,0 +1,71 @@
+{
+  "protocol_id": "0811_toolsandbox_injecagent_multiseed_replication_v1",
+  "status": "preregistered_before_replication_manifest_build",
+  "research_question": "Can two additional frozen Llama-3.1-70B seeds provide a complete stochastic-response replication surface for ToolSandbox and InjecAgent while using at most one GPU at a time?",
+  "scientific_scope": {
+    "role": "auxiliary_probability_and_robustness_data",
+    "does_not_overturn_current_method_no_go": true,
+    "does_not_increase_independent_task_count": true,
+    "no_attack_generation": true,
+    "no_real_external_endpoints": true,
+    "no_dreamer_training": true
+  },
+  "shared_llm_contract": {
+    "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+    "model_snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+    "quantization": "4bit",
+    "tool_protocol": "function_tags_repair_retry",
+    "prompt_profile": "multisource_constraint_checklist_untrusted_observation_v1",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "max_tool_output_chars": 12000,
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "trust_remote_code": false
+  },
+  "execution_adapter": {
+    "implementation_sha256": {}
+  },
+  "sources": {
+    "tool_sandbox": {
+      "commit": "165848b9a78cead7ca7fe7c89c688b58e6501219",
+      "parent_manifest": "/share/guozhix/wmagentattack/0806/multisource_semantic_v3/large_v1/manifests/tool_sandbox.json",
+      "parent_manifest_sha256": "b57ea379b2a4f6d8cf0bb0675ed36fadfac595b877b09bfdc41f0bfa956b182e",
+      "replication_seeds": [311, 313],
+      "replication_expected_rows": 190,
+      "enumeration_seed": 80531,
+      "frozen_logical_clock_iso": "2026-08-05T00:00:00"
+    },
+    "injecagent": {
+      "commit": "f19c9f2c79a41046eb13c03c51a24c567a8ffa07",
+      "parent_manifest": "/share/guozhix/wmagentattack/0806/multisource_semantic_v3/large_v1/manifests/injecagent.json",
+      "parent_manifest_sha256": "41b4c0e817c6c0616b91bcd0dea911e4e875e2104b3ba8789c75260cc0a02dc4",
+      "replication_seeds": [311, 313],
+      "replication_expected_rows": 4216,
+      "transition_tier": "observation_only"
+    }
+  },
+  "fixed_budget": {
+    "tool_sandbox_llm_decisions": 190,
+    "injecagent_llm_decisions": 4216,
+    "total_llm_decisions": 4406,
+    "maximum_concurrent_gpus": 1,
+    "replication_seeds": [311, 313],
+    "hyperparameter_searches": 0
+  },
+  "frozen_manifests": {
+    "replication": {
+      "tool_sandbox": null,
+      "injecagent": null
+    }
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1",
+  "implementation_commit": null,
+  "jobs": {
+    "tool_sandbox": null,
+    "injecagent": null,
+    "summary": null
+  },
+  "result": null
+}

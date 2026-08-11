@@ -69,6 +69,10 @@
     "remote_root": "/share/guozhix/WMagentattack-multisource-aug5/external/tau3",
     "domains": ["airline", "retail", "telecom"]
   },
+  "execution_base": {
+    "path": "configs/0806_tau3_horizon_confirmation_protocol.json",
+    "sha256": "TO_BE_FROZEN_AFTER_IMPLEMENTATION"
+  },
   "pilot_panel": {
     "tasks": 12,
     "episodes": 24,
@@ -176,6 +180,11 @@
     "dreamer_or_planner_training_forbidden": true
   },
   "planned_archive": "/share/guozhix/wmagentattack/0807/tau3_tail_horizon/pilot_v1",
+  "execution": {
+    "generation_chunks": 2,
+    "maximum_concurrent_gpu_chunks": 1,
+    "summary_chunks_expected": 2
+  },
   "implementation_commit": null,
   "implementation_sha256": null,
   "frozen_manifest": null,
