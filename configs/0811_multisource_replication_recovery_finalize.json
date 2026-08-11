@@ -22,6 +22,12 @@
     "require one frozen LLM contract and exactly 4406 total records"
   ],
   "planned_output": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1/replication_gate_recovery.json",
+  "jobs": {
+    "injecagent_array": 6660,
+    "toolsandbox_cpu_recovery": 6683,
+    "recovery_summary": 6684,
+    "superseded_summary_cancelled_after_unsatisfied_dependency": 6661
+  },
   "implementation_sha256": {
     "scripts/180_finalize_multisource_replication_recovery.py": "c3fcb7db2f159dbfa7aeac16f0e0b40c14340fd10123c237f50b7353cac7185e",
     "scripts/server/run_0811_multisource_replication_recovery_summary.sbatch": "86a659eda8562cbbc035ac0765522a4d5970c42083b67002f7af20c28f2624aa",
