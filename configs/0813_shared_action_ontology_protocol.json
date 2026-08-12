@@ -1,6 +1,6 @@
 {
   "protocol_id": "0813_shared_action_ontology_alignment_v3",
-  "status": "preflight_passed_and_frozen_before_training",
+  "status": "completed__no_go_shared_action_ontology_does_not_repair_multi_source_transfer",
   "research_question": "Does a label-blind shared operation/object/effect ontology repair negative transfer from ToolSandbox and InjecAgent on the frozen 20-task AgentDojo OOF surface?",
   "parent_result": {
     "decision": "NO_GO_NO_REPLICATED_AGENTDOJO_OOF_BENEFIT_FROM_THREE_SOURCE_EXPANSION",
@@ -136,5 +136,40 @@
     "ontology_local_residual_collision_rows": 0,
     "all_preflight_checks_passed": true
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0813/action_ontology/formal_v3"
+  "planned_archive": "/share/guozhix/wmagentattack/0813/action_ontology/formal_v3",
+  "postrun_record": {
+    "slurm_job_id": 6733,
+    "cancelled_pending_gpu_job": 6732,
+    "git_commit": "6bed284ba38243df60b0eaf120f7365aaf29fd61",
+    "started_at": "2026-08-12T11:49:15+00:00",
+    "finished_at": "2026-08-12T12:31:02+00:00",
+    "device": "CPU, 8 Torch threads",
+    "runtime_failures": 0,
+    "preflight_tests": "15 passed",
+    "neural_training_runs": 60,
+    "prediction_rows": 81156,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "real_external_endpoint_calls": 0,
+    "attack_generation": 0,
+    "dreamer_runs": 0,
+    "decision": "NO_GO_SHARED_ACTION_ONTOLOGY_DOES_NOT_REPAIR_MULTI_SOURCE_TRANSFER",
+    "primary_ontology_local_residual_semantic_markov": {
+      "versus_raw_pooled_nll_gain": -0.07476180655925023,
+      "versus_raw_pooled_accuracy_gain": -0.059528974591586035,
+      "versus_raw_pooled_positive_task_fraction": 0.35,
+      "versus_agentdojo_only_nll_gain": -0.05761856647919541,
+      "versus_agentdojo_only_accuracy_gain": -0.07686828714871823,
+      "versus_agentdojo_only_positive_task_fraction": 0.45
+    },
+    "gate_clauses_passed": 0,
+    "gate_clauses_total": 12,
+    "summary_sha256": "8d5bc497b454a6b0785044c0c8a6f29d283efcdc9dfac9cc5a2b64cf3cedbcc2",
+    "results_markdown_sha256": "d3de3815869fc8b19cf7d017732473f658050b462eeaa3f6acf9867b8227b5f1",
+    "run_metrics_sha256": "6902c63070638aa707cf72102d5842ce756366ebb2c8f2e744953458e2b5c9f0",
+    "predictions_sha256": "80e404f6a42627c5ae08866f5d645c842a5fd9d20dea1ec518bf4ddbbd607708",
+    "checksums_manifest_sha256": "43ebf6057545e54a6e6dcc0fcf99ce09bd4415b38b3cc19c3be45fb3eb1453e2",
+    "archive_checksum_verification": "PASS",
+    "post_result_reruns": 0
+  }
 }
