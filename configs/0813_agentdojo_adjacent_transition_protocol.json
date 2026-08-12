@@ -1,6 +1,6 @@
 {
   "protocol_id": "0813_agentdojo_observed_adjacent_transition_v1",
-  "status": "preflight_passed_and_frozen_before_training",
+  "status": "completed__go_retain_observed_adjacent_transition_objective",
   "research_question": "Does explicit supervision from real adjacent AgentDojo-v2 steps produce a useful action-conditioned observable transition model and improve task-disjoint tail-action prediction over an otherwise identical action-only transition model?",
   "parent_result": {
     "decision": "NO_GO_SHARED_ACTION_ONTOLOGY_DOES_NOT_REPAIR_MULTI_SOURCE_TRANSFER",
@@ -126,5 +126,31 @@
     "all_preflight_checks_passed": true
   },
   "planned_preflight": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1",
-  "planned_archive": "/share/guozhix/wmagentattack/0813/adjacent_transition/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0813/adjacent_transition/formal_v1",
+  "postrun_record": {
+    "slurm_job_id": 6734,
+    "git_commit": "fa88d3acacdfb0d6a25175175255a0cdd5a0bf04",
+    "device": "NVIDIA RTX 6000 Ada Generation",
+    "runtime_failures": 0,
+    "tests": "15 passed",
+    "neural_training_runs": 60,
+    "prediction_rows": 81156,
+    "decision": "GO_RETAIN_OBSERVED_ADJACENT_TRANSITION_OBJECTIVE",
+    "primary_semantic_markov": {
+      "tail_action_nll_gain": 0.03566376522724655,
+      "tail_action_accuracy_gain": 0.011358766207845492,
+      "positive_task_fraction": 0.65,
+      "outcome_bce_gain_over_train_prior": 0.17776584347228794,
+      "execution_error_bce_gain": 0.009756142320382646
+    },
+    "gate_clauses_passed": 9,
+    "gate_clauses_total": 9,
+    "summary_sha256": "1b1152e0af5403d67fb3a331c8d361a6155a55fbc6c3d6666b938c0adc06f5ae",
+    "results_markdown_sha256": "293f7b45252511ae4f185f5b6b12293a12ba5293ce4aa63b92f15f7dc20dd384",
+    "run_metrics_sha256": "4d4b9aff252cc98f16efbde7a841d62b30a1adbae93b1aaf1133113ac2ccc297",
+    "predictions_sha256": "5821ea63d36f4b64f400ec7ca3e0d6f49b40a7dee38cf02cdaf5f7e063bc31e9",
+    "checksums_manifest_sha256": "9ef07087c5d3cfa6a9a8f6b5901078a1bf992741ddbbdb3ceb452652256565dc",
+    "archive_checksum_verification": "PASS",
+    "post_result_reruns": 0
+  }
 }
