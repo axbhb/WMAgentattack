@@ -1,6 +1,6 @@
 {
   "protocol_id": "0812_three_source_unified_action_expansion_v1",
-  "status": "preregistered_before_unified_dataset_build",
+  "status": "preflight_passed_and_frozen_before_training",
   "research_question": "Does adding leakage-audited ToolSandbox and InjecAgent action records improve frozen Semantic Markov prediction on task-disjoint AgentDojo-v2 tasks relative to AgentDojo-only training?",
   "scope": {
     "offline_synthetic_sandbox_data_only": true,
@@ -149,10 +149,32 @@
   },
   "frozen_unified_dataset": {
     "path": "/share/guozhix/wmagentattack/0812/three_source_unified_action/preflight_v1/a/dataset.json",
-    "sha256": "PENDING_PREFLIGHT",
+    "sha256": "1ab07868cf0ee9a6ec021c98489444c0c0255dd4622a3c0883b6b3ed88d5c3c3",
     "audit_path": "/share/guozhix/wmagentattack/0812/three_source_unified_action/preflight_v1/a/audit.json",
-    "audit_sha256": "PENDING_PREFLIGHT",
-    "independent_builds_byte_identical": false
+    "audit_sha256": "b047b95f4672f54325f20a6408a07951e1f126a2e399aeb8ecfecba6ef8b06e6",
+    "independent_builds_byte_identical": true,
+    "dataset_content_sha256": "1723a8f58be22f4f0c8c1170bc417787632dff15d4763f2597d18fa8218cb9f6",
+    "preregistered_protocol_sha256_used_for_build": "9375a00fb2020be8c35fc4e27a3eff50e7f0c0beab1cc34af9e5f552645a5817",
+    "preflight_counts": {
+      "rows": 13372,
+      "candidate_schemas": 138,
+      "source_tasks": {
+        "agentdojo": 20,
+        "tool_sandbox": 70,
+        "injecagent": 17
+      },
+      "source_groups": {
+        "agentdojo": 2265,
+        "tool_sandbox": 95,
+        "injecagent": 1054
+      },
+      "repeat_ids": {
+        "agentdojo": 2060,
+        "tool_sandbox": 3,
+        "injecagent": 3
+      }
+    },
+    "all_preflight_checks_passed": true
   },
   "planned_archive": "/share/guozhix/wmagentattack/0812/three_source_unified_action/formal_v1"
 }
