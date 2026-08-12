@@ -1,6 +1,6 @@
 {
   "protocol_id": "0811_multisource_replication_recovery_finalize_v1",
-  "status": "post_outcome_measurement_recovery_finalize_frozen_before_injecagent_chunk3",
+  "status": "completed_pass",
   "research_question": "After preserving the raw ToolSandbox failure and applying the separately gated representation-level recovery, is the entire frozen 4,406-row auxiliary multi-seed expansion complete and internally valid?",
   "scope": {
     "auxiliary_probability_and_robustness_data_only": true,
@@ -24,10 +24,35 @@
   "planned_output": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1/replication_gate_recovery.json",
   "jobs": {
     "injecagent_array": 6660,
-    "toolsandbox_cpu_recovery": 6683,
-    "recovery_summary": 6684,
+    "toolsandbox_cpu_recovery_preflight_failure": 6683,
+    "recovery_summary_dependency_never_satisfied": 6684,
+    "toolsandbox_cpu_recovery_completed": 6685,
+    "recovery_summary_completed": 6686,
     "recovery_preflight_failure": "6683 failed before replay due source-root spelling; 6684 was dependency-never-satisfied and produced no summary",
     "superseded_summary_cancelled_after_unsatisfied_dependency": 6661
+  },
+  "result": {
+    "decision": "AUXILIARY_MULTI_SEED_EXPANSION_COMPLETE_AFTER_MEASUREMENT_RECOVERY",
+    "passed": true,
+    "completed_at": "2026-08-11T21:09:54Z",
+    "rows": 4406,
+    "runtime_failures": 0,
+    "real_external_endpoint_calls": 0,
+    "replication_gate_sha256": "26807040d9a5bf3fc039e58afb810986efbe9f26ca6b3f37e763dc0f6b3082d3",
+    "replication_records_sha256": "396e3ea67e831ac4ac5ee117422be722f5189cb498df4cb102af7f5b5a1ad14d",
+    "toolsandbox_recovery_audit_sha256": "901086a860cb8741de19a1637f75718f246c11d6639c2303832588eddb7ddbf0"
+  },
+  "artifact_sha256": {
+    "tool_sandbox_output": "ab98716f04f8897818e524cc868d4cba8ec56d88cf190872e9cea193c8c97e3a",
+    "tool_sandbox_original_audit": "7f7b2376255155a75977237049866901cef844fe33e38d6434a2d9aa46b1e0dc",
+    "injecagent_chunk0_output": "b5e7e0c0ccb0654691a15313190f055587d0f62c32741507539f1e1e3cf4e992",
+    "injecagent_chunk1_output": "df3ef5e3490cf78fd011e323e36f44f2c4f44ee0336a40c3ac87facb130edd14",
+    "injecagent_chunk2_output": "dc093620f61ae81893e5bb1079c7e5386fb5074d8c4327f6daa88c3ab141a05b",
+    "injecagent_chunk3_output": "4fb72a24c82a25616bf4ef25807d4d594309d7428626e25eaff3a4c080946a6e",
+    "injecagent_chunk0_audit": "a34334e90896bb40625666f77567f7f69c37fbcf92da614f6161ff33effaadd7",
+    "injecagent_chunk1_audit": "bba9b9753fd1d2375563502aef196c2e1a9b0fe80eb96ab6c8da612dcf66a309",
+    "injecagent_chunk2_audit": "7d27afedcc49f1b852d6e6b1561dda55630991830d1291dd9e3f1a71f45996c1",
+    "injecagent_chunk3_audit": "438e55e74e5ab6c71454e552a3b4100c63ef99e11af730b749f5cf9be8d1fff8"
   },
   "implementation_sha256": {
     "scripts/180_finalize_multisource_replication_recovery.py": "c3fcb7db2f159dbfa7aeac16f0e0b40c14340fd10123c237f50b7353cac7185e",

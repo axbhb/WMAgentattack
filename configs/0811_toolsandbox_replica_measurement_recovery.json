@@ -1,6 +1,6 @@
 {
   "protocol_id": "0811_toolsandbox_replica_measurement_recovery_v1",
-  "status": "post_outcome_measurement_recovery_preregistered_before_cpu_replay",
+  "status": "completed_pass_original_raw_failure_preserved",
   "research_question": "Are all four frozen ToolSandbox raw replica mismatches caused solely by allowlisted representation-level runtime identifiers rather than semantic execution nondeterminism?",
   "scope": {
     "preserve_original_failed_gate": true,
@@ -49,9 +49,25 @@
   ],
   "planned_output": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1/recovery/tool_sandbox_semantic_replica_audit.json",
   "jobs": {
-    "cpu_replay_audit_failed_source_path_preflight": 6683
+    "cpu_replay_audit_failed_source_path_preflight": 6683,
+    "cpu_replay_audit_completed": 6685
   },
   "preflight_failure": "Job 6683 made zero replays because the sbatch source-root spelling used tool-sandbox instead of the existing tool_sandbox checkout; no scientific output was produced.",
+  "result": {
+    "decision": "TOOLSANDBOX_SEMANTIC_REPLICA_RECOVERY_PASS",
+    "passed": true,
+    "exact_tool_calls": 93,
+    "fresh_replays": 186,
+    "original_raw_mismatches": 4,
+    "replayed_raw_mismatches": 4,
+    "canonical_mismatches": 0,
+    "normalized_memory_addresses": 4,
+    "normalized_runtime_uuids": 4,
+    "llm_calls_added": 0,
+    "records_regenerated": 0,
+    "generation_outputs_overwritten": false,
+    "audit_sha256": "901086a860cb8741de19a1637f75718f246c11d6639c2303832588eddb7ddbf0"
+  },
   "implementation_sha256": {
     "src/wmagentattack/toolsandbox_replica_recovery.py": "a1975623f503f0b0dc1e2e1901d72c5a4f6bfcae03fc32356782ad670d9370ed",
     "scripts/179_reaudit_toolsandbox_runtime_ids.py": "4bd3b6b1c267864123d2617894d50284945695b52b4618fa9ec0974593259aba",

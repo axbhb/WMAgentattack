@@ -17,7 +17,9 @@ def _builder():
 
 def test_replication_is_auxiliary_fixed_budget_and_single_gpu():
     protocol = json.loads((ROOT / "configs" / "0811_multisource_replication_protocol.json").read_text(encoding="utf-8"))
-    assert protocol["status"] == "manifests_frozen_before_replication_outcomes"
+    assert protocol["status"] == "completed_after_preregistered_measurement_recovery"
+    assert protocol["result"]["passed"] is True
+    assert protocol["result"]["rows"] == 4406
     assert protocol["scientific_scope"]["does_not_overturn_current_method_no_go"]
     assert protocol["scientific_scope"]["does_not_increase_independent_task_count"]
     assert protocol["fixed_budget"]["maximum_concurrent_gpus"] == 1
