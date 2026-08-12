@@ -18,7 +18,7 @@ from .clean_evidence_probe import hashed_text
 from .multisource_suitability import stable_hash
 
 
-ACTION_ONTOLOGY_VERSION = "wmagentattack.shared_action_ontology.v1.1"
+ACTION_ONTOLOGY_VERSION = "wmagentattack.shared_action_ontology.v1.2"
 ONTOLOGY_VECTOR_MODES = ("ontology_only", "ontology_local_residual")
 
 _TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9]*")
@@ -128,16 +128,21 @@ def action_ontology(descriptor: Mapping[str, Any]) -> dict[str, Any]:
             if isinstance(specification, Mapping)
         ).items()
     )
-    bridge = {
+    semantic = {
         "operation": operation,
         "objects": objects,
         "effect": effect,
         "communication_scope": communication_scope,
         "terminal": terminal,
     }
+    bridge = {
+        "operation": operation,
+        "effect": effect,
+        "terminal": terminal,
+    }
     return {
         "ontology_version": ACTION_ONTOLOGY_VERSION,
-        **bridge,
+        **semantic,
         "argument_shape": {
             "property_count": len(properties),
             "required_count": len(required),
