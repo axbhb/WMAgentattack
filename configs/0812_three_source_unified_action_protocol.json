@@ -1,6 +1,6 @@
 {
   "protocol_id": "0812_three_source_unified_action_expansion_v1",
-  "status": "preflight_passed_and_frozen_before_training",
+  "status": "completed__no_replicated_agentdojo_oof_benefit_from_simple_three_source_expansion",
   "research_question": "Does adding leakage-audited ToolSandbox and InjecAgent action records improve frozen Semantic Markov prediction on task-disjoint AgentDojo-v2 tasks relative to AgentDojo-only training?",
   "scope": {
     "offline_synthetic_sandbox_data_only": true,
@@ -176,5 +176,51 @@
     },
     "all_preflight_checks_passed": true
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0812/three_source_unified_action/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0812/three_source_unified_action/formal_v1",
+  "postrun_record": {
+    "slurm_job_id": 6715,
+    "git_commit": "bebf19cd08919e3209c36b03b820e23e345c452c",
+    "started_at": "2026-08-12T05:08:39+00:00",
+    "finished_at": "2026-08-12T05:11:24+00:00",
+    "exit_evidence": "COMPLETE marker present; empty stderr; runtime_failures=0",
+    "device": "NVIDIA RTX 6000 Ada Generation 49140 MiB",
+    "preflight_tests": "19 passed",
+    "neural_training_runs": 60,
+    "prediction_rows": 81156,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "real_external_endpoint_calls": 0,
+    "attack_generation": 0,
+    "dreamer_runs": 0,
+    "decision": "NO_GO_NO_REPLICATED_AGENTDOJO_OOF_BENEFIT_FROM_THREE_SOURCE_EXPANSION",
+    "semantic_markov": {
+      "agentdojo_only_task_macro_nll": 1.616682073668281,
+      "expanded_task_macro_nll": 1.599538833588226,
+      "task_macro_nll_gain": 0.017143240080055078,
+      "agentdojo_only_task_macro_accuracy": 0.48575273216742354,
+      "expanded_task_macro_accuracy": 0.46841341961029137,
+      "task_macro_accuracy_gain": -0.01733931255713217,
+      "positive_task_fraction": 0.5,
+      "paired_bootstrap_ci95": [-0.018586947311849834, 0.05435457564669999],
+      "paired_sign_test": "10 wins, 10 losses, p=1.0"
+    },
+    "structured_markov_v3": {
+      "agentdojo_only_task_macro_nll": 1.5784345991303759,
+      "expanded_task_macro_nll": 1.5725664812268363,
+      "task_macro_nll_gain": 0.0058681179035395825,
+      "agentdojo_only_task_macro_accuracy": 0.4701427902598654,
+      "expanded_task_macro_accuracy": 0.44036150005442926,
+      "task_macro_accuracy_gain": -0.02978129020543613,
+      "positive_task_fraction": 0.55,
+      "paired_bootstrap_ci95": [-0.023541271268985853, 0.035178351629261445],
+      "paired_sign_test": "11 wins, 9 losses, p=0.8238029479980469"
+    },
+    "summary_sha256": "7f3166b9dd6f52432ed1e1d8a3118e63f54ec6d9ca357aaf10eed2691c52f327",
+    "results_markdown_sha256": "51be906fdc97beef987a730fa8cf3bc657d19e591a95266a0ec7dce2ab76e134",
+    "run_metrics_sha256": "21a01e104264dad894f7e012eea6104c946286ac3911e12c46dcc30ac1d233f2",
+    "predictions_sha256": "11147f9fa64e264239ad5591f297c9a6d2ecadbe39e0089bbf0a1005dff3821c",
+    "checksums_manifest_sha256": "070c38ef409008487ded7d56a4f22410b3302b8e8ea6eeeb19c821581f676b9a",
+    "archive_checksum_verification": "PASS",
+    "post_result_reruns": 0
+  }
 }
