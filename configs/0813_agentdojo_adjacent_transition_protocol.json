@@ -1,6 +1,6 @@
 {
   "protocol_id": "0813_agentdojo_observed_adjacent_transition_v1",
-  "status": "preregistered_before_preflight",
+  "status": "preflight_passed_and_frozen_before_training",
   "research_question": "Does explicit supervision from real adjacent AgentDojo-v2 steps produce a useful action-conditioned observable transition model and improve task-disjoint tail-action prediction over an otherwise identical action-only transition model?",
   "parent_result": {
     "decision": "NO_GO_SHARED_ACTION_ONTOLOGY_DOES_NOT_REPAIR_MULTI_SOURCE_TRANSFER",
@@ -104,6 +104,26 @@
     "new_tool_executions": 0,
     "new_attack_generation": 0,
     "dreamer_runs": 0
+  },
+  "frozen_transition_dataset": {
+    "path": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/dataset.json",
+    "sha256": "066b69fb580634ac5354c4aa59463b86ff26fadfc3f7436b6e0646f3c0cafa5f",
+    "audit_path": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/audit.json",
+    "audit_sha256": "c60ea091978bf6a24904dfcc7147576252daf17e930967da5f715aaa52a5d46c",
+    "independent_builds_byte_identical": true,
+    "dataset_content_sha256": "660509f362b1c2f1410cdaa05b83ec8045dc17c955c71d6133810d7feb2e7751",
+    "preregistered_protocol_sha256_used_for_build": "da0ed462682267677210d8dd255f7b6d8406697f47da66781931c4ee340ee46d",
+    "event_rows": 6763,
+    "trajectories": 2060,
+    "multistep_trajectories": 1253,
+    "adjacent_transitions": 4703,
+    "outcome_positive_rows": {
+      "execution_error": 374,
+      "output_nonempty": 6312,
+      "trajectory_continues": 4703
+    },
+    "tasks_with_execution_errors": 19,
+    "all_preflight_checks_passed": true
   },
   "planned_preflight": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1",
   "planned_archive": "/share/guozhix/wmagentattack/0813/adjacent_transition/formal_v1"
