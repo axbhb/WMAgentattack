@@ -1,0 +1,97 @@
+{
+  "protocol_id": "0813_shared_action_ontology_alignment_v1",
+  "status": "preregistered_before_ontology_build",
+  "research_question": "Does a label-blind shared operation/object/effect ontology repair negative transfer from ToolSandbox and InjecAgent on the frozen 20-task AgentDojo OOF surface?",
+  "parent_result": {
+    "decision": "NO_GO_NO_REPLICATED_AGENTDOJO_OOF_BENEFIT_FROM_THREE_SOURCE_EXPANSION",
+    "report": "reports/0812_three_source_unified_action_expansion_results.md",
+    "failure_mode": "NLL improved slightly but top-1 accuracy fell; raw source-specific action schemas have no explicit cross-source equivalence."
+  },
+  "source": {
+    "dataset": "/share/guozhix/wmagentattack/0812/three_source_unified_action/preflight_v1/a/dataset.json",
+    "dataset_sha256": "1ab07868cf0ee9a6ec021c98489444c0c0255dd4622a3c0883b6b3ed88d5c3c3",
+    "audit_sha256": "b047b95f4672f54325f20a6408a07951e1f126a2e399aeb8ecfecba6ef8b06e6",
+    "frozen_parent_predictions": "/share/guozhix/wmagentattack/0812/three_source_unified_action/formal_v1/model/predictions.jsonl",
+    "frozen_parent_predictions_sha256": "11147f9fa64e264239ad5591f297c9a6d2ecadbe39e0089bbf0a1005dff3821c"
+  },
+  "ontology": {
+    "version": "wmagentattack.shared_action_ontology.v1",
+    "causal_public_fields_only": ["candidate kind", "function name", "function description", "parameter schema"],
+    "components": ["operation", "object set", "effect", "communication scope", "terminal flag", "argument shape"],
+    "forbidden_inputs": ["selected target", "task outcome", "attack label", "security or utility", "held-out performance"],
+    "state_alignment": "replace legal and prior raw action names with ontology bridge keys",
+    "ontology_only": "shared ontology vector only; retained as collision counterevidence",
+    "ontology_local_residual": "0.8 normalized shared ontology vector plus 0.2 normalized source-local public schema vector",
+    "primary_mode": "ontology_local_residual"
+  },
+  "split": {
+    "reuse_frozen_five_fold_agentdojo_oof": true,
+    "confirmation_surface_identical_to_parent": true,
+    "all_auxiliary_rows_training_only": true,
+    "selection_uses_targets_or_outcomes": false
+  },
+  "training": {
+    "candidate_modes": ["ontology_only", "ontology_local_residual"],
+    "state_variants": ["semantic_markov", "structured_markov_v3"],
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "source_mass": {"agentdojo": 0.5, "tool_sandbox": 0.25, "injecagent": 0.25},
+    "task_balanced_within_source": true,
+    "early_stopping": false,
+    "validation_model_selection": false,
+    "hyperparameter_grid": false
+  },
+  "preflight_gate": {
+    "minimum_agentdojo_bridge_keys_shared_with_any_auxiliary": 5,
+    "minimum_bridge_keys_shared_by_all_three_sources": 2,
+    "require_targets_and_legal_candidates_unchanged": true,
+    "require_zero_local_residual_vector_collisions_within_interfaces": true,
+    "require_two_byte_identical_builds": true
+  },
+  "acceptance_gate": {
+    "primary_state_variant": "semantic_markov",
+    "primary_candidate_mode": "ontology_local_residual",
+    "minimum_nll_gain_over_raw_pooled": 0.02,
+    "minimum_accuracy_gain_over_raw_pooled": 0.01,
+    "minimum_nll_gain_over_agentdojo_only": 0.02,
+    "minimum_accuracy_gain_over_agentdojo_only": 0.01,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.55,
+    "maximum_structured_nll_degradation_vs_agentdojo_only": 0.02,
+    "maximum_structured_accuracy_degradation_vs_agentdojo_only": 0.01,
+    "interpretation": "Pass resolves action-schema alignment for the current pooled architecture. Failure retains the ontology audit but does not authorize claiming multi-source benefit."
+  },
+  "uncertainty": {
+    "paired_task_bootstrap_draws": 10000,
+    "bootstrap_seed": 8132026,
+    "paired_sign_test": true,
+    "counterevidence_not_additional_hard_gates": true
+  },
+  "fixed_budget": {
+    "independent_ontology_builds": 2,
+    "folds": 5,
+    "candidate_modes": 2,
+    "state_variants": 2,
+    "training_seeds": 3,
+    "neural_training_runs": 60,
+    "parent_baseline_reruns": 0,
+    "post_result_reruns": 0,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "attack_generation": 0,
+    "dreamer_runs": 0
+  },
+  "frozen_ontology_dataset": {
+    "path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v1/a/dataset.json",
+    "sha256": "PENDING_PREFLIGHT",
+    "audit_path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v1/a/audit.json",
+    "audit_sha256": "PENDING_PREFLIGHT",
+    "independent_builds_byte_identical": false
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0813/action_ontology/formal_v1"
+}
