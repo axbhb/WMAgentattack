@@ -18,13 +18,13 @@ from .clean_evidence_probe import hashed_text
 from .multisource_suitability import stable_hash
 
 
-ACTION_ONTOLOGY_VERSION = "wmagentattack.shared_action_ontology.v1"
+ACTION_ONTOLOGY_VERSION = "wmagentattack.shared_action_ontology.v1.1"
 ONTOLOGY_VECTOR_MODES = ("ontology_only", "ontology_local_residual")
 
 _TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9]*")
 _OPERATIONS = (
     ("delete", {"cancel", "delete", "remove", "revoke"}),
-    ("communicate", {"email", "message", "notify", "post", "send", "share"}),
+    ("communicate", {"notify", "post", "send", "share"}),
     ("create", {"add", "book", "buy", "create", "make", "order", "reserve", "schedule", "set"}),
     ("update", {"change", "edit", "modify", "move", "rename", "update"}),
     ("compute", {"calculate", "convert", "compute", "timestamp"}),
@@ -50,7 +50,8 @@ _OBJECTS = {
 
 
 def _tokens(value: str) -> set[str]:
-    expanded = value.replace("_", " ").replace("-", " ")
+    expanded = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", value)
+    expanded = expanded.replace("_", " ").replace("-", " ")
     return {token.lower() for token in _TOKEN_RE.findall(expanded)}
 
 

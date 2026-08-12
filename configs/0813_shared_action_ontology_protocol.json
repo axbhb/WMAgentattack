@@ -1,6 +1,6 @@
 {
-  "protocol_id": "0813_shared_action_ontology_alignment_v1",
-  "status": "preregistered_before_ontology_build",
+  "protocol_id": "0813_shared_action_ontology_alignment_v2",
+  "status": "preregistered_after_label_blind_preflight_v1_repair_before_training",
   "research_question": "Does a label-blind shared operation/object/effect ontology repair negative transfer from ToolSandbox and InjecAgent on the frozen 20-task AgentDojo OOF surface?",
   "parent_result": {
     "decision": "NO_GO_NO_REPLICATED_AGENTDOJO_OOF_BENEFIT_FROM_THREE_SOURCE_EXPANSION",
@@ -15,7 +15,7 @@
     "frozen_parent_predictions_sha256": "11147f9fa64e264239ad5591f297c9a6d2ecadbe39e0089bbf0a1005dff3821c"
   },
   "ontology": {
-    "version": "wmagentattack.shared_action_ontology.v1",
+    "version": "wmagentattack.shared_action_ontology.v1.1",
     "causal_public_fields_only": ["candidate kind", "function name", "function description", "parameter schema"],
     "components": ["operation", "object set", "effect", "communication scope", "terminal flag", "argument shape"],
     "forbidden_inputs": ["selected target", "task outcome", "attack label", "security or utility", "held-out performance"],
@@ -53,6 +53,19 @@
     "require_zero_local_residual_vector_collisions_within_interfaces": true,
     "require_two_byte_identical_builds": true
   },
+  "failed_preflight_v1": {
+    "retained": true,
+    "protocol_git_commit": "d8d84de",
+    "protocol_sha256": "2edc55cc1d12ebe5c9a882c323599e2688affba0662701105be0b5a9b90b85ca",
+    "artifact_root": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v1/a.tmp",
+    "observed_agentdojo_aux_bridge_keys": 7,
+    "observed_all_three_bridge_keys": 1,
+    "failed_clause": "minimum_bridge_keys_shared_by_all_three_sources",
+    "repair_is_label_blind": true,
+    "repair": "Split CamelCase function names and remove email/message object nouns from communication-operation triggers so public read/update schemas are not misclassified as communication actions.",
+    "model_training_started": false,
+    "targets_or_outcomes_inspected": false
+  },
   "acceptance_gate": {
     "primary_state_variant": "semantic_markov",
     "primary_candidate_mode": "ontology_local_residual",
@@ -87,11 +100,11 @@
     "dreamer_runs": 0
   },
   "frozen_ontology_dataset": {
-    "path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v1/a/dataset.json",
+    "path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v2/a/dataset.json",
     "sha256": "PENDING_PREFLIGHT",
-    "audit_path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v1/a/audit.json",
+    "audit_path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v2/a/audit.json",
     "audit_sha256": "PENDING_PREFLIGHT",
     "independent_builds_byte_identical": false
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0813/action_ontology/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0813/action_ontology/formal_v2"
 }
