@@ -1,0 +1,110 @@
+{
+  "protocol_id": "0813_agentdojo_observed_adjacent_transition_v1",
+  "status": "preregistered_before_preflight",
+  "research_question": "Does explicit supervision from real adjacent AgentDojo-v2 steps produce a useful action-conditioned observable transition model and improve task-disjoint tail-action prediction over an otherwise identical action-only transition model?",
+  "parent_result": {
+    "decision": "NO_GO_SHARED_ACTION_ONTOLOGY_DOES_NOT_REPAIR_MULTI_SOURCE_TRANSFER",
+    "report": "reports/0813_shared_action_ontology_results.md",
+    "independent_failure_mode": "The pooled auxiliary sources are isolated decisions, while AgentDojo contains real trajectories; action ontology alignment does not supply temporal supervision."
+  },
+  "scope": {
+    "existing_frozen_agentdojo_v2_traces_only": true,
+    "synthetic_sandbox_only": true,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "real_external_endpoint_calls": 0,
+    "new_attack_generation": 0,
+    "dreamer_runs": 0,
+    "utility_value_or_planner_heads": false
+  },
+  "source": {
+    "unified_dataset": "/share/guozhix/wmagentattack/0812/three_source_unified_action/preflight_v1/a/dataset.json",
+    "unified_dataset_sha256": "1ab07868cf0ee9a6ec021c98489444c0c0255dd4622a3c0883b6b3ed88d5c3c3",
+    "agentdojo_steps": "/share/guozhix/wmagentattack/0714/agentdojo_v2/final_dataset/steps.jsonl",
+    "agentdojo_steps_sha256": "a18a8f58ad60019734994935f56b6fd739b181a36a4af0ac4cb260d43215e201",
+    "expected_step_rows": 6763,
+    "expected_trajectories": 2060,
+    "expected_adjacent_transitions": 4703,
+    "expected_multistep_trajectories": 1253,
+    "expected_tasks_with_adjacent_transitions": 20,
+    "known_variant_rows": {"attack": 6564, "clean": 199},
+    "variant_is_metadata_only": true
+  },
+  "transition_contract": {
+    "causal_state_at_t": ["trusted goal", "legal action interface", "visible current observation", "visible prior tool", "source and track"],
+    "intervention_at_t": "the actually selected candidate action; legal and explicitly allowed as the transition-condition input",
+    "observable_outcome_targets_at_t": ["execution_error", "output_nonempty", "trajectory_continues"],
+    "tail_target": "the actually observed next victim action at t+1 when the trajectory continues",
+    "forbidden_inputs": ["next action", "future observation", "task success", "attack success", "utility", "security", "hidden simulator state"],
+    "not_claimed": ["full environment state reconstruction", "task completion", "utility", "security", "counterfactual action effects"]
+  },
+  "split": {
+    "reuse_frozen_five_fold_agentdojo_oof": true,
+    "per_fold_training_tasks": 12,
+    "per_fold_validation_tasks_excluded": 4,
+    "per_fold_confirmation_tasks": 4,
+    "every_task_confirmation_exactly_once": true,
+    "trajectory_rows_never_cross_task_splits": true
+  },
+  "preflight_gate": {
+    "require_two_byte_identical_builds": true,
+    "require_exact_counts": true,
+    "require_contiguous_steps": true,
+    "require_same_trajectory_adjacency": true,
+    "require_current_and_next_targets_legal": true,
+    "require_all_expected_tasks_have_adjacent_transitions": true,
+    "minimum_execution_errors": 300,
+    "minimum_tasks_with_execution_errors": 18,
+    "require_forbidden_causal_keys_absent": true
+  },
+  "training": {
+    "conditions": ["tail_action_only", "tail_action_plus_observed_outcomes"],
+    "variants": ["semantic_markov", "structured_markov_v3"],
+    "primary_variant": "semantic_markov",
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "outcome_loss_weight": 1.0,
+    "outcome_positive_weight_cap": 10.0,
+    "task_balanced_loss": true,
+    "early_stopping": false,
+    "validation_model_selection": false,
+    "hyperparameter_grid": false
+  },
+  "acceptance_gate": {
+    "primary_variant": "semantic_markov",
+    "minimum_tail_action_nll_gain": 0.01,
+    "minimum_tail_action_accuracy_gain": 0.005,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.55,
+    "minimum_outcome_bce_gain_over_train_prior": 0.01,
+    "minimum_execution_error_bce_gain": 0.001,
+    "require_all_predictions_legal": true,
+    "interpretation": "A pass retains the adjacent-transition objective for the source-adapter experiment. A failure still retains the audited adjacent dataset, but rejects the claim that this fixed multitask head improves tail dynamics."
+  },
+  "uncertainty": {
+    "paired_task_bootstrap_draws": 10000,
+    "bootstrap_seed": 81322026,
+    "paired_sign_test": true,
+    "counterevidence_not_additional_hard_gates": true
+  },
+  "fixed_budget": {
+    "independent_dataset_builds": 2,
+    "folds": 5,
+    "conditions": 2,
+    "variants": 2,
+    "training_seeds": 3,
+    "neural_training_runs": 60,
+    "post_result_reruns": 0,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "new_attack_generation": 0,
+    "dreamer_runs": 0
+  },
+  "planned_preflight": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1",
+  "planned_archive": "/share/guozhix/wmagentattack/0813/adjacent_transition/formal_v1"
+}
