@@ -1,6 +1,6 @@
 {
   "protocol_id": "0813_shared_action_ontology_alignment_v3",
-  "status": "preregistered_after_final_label_blind_preflight_repair_before_training",
+  "status": "preflight_passed_and_frozen_before_training",
   "research_question": "Does a label-blind shared operation/object/effect ontology repair negative transfer from ToolSandbox and InjecAgent on the frozen 20-task AgentDojo OOF surface?",
   "parent_result": {
     "decision": "NO_GO_NO_REPLICATED_AGENTDOJO_OOF_BENEFIT_FROM_THREE_SOURCE_EXPANSION",
@@ -116,10 +116,17 @@
   },
   "frozen_ontology_dataset": {
     "path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v3/a/dataset.json",
-    "sha256": "PENDING_PREFLIGHT",
+    "sha256": "5260df08d4dfe7c9bc03b4dfe7078a3946179091566950e286e6b89c1d421a4d",
     "audit_path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v3/a/audit.json",
-    "audit_sha256": "PENDING_PREFLIGHT",
-    "independent_builds_byte_identical": false
+    "audit_sha256": "55e1393dec645d0bdb8846b4a0dd45b903cac32895c83b7cfa2a4d3335981b63",
+    "independent_builds_byte_identical": true,
+    "dataset_content_sha256": "f3c59896b858105437056ad72d78dd49bc5e290689198aab9d47849700b3117a",
+    "preregistered_protocol_sha256_used_for_build": "5a0f795aa5c3ddfce1b75ca029c51a66c6590858d6cbf9b027cf210875a3c9a1",
+    "candidate_count": 138,
+    "agentdojo_bridge_keys_shared_with_any_auxiliary": 7,
+    "bridge_keys_shared_by_all_three_sources": 6,
+    "ontology_local_residual_collision_rows": 0,
+    "all_preflight_checks_passed": true
   },
   "planned_archive": "/share/guozhix/wmagentattack/0813/action_ontology/formal_v3"
 }
