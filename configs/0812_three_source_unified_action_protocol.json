@@ -1,0 +1,158 @@
+{
+  "protocol_id": "0812_three_source_unified_action_expansion_v1",
+  "status": "preregistered_before_unified_dataset_build",
+  "research_question": "Does adding leakage-audited ToolSandbox and InjecAgent action records improve frozen Semantic Markov prediction on task-disjoint AgentDojo-v2 tasks relative to AgentDojo-only training?",
+  "scope": {
+    "offline_synthetic_sandbox_data_only": true,
+    "existing_frozen_records_only": true,
+    "target_evaluation_source": "agentdojo",
+    "auxiliary_training_sources": [
+      "tool_sandbox",
+      "injecagent"
+    ],
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "real_external_endpoint_calls": 0,
+    "attack_generation": 0,
+    "dreamer_runs": 0,
+    "utility_value_or_planner_heads": false
+  },
+  "sources": {
+    "agentdojo_root": "/share/guozhix/wmagentattack/0714/agentdojo_v2/final_dataset",
+    "agentdojo_steps_sha256": "a18a8f58ad60019734994935f56b6fd739b181a36a4af0ac4cb260d43215e201",
+    "agentdojo_metadata_sha256": "124ee50c4be8b9a07db1b1590e4ce400b78a54de625fa709b0e3528605174ec2",
+    "base_multisource": "/share/guozhix/wmagentattack/0806/multisource_semantic_v3/large_v1/multisource_large_records.jsonl",
+    "base_multisource_sha256": "9a930150e70c718c9ceb72d119212f485358897487e3a683c123e8725707ba1d",
+    "replication": "/share/guozhix/wmagentattack/0811/multisource_replication/auxiliary_v1/replication_records.jsonl",
+    "replication_sha256": "396e3ea67e831ac4ac5ee117422be722f5189cb498df4cb102af7f5b5a1ad14d",
+    "shared_aux_llm_contract_sha256": "d8a459b64106de53d58915cd5da4ff9f1c667c6077f16b8d9c73364048af9bc2",
+    "agentdojo_victim_contract": "Meta-Llama-3.1-70B-Instruct 4-bit, function-tags tool protocol",
+    "expected_action_rows": {
+      "agentdojo": 6763,
+      "tool_sandbox": 285,
+      "injecagent": 6324
+    },
+    "expected_total_action_rows": 13372,
+    "exclude_tau3": "The frozen tail-horizon study is NO-GO; tau3 is not authorized for the current scale comparison."
+  },
+  "unified_schema": {
+    "causal_state": [
+      "source",
+      "trusted_goal",
+      "track",
+      "tool_schemas",
+      "legal_tool_names",
+      "visible_observation",
+      "visible_prior_tool"
+    ],
+    "agentdojo_action_adapter": "candidate semantic skills as function schemas; finish maps to TEXT",
+    "auxiliary_action_adapter": "published function schemas; textual response maps to TEXT",
+    "target_and_outcomes_excluded_from_model_input": true,
+    "source_identity_retained": true,
+    "candidate_ids_are_source_and_schema_specific": true,
+    "cross_source_transfer_channel": "shared hashed semantic state and candidate names/descriptions",
+    "repeated_seed_rows_do_not_gain_source_or_task_mass": true
+  },
+  "split": {
+    "scheme": "frozen AgentDojo five-fold grouped OOF",
+    "fold_cohorts": [
+      ["original_test", "original_val"],
+      ["original_val", "train0"],
+      ["train0", "train1"],
+      ["train1", "train2"],
+      ["train2", "original_test"]
+    ],
+    "per_fold_agentdojo_tasks": {
+      "training": 12,
+      "validation_excluded_without_selection": 4,
+      "confirmation": 4
+    },
+    "every_agentdojo_task_confirmation_exactly_once": true,
+    "all_auxiliary_rows_training_only": true,
+    "confirmation_surface_identical_between_conditions": true,
+    "selection_uses_targets_or_outcomes": false
+  },
+  "training": {
+    "conditions": [
+      "agentdojo_only",
+      "agentdojo_plus_auxiliary"
+    ],
+    "variants": [
+      "semantic_markov",
+      "structured_markov_v3"
+    ],
+    "primary_variant": "semantic_markov",
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "source_mass": {
+      "agentdojo_only": {
+        "agentdojo": 1.0
+      },
+      "agentdojo_plus_auxiliary": {
+        "agentdojo": 0.5,
+        "tool_sandbox": 0.25,
+        "injecagent": 0.25
+      }
+    },
+    "task_balanced_within_source": true,
+    "early_stopping": false,
+    "validation_model_selection": false,
+    "hyperparameter_grid": false
+  },
+  "preflight_gate": {
+    "require_exact_source_counts": true,
+    "require_unique_row_ids": true,
+    "require_target_in_legal_candidates": true,
+    "require_20_agentdojo_tasks": true,
+    "require_five_task_disjoint_folds": true,
+    "require_each_agentdojo_task_confirmation_once": true,
+    "require_zero_exact_normalized_goal_overlap_between_agentdojo_and_auxiliary": true,
+    "require_single_aux_llm_contract": true,
+    "require_zero_real_external_endpoint_calls": true,
+    "require_forbidden_causal_keys_absent": true,
+    "require_two_byte_identical_dataset_builds": true
+  },
+  "acceptance_gate": {
+    "primary_variant": "semantic_markov",
+    "minimum_mean_nll_gain": 0.02,
+    "minimum_mean_accuracy_gain": 0.01,
+    "minimum_threshold_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.55,
+    "maximum_counterevidence_nll_degradation": 0.02,
+    "maximum_counterevidence_accuracy_degradation": 0.01,
+    "require_all_predictions_legal": true,
+    "interpretation": "Pass authorizes retaining the unified auxiliary data for the next formal AgentDojo model study; failure retains the unified dataset as an audited resource but rejects the claim that simple three-source expansion improves the current method."
+  },
+  "uncertainty": {
+    "paired_task_bootstrap_draws": 10000,
+    "bootstrap_seed": 8122026,
+    "paired_exact_sign_test": true,
+    "intervals_and_p_values_are_counterevidence_not_additional_hard_gates": true
+  },
+  "fixed_budget": {
+    "independent_dataset_builds": 2,
+    "folds": 5,
+    "conditions": 2,
+    "neural_variants": 2,
+    "training_seeds": 3,
+    "neural_training_runs": 60,
+    "post_result_reruns": 0,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "attack_generation": 0,
+    "dreamer_runs": 0
+  },
+  "frozen_unified_dataset": {
+    "path": "/share/guozhix/wmagentattack/0812/three_source_unified_action/preflight_v1/a/dataset.json",
+    "sha256": "PENDING_PREFLIGHT",
+    "audit_path": "/share/guozhix/wmagentattack/0812/three_source_unified_action/preflight_v1/a/audit.json",
+    "audit_sha256": "PENDING_PREFLIGHT",
+    "independent_builds_byte_identical": false
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0812/three_source_unified_action/formal_v1"
+}
