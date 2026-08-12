@@ -114,6 +114,14 @@
     "attack_generation": 0,
     "dreamer_runs": 0
   },
+  "execution_resource_contingency": {
+    "recorded_before_any_training_result": true,
+    "cancelled_pending_gpu_job": 6732,
+    "cancel_reason": "All four GPUs were occupied by long-running jobs; 6732 remained PENDING(Resources) and created no archive.",
+    "replacement": "One Slurm CPU job with identical data, code, seeds, epochs, run budget, and acceptance gate.",
+    "scientific_protocol_changed": false,
+    "duplicate_execution_allowed": false
+  },
   "frozen_ontology_dataset": {
     "path": "/share/guozhix/wmagentattack/0813/action_ontology/preflight_v3/a/dataset.json",
     "sha256": "5260df08d4dfe7c9bc03b4dfe7078a3946179091566950e286e6b89c1d421a4d",
