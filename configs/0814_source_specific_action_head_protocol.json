@@ -1,6 +1,6 @@
 {
   "protocol_id": "0814_source_specific_action_head_v1",
-  "status": "preregistered_before_training",
+  "status": "completed__no_go_source_specific_head_does_not_repair_negative_transfer",
   "research_question": "Does isolating only the final action scorer by source preserve useful shared representation learning while preventing auxiliary-source output calibration from degrading AgentDojo?",
   "parent": "NO_GO_SOURCE_RESIDUAL_ADAPTER_DOES_NOT_REPAIR_NEGATIVE_TRANSFER",
   "single_mechanism_change": "Remove all source-specific encoder adapters; keep shared state/candidate encoders and use one final linear action scorer per source.",
@@ -43,5 +43,26 @@
   },
   "uncertainty": {"paired_task_bootstrap_draws": 10000, "bootstrap_seed": 8142026, "paired_sign_test": true, "counterevidence_not_additional_hard_gates": true},
   "fixed_budget": {"folds": 5, "variants": 2, "training_seeds": 3, "neural_training_runs": 30, "parent_baseline_reruns": 0, "post_result_reruns": 0, "new_llm_calls": 0, "new_tool_executions": 0, "new_attack_generation": 0, "dreamer_runs": 0},
-  "planned_archive": "/share/guozhix/wmagentattack/0814/source_specific_head/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0814/source_specific_head/formal_v1",
+  "postrun_record": {
+    "slurm_job_id": 6736,
+    "git_commit": "c09fb46",
+    "runtime_failures": 0,
+    "tests": "16 passed",
+    "neural_training_runs": 30,
+    "prediction_rows": 40578,
+    "decision": "NO_GO_SOURCE_SPECIFIC_HEAD_DOES_NOT_REPAIR_NEGATIVE_TRANSFER",
+    "primary_semantic_vs_raw_pooled": {"nll_gain": 0.015142723770290944, "accuracy_gain": 0.00405876055297611, "positive_task_fraction": 0.45},
+    "primary_semantic_vs_agentdojo_only": {"nll_gain": 0.03228596385034578, "accuracy_gain": -0.013280552004156074, "positive_task_fraction": 0.5},
+    "counterevidence_structured_vs_raw_pooled": {"nll_gain": 0.018663040242631417, "accuracy_gain": 0.02669150325206048, "positive_task_fraction": 0.65},
+    "gate_clauses_passed": 5,
+    "gate_clauses_total": 10,
+    "summary_sha256": "63f566c0787c63aa02eb02d35111600721a44ba42d2d4499f7d657988b4d05ab",
+    "results_markdown_sha256": "1fb6439cd525c388b8ed6e75413e3014cc1d39ad5ee4dca6a49f078f93d8092a",
+    "run_metrics_sha256": "90186dd7ca5142ba9efb45c8ed4fdb39f9f32ba683aafdf17afba9609b29bbb9",
+    "predictions_sha256": "93849e7deb87424e63c4b8700317e12e3e2af20bc37b25b7f427b45e57b38245",
+    "checksums_manifest_sha256": "3594014ebeb4f7158f035f16faf45d066d28a6e41e1e3ec01d466e27a9b05138",
+    "archive_checksum_verification": "PASS",
+    "post_result_reruns": 0
+  }
 }
