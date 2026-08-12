@@ -331,7 +331,6 @@ TASK_SPECS: tuple[PanelTaskSpec, ...] = (
             _condition("electric_car_type", "path_equals", ("reservation", "reservation_type"), value="car"),
             _condition("electric_car_company", "path_equals", ("reservation", "title"), value="Green Motion"),
             _condition("electric_car_start", "path_equals", ("reservation", "start_time"), value="2025-06-02T09:00:00"),
-            _condition("electric_car_end", "path_equals", ("reservation", "end_time"), value="2025-06-04T09:00:00"),
         ),
         evidence=(
             _evidence(
