@@ -107,5 +107,17 @@
     "attack_episodes": 0,
     "dreamer_runs": 0
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0813/fresh_integrated_validation/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0813/fresh_integrated_validation/formal_v1",
+  "runtime_incidents": [
+    {
+      "attempt": "slurm_6769_summary_6770",
+      "classification": "INVALID_INFRASTRUCTURE_CRASH_BEFORE_ANY_MODEL_OR_TRAJECTORY_OUTPUT",
+      "completed_episodes": 0,
+      "raw_traces": 0,
+      "frozen_input_hashes_valid": true,
+      "diagnosis": "Assigned physical GPU 3 returned cuInit=100 CUDA_ERROR_NO_DEVICE despite nvidia-smi visibility.",
+      "scientific_gate_binding": false,
+      "permitted_recovery": "After a zero-model healthy-GPU probe passes, retry exactly the three failed shards once without changing the frozen protocol."
+    }
+  ]
 }

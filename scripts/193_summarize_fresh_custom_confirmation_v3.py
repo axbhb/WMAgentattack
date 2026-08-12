@@ -142,7 +142,10 @@ def summarize(
     gate_spec = protocol["fresh_confirmation"]["clean_gate"]
     checks = {
         "exactly_36_completed": len(completed) == 36,
-        "zero_runtime_failures": len(failures) <= int(gate_spec["maximum_runtime_failures"]),
+        "zero_runtime_failures": (
+            len(failures) <= int(gate_spec["maximum_runtime_failures"])
+            and set(episodes) == expected_keys
+        ),
         "all_expected_seed_task_keys_exact": set(episodes) == expected_keys and not duplicate_keys,
         "all_twelve_tasks_retained": set(per_task_success) == set(expected_rows),
         "all_raw_traces_present_and_clean": not trace_failures and len(metadata) == 36,
