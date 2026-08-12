@@ -41,6 +41,7 @@ def main() -> None:
     if metrics["neural_training_runs"] != int(protocol["fixed_budget"]["neural_training_runs"]):
         raise ValueError("fixed run budget incomplete")
     seeds = [int(value) for value in protocol["training"]["training_seeds"]]
+    candidate_condition = str(protocol["training"]["condition"])
     comparisons = {}
     for variant in protocol["training"]["variants"]:
         comparisons[variant] = {
@@ -49,7 +50,7 @@ def main() -> None:
                 candidate_rows=candidate,
                 seeds=seeds,
                 baseline_condition="agentdojo_plus_auxiliary",
-                candidate_condition="source_residual_adapter",
+                candidate_condition=candidate_condition,
                 variant=variant,
                 protocol=protocol,
             ),
@@ -58,7 +59,7 @@ def main() -> None:
                 candidate_rows=candidate,
                 seeds=seeds,
                 baseline_condition="agentdojo_only",
-                candidate_condition="source_residual_adapter",
+                candidate_condition=candidate_condition,
                 variant=variant,
                 protocol=protocol,
             ),
@@ -82,9 +83,10 @@ def main() -> None:
         "all_predictions_legal": all(row["legal_prediction"] == 1.0 for row in candidate),
     }
     passed = all(checks.values())
+    head_only = protocol["protocol_id"] == "0814_source_specific_action_head_v1"
     output = {
         "protocol_id": protocol["protocol_id"],
-        "decision": "GO_SOURCE_RESIDUAL_ADAPTER_REPAIRS_NEGATIVE_TRANSFER" if passed else "NO_GO_SOURCE_RESIDUAL_ADAPTER_DOES_NOT_REPAIR_NEGATIVE_TRANSFER",
+        "decision": (("GO_SOURCE_SPECIFIC_HEAD_REPAIRS_NEGATIVE_TRANSFER" if passed else "NO_GO_SOURCE_SPECIFIC_HEAD_DOES_NOT_REPAIR_NEGATIVE_TRANSFER") if head_only else ("GO_SOURCE_RESIDUAL_ADAPTER_REPAIRS_NEGATIVE_TRANSFER" if passed else "NO_GO_SOURCE_RESIDUAL_ADAPTER_DOES_NOT_REPAIR_NEGATIVE_TRANSFER")),
         "gate_passed": passed,
         "gate_checks": checks,
         "primary": primary,

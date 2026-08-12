@@ -1,6 +1,6 @@
 {
   "protocol_id": "0813_source_residual_adapter_v1",
-  "status": "preregistered_before_training",
+  "status": "completed__no_go_source_residual_adapter_does_not_repair_negative_transfer",
   "research_question": "Does a shared action backbone with small source-specific state and candidate residual adapters prevent ToolSandbox/InjecAgent negative transfer on the frozen 20-task AgentDojo OOF surface?",
   "parents": {
     "simple_pooling": "NO_GO_NO_REPLICATED_AGENTDOJO_OOF_BENEFIT_FROM_THREE_SOURCE_EXPANSION",
@@ -78,5 +78,25 @@
     "new_attack_generation": 0,
     "dreamer_runs": 0
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0813/source_adapter/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0813/source_adapter/formal_v1",
+  "postrun_record": {
+    "slurm_job_id": 6735,
+    "git_commit": "63a240fd5c089ba5f1e417f53c3cc03148f53639",
+    "runtime_failures": 0,
+    "tests": "15 passed",
+    "neural_training_runs": 30,
+    "prediction_rows": 40578,
+    "decision": "NO_GO_SOURCE_RESIDUAL_ADAPTER_DOES_NOT_REPAIR_NEGATIVE_TRANSFER",
+    "primary_vs_raw_pooled": {"nll_gain": -0.12136926057532675, "accuracy_gain": -0.018261262576959456, "positive_task_fraction": 0.35},
+    "primary_vs_agentdojo_only": {"nll_gain": -0.10422602049527191, "accuracy_gain": -0.03560057513409164, "positive_task_fraction": 0.25},
+    "gate_clauses_passed": 2,
+    "gate_clauses_total": 10,
+    "summary_sha256": "8ca1db5451baeb7b15f43d373961b1fcd3e6343ae39ea1bec9c45e29768235f5",
+    "results_markdown_sha256": "38fcc18bbfa1c6065fb18e038918dc96aaa4db750081356ec0989dd4e561bca9",
+    "run_metrics_sha256": "95aad8d8d3d8122b6455b4f756980d08d484194e3a240f17936ff56a1811e3a2",
+    "predictions_sha256": "73788cf52ccd8ac8acb95736b90e366319898c02e83d2655b2c8fdcaf0010cd1",
+    "checksums_manifest_sha256": "fd800d0f8bdd377705b03683d8cd20c6fc6e9c662f14f5129d9f84e9cead8811",
+    "archive_checksum_verification": "PASS",
+    "post_result_reruns": 0
+  }
 }

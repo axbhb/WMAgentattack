@@ -23,6 +23,7 @@ from wmagentattack.multisource_suitability import file_sha256
 from wmagentattack.source_residual_adapter import (
     FROZEN_SOURCES,
     SourceResidualActionModel,
+    SourceSpecificHeadActionModel,
     source_indices,
 )
 
@@ -90,16 +91,26 @@ def _train(
     )
     weights = torch.as_tensor(weights_np, dtype=torch.float32, device=device)
     training = protocol["training"]
-    architecture = protocol["architecture"]
-    model = SourceResidualActionModel(
-        state_size=int(arrays["states"].shape[1]),
-        candidate_size=int(arrays["candidate_inputs"].shape[1]),
-        hidden_size=int(training["hidden_size"]),
-        bottleneck_size=int(architecture["bottleneck_size"]),
-        source_count=len(FROZEN_SOURCES),
-        residual_scale=float(architecture["residual_scale"]),
-        dropout=float(training["dropout"]),
-    ).to(device)
+    head_only = protocol["protocol_id"] == "0814_source_specific_action_head_v1"
+    if head_only:
+        model = SourceSpecificHeadActionModel(
+            state_size=int(arrays["states"].shape[1]),
+            candidate_size=int(arrays["candidate_inputs"].shape[1]),
+            hidden_size=int(training["hidden_size"]),
+            source_count=len(FROZEN_SOURCES),
+            dropout=float(training["dropout"]),
+        ).to(device)
+    else:
+        architecture = protocol["architecture"]
+        model = SourceResidualActionModel(
+            state_size=int(arrays["states"].shape[1]),
+            candidate_size=int(arrays["candidate_inputs"].shape[1]),
+            hidden_size=int(training["hidden_size"]),
+            bottleneck_size=int(architecture["bottleneck_size"]),
+            source_count=len(FROZEN_SOURCES),
+            residual_scale=float(architecture["residual_scale"]),
+            dropout=float(training["dropout"]),
+        ).to(device)
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=float(training["learning_rate"]),
@@ -109,12 +120,10 @@ def _train(
     for epoch in range(int(training["fixed_epochs"])):
         _set_seed(seed * 1009 + epoch)
         model.train()
-        logits = model(
-            states[train_indices],
-            candidates,
-            row_source_tensor[train_indices],
-            candidate_source_tensor,
-        )
+        if head_only:
+            logits = model(states[train_indices], candidates, row_source_tensor[train_indices])
+        else:
+            logits = model(states[train_indices], candidates, row_source_tensor[train_indices], candidate_source_tensor)
         masked = logits.masked_fill(
             ~legal[train_indices], torch.finfo(logits.dtype).min
         )
@@ -129,13 +138,10 @@ def _train(
             history.append({"epoch": epoch, "action_loss": float(loss.detach().cpu())})
     model.eval()
     with torch.no_grad():
-        probabilities = model.action_probabilities(
-            states,
-            candidates,
-            row_source_tensor,
-            candidate_source_tensor,
-            legal,
-        ).cpu().numpy()
+        if head_only:
+            probabilities = model.action_probabilities(states, candidates, row_source_tensor, legal).cpu().numpy()
+        else:
+            probabilities = model.action_probabilities(states, candidates, row_source_tensor, candidate_source_tensor, legal).cpu().numpy()
     realized = Counter()
     for row, weight in zip(training_rows, weights_np):
         realized[str(row["source"])] += float(weight)
@@ -221,7 +227,7 @@ def main() -> None:
                     arrays=arrays,
                     probabilities=probabilities,
                     fold=fold,
-                    condition="source_residual_adapter",
+                    condition=str(protocol["training"]["condition"]),
                     variant=variant,
                     seed=seed,
                     catalog=dataset["candidate_catalog"],

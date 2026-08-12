@@ -132,3 +132,57 @@ def source_indices(
         dtype=np.int64,
     )
     return row_values, candidate_values
+
+
+class SourceSpecificHeadActionModel(nn.Module):
+    """Shared representation with only the final action scorer source-local."""
+
+    def __init__(
+        self,
+        *,
+        state_size: int,
+        candidate_size: int,
+        hidden_size: int,
+        source_count: int,
+        dropout: float,
+    ) -> None:
+        super().__init__()
+        self.state_encoder = nn.Sequential(
+            nn.Linear(state_size, hidden_size), nn.LayerNorm(hidden_size),
+            nn.GELU(), nn.Dropout(dropout), nn.Linear(hidden_size, hidden_size),
+            nn.LayerNorm(hidden_size), nn.GELU(),
+        )
+        self.candidate_encoder = nn.Sequential(
+            nn.Linear(candidate_size, hidden_size), nn.LayerNorm(hidden_size), nn.GELU()
+        )
+        self.source_heads = nn.ModuleList(
+            [nn.Linear(hidden_size, 1) for _ in range(source_count)]
+        )
+
+    def forward(
+        self, states: Tensor, candidates: Tensor, row_source_indices: Tensor
+    ) -> Tensor:
+        state = self.state_encoder(states)
+        candidate = self.candidate_encoder(candidates)
+        joint = torch.tanh(state[:, None, :] + candidate[None, :, :])
+        logits = torch.empty(
+            joint.shape[:2], dtype=joint.dtype, device=joint.device
+        )
+        for source_index, head in enumerate(self.source_heads):
+            mask = row_source_indices == source_index
+            if bool(mask.any()):
+                logits[mask] = head(joint[mask]).squeeze(-1)
+        return logits
+
+    def action_probabilities(
+        self,
+        states: Tensor,
+        candidates: Tensor,
+        row_source_indices: Tensor,
+        legal_mask: Tensor,
+    ) -> Tensor:
+        logits = self(states, candidates, row_source_indices)
+        if logits.shape != legal_mask.shape:
+            raise ValueError("legal mask shape differs from logits")
+        masked = logits.masked_fill(~legal_mask, torch.finfo(logits.dtype).min)
+        return torch.softmax(masked, dim=1)
