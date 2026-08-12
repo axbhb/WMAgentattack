@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=wm-adjacent-transition
-#SBATCH --partition=gpu
+#SBATCH --partition=6000ada
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
