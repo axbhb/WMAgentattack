@@ -7,7 +7,7 @@
   "stage_a":{
     "hypothesis":"Canonical relational slots add transferable state information to v6 without raw-text task memorization.",
     "slot_builder":{"hash_dimension":16,"max_nodes":32,"hidden_size":96,"message_layers":2,"raw_goal_observation_schema_text":false},
-    "teacher":{"epochs":120,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"hash_dimension":128,"dropout":0.1,"outcome_loss_weight":1.0,"outcome_positive_weight_cap":10.0,"joint_loss_weight":0.25},
+    "teacher":{"fixed_epochs":120,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"hash_dimension":128,"dropout":0.1,"outcome_loss_weight":1.0,"outcome_positive_weight_cap":10.0,"joint_loss_weight":0.25},
     "residual":{"epochs":80,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"dropout":0.1,"h1_ce_weight":0.25,"h1_kl_weight":2.0,"horizon_weights":{"2":1.0,"3":0.5,"4":0.25,"5":0.125},"latent_weight":0.1,"future_joint_weight":0.1},
     "fixed_fits":{"teacher":15,"v6_replication_residual":15,"slot_residual":15},
     "gate":{"maximum_h1_nll_degradation_vs_v6":0.005,"maximum_h1_accuracy_degradation_vs_v6":0.002,"minimum_h2_h5_nll_gain_vs_v6":0.03,"minimum_h2_h5_positive_task_fraction":0.55,"maximum_future_joint_ce_degradation":0.01,"minimum_threshold_positive_seeds":2,"maximum_v6_replication_metric_error":0.000001,"require_exact_entity_renaming_invariance":true,"require_semantic_sensitivity":true,"require_zero_raw_values":true,"require_all_legal":true}
@@ -22,5 +22,6 @@
     "mechanism":"remove Structured Markov context and confirm a pure relational predictive latent encoder",
     "gate":{"minimum_h1_nll_gain_vs_original_structured":0.01,"minimum_h1_accuracy_gain_vs_original_structured":0.01,"maximum_h1_nll_degradation_vs_v6":0.01,"minimum_h2_h5_nll_gain_vs_v6":0.03,"minimum_h2_h5_positive_task_fraction":0.60,"minimum_threshold_positive_seeds":2,"require_all_legal":true}
   },
-  "planned_archive_root":"/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7"
+  "planned_archive_root":"/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7",
+  "runtime_integrity_repairs":[{"failed_job_id":7066,"failure":"teacher config used epochs while the frozen v5 trainer requires fixed_epochs","scientific_outputs":0,"repair":"rename the key only; preserve value 120 and all scientific fields","authorized_retry_count":1}]
 }

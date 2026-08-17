@@ -7,3 +7,5 @@ The fixed three-stage budget tests whether a canonical relational latent can rep
 All stages retain task-disjoint folds, seeds 7/17/29, exact legal-action masking, the four-cell soft target, and the same AgentDojo sandbox dataset. Raw goal, observation, schema descriptions, task IDs, future fields, and outcome labels are excluded from slot inputs.
 
 Pre-formal, label-blind capacity audit: representing every local entity mention as a separate padded node caused avoidable truncation. Before any formal result, entity mentions were therefore deterministically aggregated by `(semantic type, goal/observation/shared role)` with a log-count feature. This retains equality and cardinality signals, removes raw values, bounds the graph, and avoids result-conditioned architecture changes.
+
+Runtime integrity record: Slurm 7066 exited before any model fit or prediction because the teacher configuration used the key `epochs` while the frozen v5 trainer expects `fixed_epochs`. The sole repair renamed that key while preserving the value 120. No data, architecture, seed, loss, or gate changed; exactly one retry is authorized.
