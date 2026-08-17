@@ -119,7 +119,7 @@ def train_slot(teacher, events, arrays, surfaces, slots, protocol, training_seed
     return model, teacher_context, teacher_logits, (slot_features, slot_types, slot_relations, slot_mask), history
 
 
-def evaluate_slot(model, teacher, teacher_context, teacher_logits, slot_tensors, events, arrays, surfaces, diagnostics, fold, training_seed, device):
+def evaluate_slot(model, teacher, teacher_context, teacher_logits, slot_tensors, events, arrays, surfaces, diagnostics, fold, training_seed, device, arm="relational_slot_stage_a"):
     candidates = torch.tensor(arrays["candidate_inputs"], dtype=torch.float32, device=device)
     model.eval(); rows = []; prior = np.asarray(diagnostics["joint_prior"])
     with torch.no_grad():
@@ -146,7 +146,7 @@ def evaluate_slot(model, teacher, teacher_context, teacher_logits, slot_tensors,
                 event = events[event_index]; target = int(targets[offset])
                 y = np.asarray([event["joint_outcome_target"][name] for name in JOINT_OUTCOME_CLASSES]) if event["joint_outcome_trainable"] else None
                 rows.append({
-                    "arm": "relational_slot_stage_a", "fold": fold, "training_seed": training_seed,
+                    "arm": arm, "fold": fold, "training_seed": training_seed,
                     "horizon": horizon, "event_id": event["event_id"], "task_name": event["task_name"],
                     "trajectory_id": event["trajectory_id"], "joint_group_id": event["joint_outcome_group_id"],
                     "action_nll": float(-math.log(max(probability[offset, target], 1e-12))),

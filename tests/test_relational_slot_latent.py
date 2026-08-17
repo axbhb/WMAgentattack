@@ -3,6 +3,7 @@ import numpy as np
 import torch
 
 from wmagentattack.relational_slot_latent import (
+    GroundedPredictiveSlotResidual,
     RelationalSlotEncoder,
     build_relational_slot_state,
 )
@@ -59,3 +60,15 @@ def test_encoder_is_permutation_equivariant_at_pool():
         state.relations[np.ix_(permutation, permutation)],
     )
     torch.testing.assert_close(original, permuted, atol=1e-6, rtol=1e-6)
+
+
+def test_grounded_predictive_shapes():
+    model = GroundedPredictiveSlotResidual(
+        candidate_size=12, slot_feature_size=26, hidden_size=16,
+        slot_layers=1, grounding_size=12, dropout=0.0,
+    )
+    hidden = torch.randn(4, 16)
+    predicted = model.predict_slot_latent(hidden)
+    assert predicted.shape == (4, 16)
+    assert model.static_grounding(predicted).shape == (4, 12)
+    assert model.transition_grounding(hidden, predicted).shape == (4, 12)

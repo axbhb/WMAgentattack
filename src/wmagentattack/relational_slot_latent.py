@@ -319,3 +319,34 @@ class SlotAugmentedResidualDynamics(nn.Module):
 
     def joint_logits(self, hidden: Tensor) -> Tensor:
         return self.base.joint_logits(hidden)
+
+
+class GroundedPredictiveSlotResidual(SlotAugmentedResidualDynamics):
+    """Stage B adds JEPA prediction and training-only semantic grounding."""
+
+    def __init__(
+        self, *, candidate_size: int, slot_feature_size: int, hidden_size: int,
+        slot_layers: int, grounding_size: int, dropout: float,
+    ) -> None:
+        super().__init__(
+            candidate_size=candidate_size, slot_feature_size=slot_feature_size,
+            hidden_size=hidden_size, slot_layers=slot_layers, dropout=dropout,
+        )
+        self.latent_predictor = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size), nn.LayerNorm(hidden_size),
+            nn.GELU(), nn.Linear(hidden_size, hidden_size),
+        )
+        self.static_grounding_head = nn.Linear(hidden_size, grounding_size)
+        self.transition_grounding_head = nn.Sequential(
+            nn.Linear(hidden_size * 2, hidden_size), nn.GELU(),
+            nn.Linear(hidden_size, grounding_size),
+        )
+
+    def predict_slot_latent(self, hidden: Tensor) -> Tensor:
+        return self.latent_predictor(hidden)
+
+    def static_grounding(self, slot: Tensor) -> Tensor:
+        return self.static_grounding_head(slot)
+
+    def transition_grounding(self, start_slot: Tensor, predicted_slot: Tensor) -> Tensor:
+        return self.transition_grounding_head(torch.cat([start_slot, predicted_slot], dim=-1))
