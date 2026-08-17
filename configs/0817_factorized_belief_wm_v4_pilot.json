@@ -1,0 +1,141 @@
+{
+  "protocol_id": "0817_factorized_neurosymbolic_belief_wm_v4_pilot_v1",
+  "status": "preregistered_and_frozen_before_training",
+  "research_question": "On the same frozen AgentDojo adjacent transitions, does a typed relational belief state plus action-conditioned recurrent multi-horizon dynamics improve task-disjoint victim next-action prediction and 2-5 step free rollout over Structured Markov v3 plus MLP?",
+  "scope": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "existing_frozen_traces_only": true,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "real_external_endpoint_calls": 0,
+    "new_attack_generation": 0,
+    "dreamer_runs": 0,
+    "utility_value_security_completion_or_planner_heads": false
+  },
+  "frozen_dataset": {
+    "path": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/dataset.json",
+    "sha256": "066b69fb580634ac5354c4aa59463b86ff26fadfc3f7436b6e0646f3c0cafa5f",
+    "audit_path": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/audit.json",
+    "audit_sha256": "c60ea091978bf6a24904dfcc7147576252daf17e930967da5f715aaa52a5d46c",
+    "event_rows": 6763,
+    "trajectories": 2060,
+    "adjacent_transitions": 4703,
+    "tasks": 20,
+    "candidates": 31
+  },
+  "split": {
+    "reuse_frozen_five_fold_agentdojo_oof": true,
+    "task_disjoint": true,
+    "per_fold_training_tasks": 12,
+    "per_fold_validation_tasks_excluded": 4,
+    "per_fold_confirmation_tasks": 4,
+    "every_task_confirmation_exactly_once": true,
+    "same_folds_and_seeds_for_all_arms": true
+  },
+  "architecture": {
+    "baseline": "Structured Markov v3 hashed state plus MLP next-action and observable-outcome heads",
+    "typed_state_nodes": [
+      "source and track",
+      "trusted goal",
+      "visible observation",
+      "visible prior tool",
+      "legal tool interface",
+      "tool schemas",
+      "entity and numeric evidence"
+    ],
+    "candidate": "Factorized neuro-symbolic belief world model with typed-node self-attention, structured-state residual branch, selected-action GRU dynamics, deterministic legal-action mask, separate victim-policy and observable-outcome heads",
+    "multi_horizon_training": "Teacher-forced actions supervise horizons 1-5 during training; confirmation rollout uses the observed current action only and then feeds expected predicted action embeddings without future observations",
+    "exact_components_outside_learned_model": [
+      "candidate catalog",
+      "legal action interface",
+      "task-disjoint split",
+      "observed sandbox transition records"
+    ],
+    "forbidden_inputs": [
+      "future action",
+      "future observation",
+      "task success",
+      "attack success",
+      "utility",
+      "security",
+      "hidden simulator state"
+    ]
+  },
+  "training": {
+    "arms": [
+      "structured_mlp",
+      "fns_bwm_onestep",
+      "fns_bwm_multihorizon"
+    ],
+    "training_seeds": [7, 17, 29],
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "state_hash_dimension": 128,
+    "typed_hash_dimension": 64,
+    "attention_heads": 4,
+    "attention_layers": 2,
+    "dropout": 0.1,
+    "gradient_clip_norm": 10.0,
+    "outcome_loss_weight": 1.0,
+    "outcome_positive_weight_cap": 10.0,
+    "horizons": [1, 2, 3, 4, 5],
+    "maximum_horizon": 5,
+    "horizon_loss_weights": {
+      "1": 1.0,
+      "2": 0.5,
+      "3": 0.25,
+      "4": 0.125,
+      "5": 0.0625
+    },
+    "task_balanced_loss": true,
+    "early_stopping": false,
+    "validation_model_selection": false,
+    "hyperparameter_grid": false
+  },
+  "acceptance_gate": {
+    "primary_comparison": "fns_bwm_multihorizon versus structured_mlp",
+    "mechanism_comparison": "fns_bwm_multihorizon versus fns_bwm_onestep for free rollout horizons 2-5",
+    "minimum_h1_nll_gain": 0.01,
+    "minimum_h1_accuracy_gain": 0.005,
+    "minimum_h2_h5_nll_gain": 0.01,
+    "minimum_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.55,
+    "maximum_outcome_bce_degradation": 0.005,
+    "maximum_execution_error_bce_degradation": 0.01,
+    "require_all_predictions_legal": true,
+    "require_complete_fixed_budget": true,
+    "interpretation": "Pass retains v4 only for the next clean scientific stage. Failure preserves the result and rejects v4 without attacks, planner, or post-result reruns."
+  },
+  "uncertainty": {
+    "paired_task_bootstrap_draws": 10000,
+    "bootstrap_seed": 8172026,
+    "paired_sign_test": true,
+    "task_is_inferential_unit": true,
+    "intervals_are_counterevidence_not_extra_posthoc_gates": true
+  },
+  "fixed_budget": {
+    "folds": 5,
+    "arms": 3,
+    "training_seeds": 3,
+    "neural_training_runs": 45,
+    "post_result_reruns": 0,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "new_attack_generation": 0,
+    "dreamer_runs": 0
+  },
+  "mutable_files": [
+    "src/wmagentattack/factorized_belief_world_model.py",
+    "scripts/197_train_factorized_belief_wm_v4.py",
+    "scripts/198_summarize_factorized_belief_wm_v4.py",
+    "scripts/199_audit_factorized_belief_wm_v4.py",
+    "scripts/server/run_0817_factorized_belief_wm_v4.sbatch",
+    "tests/test_factorized_belief_world_model.py",
+    "configs/0817_factorized_belief_wm_v4_pilot.json",
+    "reports/0817_factorized_belief_wm_v4_pilot.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ],
+  "planned_archive": "/share/guozhix/wmagentattack/0817/factorized_belief_wm_v4/pilot_v1"
+}
