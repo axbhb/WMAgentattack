@@ -1,6 +1,6 @@
 {
   "protocol_id": "0817_factorized_neurosymbolic_belief_wm_v4_pilot_v1",
-  "status": "preregistered_and_frozen_before_training",
+  "status": "completed__no_go_preserve_counterevidence",
   "research_question": "On the same frozen AgentDojo adjacent transitions, does a typed relational belief state plus action-conditioned recurrent multi-horizon dynamics improve task-disjoint victim next-action prediction and 2-5 step free rollout over Structured Markov v3 plus MLP?",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -145,5 +145,47 @@
     "reports/0817_factorized_belief_wm_v4_pilot.md",
     "reports/autoresearch_result_ledger.jsonl"
   ],
-  "planned_archive": "/share/guozhix/wmagentattack/0817/factorized_belief_wm_v4/pilot_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0817/factorized_belief_wm_v4/pilot_v1",
+  "postrun_record": {
+    "formal_slurm_job_id": 7054,
+    "cancelled_pending_gpu_job_id": 7053,
+    "git_commit_used": "907c4afd112bb9e54b00ca943ca16ed35a85e436",
+    "runtime_device": "cpu",
+    "elapsed": "00:44:38",
+    "runtime_failures": 0,
+    "tests": "6 passed",
+    "representation_audit_passed": true,
+    "neural_training_runs": 45,
+    "prediction_rows": 157842,
+    "decision": "NO_GO_FNS_BWM_V4_DOES_NOT_CLEAR_FROZEN_GATE",
+    "gate_clauses_passed": 6,
+    "gate_clauses_total": 11,
+    "primary_h1_task_macro": {
+      "structured_mlp_nll": 1.7886380351579867,
+      "fns_bwm_onestep_nll": 3.5582746309412223,
+      "fns_bwm_multihorizon_nll": 3.673056363044048,
+      "multihorizon_nll_gain": -1.8844183278860613,
+      "multihorizon_accuracy_gain": -0.046903398035633176,
+      "positive_task_fraction": 0.0
+    },
+    "h2_h5_multihorizon_vs_onestep": {
+      "mean_nll_gain": 0.33235117983860035,
+      "positive_task_fraction": 0.55,
+      "horizon_2_gain": -0.16626727350126905,
+      "horizon_3_gain": 0.12892977999120253,
+      "horizon_4_gain": 0.6198902341523115,
+      "horizon_5_gain": 0.7468519787121565
+    },
+    "observable_outcome_bce_gain": 0.0281410100645251,
+    "execution_error_bce_gain": -0.0136384209666461,
+    "all_predictions_legal": true,
+    "summary_sha256": "5fc5d0c794fa5d4d7956aadbcfb7231821afb19aece19b70510bb12468e96997",
+    "results_markdown_sha256": "0241035bef43f9bc69b07d07c35430f3e825bc6f42360f8bc3024415a26c3d9a",
+    "run_metrics_sha256": "7d0f03529e4938702ab02bda099a81211f8abbcddc5c3a8662041730a31b71db",
+    "predictions_sha256": "af05762c6e198d4ace4bd889ec5f3c3bb9c1d48fa455dcdd2064fd525b4d52e9",
+    "representation_audit_sha256": "71dfae45bdf96cfa5c3bc442fd5173ecfdb1d69a9ef2a00ea8d3cb9591893b86",
+    "checksums_manifest_sha256": "0e575b07012cadc63fabf9df79e5791c5dd461b426c00b77facd18acb8ba6634",
+    "archive_checksum_verification": "PASS",
+    "post_result_reruns": 0
+  }
 }
