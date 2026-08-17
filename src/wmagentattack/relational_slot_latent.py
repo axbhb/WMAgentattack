@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import math
 import re
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -128,14 +129,22 @@ def build_relational_slot_state(
         add("goal_operation", term, (1.0,), "goal")
     for term in frame.logic_terms:
         add("goal_logic", term, (1.0,), "goal")
+    entity_groups = Counter()
     for kind, value in entity_keys:
         in_goal = (kind, value) in goal_mentions
         in_observation = (kind, value) in observation_mentions
         role = "both" if in_goal and in_observation else ("goal" if in_goal else "observation")
-        # The local value is used only for equality linking and is never encoded.
+        # Local values are used only for equality grouping and are never encoded.
+        entity_groups[(kind, role)] += 1
+    for (kind, role), group_count in sorted(entity_groups.items()):
         add(
             "entity", kind,
-            (float(in_goal), float(in_observation), float(in_goal and in_observation)),
+            (
+                float(role in {"goal", "both"}),
+                float(role in {"observation", "both"}),
+                float(role == "both"),
+                math.log1p(group_count),
+            ),
             "entity", role,
         )
     for name in legal_tools:
