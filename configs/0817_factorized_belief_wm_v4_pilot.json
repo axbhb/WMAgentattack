@@ -126,6 +126,14 @@
     "new_attack_generation": 0,
     "dreamer_runs": 0
   },
+  "runtime_preregistration_note": {
+    "formal_device": "cpu",
+    "scientific_effect": "All three paired arms use the same device; architecture, data, seeds, epochs, metrics, and gates are unchanged.",
+    "cancelled_pending_submission": 7053,
+    "cancelled_before_start": true,
+    "cancelled_output_rows": 0,
+    "reason": "The only GPU node was fully occupied and Slurm estimated an approximately 18-hour wait; the label-blind one-epoch CPU smoke passed before this change."
+  },
   "mutable_files": [
     "src/wmagentattack/factorized_belief_world_model.py",
     "scripts/197_train_factorized_belief_wm_v4.py",

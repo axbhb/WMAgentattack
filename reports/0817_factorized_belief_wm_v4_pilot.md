@@ -12,4 +12,6 @@ The fixed comparison has three arms: the existing Structured Markov v3 MLP, the 
 
 The candidate is retained only if it clears every gate in `configs/0817_factorized_belief_wm_v4_pilot.json`. The one-step typed ablation, task-paired intervals, individual horizons, Brier scores, and predictive entropy remain diagnostic counterevidence and cannot be used to alter the frozen gate after results are visible.
 
+Runtime note recorded before any formal model fit: the first GPU submission (7053) remained pending with zero output and an approximately 18-hour scheduler delay. It was cancelled before start and replaced by one CPU submission after the label-blind CPU smoke passed. Every paired arm uses the same CPU runtime; no scientific field, threshold, seed, epoch, or data split changed.
+
 Method motivation is mapped to recent primary work on code-grounded world models, language-agent world models, belief-state modeling, and temporal abstraction. The concrete repository hypothesis is narrower than those papers: typed causal fields and action-conditioned multi-step latent dynamics should reduce task-disjoint next-action NLL and free-rollout error on the existing audited traces.

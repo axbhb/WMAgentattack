@@ -1,7 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=wm-fns-bwm-v4
+#SBATCH --job-name=wm-fns-bwm-v4-cpu
 #SBATCH --partition=6000ada
-#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
 #SBATCH --time=08:00:00
@@ -30,10 +29,10 @@ mkdir -p "$ARCHIVE.tmp/results" "$ARCHIVE.tmp/source_snapshot"
 {
   echo "job_id=${SLURM_JOB_ID}"
   echo "git_commit=$(git rev-parse HEAD)"
+  echo "runtime_device=cpu"
   echo "cuda_visible_devices=${CUDA_VISIBLE_DEVICES:-}"
   echo "slurm_job_gpus=${SLURM_JOB_GPUS:-}"
-  nvidia-smi --query-gpu=name,uuid,memory.total --format=csv,noheader
-  "$PY" -c 'import torch; assert torch.cuda.is_available(); print(torch.__version__, torch.cuda.get_device_name(0))'
+  "$PY" -c 'import torch; print(torch.__version__, torch.get_num_threads())'
 } > "$ARCHIVE.tmp/runtime_preflight.txt"
 
 cp "$PROTOCOL" "$ARCHIVE.tmp/protocol.frozen.json"
@@ -68,7 +67,7 @@ sha256sum \
   --dataset "$DATA" \
   --audit "$AUDIT" \
   --output-dir "$ARCHIVE.tmp/results" \
-  --device cuda \
+  --device cpu \
   > "$ARCHIVE.tmp/training_stdout.json"
 
 "$PY" scripts/198_summarize_factorized_belief_wm_v4.py \
