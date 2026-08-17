@@ -618,3 +618,23 @@ class GroundedPredictiveSlotResidual(SlotAugmentedResidualDynamics):
 
     def transition_grounding(self, start_slot: Tensor, predicted_slot: Tensor) -> Tensor:
         return self.transition_grounding_head(torch.cat([start_slot, predicted_slot], dim=-1))
+
+
+class SuccessorAffordanceResidual(SlotAugmentedResidualDynamics):
+    """Affordance residual with a shared successor-action occupancy scorer."""
+
+    def __init__(
+        self, *, candidate_size: int, slot_feature_size: int, hidden_size: int,
+        slot_layers: int, dropout: float,
+    ) -> None:
+        super().__init__(
+            candidate_size=candidate_size, slot_feature_size=slot_feature_size,
+            hidden_size=hidden_size, slot_layers=slot_layers, dropout=dropout,
+        )
+        self.successor_projection = nn.Linear(hidden_size, candidate_size)
+        nn.init.zeros_(self.successor_projection.weight)
+        nn.init.zeros_(self.successor_projection.bias)
+
+    def successor_logits(self, hidden: Tensor, candidates: Tensor) -> Tensor:
+        query = self.successor_projection(hidden)
+        return query @ candidates.T / math.sqrt(candidates.shape[1])

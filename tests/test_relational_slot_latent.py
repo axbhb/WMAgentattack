@@ -5,6 +5,7 @@ import torch
 from wmagentattack.relational_slot_latent import (
     GroundedPredictiveSlotResidual,
     RelationalSlotEncoder,
+    SuccessorAffordanceResidual,
     build_interface_affordance_state,
     build_relational_slot_state,
 )
@@ -117,3 +118,13 @@ def test_affordance_state_preserves_interface_aligned_intent():
     assert not np.array_equal(left.features, right.features)
     assert left.audit["encoded_interface_concepts"] > 0
     assert left.audit["interface_only_lexical_encoding"]
+
+
+def test_successor_affordance_scorer_is_zero_initialised_and_legal_maskable():
+    model = SuccessorAffordanceResidual(
+        candidate_size=12, slot_feature_size=40, hidden_size=16,
+        slot_layers=1, dropout=0.0,
+    )
+    logits = model.successor_logits(torch.randn(3, 16), torch.randn(7, 12))
+    torch.testing.assert_close(logits, torch.zeros_like(logits))
+    assert logits.shape == (3, 7)

@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_interface_affordance_autoresearch_v8",
-  "status": "preregistered_stage_c1_before_training",
+  "status": "preregistered_stage_c2_before_training",
   "research_budget": {
     "maximum_candidate_stages": 3,
     "post_result_reruns": 0,
@@ -16,6 +16,10 @@
   "external_v6_control": {
     "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
     "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "external_stage_c1_control": {
+    "predictions": "/share/guozhix/wmagentattack/0818/interface_affordance_v8/stage_c1/formal_v1/results/predictions.jsonl",
+    "sha256": "7a5a7dcab3aaefa2499e880c79731334fb24cb0e42f8cba3897fe9bbf846caec"
   },
   "label_blind_preaudit": {
     "path": "/share/guozhix/wmagentattack/0818/interface_affordance_v8/preaudit/interface_coverage.json",
@@ -107,5 +111,19 @@
       "require_all_legal": true
     }
   },
-  "planned_archive_root": "/share/guozhix/wmagentattack/0818/interface_affordance_v8"
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/interface_affordance_v8",
+  "stage_c1_result": {
+    "job_id": 7071,
+    "decision": "NO_GO_INTERFACE_AFFORDANCE_C1",
+    "gate_clauses_passed": 9,
+    "gate_clauses_total": 12,
+    "h1_nll_gain_vs_v6": 0.0007856991676290578,
+    "h1_accuracy_gain_vs_v6": 0.0024478639168242253,
+    "h2_h5_nll_gain_vs_v6": -0.004151958007561669,
+    "h2_h5_positive_task_fraction": 0.4,
+    "future_joint_ce_gain": -0.005446775813065776,
+    "predictions_sha256": "7a5a7dcab3aaefa2499e880c79731334fb24cb0e42f8cba3897fe9bbf846caec",
+    "run_metrics_sha256": "75acbd57d6163c69182e52c5e64fc350846f12517625da490f89319e35567fbf",
+    "archive": "/share/guozhix/wmagentattack/0818/interface_affordance_v8/stage_c1/formal_v1"
+  }
 }
