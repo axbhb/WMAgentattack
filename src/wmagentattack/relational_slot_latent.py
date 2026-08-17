@@ -31,6 +31,7 @@ NODE_TYPES = (
     "legal_tool",
     "prior_tool",
     "observation_summary",
+    "interface_concept",
 )
 RELATION_TYPES = (
     "none",
@@ -41,11 +42,22 @@ RELATION_TYPES = (
     "tool_group",
     "shared_entity",
     "prior_tool_match",
+    "concept_tool_match",
+    "goal_affordance",
+    "observation_affordance",
 )
 
 _TYPE_INDEX = {name: index for index, name in enumerate(NODE_TYPES)}
 _RELATION_INDEX = {name: index for index, name in enumerate(RELATION_TYPES)}
 _ERROR = re.compile(r"\b(error|failed|failure|invalid|exception)\b", re.I)
+_TOKEN = re.compile(r"[a-z][a-z0-9_]+", re.I)
+_INTERFACE_STOPWORDS = frozenset(
+    "a an and are as at be been by can could did do does for from get gets given has "
+    "have if in into is it its may of on or return returns returned that the their them "
+    "these this to type use used user using was were when where which will with would "
+    "all any each information detail details data value values object result results "
+    "available corresponding specified provided given".split()
+)
 
 
 def _signed_hash(namespace: str, value: str, dimension: int) -> np.ndarray:
@@ -64,6 +76,45 @@ def _tool_family(name: str) -> str:
         if family in lowered:
             return family
     return "other"
+
+
+def _normalise_token(token: str) -> str:
+    token = token.lower().strip("_")
+    if len(token) > 4 and token.endswith("ies"):
+        token = token[:-3] + "y"
+    elif len(token) > 4 and token.endswith("s") and not token.endswith("ss"):
+        token = token[:-1]
+    return token
+
+
+def _content_tokens(text: str) -> set[str]:
+    tokens: set[str] = set()
+    for raw in _TOKEN.findall(text):
+        for part in raw.split("_"):
+            token = _normalise_token(part)
+            if len(token) >= 3 and token not in _INTERFACE_STOPWORDS:
+                tokens.add(token)
+    return tokens
+
+
+def _schema_texts(causal: Mapping[str, Any]) -> dict[str, str]:
+    output = {str(name): str(name) for name in causal["legal_tool_names"]}
+    for row in causal["tool_schemas"]:
+        if not isinstance(row, Mapping):
+            continue
+        function = row.get("function", {})
+        if not isinstance(function, Mapping):
+            continue
+        name = str(function.get("name", ""))
+        if name not in output:
+            continue
+        parameters = function.get("parameters", {})
+        properties = parameters.get("properties", {}) if isinstance(parameters, Mapping) else {}
+        property_text = " ".join(map(str, properties)) if isinstance(properties, Mapping) else ""
+        output[name] = " ".join(
+            (name, str(function.get("description", "")), property_text)
+        )
+    return output
 
 
 @dataclass(frozen=True)
@@ -221,6 +272,212 @@ def stack_relational_slot_states(
     states = [
         build_relational_slot_state(row["causal_model_input"], hash_dimension=hash_dimension, max_nodes=max_nodes)
         for row in rows
+    ]
+    return {
+        "features": np.stack([row.features for row in states]),
+        "node_types": np.stack([row.node_types for row in states]),
+        "relations": np.stack([row.relations for row in states]),
+        "mask": np.stack([np.arange(max_nodes) < row.audit["node_count"] for row in states]),
+        "grounding": np.stack([row.grounding for row in states]),
+        "audit": [row.audit for row in states],
+    }
+
+
+def build_interface_affordance_state(
+    causal: Mapping[str, Any], *, hash_dimension: int = 24,
+    max_nodes: int = 64, max_concepts: int = 20,
+) -> RelationalSlotState:
+    """Build a bottlenecked graph from visible text/interface intersections.
+
+    A lexical item is encoded only when it belongs to the currently legal tool
+    interface.  Arbitrary goal/observation words and entity values are omitted.
+    This preserves domain intent while preventing a full-text task-ID shortcut.
+    """
+    required = {
+        "source", "track", "trusted_goal", "visible_observation",
+        "visible_prior_tool", "legal_tool_names", "tool_schemas",
+    }
+    missing = sorted(required - set(causal))
+    if missing:
+        raise ValueError(f"missing causal affordance fields: {missing}")
+    if hash_dimension <= 0 or max_nodes < 16 or max_concepts < 1:
+        raise ValueError("invalid affordance dimensions")
+
+    goal_text = str(causal["trusted_goal"])
+    observation = str(causal["visible_observation"])
+    frame = build_goal_semantic_frame(goal_text)
+    observation_frame = build_goal_semantic_frame(observation)
+    goal_tokens = _content_tokens(goal_text)
+    observation_tokens = _content_tokens(observation)
+    schema_texts = _schema_texts(causal)
+    tool_tokens = {name: _content_tokens(text) for name, text in schema_texts.items()}
+    interface_vocabulary = set().union(*tool_tokens.values()) if tool_tokens else set()
+    matched = (goal_tokens | observation_tokens) & interface_vocabulary
+    concept_tool_count = {
+        token: sum(token in tokens for tokens in tool_tokens.values()) for token in matched
+    }
+    ranked = sorted(
+        matched,
+        key=lambda token: (
+            -(4 * int(token in goal_tokens) + 2 * int(token in observation_tokens)
+              + min(concept_tool_count[token], 3)),
+            token,
+        ),
+    )
+    concepts = ranked[:max_concepts]
+    legal_tools = tuple(sorted(map(str, causal["legal_tool_names"])))
+    prior_tool = str(causal["visible_prior_tool"])
+    feature_size = hash_dimension + 16
+    rows: list[np.ndarray] = []
+    types: list[int] = []
+    groups: list[str] = []
+    labels: list[str] = []
+    concept_values: list[str | None] = []
+    tool_values: list[str | None] = []
+
+    def add(
+        node_type: str, label: str, numeric: Sequence[float], group: str,
+        *, concept: str | None = None, tool: str | None = None,
+    ) -> None:
+        if len(rows) >= max_nodes:
+            return
+        nums = np.zeros(16, dtype=np.float32)
+        values = np.asarray(tuple(numeric), dtype=np.float32)
+        nums[: min(len(values), len(nums))] = values[: len(nums)]
+        rows.append(np.concatenate([_signed_hash(node_type, label, hash_dimension), nums]))
+        types.append(_TYPE_INDEX[node_type]); groups.append(group); labels.append(label)
+        concept_values.append(concept); tool_values.append(tool)
+
+    add(
+        "global", f"{causal['source']}::{causal['track']}",
+        (
+            math.log1p(len(legal_tools)), math.log1p(len(goal_tokens)),
+            math.log1p(len(observation_tokens)), math.log1p(len(interface_vocabulary)),
+            math.log1p(len(matched)), len(matched) / max(1, len(goal_tokens | observation_tokens)),
+            float(frame.has_condition), float(frame.has_comparison),
+            float(frame.requires_set_coverage), float(frame.requires_uniqueness),
+            float(prior_tool != "<START>"), float(bool(_ERROR.search(observation))),
+        ), "global",
+    )
+    for term in frame.operation_terms:
+        add("goal_operation", term, (1.0,), "goal")
+    for term in frame.logic_terms:
+        add("goal_logic", term, (1.0,), "goal")
+    for name in legal_tools:
+        tokens = tool_tokens.get(name, _content_tokens(name))
+        goal_match = goal_tokens & tokens
+        observation_match = observation_tokens & tokens
+        name_tokens = _content_tokens(name)
+        add(
+            "legal_tool", f"{name}::{_tool_family(name)}",
+            (
+                1.0, math.log1p(len(goal_match)), len(goal_match) / max(1, len(goal_tokens)),
+                len(goal_match) / max(1, len(tokens)),
+                math.log1p(len(observation_match)),
+                len(observation_match) / max(1, len(observation_tokens)),
+                len(observation_match) / max(1, len(tokens)),
+                len(goal_tokens & name_tokens) / max(1, len(name_tokens)),
+                len(observation_tokens & name_tokens) / max(1, len(name_tokens)),
+                float(name == prior_tool), float(bool(goal_match)),
+                float(bool(observation_match)), math.log1p(len(tokens)),
+            ), "tool", tool=name,
+        )
+    add(
+        "prior_tool", f"{prior_tool}::{_tool_family(prior_tool)}",
+        (float(prior_tool != "<START>"),), "tool", tool=prior_tool,
+    )
+    for token in concepts:
+        add(
+            "interface_concept", token,
+            (
+                float(token in goal_tokens), float(token in observation_tokens),
+                float(token in goal_tokens and token in observation_tokens),
+                math.log1p(concept_tool_count[token]),
+            ), "concept", concept=token,
+        )
+    add(
+        "observation_summary", "visible_observation_summary",
+        (
+            math.log1p(len(observation.split())), math.log1p(len(observation.splitlines())),
+            float(bool(_ERROR.search(observation))),
+            math.log1p(len(observation_tokens & interface_vocabulary)),
+        ), "observation",
+    )
+
+    count = len(rows)
+    relations = np.zeros((max_nodes, max_nodes), dtype=np.int64)
+    for i in range(count):
+        relations[i, i] = _RELATION_INDEX["self"]
+        if i:
+            relations[0, i] = relations[i, 0] = _RELATION_INDEX["global"]
+    for i in range(count):
+        for j in range(count):
+            if i == j or i == 0 or j == 0:
+                continue
+            if groups[i] == groups[j] == "goal":
+                relations[i, j] = _RELATION_INDEX["goal_group"]
+            elif groups[i] == groups[j] == "tool":
+                relations[i, j] = _RELATION_INDEX["tool_group"]
+            if concept_values[i] is not None and tool_values[j] is not None:
+                token = concept_values[i]
+                if token in tool_tokens.get(tool_values[j], set()):
+                    relations[i, j] = relations[j, i] = _RELATION_INDEX["concept_tool_match"]
+            if groups[i] == "goal" and tool_values[j] is not None:
+                if goal_tokens & tool_tokens.get(tool_values[j], set()):
+                    relations[i, j] = relations[j, i] = _RELATION_INDEX["goal_affordance"]
+            if groups[i] == "observation" and tool_values[j] is not None:
+                if observation_tokens & tool_tokens.get(tool_values[j], set()):
+                    relations[i, j] = relations[j, i] = _RELATION_INDEX["observation_affordance"]
+            if {types[i], types[j]} == {_TYPE_INDEX["prior_tool"], _TYPE_INDEX["legal_tool"]}:
+                prior_index = i if types[i] == _TYPE_INDEX["prior_tool"] else j
+                legal_index = j if prior_index == i else i
+                if tool_values[prior_index] == tool_values[legal_index]:
+                    relations[i, j] = relations[j, i] = _RELATION_INDEX["prior_tool_match"]
+
+    padded = np.zeros((max_nodes, feature_size), dtype=np.float32)
+    padded[:count] = np.stack(rows)
+    padded_types = np.zeros(max_nodes, dtype=np.int64)
+    padded_types[:count] = np.asarray(types, dtype=np.int64)
+    grounding = np.asarray(
+        [
+            float(frame.has_condition), float(frame.has_comparison),
+            float(frame.requires_set_coverage), float(frame.requires_uniqueness),
+            math.log1p(len(goal_tokens)), math.log1p(len(observation_tokens)),
+            math.log1p(len(interface_vocabulary)), math.log1p(len(matched)),
+            len(matched) / max(1, len(goal_tokens | observation_tokens)),
+            math.log1p(sum(bool(goal_tokens & tokens) for tokens in tool_tokens.values())),
+            math.log1p(sum(bool(observation_tokens & tokens) for tokens in tool_tokens.values())),
+            float(bool(_ERROR.search(observation))),
+        ], dtype=np.float32,
+    )
+    return RelationalSlotState(
+        features=padded, node_types=padded_types, relations=relations,
+        grounding=grounding,
+        audit={
+            "node_count": count, "truncated": count >= max_nodes,
+            "raw_values_encoded": False, "interface_only_lexical_encoding": True,
+            "goal_content_tokens": len(goal_tokens),
+            "observation_content_tokens": len(observation_tokens),
+            "interface_vocabulary": len(interface_vocabulary),
+            "matched_interface_concepts": len(matched),
+            "encoded_interface_concepts": len(concepts),
+            "concepts_truncated": len(ranked) > max_concepts,
+            "unmatched_text_tokens_encoded": 0,
+            "tools_with_goal_overlap": sum(bool(goal_tokens & tokens) for tokens in tool_tokens.values()),
+            "tools_with_observation_overlap": sum(bool(observation_tokens & tokens) for tokens in tool_tokens.values()),
+        },
+    )
+
+
+def stack_interface_affordance_states(
+    rows: Sequence[Mapping[str, Any]], *, hash_dimension: int = 24,
+    max_nodes: int = 64, max_concepts: int = 20,
+) -> dict[str, np.ndarray | list[dict[str, Any]]]:
+    states = [
+        build_interface_affordance_state(
+            row["causal_model_input"], hash_dimension=hash_dimension,
+            max_nodes=max_nodes, max_concepts=max_concepts,
+        ) for row in rows
     ]
     return {
         "features": np.stack([row.features for row in states]),

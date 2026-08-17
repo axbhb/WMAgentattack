@@ -5,6 +5,7 @@ import torch
 from wmagentattack.relational_slot_latent import (
     GroundedPredictiveSlotResidual,
     RelationalSlotEncoder,
+    build_interface_affordance_state,
     build_relational_slot_state,
 )
 
@@ -72,3 +73,47 @@ def test_grounded_predictive_shapes():
     assert predicted.shape == (4, 16)
     assert model.static_grounding(predicted).shape == (4, 12)
     assert model.transition_grounding(hidden, predicted).shape == (4, 12)
+
+
+def affordance_causal():
+    value = causal()
+    value["tool_schemas"] = [
+        {
+            "type": "function",
+            "function": {
+                "name": "hotel_read",
+                "description": "Search hotels and return hotel rating, address, and price.",
+                "parameters": {"type": "object", "properties": {"city": {}, "budget": {}}},
+            },
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "hotel_generate",
+                "description": "Book a selected hotel for the requested date.",
+                "parameters": {"type": "object", "properties": {"hotel": {}, "date": {}}},
+            },
+        },
+    ]
+    return value
+
+
+def test_affordance_state_ignores_unmatched_entity_values():
+    left = build_interface_affordance_state(affordance_causal())
+    changed = copy.deepcopy(affordance_causal())
+    changed["trusted_goal"] = changed["trusted_goal"].replace("Paris", "Reykjavik")
+    changed["visible_observation"] = changed["visible_observation"].replace("Paris", "Reykjavik").replace("Hotel A", "Aurora Place")
+    right = build_interface_affordance_state(changed)
+    np.testing.assert_array_equal(left.features, right.features)
+    np.testing.assert_array_equal(left.relations, right.relations)
+    assert left.audit["unmatched_text_tokens_encoded"] == 0
+
+
+def test_affordance_state_preserves_interface_aligned_intent():
+    left = build_interface_affordance_state(affordance_causal())
+    changed = copy.deepcopy(affordance_causal())
+    changed["trusted_goal"] = "Find and book a hotel on 2026-09-01."
+    right = build_interface_affordance_state(changed)
+    assert not np.array_equal(left.features, right.features)
+    assert left.audit["encoded_interface_concepts"] > 0
+    assert left.audit["interface_only_lexical_encoding"]
