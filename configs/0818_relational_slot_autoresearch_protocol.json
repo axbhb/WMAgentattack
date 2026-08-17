@@ -1,0 +1,26 @@
+{
+  "protocol_id":"0818_relational_slot_jepa_autoresearch_v7",
+  "status":"preregistered_stage_a_before_training",
+  "research_budget":{"maximum_candidate_stages":3,"post_result_reruns":0,"folds":5,"seeds":[7,17,29]},
+  "frozen_dataset":{"path":"/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json","sha256":"3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2","audit_path":"/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json","audit_sha256":"677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80"},
+  "external_v6_control":{"predictions":"/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl","sha256":"971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"},
+  "stage_a":{
+    "hypothesis":"Canonical relational slots add transferable state information to v6 without raw-text task memorization.",
+    "slot_builder":{"hash_dimension":16,"max_nodes":32,"hidden_size":96,"message_layers":2,"raw_goal_observation_schema_text":false},
+    "teacher":{"epochs":120,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"hash_dimension":128,"dropout":0.1,"outcome_loss_weight":1.0,"outcome_positive_weight_cap":10.0,"joint_loss_weight":0.25},
+    "residual":{"epochs":80,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"dropout":0.1,"h1_ce_weight":0.25,"h1_kl_weight":2.0,"horizon_weights":{"2":1.0,"3":0.5,"4":0.25,"5":0.125},"latent_weight":0.1,"future_joint_weight":0.1},
+    "fixed_fits":{"teacher":15,"v6_replication_residual":15,"slot_residual":15},
+    "gate":{"maximum_h1_nll_degradation_vs_v6":0.005,"maximum_h1_accuracy_degradation_vs_v6":0.002,"minimum_h2_h5_nll_gain_vs_v6":0.03,"minimum_h2_h5_positive_task_fraction":0.55,"maximum_future_joint_ce_degradation":0.01,"minimum_threshold_positive_seeds":2,"maximum_v6_replication_metric_error":0.000001,"require_exact_entity_renaming_invariance":true,"require_semantic_sensitivity":true,"require_zero_raw_values":true,"require_all_legal":true}
+  },
+  "stage_b":{
+    "authorization":"run_if_stage_a_integrity_passes_even_if_performance_no_go",
+    "mechanism":"EMA-target action-conditioned JEPA plus static and transition grounding on the same relational slots",
+    "gate":{"maximum_h1_nll_degradation_vs_v6":0.005,"maximum_h1_accuracy_degradation_vs_v6":0.002,"minimum_h2_h5_nll_gain_vs_v6":0.05,"minimum_h2_h5_positive_task_fraction":0.60,"maximum_future_joint_ce_degradation":0.01,"minimum_threshold_positive_seeds":2,"require_anti_collapse":true,"require_all_legal":true}
+  },
+  "stage_c":{
+    "authorization":"run_only_if_stage_b_passes",
+    "mechanism":"remove Structured Markov context and confirm a pure relational predictive latent encoder",
+    "gate":{"minimum_h1_nll_gain_vs_original_structured":0.01,"minimum_h1_accuracy_gain_vs_original_structured":0.01,"maximum_h1_nll_degradation_vs_v6":0.01,"minimum_h2_h5_nll_gain_vs_v6":0.03,"minimum_h2_h5_positive_task_fraction":0.60,"minimum_threshold_positive_seeds":2,"require_all_legal":true}
+  },
+  "planned_archive_root":"/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7"
+}
