@@ -151,16 +151,22 @@ class StructuredJointOutcomeModel(nn.Module):
         self.outcome_head = nn.Linear(hidden_size, len(OBSERVED_OUTCOME_TARGETS))
         self.joint_outcome_head = nn.Linear(hidden_size, len(JOINT_OUTCOME_CLASSES))
 
+    def encode_context(self, states: Tensor, selected_actions: Tensor) -> Tensor:
+        return torch.tanh(
+            self.state_encoder(states) + self.action_encoder(selected_actions)
+        )
+
+    def score_candidates(self, context: Tensor, next_candidates: Tensor) -> Tensor:
+        candidate = self.next_candidate_encoder(next_candidates)
+        joint = torch.tanh(context[:, None, :] + candidate[None, :, :])
+        return self.next_action_head(joint).squeeze(-1)
+
     def forward(
         self, states: Tensor, selected_actions: Tensor, next_candidates: Tensor
     ) -> tuple[Tensor, Tensor, Tensor]:
-        context = torch.tanh(
-            self.state_encoder(states) + self.action_encoder(selected_actions)
-        )
-        candidate = self.next_candidate_encoder(next_candidates)
-        joint = torch.tanh(context[:, None, :] + candidate[None, :, :])
+        context = self.encode_context(states, selected_actions)
         return (
-            self.next_action_head(joint).squeeze(-1),
+            self.score_candidates(context, next_candidates),
             self.outcome_head(context),
             self.joint_outcome_head(context),
         )

@@ -71,7 +71,7 @@ def _arrays(events, catalog, dimension):
     return {"candidates":candidates,"states":states,"candidate_inputs":candidate_inputs,"selected":selected,"legal":legal,"target":target,"outcomes":outcomes,"joint":joint}
 
 
-def _train(arm, events, a, protocol, seed, device):
+def _train(arm, events, a, protocol, seed, device, return_model=False):
     train=np.asarray([i for i,e in enumerate(events) if e["split"]=="training"],np.int64)
     tail=np.asarray([i for i in train if a["target"][i]>=0],np.int64)
     joint_idx=np.asarray([i for i in train if e_trainable(events[i])],np.int64)
@@ -110,7 +110,8 @@ def _train(arm, events, a, protocol, seed, device):
         out_probs=torch.sigmoid(out_logits).cpu().numpy()
         joint_probs=torch.softmax(output[2],1).cpu().numpy() if arm=="structured_joint_aux" else None
     prior=(a["joint"][joint_idx]*normalized_joint_event_weights(events,joint_idx)[:,None]).sum(0)/normalized_joint_event_weights(events,joint_idx).sum()
-    return probs,out_probs,joint_probs,{"history":history,"joint_prior":prior.tolist(),"training_rows":len(train),"joint_training_rows":len(joint_idx)}
+    result=(probs,out_probs,joint_probs,{"history":history,"joint_prior":prior.tolist(),"training_rows":len(train),"joint_training_rows":len(joint_idx)})
+    return (*result,model) if return_model else result
 
 
 def e_trainable(event): return bool(event["joint_outcome_trainable"])
