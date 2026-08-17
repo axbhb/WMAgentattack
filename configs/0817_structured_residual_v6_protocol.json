@@ -1,6 +1,6 @@
 {
   "protocol_id":"0817_structured_joint_zero_residual_v6",
-  "status":"preregistered_and_frozen_before_training",
+  "status":"completed_go_retain_structured_joint_residual_v6",
   "research_question":"Can a zero-initialized recurrent residual over the retained Structured+four-cell model preserve its one-step gain while improving 2-5 step free rollout over typed v4?",
   "frozen_dataset":{"path":"/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json","sha256":"3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2","audit_sha256":"677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80"},
   "external_controls":{"v5_predictions":"/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/formal_v1/results/predictions.jsonl","v5_sha256":"fc4632f59b72ea2a140caadd8cfae5fad1c85a429262857b010a7ea0996398db","v4_predictions":"/share/guozhix/wmagentattack/0817/factorized_belief_wm_v4/pilot_v1/results/predictions.jsonl","v4_sha256":"af05762c6e198d4ace4bd889ec5f3c3bb9c1d48fa455dcdd2064fd525b4d52e9"},
@@ -8,5 +8,33 @@
   "residual_training":{"epochs":80,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"dropout":0.1,"h1_ce_weight":0.25,"h1_kl_weight":2.0,"horizon_weights":{"2":1.0,"3":0.5,"4":0.25,"5":0.125},"latent_weight":0.1,"future_joint_weight":0.1},
   "acceptance_gate":{"minimum_h1_nll_gain_over_original":0.01,"minimum_h1_accuracy_gain_over_original":0.01,"maximum_h1_nll_degradation_vs_teacher":0.005,"maximum_h1_accuracy_degradation_vs_teacher":0.002,"minimum_h2_h5_nll_gain_over_typed_v4":0.1,"minimum_h2_h5_positive_task_fraction":0.55,"minimum_future_joint_ce_gain_over_prior":0.01,"minimum_positive_seeds":2,"require_all_legal":true},
   "fixed_budget":{"folds":5,"seeds":3,"teacher_fits":15,"residual_fits":15,"post_result_reruns":0},
-  "planned_archive":"/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1"
+  "planned_archive":"/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1",
+  "postrun":{
+    "job_id":7056,
+    "git_commit_at_run":"32d6bae0ce31e2aa680207587f7af2adf3657e14",
+    "decision":"GO_RETAIN_STRUCTURED_JOINT_RESIDUAL_V6",
+    "runtime_failures":0,
+    "gate_clauses_passed":10,
+    "gate_clauses_total":10,
+    "metrics":{
+      "original_structured_h1_nll":1.7886380055992317,
+      "original_structured_h1_accuracy":0.4246415107377211,
+      "v5_teacher_h1_nll":1.7688787013789429,
+      "v5_teacher_h1_accuracy":0.4469727011925248,
+      "v6_h1_nll":1.7717618233981816,
+      "v6_h1_accuracy":0.4468999546221178,
+      "v6_h1_nll_gain_over_original":0.01687618220104997,
+      "v6_h1_accuracy_gain_over_original":0.022258443884396673,
+      "v6_h1_nll_gain_over_teacher":-0.002883122019238708,
+      "v6_h1_accuracy_gain_over_teacher":-0.00007274657040699704,
+      "h2_h5_nll_gain_over_typed_v4":1.4712739298653201,
+      "h2_h5_positive_task_fraction":1.0,
+      "future_joint_ce":1.262605137943679,
+      "future_joint_prior_ce":1.2840538622492461,
+      "future_joint_ce_gain":0.021448724305567445
+    },
+    "predictions_sha256":"971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd",
+    "run_metrics_sha256":"9cd0d1113ba359abad89a7bcf09f46431254d7eb042fca2d8da535042b8f6951",
+    "archive":"/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1"
+  }
 }
