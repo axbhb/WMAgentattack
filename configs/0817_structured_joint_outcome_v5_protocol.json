@@ -1,0 +1,32 @@
+{
+  "protocol_id": "0817_structured_markov_joint_outcome_auxiliary_v5",
+  "status": "preregistered_before_deterministic_preflight",
+  "research_question": "Does adding a trajectory-normalized four-cell task/attack outcome auxiliary cross-entropy to the unchanged Structured Markov v3 baseline improve task-disjoint next-action dynamics while learning calibrated joint outcomes?",
+  "scope": {"existing_agentdojo_traces_only": true, "new_llm_calls": 0, "new_tool_executions": 0, "new_attacks": 0, "planner_runs": 0, "labels_are_targets_not_inputs": true},
+  "source": {
+    "adjacent_path": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/dataset.json",
+    "adjacent_sha256": "066b69fb580634ac5354c4aa59463b86ff26fadfc3f7436b6e0646f3c0cafa5f",
+    "metadata_path": "/share/guozhix/wmagentattack/0714/agentdojo_v2/final_dataset/metadata.jsonl",
+    "metadata_sha256": "124ee50c4be8b9a07db1b1590e4ce400b78a54de625fa709b0e3528605174ec2",
+    "trajectories": 2060, "attack_trajectories": 2000, "attack_groups": 400, "seeds_per_attack_group": 5,
+    "observed_joint_counts": {"attack0_utility0": 967, "attack0_utility1": 782, "attack1_utility0": 67, "attack1_utility1": 184}
+  },
+  "labels": {"classes": ["attack0_utility0", "attack0_utility1", "attack1_utility0", "attack1_utility1"], "dirichlet_prior_per_cell": 0.5, "clean_trajectories_excluded_from_joint_loss": true, "normalization": "equal task, then attack group, then seed trajectory, then event within trajectory"},
+  "split": {"reuse_frozen_five_fold_task_disjoint_surface": true, "same_folds_and_seeds_for_both_arms": true, "validation_tasks_excluded": true},
+  "training": {
+    "arms": ["structured_baseline", "structured_joint_aux"], "training_seeds": [7, 17, 29], "fixed_epochs": 120,
+    "learning_rate": 0.001, "weight_decay": 0.0001, "hidden_size": 96, "hash_dimension": 128, "dropout": 0.1,
+    "outcome_loss_weight": 1.0, "outcome_positive_weight_cap": 10.0, "joint_loss_weight": 0.25,
+    "early_stopping": false, "validation_selection": false, "hyperparameter_grid": false
+  },
+  "acceptance_gate": {
+    "minimum_action_nll_gain": 0.005, "minimum_action_accuracy_gain": 0.002, "minimum_positive_seeds": 2,
+    "minimum_positive_task_fraction": 0.55, "maximum_outcome_bce_degradation": 0.005,
+    "minimum_joint_ce_gain": 0.01, "minimum_joint_brier_gain": 0.002,
+    "require_all_predictions_legal": true, "require_complete_budget": true
+  },
+  "fixed_budget": {"dataset_builds": 2, "folds": 5, "arms": 2, "training_seeds": 3, "neural_training_runs": 30, "post_result_reruns": 0},
+  "planned_preflight": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1",
+  "planned_archive": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/formal_v1",
+  "frozen_dataset": null
+}
