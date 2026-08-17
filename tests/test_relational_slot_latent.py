@@ -102,7 +102,7 @@ def test_affordance_state_ignores_unmatched_entity_values():
     left = build_interface_affordance_state(affordance_causal())
     changed = copy.deepcopy(affordance_causal())
     changed["trusted_goal"] = changed["trusted_goal"].replace("Paris", "Reykjavik")
-    changed["visible_observation"] = changed["visible_observation"].replace("Paris", "Reykjavik").replace("Hotel A", "Aurora Place")
+    changed["visible_observation"] = changed["visible_observation"].replace("Paris", "Reykjavik").replace("Hotel A", "Hotel Z")
     right = build_interface_affordance_state(changed)
     np.testing.assert_array_equal(left.features, right.features)
     np.testing.assert_array_equal(left.relations, right.relations)

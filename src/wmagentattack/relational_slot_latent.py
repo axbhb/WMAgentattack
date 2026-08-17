@@ -325,6 +325,8 @@ def build_interface_affordance_state(
         ),
     )
     concepts = ranked[:max_concepts]
+    matched_goal_tokens = goal_tokens & interface_vocabulary
+    matched_observation_tokens = observation_tokens & interface_vocabulary
     legal_tools = tuple(sorted(map(str, causal["legal_tool_names"])))
     prior_tool = str(causal["visible_prior_tool"])
     feature_size = hash_dimension + 16
@@ -351,9 +353,9 @@ def build_interface_affordance_state(
     add(
         "global", f"{causal['source']}::{causal['track']}",
         (
-            math.log1p(len(legal_tools)), math.log1p(len(goal_tokens)),
-            math.log1p(len(observation_tokens)), math.log1p(len(interface_vocabulary)),
-            math.log1p(len(matched)), len(matched) / max(1, len(goal_tokens | observation_tokens)),
+            math.log1p(len(legal_tools)), math.log1p(len(matched_goal_tokens)),
+            math.log1p(len(matched_observation_tokens)), math.log1p(len(interface_vocabulary)),
+            math.log1p(len(matched)), len(matched) / max(1, len(interface_vocabulary)),
             float(frame.has_condition), float(frame.has_comparison),
             float(frame.requires_set_coverage), float(frame.requires_uniqueness),
             float(prior_tool != "<START>"), float(bool(_ERROR.search(observation))),
@@ -371,10 +373,10 @@ def build_interface_affordance_state(
         add(
             "legal_tool", f"{name}::{_tool_family(name)}",
             (
-                1.0, math.log1p(len(goal_match)), len(goal_match) / max(1, len(goal_tokens)),
+                1.0, math.log1p(len(goal_match)), len(goal_match) / max(1, len(matched_goal_tokens)),
                 len(goal_match) / max(1, len(tokens)),
                 math.log1p(len(observation_match)),
-                len(observation_match) / max(1, len(observation_tokens)),
+                len(observation_match) / max(1, len(matched_observation_tokens)),
                 len(observation_match) / max(1, len(tokens)),
                 len(goal_tokens & name_tokens) / max(1, len(name_tokens)),
                 len(observation_tokens & name_tokens) / max(1, len(name_tokens)),
@@ -398,9 +400,10 @@ def build_interface_affordance_state(
     add(
         "observation_summary", "visible_observation_summary",
         (
-            math.log1p(len(observation.split())), math.log1p(len(observation.splitlines())),
+            math.log1p(len(matched_observation_tokens)),
+            len(matched_observation_tokens) / max(1, len(interface_vocabulary)),
             float(bool(_ERROR.search(observation))),
-            math.log1p(len(observation_tokens & interface_vocabulary)),
+            math.log1p(len(matched_observation_tokens)),
         ), "observation",
     )
 
@@ -442,9 +445,9 @@ def build_interface_affordance_state(
         [
             float(frame.has_condition), float(frame.has_comparison),
             float(frame.requires_set_coverage), float(frame.requires_uniqueness),
-            math.log1p(len(goal_tokens)), math.log1p(len(observation_tokens)),
+            math.log1p(len(matched_goal_tokens)), math.log1p(len(matched_observation_tokens)),
             math.log1p(len(interface_vocabulary)), math.log1p(len(matched)),
-            len(matched) / max(1, len(goal_tokens | observation_tokens)),
+            len(matched) / max(1, len(interface_vocabulary)),
             math.log1p(sum(bool(goal_tokens & tokens) for tokens in tool_tokens.values())),
             math.log1p(sum(bool(observation_tokens & tokens) for tokens in tool_tokens.values())),
             float(bool(_ERROR.search(observation))),
