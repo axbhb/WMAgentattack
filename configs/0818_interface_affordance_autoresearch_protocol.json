@@ -1,0 +1,111 @@
+{
+  "protocol_id": "0818_interface_affordance_autoresearch_v8",
+  "status": "preregistered_stage_c1_before_training",
+  "research_budget": {
+    "maximum_candidate_stages": 3,
+    "post_result_reruns": 0,
+    "folds": 5,
+    "seeds": [7, 17, 29]
+  },
+  "frozen_dataset": {
+    "path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "audit_path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json",
+    "audit_sha256": "677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80"
+  },
+  "external_v6_control": {
+    "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
+    "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "label_blind_preaudit": {
+    "path": "/share/guozhix/wmagentattack/0818/interface_affordance_v8/preaudit/interface_coverage.json",
+    "sha256": "3109a9f1ee3aa2408042427146b5420366e2b402cd4e67fe7e5dc30cbc9c3d15",
+    "events": 6763,
+    "tasks": 20,
+    "fraction_with_any_concept": 0.9838828922076002,
+    "fraction_with_goal_tool_overlap": 0.9688008280348958,
+    "truncated_rows": 0,
+    "concept_truncated_rows": 0,
+    "unmatched_text_tokens_encoded": 0
+  },
+  "teacher": {
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "outcome_loss_weight": 1.0,
+    "outcome_positive_weight_cap": 10.0,
+    "joint_loss_weight": 0.25
+  },
+  "stage_c1": {
+    "hypothesis": "Interface-aligned concept/tool affordances restore transferable domain intent omitted by v7 while retaining a strict lexical bottleneck.",
+    "affordance_builder": {
+      "hash_dimension": 24,
+      "max_nodes": 64,
+      "max_concepts": 32,
+      "hidden_size": 96,
+      "message_layers": 2,
+      "arbitrary_raw_text_encoded": false,
+      "interface_intersection_only": true
+    },
+    "residual": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1
+    },
+    "fixed_fits": {"teacher": 15, "affordance_residual": 15},
+    "gate": {
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.03,
+      "minimum_h2_h5_positive_task_fraction": 0.60,
+      "maximum_future_joint_ce_degradation": 0.01,
+      "minimum_threshold_positive_seeds": 2,
+      "require_zero_raw_values": true,
+      "require_interface_only_lexical_encoding": true,
+      "require_zero_unmatched_text_tokens": true,
+      "require_zero_truncation": true,
+      "require_all_legal": true
+    }
+  },
+  "stage_c2": {
+    "authorization": "run_if_stage_c1_integrity_passes_even_if_performance_no_go",
+    "hypothesis": "A discounted successor-action occupancy objective makes affordance slots predict future tool demand directly.",
+    "successor_discount": 0.8,
+    "successor_weight": 0.25,
+    "fixed_fits": {"teacher": 15, "successor_affordance_residual": 15},
+    "gate": {
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.05,
+      "minimum_h2_h5_nll_gain_vs_stage_c1": 0.02,
+      "minimum_h2_h5_positive_task_fraction": 0.60,
+      "maximum_future_joint_ce_degradation": 0.01,
+      "minimum_threshold_positive_seeds": 2,
+      "require_all_legal": true
+    }
+  },
+  "stage_c3": {
+    "authorization": "run_only_if_stage_c1_or_stage_c2_passes_complete_performance_gate",
+    "mechanism": "remove Structured Markov v3 context and confirm the interface-affordance predictive state as a replacement",
+    "gate": {
+      "minimum_h1_nll_gain_vs_original_structured": 0.01,
+      "minimum_h1_accuracy_gain_vs_original_structured": 0.01,
+      "maximum_h1_nll_degradation_vs_v6": 0.01,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.03,
+      "minimum_h2_h5_positive_task_fraction": 0.60,
+      "minimum_threshold_positive_seeds": 2,
+      "require_all_legal": true
+    }
+  },
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/interface_affordance_v8"
+}
