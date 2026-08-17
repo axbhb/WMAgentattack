@@ -1,6 +1,6 @@
 {
   "protocol_id":"0818_relational_slot_jepa_autoresearch_v7",
-  "status":"stage_a_no_go_stage_b_preregistered_before_training",
+  "status":"completed_no_go_stage_c_not_authorized",
   "research_budget":{"maximum_candidate_stages":3,"post_result_reruns":0,"folds":5,"seeds":[7,17,29]},
   "frozen_dataset":{"path":"/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json","sha256":"3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2","audit_path":"/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json","audit_sha256":"677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80"},
   "external_v6_control":{"predictions":"/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl","sha256":"971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"},
@@ -28,4 +28,5 @@
   "planned_archive_root":"/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7",
   "runtime_integrity_repairs":[{"failed_job_id":7066,"failure":"teacher config used epochs while the frozen v5 trainer requires fixed_epochs","scientific_outputs":0,"repair":"rename the key only; preserve value 120 and all scientific fields","authorized_retry_count":1}]
   ,"stage_a_result":{"job_id":7067,"decision":"NO_GO_RELATIONAL_SLOT_STAGE_A","gate_clauses_passed":7,"gate_clauses_total":10,"v6_h1_nll":1.7717618233981816,"slot_h1_nll":1.7712039806754116,"v6_h1_accuracy":0.4468999546221178,"slot_h1_accuracy":0.44715837363241884,"h2_h5_nll_gain":-0.004759957090253644,"h2_h5_positive_task_fraction":0.55,"future_joint_ce_gain":-0.010795492329058444,"predictions_sha256":"e822081a37ba61602042224e87fe0821869975597c63ce39322a96f896a58312","run_metrics_sha256":"e0f63246536380a35a594022807ebaa0147bad41cc2a20d2ef2bae99b499140b","archive":"/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7/stage_a/formal_v1"}
+  ,"stage_b_result":{"job_id":7068,"decision":"NO_GO_GROUNDED_JEPA_STAGE_B","gate_clauses_passed":6,"gate_clauses_total":10,"v6_h1_nll":1.7717618233981816,"jepa_h1_nll":1.7733332118303151,"v6_h1_accuracy":0.4468999546221178,"jepa_h1_accuracy":0.44657772014777364,"h2_h5_nll_gain_vs_v6":-0.011363422909968562,"h2_h5_nll_gain_vs_stage_a":-0.006603465819714916,"future_joint_ce_gain":0.012065764359589776,"slot_dimension_mean_std":0.4689334789911906,"low_variance_dimension_fraction":0.03125000049670537,"predictions_sha256":"ab9b75cedd4dfdd7a8d874e6f5575967941e3df2e68e62d00b1291a9f687c078","run_metrics_sha256":"128db8b919bdcee5e8e9549c1261b4c7662b53875a638fa09812c797fc221039","archive":"/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7/stage_b/formal_v1"}
 }

@@ -17,3 +17,13 @@ Slurm 7067 completed all 45 fixed fits with zero runtime failures and exact v6 m
 All integrity conditions passed: 27,052 fold-specific slot rows, maximum 25 nodes, zero truncation, zero raw values, exact entity-renaming invariance tests, and legal predictions only. The pre-registered Stage B is therefore authorized to test whether predictive latent geometry and semantic grounding can turn the structurally valid slots into a useful state representation.
 
 Stage A archive: `/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7/stage_a/formal_v1`.
+
+## Stage B result
+
+Slurm 7068 completed all 45 fixed fits with zero failures. Decision: `NO_GO_GROUNDED_JEPA_STAGE_B` (6/10 clauses passed). Anti-collapse succeeded (mean latent-dimension standard deviation 0.468933; only 3.125% below 0.05), h1 remained within noninferiority, and future four-cell CE improved by 0.012066. Nevertheless h2--h5 NLL worsened by 0.011363 versus v6 and 0.006603 versus Stage A; only 9/20 tasks improved and all three seed effects were negative.
+
+The counterevidence is domain-structured: several Banking and Slack tasks improve, while Travel tasks degrade strongly (for example `travel|user_task_2`: -0.096824 NLL gain). The representation is diverse and predictable, so collapse is not the explanation. The anonymized slot state omitted action-relevant domain concepts such as hotel, restaurant, flight, rating, and price. JEPA faithfully learned this incomplete state geometry and therefore could not recover the missing next-tool information. Stage C pure replacement is `NOT_AUTHORIZED` under the frozen protocol.
+
+Stage B archive: `/share/guozhix/wmagentattack/0818/relational_slot_jepa_v7/stage_b/formal_v1`.
+
+Binding retained model after this loop: `Structured Markov v3 + four-cell head + zero-initialized v6 residual`. The next independent hypothesis must preserve normalized interface-aligned intent content rather than adding more latent regularization to the same lossy slots.
