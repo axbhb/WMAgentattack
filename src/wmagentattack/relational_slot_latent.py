@@ -13,6 +13,7 @@ import re
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Any
 
 import numpy as np
@@ -115,6 +116,11 @@ def _schema_texts(causal: Mapping[str, Any]) -> dict[str, str]:
             (name, str(function.get("description", "")), property_text)
         )
     return output
+
+
+@lru_cache(maxsize=256)
+def _cached_tool_tokens(items: tuple[tuple[str, str], ...]) -> tuple[tuple[str, frozenset[str]], ...]:
+    return tuple((name, frozenset(_content_tokens(text))) for name, text in items)
 
 
 @dataclass(frozen=True)
@@ -310,7 +316,9 @@ def build_interface_affordance_state(
     goal_tokens = _content_tokens(goal_text)
     observation_tokens = _content_tokens(observation)
     schema_texts = _schema_texts(causal)
-    tool_tokens = {name: _content_tokens(text) for name, text in schema_texts.items()}
+    tool_tokens = {
+        name: set(tokens) for name, tokens in _cached_tool_tokens(tuple(sorted(schema_texts.items())))
+    }
     interface_vocabulary = set().union(*tool_tokens.values()) if tool_tokens else set()
     matched = (goal_tokens | observation_tokens) & interface_vocabulary
     concept_tool_count = {
