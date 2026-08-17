@@ -1,6 +1,6 @@
 {
   "protocol_id": "0817_structured_markov_joint_outcome_auxiliary_v5",
-  "status": "preregistered_before_deterministic_preflight",
+  "status": "preflight_passed_and_frozen_before_training",
   "research_question": "Does adding a trajectory-normalized four-cell task/attack outcome auxiliary cross-entropy to the unchanged Structured Markov v3 baseline improve task-disjoint next-action dynamics while learning calibrated joint outcomes?",
   "scope": {"existing_agentdojo_traces_only": true, "new_llm_calls": 0, "new_tool_executions": 0, "new_attacks": 0, "planner_runs": 0, "labels_are_targets_not_inputs": true},
   "source": {
@@ -28,5 +28,14 @@
   "fixed_budget": {"dataset_builds": 2, "folds": 5, "arms": 2, "training_seeds": 3, "neural_training_runs": 30, "post_result_reruns": 0},
   "planned_preflight": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1",
   "planned_archive": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/formal_v1",
-  "frozen_dataset": null
+  "frozen_dataset": {
+    "path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "audit_path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json",
+    "audit_sha256": "677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80",
+    "dataset_content_sha256": "9025e6953b0b8f6e2451415071f7ac49b636d212e65e24f337d3da68a57d7741",
+    "independent_builds_byte_identical": true,
+    "event_rows": 6763,
+    "attack_event_rows": 6564
+  }
 }
