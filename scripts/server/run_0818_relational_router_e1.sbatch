@@ -18,8 +18,21 @@ if [[ -e "$ARCH/COMPLETE" ]]; then exit 3; fi
 rm -rf "$ARCH.tmp"; mkdir -p "$ARCH.tmp/results" "$ARCH.tmp/source_snapshot"
 printf 'job_id=%s\ngit_commit=%s\n' "$SLURM_JOB_ID" "$(git rev-parse HEAD)" > "$ARCH.tmp/runtime.txt"
 cp "$PROTOCOL" "$ARCH.tmp/protocol.json"
-cp src/wmagentattack/relational_router_residual.py scripts/216_train_relational_router_e1.py scripts/217_summarize_relational_router_e1.py "$ARCH.tmp/source_snapshot/"
-sha256sum "$PROTOCOL" "$DATA" "$AUDIT" src/wmagentattack/relational_router_residual.py scripts/216_train_relational_router_e1.py scripts/217_summarize_relational_router_e1.py > "$ARCH.tmp/frozen.sha256"
+SOURCES=(
+  src/wmagentattack/relational_router_residual.py
+  src/wmagentattack/relational_slot_latent.py
+  src/wmagentattack/domain_expert_latent.py
+  src/wmagentattack/structured_residual_dynamics.py
+  src/wmagentattack/joint_outcome_auxiliary.py
+  scripts/201_train_structured_joint_outcome_v5.py
+  scripts/203_train_structured_residual_v6.py
+  scripts/211_summarize_interface_affordance_c1.py
+  scripts/214_train_domain_expert_d1.py
+  scripts/216_train_relational_router_e1.py
+  scripts/217_summarize_relational_router_e1.py
+)
+cp "${SOURCES[@]}" "$ARCH.tmp/source_snapshot/"
+sha256sum "$PROTOCOL" "$DATA" "$AUDIT" "${SOURCES[@]}" > "$ARCH.tmp/frozen.sha256"
 "$PY" -m pytest -q tests/test_relational_router_residual.py tests/test_structured_residual_dynamics.py tests/test_joint_outcome_auxiliary.py > "$ARCH.tmp/tests.txt"
 "$PY" scripts/216_train_relational_router_e1.py --protocol "$PROTOCOL" --dataset "$DATA" --audit "$AUDIT" --output-dir "$ARCH.tmp/results"
 "$PY" scripts/217_summarize_relational_router_e1.py --protocol "$PROTOCOL" --predictions "$ARCH.tmp/results/predictions.jsonl" --run-metrics "$ARCH.tmp/results/run_metrics.json" --output "$ARCH.tmp/results/summary.json" --markdown "$ARCH.tmp/results/results.md"
