@@ -13,14 +13,14 @@ WT=/share/guozhix/WMagentattack-persistence-conflict-aug18
 ROOT=/share/guozhix/WMagentattack
 PY=/share/guozhix/software/miniconda3/envs/wmagentattack/bin/python
 PROTOCOL=configs/0818_persistence_conflict_v19_protocol.json
-MANIFEST=/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v1/a/manifest.json
-MANIFEST_AUDIT=/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v1/a/audit.json
+MANIFEST=/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v2/a/manifest.json
+MANIFEST_AUDIT=/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v2/a/audit.json
 RAW=/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v2/panel_v2_architecture_dataset.json
 SEMANTIC=/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage1/rebuild_a/semantic_state_v3_dataset.json
 ADAPTER=configs/0729_custom_panel_v2_adapter_extension.json
 ADAPTER_REPAIR=configs/0805_counterfactual_adapter_repair_v2.json
 PERSISTENCE_ADAPTER=configs/0818_persistence_adapter_extension_v19.json
-ARCHIVE=/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v1
+ARCHIVE=/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v2
 
 cd "$WT"
 if [[ -e "$ARCHIVE" ]]; then

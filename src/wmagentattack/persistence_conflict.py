@@ -7,6 +7,7 @@ from collections import Counter
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+import yaml
 from pydantic import BaseModel
 
 from .clean_state_instrumentation import instrument_function_call
@@ -14,7 +15,6 @@ from .counterfactual_execution import (
     _delta_roots,
     _ledger_update,
     _next_features,
-    _tool_result_to_str,
     frozen_sandbox_clock,
     replay_to_prefix,
 )
@@ -77,28 +77,27 @@ def _sequence_steps(
             {"kind": "banking_subject", "id": transaction_id, "value": "wm-v19-beta"},
         )
     if suite == "slack":
-        user = str(control_arguments["user"])
         channel = str(control_arguments["channel"])
         write = {
-            "tool_name": "add_user_to_channel",
-            "arguments": {"user": user, "channel": channel},
+            "tool_name": "send_channel_message",
+            "arguments": {"channel": channel, "body": "wm-v19-alpha"},
             "role": "shared_write",
         }
         read = {
-            "tool_name": "get_users_in_channel",
+            "tool_name": "read_channel_messages",
             "arguments": {"channel": channel},
             "role": "readback",
         }
         conflict = {
-            "tool_name": "remove_user_from_slack",
-            "arguments": {"user": user},
+            "tool_name": "send_channel_message",
+            "arguments": {"channel": channel, "body": "wm-v19-beta"},
             "role": "competing_write",
         }
         return (
             [write, read, read],
             [write, conflict, read],
-            {"kind": "slack_membership", "user": user, "present": True},
-            {"kind": "slack_membership", "user": user, "present": False},
+            {"kind": "slack_message", "body": "wm-v19-alpha", "present": True},
+            {"kind": "slack_message", "body": "wm-v19-beta", "present": True},
         )
     if suite == "travel":
         write = {
@@ -285,8 +284,8 @@ def _readback_matches(output: Any, expectation: Mapping[str, Any]) -> bool:
             and row.get("subject") == expectation["value"]
             for row in payload
         )
-    if kind == "slack_membership":
-        present = str(expectation["user"]) in [str(item) for item in payload]
+    if kind == "slack_message":
+        present = any(row.get("body") == expectation["body"] for row in payload)
         return present is bool(expectation["present"])
     if kind == "calendar_start":
         return any(
@@ -345,7 +344,10 @@ def execute_sequence(
                 function=tool_name,
                 arguments=arguments,
             )
-        formatted_output = _tool_result_to_str(runtime_output)
+        if isinstance(runtime_output, (BaseModel, list, tuple, Mapping)):
+            formatted_output = yaml.safe_dump(_plain(runtime_output)).strip()
+        else:
+            formatted_output = str(runtime_output)
         ledger = _ledger_update(
             ledger,
             registry,

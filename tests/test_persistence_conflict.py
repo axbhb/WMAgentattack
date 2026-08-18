@@ -15,7 +15,8 @@ def test_suite_readback_validators():
         {"kind": "banking_subject", "id": 7, "value": "wm-v19-alpha"},
     )
     assert _readback_matches(
-        ["Eve"], {"kind": "slack_membership", "user": "Eve", "present": True}
+        [{"body": "wm-v19-alpha"}],
+        {"kind": "slack_message", "body": "wm-v19-alpha", "present": True},
     )
     assert _readback_matches(
         [{"title": "x", "start_time": "2027-01-15T09:00:00"}],

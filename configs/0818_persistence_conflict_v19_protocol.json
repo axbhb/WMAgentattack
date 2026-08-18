@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_persistence_conflict_v19",
-  "status": "manifest_frozen_before_sequence_execution",
+  "status": "preregistered_before_manifest_build",
   "research_question": "Do same-root legal modifications persist into a second read, and do legal competing updates produce reproducible, model-visible successor differences across all four AgentDojo suites?",
   "scope": {
     "clean_only": true,
@@ -57,11 +57,9 @@
     "expected_prefix_replay_calls_two_replicas": 76
   },
   "manifest": {
-    "path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v1/a/manifest.json",
-    "audit_path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v1/a/audit.json",
-    "sha256": "a12738f6ba941fe572a83c72aa12493f7c78517c72821fe260ba91c266386cd2",
-    "audit_sha256": "bda4a2fe5bdb20b809e5e82a94516aad4c67b3dc32e140f6934457a63a474f27",
-    "independent_builds_byte_identical": true
+    "path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v2/a/manifest.json",
+    "audit_path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v2/a/audit.json",
+    "sha256": null
   },
   "execution": {
     "fresh_state_replicas_per_sequence": 2,
@@ -93,6 +91,16 @@
     "pass": "Freeze and merge v17 legal-action forks, v18 execution-boundary pairs, and v19 persistence/conflict sequences; then preregister one task-disjoint tiny world-model comparison against Structured Markov v3/v6.",
     "fail": "Do not scale or train on multi-step paired data; preserve exact simulator transitions and diagnose the failed suite or semantic readback representation without relaxing this gate."
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v1",
+  "invalid_runtime_attempt": {
+    "job_id": 7115,
+    "archive": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v1",
+    "classification": "INVALID_RUNTIME_INTEGRITY",
+    "completed_sequences": 18,
+    "travel_formatter_failures": 6,
+    "slack_partial_mutation_key_errors": 3,
+    "scientific_gate_interpretable": false,
+    "repair_scope": "JSON-native output formatting and label-blind replacement of the failing Slack remove action; tasks, roots, budgets, metrics, and thresholds unchanged"
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v2",
   "result": null
 }
