@@ -1,0 +1,60 @@
+{
+  "protocol_id": "0818_late_fusion_distillation_v15",
+  "status": "preregistered_before_training",
+  "research_question": "Can a zero-initialized exact/evidence late-fusion student distill the action-relevant contribution of a full-graph oracle without reconstructing future sparse graph features?",
+  "sources": {
+    "events": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "events_sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "event_graph": "/share/guozhix/wmagentattack/0818/action_event_graph_v12/data_gate/formal_v1/a/dataset.json",
+    "event_graph_sha256": "a6ea2205db5055c2ab96dc32efbf9d41d70c6160af1b1d44bcd677d73872ebb7",
+    "partition": "/share/guozhix/wmagentattack/0818/hybrid_evidence_residual_v14/data_gate/formal_v1/a/dataset.json",
+    "partition_sha256": "9582ca68e8075d0f1fda2d73cd0120020efa6198bb761bf03257810af25a97a6",
+    "v6_predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
+    "v6_predictions_sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd",
+    "v14_gate": "/share/guozhix/wmagentattack/0818/hybrid_evidence_residual_v14/oracle_attribution/formal_v1/partition_gate.json",
+    "v14_gate_sha256": "5ecd9f3c25e1783ff9d06d0a54c113d7b09803485bf0d9b08761f1fa7c0d2d72"
+  },
+  "budget": {
+    "folds": 5,
+    "seeds": [7, 17, 29],
+    "structured_teacher_fits": 15,
+    "full_graph_oracle_fits": 15,
+    "capacity_control_fits": 15,
+    "distilled_student_fits": 15,
+    "post_result_reruns": 0
+  },
+  "training": {
+    "epochs": 80,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "latent_size": 32,
+    "dropout": 0.1,
+    "h1_ce_weight": 0.25,
+    "h1_kl_weight": 2.0,
+    "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+    "latent_context_weight": 0.1,
+    "oracle_action_kl_weight": 0.5,
+    "oracle_temperature": 1.0,
+    "future_joint_weight": 0.0
+  },
+  "teacher_training_protocol": {
+    "training": {"fixed_epochs": 120, "learning_rate": 0.001, "weight_decay": 0.0001, "hidden_size": 96, "hash_dimension": 128, "dropout": 0.1, "outcome_loss_weight": 1.0, "outcome_positive_weight_cap": 10.0, "joint_loss_weight": 0.25}
+  },
+  "gate": {
+    "maximum_h1_nll_degradation_vs_v6": 0.005,
+    "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+    "minimum_h2_h5_nll_gain_vs_v6": 0.01,
+    "minimum_h2_h5_nll_gain_vs_capacity_control": 0.005,
+    "minimum_fraction_of_v14_full_oracle_gain": 0.50,
+    "minimum_task_positive_fraction": 0.60,
+    "minimum_positive_seeds": 2,
+    "minimum_oracle_kl_gain_vs_capacity": 0.005,
+    "maximum_absolute_future_joint_ce_difference_vs_v6": 1e-12,
+    "require_all_legal": true,
+    "require_parameter_match": true,
+    "require_complete_budget": true
+  },
+  "scope": {"new_llm_calls": 0, "new_tool_executions": 0, "new_attacks": 0, "planner_runs": 0, "real_endpoints": 0},
+  "planned_archive": "/share/guozhix/wmagentattack/0818/late_fusion_distillation_v15/formal_v1"
+}
