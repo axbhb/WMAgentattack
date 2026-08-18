@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_relational_router_then_uncertainty_v10",
-  "status": "stage_e1_no_go_stage_e2_frozen_before_training",
+  "status": "completed_no_go_after_uncertainty_direction_switch",
   "research_question": "Can a task-ID-free relational state signature and state-dependent sparse residual beat v6; if not, does an uncertainty-aware ensemble provide a scientifically better world model without another latent router?",
   "scope": {
     "existing_agentdojo_traces_only": true,
@@ -180,5 +180,36 @@
     "predictions_sha256": "cbe0ac0ca67a5773d7c261c8a0061d4545086367ad1ab7a91d5ac039fe5f1673",
     "run_metrics_sha256": "bf4bdc468a748e6c9e4c9375d7b154f27ae8424086e5c3a51f39bfd361033602",
     "authorized_next_stage": "stage_e2_direction_switch"
+  },
+  "stage_e2_formal_result": {
+    "job_id": 7104,
+    "git_commit": "68275da88cb04a476827d5d03d8b4e283edb644b",
+    "archive": "/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10/stage_e2/formal_v1",
+    "decision": "NO_GO_UNCERTAINTY_ENSEMBLE_E2",
+    "gate_clauses_passed": 6,
+    "gate_clauses_total": 10,
+    "runtime_failures": 0,
+    "completed_budget": {
+      "teacher_fits": 45,
+      "residual_fits": 45,
+      "ensemble_evaluations": 15
+    },
+    "metrics": {
+      "h1_nll_gain_vs_mean_member": 0.021254586308227314,
+      "h1_accuracy_gain_vs_mean_member": -0.003425879363841365,
+      "h2_h5_nll_gain_vs_mean_member": 0.004396275304823397,
+      "future_joint_ce_gain_vs_mean_member": 0.020045067274941115,
+      "h2_h5_positive_task_fraction": 1.0,
+      "error_epistemic_gap": 0.0009924170961416274,
+      "mean_epistemic_mi": 0.009180454710063993
+    },
+    "predictions_sha256": "0fc3011f112687c68f4745e09ce0d23dd73fcb840defaba4e91d4ed40bdfb843",
+    "run_metrics_sha256": "5236e514d66171a151a403524371ec7a038b2e8abd7b6e4659967e152b91b2be"
+  },
+  "final_conclusion": {
+    "retained_model": "Structured Markov v3 plus four-cell outcome head plus zero-initialized multi-step residual dynamics (v6)",
+    "ensemble_status": "diagnostic_only_not_retained_due_accuracy_cost_and_insufficient_multistep_gain",
+    "rejected_direction": "additional latent encoders, sparse routers, coarse experts, or output-level ensembles as the primary world-model replacement",
+    "next_research_direction": "factorized explicit transition targets: observable state delta, evidence acquisition/provenance, goal-progress update, and execution status before action derivation"
   }
 }

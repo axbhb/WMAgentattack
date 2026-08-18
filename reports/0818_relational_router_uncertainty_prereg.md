@@ -21,3 +21,17 @@ The mechanism has two real local signals. Future four-cell CE improves by 0.0104
 This result rejects another latent/router escalation. Stage E2 is now authorized exactly as frozen: a uniform three-member probabilistic v6 ensemble with three independent ensemble groups. It changes the research target from representation capacity to predictive uncertainty. No E2 weight, temperature, threshold, task, seed, or gate has been selected from E1 outcomes.
 
 Stage E1 archive: `/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10/stage_e1/formal_v1`
+
+## Stage E2 formal conclusion
+
+Slurm 7104 completed all 45 teacher fits, 45 v6 residual fits, and 15 frozen ensemble evaluations with zero runtime failures. All archive/source hashes and eight tests pass. The formal decision is `NO_GO_UNCERTAINTY_ENSEMBLE_E2`: 6 of 10 clauses passed.
+
+Uniform ensembling produces a strong probability-distribution effect. H1 NLL improves by 0.02125 in every ensemble group and on every held-out task. Future four-cell CE improves by 0.02005, also in every group and task. H2--H5 NLL improves in all three groups and all tasks, but the mean gain is only 0.00440, far below the frozen 0.02 threshold. The ensemble also lowers h1 accuracy by 0.00343, beyond the 0.002 allowance. Member mutual information is nonzero (mean 0.00918), but its task-macro error separation is only 0.00099 rather than the required 0.005 and one ensemble group has the wrong sign.
+
+This is counterevidence against treating more model uncertainty machinery as the primary repair. Probability averaging calibrates the stochastic victim-action distribution, but it neither recovers decisive actions nor materially repairs long-horizon dynamics. The ensemble is therefore retained only as a calibration diagnostic, not as the main world model.
+
+## Final direction change
+
+The retained operational model remains v6: Structured Markov v3 plus the four-cell outcome auxiliary and zero-initialized recurrent residual. The next independent research program should stop optimizing raw next-tool identity as the principal latent target. Instead it should build and validate factorized transition labels for observable state delta, evidence acquisition/provenance, goal-progress update, and execution status. A deterministic or calibrated action head should then be conditioned on the predicted intermediate state. This tests whether the current aleatoric next-action target is hiding a more stable semantic transition process.
+
+Stage E2 archive: `/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10/stage_e2/formal_v1`
