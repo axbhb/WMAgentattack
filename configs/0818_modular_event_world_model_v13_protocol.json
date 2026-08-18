@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_modular_event_world_model_v13",
-  "status": "stage_m1_passed_stage_m2_frozen_before_training",
+  "status": "complete_no_go_predicted_event_graph_v13",
   "research_question": "Can the v12 event-graph action path and retained v6 joint-outcome path coexist without shared-hidden negative transfer?",
   "sequential_exploratory": true,
   "scope": {
@@ -94,5 +94,33 @@
   "teacher_training_protocol": {
     "training": {"fixed_epochs":120,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"hash_dimension":128,"dropout":0.1,"outcome_loss_weight":1.0,"outcome_positive_weight_cap":10.0,"joint_loss_weight":0.25}
   },
+  "stage_m2_result": {
+    "decision": "NO_GO_PREDICTED_EVENT_GRAPH_WORLD_MODEL_V13",
+    "job_id": 7108,
+    "git_commit": "473fe7d1bd7ca109e6e6d16402a056bbac13260b",
+    "archive": "/share/guozhix/wmagentattack/0818/modular_event_world_model_v13/stage_m2/formal_v1",
+    "elapsed": "00:08:31",
+    "training_units": 30,
+    "teacher_fits": 15,
+    "runtime_failures": 0,
+    "paired_rows_per_arm": 41433,
+    "graph_bce_gain_vs_train_prior": -0.06971871904678707,
+    "h1_nll_gain_vs_v6": 0.0009473203022073162,
+    "h1_accuracy_gain_vs_v6": 0.002467446970084683,
+    "h2_h5_nll_gain_vs_v6": -0.006190693329895151,
+    "h2_h5_nll_gain_vs_capacity": 0.004008743207350393,
+    "h2_h5_positive_task_fraction": 0.45,
+    "positive_seeds": 1,
+    "future_joint_ce_difference_vs_v6": 0.0,
+    "gate_checks_passed": 8,
+    "gate_checks_total": 13,
+    "predictions_sha256": "2a776e71fcba62fc8399c78d0f53401f6bca78f78915d400a318f6ee4932f1e5",
+    "composite_predictions_sha256": "97f4b8de2031015195ae3cfd63464046307475a40463a5897daa01568dba84b3",
+    "run_metrics_sha256": "40f81fa03c6df4f80ae641a038c23be751738e32eb33b19ac6bad06f196f3beb",
+    "gate_sha256": "8bbb681471d9148dc4b7e8cedea4e463b12de06b761f4425e2aedb0e824c5e8f",
+    "checksums_sha256": "eff702bedea4d1c20bd9e8d66f4a449fbed736baa39b5d0f7770dffe3de1f5aa"
+  },
+  "retained_architecture": "structured_residual_v6 with independent four-cell outcome branch",
+  "authorized_direction": "v14 exact action/tool structure plus learned stochastic receipt/evidence residual",
   "planned_archive": "/share/guozhix/wmagentattack/0818/modular_event_world_model_v13"
 }
