@@ -17,7 +17,7 @@
     "state_block_weight": 0.50,
     "event_graph_block_weight": 0.30,
     "current_action_block_weight": 0.20,
-    "support_calibration": "per-fold per-horizon 25th percentile of training leave-one-trajectory-out top-1 cosine similarity",
+    "support_calibration": "per-fold per-horizon 25th percentile of training leave-one-task-out top-1 cosine similarity",
     "raw_text": false,
     "labels_in_query": false,
     "confirmation_rows_in_index": false
