@@ -1,0 +1,110 @@
+{
+  "protocol_id": "0818_action_conditioned_event_graph_v12",
+  "status": "preregistered_action_event_graph_data_gate",
+  "research_question": "Do causal tool/action/argument/receipt event graphs contain task-disjoint action-dynamics information that generic v11 text-delta factors lacked?",
+  "direction_change_evidence": {
+    "v11_decision": "NO_GO_FACTORIZED_SEMANTIC_TRANSITION_V11",
+    "v11_oracle_h2_h5_nll_gain_vs_v6": -0.009797909038785671,
+    "interpretation": "True generic factors did not help, so v12 changes the target to action-grounded events and requires oracle sufficiency before learning a graph predictor."
+  },
+  "scope": {
+    "agentdojo_sandbox_only": true,
+    "existing_trajectories_only": true,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "new_attacks": 0,
+    "planner_runs": 0,
+    "task_disjoint": true,
+    "oracle_graph_is_confirmation_diagnostic_only": true
+  },
+  "sources": {
+    "steps_path": "/share/guozhix/wmagentattack/0714/agentdojo_v2/final_dataset/steps.jsonl",
+    "steps_sha256": "a18a8f58ad60019734994935f56b6fd739b181a36a4af0ac4cb260d43215e201",
+    "events_path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "events_sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "rows": 6763,
+    "trajectories": 2060,
+    "tasks": 20
+  },
+  "data_gate": {
+    "double_build_required": true,
+    "require_byte_identical_dataset_and_audit": true,
+    "expected_rows": 6763,
+    "expected_tasks": 20,
+    "require_unique_event_alignment": true,
+    "require_nonempty_graphs": true,
+    "require_complete_nonfinish_tool_identity": true,
+    "minimum_receipt_formats": 5,
+    "maximum_single_graph_signature_fraction": 0.20,
+    "require_zero_forbidden_fields": true,
+    "legal_action_delta_is_audited_not_a_primary_signal": true
+  },
+  "oracle_sufficiency_stage": {
+    "authorization": "only_if_data_gate_passes",
+    "folds": 5,
+    "seeds": [7, 17, 29],
+    "fixed_fits": {"teacher": 15, "zero_graph_capacity_control": 15, "true_event_graph_oracle": 15},
+    "post_result_reruns": 0,
+    "representation": {
+      "explicit_sorted_feature_catalog": true,
+      "raw_values_or_text": false,
+      "task_or_trajectory_identifiers": false,
+      "current_exact_tool_and_typed_arguments": true,
+      "typed_receipt_schema": true,
+      "entity_schema_delta_from_previous": true,
+      "legal_delta_from_previous": true,
+      "future_true_graph": "oracle diagnostic only"
+    },
+    "training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1
+    },
+    "gate": {
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.02,
+      "minimum_h2_h5_nll_gain_vs_zero_graph_control": 0.01,
+      "minimum_positive_task_fraction": 0.60,
+      "minimum_positive_seeds": 2,
+      "minimum_future_joint_ce_gain_vs_v6": 0.005,
+      "require_all_legal": true,
+      "require_parameter_match": true,
+      "require_complete_budget": true
+    }
+  },
+  "external_v6_control": {
+    "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
+    "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "literature_map": [
+    {
+      "paper": "Graph World Model (ICML 2025)",
+      "url": "https://proceedings.mlr.press/v267/feng25p.html",
+      "repo_hypothesis": "Represent each tool call as an action node linked to typed argument and receipt nodes."
+    },
+    {
+      "paper": "Web Agents with World Models (2024)",
+      "url": "https://arxiv.org/abs/2410.13232",
+      "repo_hypothesis": "Predict compact transition-focused receipt changes instead of reconstructing full observations."
+    },
+    {
+      "paper": "Do Transformer World Models Give Better Policy Gradients? (ICML 2024)",
+      "url": "https://proceedings.mlr.press/v235/ma24i.html",
+      "repo_hypothesis": "Keep action conditioning explicit and direct rather than burying action effects in an unconstrained latent."
+    },
+    {
+      "paper": "What Has a Foundation Model Found? (ICML 2025)",
+      "url": "https://proceedings.mlr.press/v267/vafa25a.html",
+      "repo_hypothesis": "Use task-disjoint oracle sufficiency as an inductive-bias probe before accepting a representation."
+    }
+  ],
+  "planned_archive": "/share/guozhix/wmagentattack/0818/action_event_graph_v12"
+}
