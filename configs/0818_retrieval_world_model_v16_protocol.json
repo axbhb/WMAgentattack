@@ -1,0 +1,45 @@
+{
+  "protocol_id": "0818_retrieval_world_model_v16",
+  "status": "preregistered_support_gate_before_execution",
+  "research_question": "Do task-disjoint training transitions provide sufficiently close semantic prototypes for a retrieval-grounded successor-action world model to outperform v6 on covered events?",
+  "sources": {
+    "events": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "events_sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "event_graph": "/share/guozhix/wmagentattack/0818/action_event_graph_v12/data_gate/formal_v1/a/dataset.json",
+    "event_graph_sha256": "a6ea2205db5055c2ab96dc32efbf9d41d70c6160af1b1d44bcd677d73872ebb7",
+    "v6_predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
+    "v6_predictions_sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "retrieval": {
+    "k": 32,
+    "temperature": 0.10,
+    "legal_smoothing": 0.001,
+    "state_block_weight": 0.50,
+    "event_graph_block_weight": 0.30,
+    "current_action_block_weight": 0.20,
+    "support_calibration": "per-fold per-horizon 25th percentile of training leave-one-trajectory-out top-1 cosine similarity",
+    "raw_text": false,
+    "labels_in_query": false,
+    "confirmation_rows_in_index": false
+  },
+  "budget": {"folds": 5, "seeds_for_pairing": [7, 17, 29], "retrieval_variants": 1, "post_result_reruns": 0},
+  "gate": {
+    "minimum_h2_h5_supported_fraction": 0.40,
+    "minimum_supported_h2_h5_nll_gain_vs_v6": 0.0,
+    "minimum_supported_positive_task_fraction": 0.60,
+    "minimum_supported_positive_seeds": 2,
+    "minimum_uncovered_minus_supported_nll_gap": 0.05,
+    "require_all_legal": true,
+    "require_complete_rows": true,
+    "require_zero_runtime_failures": true
+  },
+  "decision_rule": "Only a passing support gate authorizes retraining v6 to expose full probabilities and testing a conservative similarity-gated residual mixture.",
+  "scope": {"new_llm_calls": 0, "new_tool_executions": 0, "new_attacks": 0, "planner_runs": 0, "real_endpoints": 0},
+  "literature_map": [
+    {"paper": "R-WoM: Retrieval-augmented World Model for Computer-use Agents", "url": "https://arxiv.org/abs/2510.11892", "repo_hypothesis": "Ground long-horizon forecasts in retrieved observed transitions instead of unconstrained latent generation."},
+    {"paper": "World Model Implanting for Test-time Adaptation of Embodied Agents", "url": "https://proceedings.mlr.press/v267/yoo25a.html", "repo_hypothesis": "Use prototype-based trajectory abstraction matching for novel held-out tasks."},
+    {"paper": "Improving Transformer World Models for Data-Efficient RL", "url": "https://proceedings.mlr.press/v267/dedieu25a.html", "repo_hypothesis": "Nearest-neighbor tokenization can preserve useful transition structure."},
+    {"paper": "Current Agents Fail to Leverage World Model as Tool for Foresight", "url": "https://arxiv.org/abs/2601.03905", "repo_hypothesis": "Require explicit coverage calibration before allowing retrieved foresight to influence decisions."}
+  ],
+  "planned_archive": "/share/guozhix/wmagentattack/0818/retrieval_world_model_v16/support_gate/formal_v1"
+}
