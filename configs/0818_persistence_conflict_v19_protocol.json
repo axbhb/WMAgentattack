@@ -104,5 +104,27 @@
     "repair_scope": "JSON-native output formatting and label-blind replacement of the failing Slack remove action; tasks, roots, budgets, metrics, and thresholds unchanged"
   },
   "planned_archive": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v2",
-  "result": null
+  "result": {
+    "job_id": 7116,
+    "decision": "GO_PERSISTENCE_CONFLICT_DATA_DIRECTION_V19",
+    "runtime_failures": 0,
+    "complete_sequences": 24,
+    "complete_pairs": 12,
+    "control_persistence_matches": 12,
+    "conflict_readback_matches": 12,
+    "shared_write_states_identical": 12,
+    "final_semantic_states_differ": 12,
+    "final_observations_differ": 12,
+    "suites_with_both_matches": 4,
+    "step_executions": 144,
+    "prefix_replay_calls": 76,
+    "total_sandbox_calls": 220,
+    "tests_passed": 19,
+    "dataset_sha256": "895294f17261d553e578317220a1fd0be1543ae85e9205f8a9e1fd467aa42ca0",
+    "gate_sha256": "56c71e3b17a551faeb61cd1e41d164087643660d9fa3f0159bce436de3460913",
+    "archive_checksums_sha256": "737ebc860760a2ab14b067ca92b798d62a64382e3df0f43b622260299686e633",
+    "archive": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v2",
+    "authorized_next_stage": "deterministic v17+v18+v19 dataset merge and one preregistered task-disjoint tiny world-model comparison against Structured Markov v3/v6",
+    "not_authorized": ["attack generation", "real endpoints", "large model training", "Dreamer training", "planner evaluation"]
+  }
 }
