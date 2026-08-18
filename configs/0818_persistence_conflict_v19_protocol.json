@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_persistence_conflict_v19",
-  "status": "preregistered_before_manifest_build",
+  "status": "manifest_frozen_before_sequence_execution",
   "research_question": "Do same-root legal modifications persist into a second read, and do legal competing updates produce reproducible, model-visible successor differences across all four AgentDojo suites?",
   "scope": {
     "clean_only": true,
@@ -59,7 +59,9 @@
   "manifest": {
     "path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v2/a/manifest.json",
     "audit_path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/manifest_preflight_v2/a/audit.json",
-    "sha256": null
+    "sha256": "b81c88bde8b20caed0a3dfb64389cc6610c714a7346034dd9b0aa48d65ecbcc4",
+    "audit_sha256": "ddeaf63980968bed765ef08414ceeade9ebe1a6a08b77970c1e82b24942b3010",
+    "independent_builds_byte_identical": true
   },
   "execution": {
     "fresh_state_replicas_per_sequence": 2,
