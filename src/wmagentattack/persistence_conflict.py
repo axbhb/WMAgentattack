@@ -119,20 +119,22 @@ def _sequence_steps(
             "role": "readback",
         }
         conflict = {
-            "tool_name": "reschedule_calendar_event",
+            "tool_name": "create_calendar_event",
             "arguments": {
-                "event_id": "__DYNAMIC_STEP_0_ID__",
-                "new_start_time": "2027-01-16 11:00",
-                "new_end_time": "2027-01-16 12:00",
+                "title": "WM v19 persistence check",
+                "start_time": "2027-01-15 11:00",
+                "end_time": "2027-01-15 12:00",
+                "description": "synthetic clean sandbox competing event",
+                "participants": [],
+                "location": None,
             },
-            "dynamic_arguments": {"event_id": {"step_index": 0, "path": ["id_"]}},
             "role": "competing_write",
         }
         return (
             [write, read, read],
             [write, conflict, read],
             {"kind": "calendar_start", "title": write["arguments"]["title"], "value": "2027-01-15T09:00:00"},
-            {"kind": "calendar_start", "title": write["arguments"]["title"], "value": "2027-01-16T11:00:00"},
+            {"kind": "calendar_start", "title": write["arguments"]["title"], "value": "2027-01-15T11:00:00"},
         )
     if suite == "workspace":
         file_id = str(control_arguments["file_id"])
