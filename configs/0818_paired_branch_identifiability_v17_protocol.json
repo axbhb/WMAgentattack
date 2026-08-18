@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_paired_branch_identifiability_v17",
-  "status": "preregistered_before_manifest_build",
+  "status": "manifest_frozen_before_branch_execution",
   "research_question": "Can outcome-blind same-prefix action forks create reproducible and non-trivial action-effect supervision that the observational AgentDojo trajectories and the 0805 balanced counterfactual pilot do not provide?",
   "scope": {
     "clean_only": true,
@@ -60,7 +60,10 @@
   "manifest": {
     "path": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/manifest_preflight_v1/a/manifest.json",
     "audit_path": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/manifest_preflight_v1/a/audit.json",
-    "sha256": null,
+    "sha256": "fcf5f30d105c9b1eb56e4b888fcedf9bcb667fb195781168e151bd44dd499b13",
+    "audit_sha256": "8114cf33b35d095fab642343c96fc939f3427af5f11bdc1328db5bc89060d575",
+    "independent_builds_byte_identical": true,
+    "novel_exact_rows_vs_0805": 47,
     "freeze_required_before_branch_execution": true
   },
   "execution": {
@@ -98,8 +101,8 @@
     "queries_per_class": {"mutating": 24, "read_only": 24},
     "fresh_state_replicas": 2,
     "counterfactual_tool_executions": 96,
-    "observed_prefix_replay_tool_executions": null,
-    "total_sandbox_tool_executions": null,
+    "observed_prefix_replay_tool_executions": 152,
+    "total_sandbox_tool_executions": 248,
     "victim_llm_calls": 0,
     "attack_examples": 0,
     "model_training_runs": 0,
