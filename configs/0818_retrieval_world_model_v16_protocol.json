@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_retrieval_world_model_v16",
-  "status": "preregistered_support_gate_before_execution",
+  "status": "complete_no_go_retrieval_support_data_direction_switch",
   "research_question": "Do task-disjoint training transitions provide sufficiently close semantic prototypes for a retrieval-grounded successor-action world model to outperform v6 on covered events?",
   "sources": {
     "events": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
@@ -34,6 +34,25 @@
     "require_zero_runtime_failures": true
   },
   "decision_rule": "Only a passing support gate authorizes retraining v6 to expose full probabilities and testing a conservative similarity-gated residual mixture.",
+  "result": {
+    "decision": "NO_GO_RETRIEVAL_SUPPORT_V16",
+    "job_id": 7111,
+    "git_commit": "b7ba76f",
+    "archive": "/share/guozhix/wmagentattack/0818/retrieval_world_model_v16/support_gate/formal_v1",
+    "elapsed": "00:00:39",
+    "runtime_failures": 0,
+    "rows": 41433,
+    "h2_h5_supported_fraction": 0.8496925779534475,
+    "supported_h2_h5_nll_gain_vs_v6": -0.8208492151051022,
+    "supported_positive_task_fraction": 0.05,
+    "positive_seeds": 0,
+    "uncovered_minus_supported_nll_gap": 0.18718410112980965,
+    "predictions_sha256": "9bbf42f3538b13d96513a0d2d543229e7114996d1336e0e023602e0d8a642bce",
+    "run_metrics_sha256": "9a0f2c22a37d5eadd2e5cc70b013f0f88ac6dd76912a5ceba74fde10aa8b540e",
+    "gate_sha256": "3402f7678d7b43fcdfef1d29ea08fb9799f255d6153baea8c6bfe54949af6a78",
+    "checksums_sha256": "4ba28d1faa750feb23963f471177161dc0332e304150371bf9d6acdcab4273c6"
+  },
+  "authorized_direction": "clean-only counterfactual branching and transition-identifiability data gate; no further encoder or latent search on the same observational dataset",
   "scope": {"new_llm_calls": 0, "new_tool_executions": 0, "new_attacks": 0, "planner_runs": 0, "real_endpoints": 0},
   "literature_map": [
     {"paper": "R-WoM: Retrieval-augmented World Model for Computer-use Agents", "url": "https://arxiv.org/abs/2510.11892", "repo_hypothesis": "Ground long-horizon forecasts in retrieved observed transitions instead of unconstrained latent generation."},
