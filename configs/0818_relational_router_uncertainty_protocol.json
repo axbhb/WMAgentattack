@@ -1,0 +1,142 @@
+{
+  "protocol_id": "0818_relational_router_then_uncertainty_v10",
+  "status": "preregistered_stage_e1_before_training",
+  "research_question": "Can a task-ID-free relational state signature and state-dependent sparse residual beat v6; if not, does an uncertainty-aware ensemble provide a scientifically better world model without another latent router?",
+  "scope": {
+    "existing_agentdojo_traces_only": true,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "new_attacks": 0,
+    "planner_runs": 0,
+    "labels_are_targets_not_inputs": true,
+    "confirmation_labels_used_for_tuning": false
+  },
+  "research_budget": {
+    "maximum_candidate_stages": 2,
+    "post_result_reruns": 0,
+    "folds": 5,
+    "seeds": [7, 17, 29]
+  },
+  "frozen_dataset": {
+    "path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "audit_path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json",
+    "audit_sha256": "677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80",
+    "event_rows": 6763,
+    "trajectories": 2060,
+    "tasks": 20
+  },
+  "external_v6_control": {
+    "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
+    "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "external_v9_negative_control": {
+    "predictions": "/share/guozhix/wmagentattack/0818/domain_expert_affordance_v9/stage_d1/formal_v1/results/predictions.jsonl",
+    "sha256": "bddcccb7504509ef1849a9ef8ebbb9ea94ea538da88ced2fa09952d825b05211"
+  },
+  "teacher": {
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "outcome_loss_weight": 1.0,
+    "outcome_positive_weight_cap": 10.0,
+    "joint_loss_weight": 0.25
+  },
+  "literature_mapping": [
+    {
+      "paper": "QORA: Zero-Shot Transfer via Interpretable Object-Relational Model Learning, ICML 2024",
+      "url": "https://proceedings.mlr.press/v235/stella24a.html",
+      "repo_hypothesis": "Replace lexical/domain routing with a compact relation-state signature that can transfer across held-out tasks."
+    },
+    {
+      "paper": "DSMoE: Matrix-Partitioned Experts with Dynamic Routing, EMNLP 2025",
+      "url": "https://aclanthology.org/2025.emnlp-main.997/",
+      "repo_hypothesis": "Route each visible state to exactly two basis residuals instead of assigning one expert to an entire domain."
+    },
+    {
+      "paper": "Is a Modular Architecture Enough?, NeurIPS 2022",
+      "url": "https://openreview.net/forum?id=3-3XMModtrx",
+      "repo_hypothesis": "Require utilization and entropy diagnostics and compare against an equal-input, parameter-matched dense control."
+    },
+    {
+      "paper": "PETS: Deep Reinforcement Learning in a Handful of Trials using Probabilistic Dynamics Models, NeurIPS 2018",
+      "url": "https://papers.nips.cc/paper/7725-deep-reinforcement-learning-in-a-handful-of-trials-using-probabilistic-dynamics-models",
+      "repo_hypothesis": "If routing fails, change direction to a uniform deep ensemble that exposes epistemic disagreement and improves predictive distributions."
+    }
+  ],
+  "stage_e1": {
+    "hypothesis": "A non-lexical relation-state signature with top-2 dynamic basis residuals removes the coarse-domain interference seen in v9 and beats both v6 and a parameter-matched dense signature model.",
+    "relation_signature": {
+      "removed_hash_dimension": 24,
+      "max_nodes": 64,
+      "max_concepts": 32,
+      "features": ["node_type_histogram", "relation_type_histogram", "numeric_affordance_mean", "numeric_affordance_max"],
+      "uses_lexical_hashes": false,
+      "uses_track": false,
+      "uses_task_id": false
+    },
+    "dense_control": {"bottleneck_size": 96},
+    "sparse_router": {
+      "experts": 4,
+      "active_experts": 2,
+      "expert_bottleneck_size": 24,
+      "router_hidden_size": 32
+    },
+    "training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1,
+      "successor_weight": 0.25,
+      "successor_discount": 0.8
+    },
+    "fixed_fits": {"teacher": 15, "dense_relation_control": 15, "sparse_relation": 15},
+    "gate": {
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.01,
+      "minimum_h2_h5_nll_gain_vs_dense": 0.005,
+      "minimum_h2_h5_nll_gain_vs_v9": 0.01,
+      "minimum_positive_task_fraction": 0.60,
+      "minimum_threshold_positive_seeds": 2,
+      "minimum_positive_domains": 3,
+      "maximum_future_joint_ce_degradation": 0.01,
+      "maximum_parameter_gap_fraction": 0.02,
+      "maximum_expert_soft_load": 0.65,
+      "minimum_topk_entropy": 0.60,
+      "require_all_experts_used": true,
+      "require_all_legal": true
+    }
+  },
+  "stage_e2_direction_switch": {
+    "authorization": "run_only_if_stage_e1_is_no_go",
+    "hypothesis": "The limiting factor is irreducible and epistemic uncertainty rather than missing latent capacity; a uniform probabilistic ensemble improves task-disjoint predictive distributions and identifies model errors.",
+    "mechanism": "Three independent v6 teacher-plus-residual members per ensemble; uniform probability mixture; predictive entropy and member mutual information reported separately; no confirmation-tuned weights or thresholds.",
+    "ensemble_groups": {
+      "7": [7, 17, 29],
+      "37": [37, 47, 59],
+      "67": [67, 79, 89]
+    },
+    "fixed_fits": {"teacher": 45, "structured_residual_v6": 45, "ensemble_evaluations": 15},
+    "gate": {
+      "minimum_h1_nll_gain_vs_mean_member": 0.01,
+      "maximum_h1_accuracy_degradation_vs_mean_member": 0.002,
+      "minimum_h2_h5_nll_gain_vs_mean_member": 0.02,
+      "minimum_future_joint_ce_gain_vs_mean_member": 0.01,
+      "minimum_positive_task_fraction": 0.60,
+      "minimum_positive_ensemble_groups": 2,
+      "minimum_error_epistemic_gap": 0.005,
+      "require_all_legal": true
+    }
+  },
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10"
+}
