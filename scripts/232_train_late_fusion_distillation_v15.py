@@ -93,7 +93,7 @@ def main():
         if file_sha256(path)!=protocol["sources"][key]:raise ValueError(f"hash mismatch {key}")
     source=json.loads(args.events.read_text());graphs=json.loads(args.graph_dataset.read_text());partition=json.loads(args.partition.read_text());exact_mask,evidence_mask=_partition_masks(graphs,partition);device="cuda" if args.device=="auto" and torch.cuda.is_available() else ("cpu" if args.device=="auto" else args.device)
     if device=="cpu":torch.set_num_threads(8)
-    folds=[0] if args.smoke else list(range(protocol["budget"]["folds"]));seeds=[protocol["budget"]["seeds"][0]] if args.smoke else protocol["budget"]["seeds"];run_protocol=copy.deepcopy(protocol);run_protocol["oracle_sufficiency_stage"]={"training":copy.deepcopy(protocol["training"])}
+    folds=[0] if args.smoke else list(range(protocol["budget"]["folds"]));seeds=[protocol["budget"]["seeds"][0]] if args.smoke else protocol["budget"]["seeds"];run_protocol=copy.deepcopy(protocol);oracle_training=copy.deepcopy(protocol["training"]);oracle_training["latent_weight"]=oracle_training["latent_context_weight"];run_protocol["oracle_sufficiency_stage"]={"training":oracle_training}
     if args.smoke:run_protocol["teacher_training_protocol"]["training"]["fixed_epochs"]=1;run_protocol["training"]["epochs"]=1;run_protocol["oracle_sufficiency_stage"]["training"]["epochs"]=1
     args.output_dir.mkdir(parents=True,exist_ok=True);pred=args.output_dir/"predictions.jsonl";pred.write_text("");runs=[];parameter_counts={};teacher_fits=oracle_fits=0
     for fold in folds:
