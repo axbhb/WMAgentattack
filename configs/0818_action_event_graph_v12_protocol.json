@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_action_conditioned_event_graph_v12",
-  "status": "preregistered_action_event_graph_data_gate",
+  "status": "data_gate_passed_oracle_stage_frozen_before_training",
   "research_question": "Do causal tool/action/argument/receipt event graphs contain task-disjoint action-dynamics information that generic v11 text-delta factors lacked?",
   "direction_change_evidence": {
     "v11_decision": "NO_GO_FACTORIZED_SEMANTIC_TRANSITION_V11",
@@ -83,6 +83,33 @@
   "external_v6_control": {
     "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
     "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "teacher_training_protocol": {
+    "training": {
+      "fixed_epochs": 120,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "hash_dimension": 128,
+      "dropout": 0.1,
+      "outcome_loss_weight": 1.0,
+      "outcome_positive_weight_cap": 10.0,
+      "joint_loss_weight": 0.25
+    }
+  },
+  "data_gate_result": {
+    "decision": "GO_ACTION_EVENT_GRAPH_DATA_GATE",
+    "git_commit": "68a8bae4ff8af724e7046b94294813f34295c0f4",
+    "archive": "/share/guozhix/wmagentattack/0818/action_event_graph_v12/data_gate/formal_v1",
+    "rows": 6763,
+    "tasks": 20,
+    "trajectories": 2060,
+    "feature_catalog_size": 263,
+    "maximum_signature_fraction": 0.021735916013603432,
+    "dataset_sha256": "a6ea2205db5055c2ab96dc32efbf9d41d70c6160af1b1d44bcd677d73872ebb7",
+    "audit_sha256": "5f98f27f0270737b430d515e5de50007566254b92c069ff43eab6f63c1e44459",
+    "data_gate_sha256": "510ba1401e818d28e8686254317ab5fd3fccca3ff5ec2f908ec820549d1b6255",
+    "checksums_sha256": "d5a79a28d2b405cd63f19acb82b11544388f64a811f41ade0675d3a97f5cb970"
   },
   "literature_map": [
     {
