@@ -621,6 +621,8 @@ def execute_frozen_manifest(
     replicas: int,
     readiness_gate: Mapping[str, float | int],
     logical_clock_iso: str | None = None,
+    expected_rows: int = 24,
+    expected_per_class: Mapping[str, int] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     if replicas != 2:
         raise ValueError("the frozen pilot requires exactly two replicas")
@@ -722,9 +724,13 @@ def execute_frozen_manifest(
     )
     observed_relations = int(universe["audit"]["observed_constraint_rows"]) + selected_relations
     observed_fraction = observed_relations / max(1, total_relations)
+    expected_per_class = dict(
+        expected_per_class or {"read_only": 12, "mutating": 12}
+    )
     collector_checks = {
-        "exact_24_bound_queries": len(manifest["rows"]) == 24,
-        "exact_48_fresh_state_executions": len(all_replicas) == 48,
+        "exact_bound_queries": len(manifest["rows"]) == expected_rows,
+        "exact_fresh_state_executions": len(all_replicas)
+        == expected_rows * replicas,
         "all_12_suite_difficulty_cells": len(
             {
                 (
@@ -735,10 +741,10 @@ def execute_frozen_manifest(
             }
         )
         == 12,
-        "exact_12_read_only_and_12_mutating": Counter(
+        "exact_mutation_class_budget": Counter(
             row["query"]["mutation_class"] for row in manifest["rows"]
         )
-        == {"read_only": 12, "mutating": 12},
+        == expected_per_class,
         "zero_stop_tool_executions": all(
             row["query"]["candidate_id"] != "STOP" for row in manifest["rows"]
         ),
@@ -746,8 +752,9 @@ def execute_frozen_manifest(
             item["prefix_replay"]["passed"] for item in all_replicas
         ),
         "zero_infrastructure_failures": not infrastructure_failures,
-        "all_argument_payloads_schema_valid": len(canonical_outcomes) == 24,
-        "all_replica_pairs_identical": len(replica_verification) == 24
+        "all_argument_payloads_schema_valid": len(canonical_outcomes)
+        == expected_rows,
+        "all_replica_pairs_identical": len(replica_verification) == expected_rows
         and all(row["identical"] for row in replica_verification),
         "zero_semantic_state_leakage": not leakage,
     }

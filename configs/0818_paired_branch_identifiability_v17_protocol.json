@@ -1,0 +1,114 @@
+{
+  "protocol_id": "0818_paired_branch_identifiability_v17",
+  "status": "preregistered_before_manifest_build",
+  "research_question": "Can outcome-blind same-prefix action forks create reproducible and non-trivial action-effect supervision that the observational AgentDojo trajectories and the 0805 balanced counterfactual pilot do not provide?",
+  "scope": {
+    "clean_only": true,
+    "agentdojo_synthetic_sandbox_only": true,
+    "external_endpoints": false,
+    "victim_llm_calls": 0,
+    "attack_examples": 0,
+    "model_training_runs": 0,
+    "dreamer_runs": 0
+  },
+  "source": {
+    "raw_dataset": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v2/panel_v2_architecture_dataset.json",
+    "raw_dataset_sha256": "c01a0c29a8e2ce99e6f3dd81c82f1711131868ebe81da62a0298fe7e42745746",
+    "semantic_dataset": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage1/rebuild_a/semantic_state_v3_dataset.json",
+    "semantic_dataset_sha256": "099aecb7ab70b5d822f44e9007fb95c1d6ed78569505dbc32621efdd88f82a53",
+    "previous_manifest": "/share/guozhix/wmagentattack/0805/counterfactual_evidence_execution_pilot/fixed_v3/manifest.frozen.json",
+    "previous_manifest_sha256": "a7e99a9c821757d200c6e943f0a22c764a22564a956897b68e384c7a25229569",
+    "adapter_extension": "configs/0729_custom_panel_v2_adapter_extension.json",
+    "adapter_extension_sha256": "edeb7dd0541e043776ef48fc0e9783951d124e58a6eff31b46449e9733bfd8e5",
+    "adapter_repair": "configs/0805_counterfactual_adapter_repair_v2.json",
+    "adapter_repair_sha256": "c8572f22225b9fa8ebdf12db92416efb84de48b23edfd2e55157cf734bcee2be"
+  },
+  "selection": {
+    "seed": "20260818-paired-branch-v17",
+    "split": "training",
+    "track": "deterministic_greedy",
+    "suites": ["banking", "slack", "travel", "workspace"],
+    "difficulties": ["L1", "L2", "L3"],
+    "actions_per_class": 2,
+    "task_ids": [
+      "clean::banking::user_task_2000",
+      "clean::banking::user_task_2004",
+      "clean::banking::user_task_2008",
+      "clean::slack::user_task_2100",
+      "clean::slack::user_task_2104",
+      "clean::slack::user_task_2108",
+      "clean::travel::user_task_2200",
+      "clean::travel::user_task_2204",
+      "clean::travel::user_task_2208",
+      "clean::workspace::user_task_2300",
+      "clean::workspace::user_task_2304",
+      "clean::workspace::user_task_2308"
+    ],
+    "anchor_rule": "Within each task, choose one prefix with at least two bound read-only and two bound mutating alternatives; prefer existing causal evidence, later prefixes, and a frozen hash tie-break.",
+    "binding_rule": "Use only schema-valid arguments from already-observed clean calls. Prefer structurally ambiguous read-only bindings and referentially unmatched mutating bindings; never read donor outputs or fresh branch outcomes.",
+    "previous_row_rule": "Deprioritize byte-identical query-plus-argument rows from the frozen 0805 manifest without excluding a state or action."
+  },
+  "expected_manifest_preview": {
+    "selected_rows": 48,
+    "selected_anchors": 12,
+    "selected_tasks": 12,
+    "selected_suite_difficulty_cells": 12,
+    "selected_per_class": {"mutating": 24, "read_only": 24},
+    "all_anchors_have_exact_budget": true,
+    "selection_uses_outcomes": false
+  },
+  "manifest": {
+    "path": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/manifest_preflight_v1/a/manifest.json",
+    "audit_path": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/manifest_preflight_v1/a/audit.json",
+    "sha256": null,
+    "freeze_required_before_branch_execution": true
+  },
+  "execution": {
+    "fresh_state_replicas_per_query": 2,
+    "reconstruct_prefix_from_default_environment_and_observed_prior_calls": true,
+    "require_prefix_ledger_and_semantic_state_match": true,
+    "require_replica_outcomes_byte_identical": true,
+    "frozen_logical_clock_iso": "2024-05-15T12:00:00",
+    "raw_tool_outputs_are_not_model_features": true,
+    "simulator_state_and_exact_delta_are_audit_only": true
+  },
+  "identifiability_gate": {
+    "required_complete_anchors": 12,
+    "minimum_anchors_with_two_effects": 10,
+    "minimum_anchors_with_three_effects": 6,
+    "minimum_pairwise_effect_difference_fraction": 0.5,
+    "minimum_boundary_event_total": 6,
+    "minimum_boundary_event_types": 2,
+    "effect_projection_excludes": [
+      "candidate action identity",
+      "last_action payload",
+      "raw tool output",
+      "final utility/security labels"
+    ]
+  },
+  "legacy_evidence_diagnostics": {
+    "minimum_observed_bound_query_fraction": 0.0,
+    "minimum_counterfactual_execution_errors": 0,
+    "minimum_counterfactual_conflicts": 0,
+    "minimum_counterfactual_ambiguity_events": 0
+  },
+  "fixed_budget": {
+    "manifest_independent_builds": 2,
+    "unique_bound_queries": 48,
+    "queries_per_class": {"mutating": 24, "read_only": 24},
+    "fresh_state_replicas": 2,
+    "counterfactual_tool_executions": 96,
+    "observed_prefix_replay_tool_executions": null,
+    "total_sandbox_tool_executions": null,
+    "victim_llm_calls": 0,
+    "attack_examples": 0,
+    "model_training_runs": 0,
+    "dreamer_runs": 0,
+    "rerun_after_scientific_result": false
+  },
+  "decision_policy": {
+    "pass": "Authorize a separately preregistered task-disjoint paired-branch dataset expansion and an intervention-masked entity-slot world-model probe; do not authorize attacks or Dreamer.",
+    "fail": "Retain counterevidence and stop neural architecture search on the current AgentDojo data; use exact transition execution with uncertainty rather than a learned action-effect latent model."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/formal_v1"
+}
