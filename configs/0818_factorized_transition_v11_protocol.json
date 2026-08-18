@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_factorized_semantic_transition_v11",
-  "status": "label_gate_passed_stage_f2_frozen_before_training",
+  "status": "completed_no_go_factorized_semantic_transition_v11",
   "research_question": "Does predicting stable semantic state/evidence/progress/execution transitions before the next action improve task-disjoint world modeling over v6?",
   "scope": {
     "existing_agentdojo_traces_only": true,
@@ -105,5 +105,38 @@
   },
   "implementation_integrity_repairs": [
     "Copied the already-frozen v6 teacher-training hyperparameters into this self-contained protocol before any Stage F2 neural result."
-  ]
+  ],
+  "stage_f2_result": {
+    "decision": "NO_GO_FACTORIZED_SEMANTIC_TRANSITION_V11",
+    "job_id": 7106,
+    "git_commit_at_run": "b446c8b13aa3e44a2fb9a886a3921704b4002376",
+    "archive": "/share/guozhix/wmagentattack/0818/factorized_semantic_transition_v11/stage_f2/formal_v1",
+    "fixed_fits_completed": 30,
+    "runtime_failures": 0,
+    "parameter_count_each_arm": 94584,
+    "paired_rows_each_arm": 41433,
+    "gate_clauses_passed": 7,
+    "gate_clauses_total": 14,
+    "metrics": {
+      "h1_nll_gain_vs_v6": 0.0014804541693367258,
+      "h1_accuracy_gain_vs_v6": 0.0006032727318089204,
+      "h2_h5_nll_gain_vs_v6": -0.00896236480410941,
+      "h2_h5_nll_gain_vs_capacity_control": -0.0002850581593534924,
+      "future_joint_ce_gain_vs_v6": -0.022366237515276985,
+      "oracle_h2_h5_nll_gain_vs_predicted": -0.0008355442346762628,
+      "oracle_h2_h5_nll_gain_vs_v6": -0.009797909038785671,
+      "observation_delta_nll_gain_vs_prior": -0.006455045906511952,
+      "observation_delta_accuracy_gain_vs_prior": -0.00007342143906020615,
+      "evidence_delta_nll_gain_vs_prior": 0.07925404082095777,
+      "evidence_delta_accuracy_gain_vs_prior": 0.10919002712736643,
+      "goal_progress_nll_gain_vs_prior": 0.06644715847946686,
+      "goal_progress_accuracy_gain_vs_prior": -0.011422584354424732,
+      "execution_status_nll_gain_vs_prior": 0.07044182390231715,
+      "execution_status_accuracy_gain_vs_prior": 0.03771628980132905
+    },
+    "predictions_sha256": "9fec358472babcca7d76513dc144bda354ef371b55b207b82cdb80fc9a60948e",
+    "run_metrics_sha256": "7c8d99d64747c885caa7968d4afd183e1903a2cb1e39a040b5f3870ec1789ee3",
+    "gate_sha256": "bb6f577837a81615e088fe1942c93c3f0485608b13d44f36b80d8c5a57ebf68f",
+    "checksums_sha256": "cebe0e77debd01751638ecd46dc1f308c52df805d8d637240c915e12707e3830"
+  }
 }
