@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_hybrid_evidence_residual_v14",
-  "status": "preregistered_partition_data_gate",
+  "status": "partition_data_gate_passed_oracle_attribution_frozen_before_training",
   "research_question": "Which label-blind event-graph partition carries the v12 task-disjoint multi-step action gain: exact action/tool protocol structure, stochastic receipt/evidence residuals, or their interaction?",
   "sequential_exploratory": true,
   "sources": {
@@ -41,12 +41,46 @@
     "require_both_partitions_nonempty": true,
     "forbidden_tokens": ["task_success", "attack_success", "target_skill", "next_action", "joint_outcome"]
   },
-  "planned_oracle_stage": {
+  "data_gate_result": {
+    "decision": "GO_EVENT_GRAPH_PARTITION_DATA_GATE_V14",
+    "git_commit": "15c9b01",
+    "archive": "/share/guozhix/wmagentattack/0818/hybrid_evidence_residual_v14/data_gate/formal_v1",
+    "rows": 6763,
+    "tasks": 20,
+    "full_features": 263,
+    "exact_features": 174,
+    "evidence_features": 89,
+    "exact_active_fraction": 0.3946221144599992,
+    "dataset_sha256": "9582ca68e8075d0f1fda2d73cd0120020efa6198bb761bf03257810af25a97a6",
+    "audit_sha256": "455fdc144fe90ad690e83381fa326a0a299944312e4c3bfed4e13ed88a0f42cc",
+    "checksums_sha256": "df9319c4b7250b09af619b9e4a7c6d77c94149fa21369d739f770429c15bdcc4"
+  },
+  "oracle_attribution_stage": {
+    "authorization": "partition data gate passed",
     "folds": 5,
     "seeds": [7, 17, 29],
-    "arms": ["exact_protocol_oracle_v14", "stochastic_evidence_oracle_v14"],
-    "fixed_fits": {"teacher": 15, "exact_protocol_oracle": 15, "stochastic_evidence_oracle": 15},
-    "training": "identical to frozen v12 oracle except the 263-dimensional graph is masked by the preregistered partition",
+    "arms": ["full_graph_modular_oracle_v14", "exact_protocol_oracle_v14", "stochastic_evidence_oracle_v14"],
+    "fixed_fits": {"teacher": 15, "full_graph_modular_oracle": 15, "exact_protocol_oracle": 15, "stochastic_evidence_oracle": 15},
+    "training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.0
+    },
+    "full_graph_gate": {
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.02,
+      "minimum_positive_task_fraction": 0.60,
+      "minimum_positive_seeds": 2,
+      "require_all_legal": true
+    },
     "per_arm_gate": {
       "maximum_h1_nll_degradation_vs_v6": 0.005,
       "maximum_h1_accuracy_degradation_vs_v6": 0.002,
@@ -61,6 +95,21 @@
       "evidence_passes": "authorize a calibrated evidence-residual predictor combined with exact protocol rendering",
       "neither_passes": "record interaction requirement; do not train a predictor and redesign late fusion",
       "both_pass": "retain both modules and train only the evidence residual"
+    },
+    "require_parameter_match": true,
+    "require_complete_budget": true
+  },
+  "teacher_training_protocol": {
+    "training": {
+      "fixed_epochs": 120,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "hash_dimension": 128,
+      "dropout": 0.1,
+      "outcome_loss_weight": 1.0,
+      "outcome_positive_weight_cap": 10.0,
+      "joint_loss_weight": 0.25
     }
   },
   "scope": {
