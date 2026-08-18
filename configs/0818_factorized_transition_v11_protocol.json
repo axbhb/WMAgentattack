@@ -1,0 +1,77 @@
+{
+  "protocol_id": "0818_factorized_semantic_transition_v11",
+  "status": "preregistered_label_gate_before_build",
+  "research_question": "Does predicting stable semantic state/evidence/progress/execution transitions before the next action improve task-disjoint world modeling over v6?",
+  "scope": {
+    "existing_agentdojo_traces_only": true,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "new_attacks": 0,
+    "planner_runs": 0,
+    "labels_are_targets_not_inputs": true,
+    "oracle_factors_are_diagnostic_only": true
+  },
+  "frozen_dataset": {
+    "path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "event_rows": 6763,
+    "adjacent_rows": 4703,
+    "trajectories": 2060,
+    "tasks": 20
+  },
+  "stage_f1_label_gate": {
+    "double_build_required": true,
+    "require_byte_identical_dataset": true,
+    "require_byte_identical_audit": true,
+    "minimum_observed_classes_per_factor": 2,
+    "maximum_single_class_fraction": 0.98,
+    "require_all_tasks": true,
+    "require_unique_source_events": true,
+    "require_zero_final_outcome_or_next_action_factor_leakage": true
+  },
+  "stage_f2_model": {
+    "authorization": "only_if_stage_f1_passes_complete_gate",
+    "folds": 5,
+    "seeds": [7, 17, 29],
+    "fixed_fits": {"teacher": 15, "capacity_control": 15, "factorized_transition": 15},
+    "post_result_reruns": 0,
+    "architecture": {
+      "retained_context": "Structured Markov v3 plus four-cell teacher",
+      "factor_heads": ["observation_delta", "evidence_delta", "goal_progress", "execution_status"],
+      "factor_conditioning": "predicted factor distributions only",
+      "oracle_conditioning": "confirmation diagnostic only",
+      "zero_initialized_residual": true,
+      "capacity_control": "same hidden size and parameter-matched unsupervised transition bottleneck"
+    },
+    "training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "factor_loss_weight": 0.5,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1
+    },
+    "gate": {
+      "minimum_each_factor_nll_gain_vs_train_prior": 0.02,
+      "minimum_each_factor_accuracy_gain_vs_train_prior": 0.02,
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.01,
+      "minimum_h2_h5_nll_gain_vs_capacity_control": 0.005,
+      "minimum_positive_task_fraction": 0.60,
+      "minimum_positive_seeds": 2,
+      "maximum_future_joint_ce_degradation": 0.01,
+      "require_all_legal": true
+    }
+  },
+  "external_v6_control": {
+    "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
+    "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/factorized_semantic_transition_v11"
+}
