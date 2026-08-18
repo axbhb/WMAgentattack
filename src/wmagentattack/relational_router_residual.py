@@ -140,6 +140,10 @@ class SparseRelationalSignatureResidual(_BaseRelationalSignatureResidual):
             nn.Linear(route_feature_size, router_hidden_size), nn.Tanh(),
             nn.Linear(router_hidden_size, experts),
         )
+        # A random output bias can select one constant pair before the router
+        # has seen any state.  Zero bias makes initial routing depend only on
+        # the visible relational signature while preserving random projections.
+        nn.init.zeros_(self.router[-1].bias)
 
     def routing_weights(self, signatures: Tensor) -> Tensor:
         logits = self.router(signatures)

@@ -67,6 +67,11 @@ def test_sparse_router_activates_exactly_two_experts_per_state():
     torch.testing.assert_close(weights.sum(1), torch.ones(31))
 
 
+def test_router_output_bias_cannot_create_a_constant_route():
+    _, sparse = models()
+    torch.testing.assert_close(sparse.router[-1].bias, torch.zeros(4))
+
+
 def test_sparse_and_dense_capacity_are_preregistered_close():
     dense, sparse = models()
     assert parameter_gap_fraction(dense, sparse) <= 0.02
