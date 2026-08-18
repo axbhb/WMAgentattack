@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_interface_affordance_autoresearch_v8",
-  "status": "preregistered_stage_c2_before_training",
+  "status": "completed_no_go_stage_c3_not_authorized",
   "research_budget": {
     "maximum_candidate_stages": 3,
     "post_result_reruns": 0,
@@ -125,5 +125,24 @@
     "predictions_sha256": "7a5a7dcab3aaefa2499e880c79731334fb24cb0e42f8cba3897fe9bbf846caec",
     "run_metrics_sha256": "75acbd57d6163c69182e52c5e64fc350846f12517625da490f89319e35567fbf",
     "archive": "/share/guozhix/wmagentattack/0818/interface_affordance_v8/stage_c1/formal_v1"
+  },
+  "stage_c2_result": {
+    "job_id": 7074,
+    "decision": "NO_GO_SUCCESSOR_AFFORDANCE_C2",
+    "gate_clauses_passed": 6,
+    "gate_clauses_total": 10,
+    "h1_nll_gain_vs_v6": -0.0006730792292227746,
+    "h1_accuracy_gain_vs_v6": -0.0034613881802487896,
+    "h2_h5_nll_gain_vs_v6": -0.0004416549096474616,
+    "h2_h5_nll_gain_vs_stage_c1": 0.0037103030979142074,
+    "h2_h5_positive_task_fraction": 0.6,
+    "future_joint_ce_gain": 0.0021437720464448527,
+    "predictions_sha256": "74798cad40508d30fe5b50be15fb037d9c45634a5535727db491dc8cc445bf03",
+    "run_metrics_sha256": "5d293e9e7dc2c4dcdf32244a552b8dd21bffc96f70508662c1c73f32334c2ac1",
+    "archive": "/share/guozhix/wmagentattack/0818/interface_affordance_v8/stage_c2/formal_v1"
+  },
+  "stage_c3_result": {
+    "decision": "NOT_AUTHORIZED",
+    "reason": "Stage C2 failed the frozen complete performance gate; pure removal of Structured Markov v3 would be unsupported."
   }
 }
