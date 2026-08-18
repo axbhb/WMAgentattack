@@ -1,0 +1,114 @@
+{
+  "protocol_id": "0818_parameter_intervention_v18",
+  "status": "preregistered_before_manifest_build",
+  "research_question": "Can one-field, schema-valid parameter interventions at the same state and tool reliably create the execution-boundary supervision that clean donor actions failed to expose in v17?",
+  "scope": {
+    "clean_only": true,
+    "agentdojo_synthetic_sandbox_only": true,
+    "external_endpoints": false,
+    "victim_llm_calls": 0,
+    "attack_examples": 0,
+    "model_training_runs": 0,
+    "dreamer_runs": 0
+  },
+  "source": {
+    "raw_dataset": "/share/guozhix/wmagentattack/0729/custom_panel_v2_architecture_ablation/preflight_v2/panel_v2_architecture_dataset.json",
+    "raw_dataset_sha256": "c01a0c29a8e2ce99e6f3dd81c82f1711131868ebe81da62a0298fe7e42745746",
+    "semantic_dataset": "/share/guozhix/wmagentattack/0804/autoresearch_semantic_wm_v3/stage1/rebuild_a/semantic_state_v3_dataset.json",
+    "semantic_dataset_sha256": "099aecb7ab70b5d822f44e9007fb95c1d6ed78569505dbc32621efdd88f82a53",
+    "base_manifest": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/formal_v1/manifest.frozen.json",
+    "base_manifest_sha256": "fcf5f30d105c9b1eb56e4b888fcedf9bcb667fb195781168e151bd44dd499b13",
+    "adapter_extension": "configs/0729_custom_panel_v2_adapter_extension.json",
+    "adapter_extension_sha256": "edeb7dd0541e043776ef48fc0e9783951d124e58a6eff31b46449e9733bfd8e5",
+    "adapter_repair": "configs/0805_counterfactual_adapter_repair_v2.json",
+    "adapter_repair_sha256": "c8572f22225b9fa8ebdf12db92416efb84de48b23edfd2e55157cf734bcee2be"
+  },
+  "selection": {
+    "seed": "20260818-parameter-intervention-v18",
+    "suites": ["banking", "slack", "travel", "workspace"],
+    "task_ids": [
+      "clean::banking::user_task_2000",
+      "clean::banking::user_task_2004",
+      "clean::banking::user_task_2008",
+      "clean::slack::user_task_2100",
+      "clean::slack::user_task_2104",
+      "clean::slack::user_task_2108",
+      "clean::travel::user_task_2200",
+      "clean::travel::user_task_2204",
+      "clean::travel::user_task_2208",
+      "clean::workspace::user_task_2300",
+      "clean::workspace::user_task_2304",
+      "clean::workspace::user_task_2308"
+    ],
+    "target_tools": {
+      "banking": "update_scheduled_transaction",
+      "slack": "add_user_to_channel",
+      "travel": "reserve_hotel",
+      "workspace": "share_file"
+    },
+    "one_field_interventions": {
+      "banking": "replace transaction id with 2147483647",
+      "slack": "replace user with a frozen nonexistent user sentinel",
+      "travel": "replace start_day with a frozen non-ISO date string",
+      "workspace": "replace file_id with a frozen nonexistent file sentinel"
+    }
+  },
+  "expected_manifest_preview": {
+    "pairs": 12,
+    "rows": 24,
+    "tasks": 12,
+    "suite_difficulty_cells": 12,
+    "target_tools": {
+      "add_user_to_channel": 3,
+      "reserve_hotel": 3,
+      "share_file": 3,
+      "update_scheduled_transaction": 3
+    },
+    "intervention_fields": {"file_id": 3, "id": 3, "start_day": 3, "user": 3},
+    "all_pairs_change_exactly_one_field": true,
+    "selection_uses_outcomes": false
+  },
+  "manifest": {
+    "path": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/manifest_preflight_v1/a/manifest.json",
+    "audit_path": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/manifest_preflight_v1/a/audit.json",
+    "sha256": null
+  },
+  "execution": {
+    "fresh_state_replicas_per_row": 2,
+    "frozen_logical_clock_iso": "2024-05-15T12:00:00",
+    "require_byte_identical_replicas": true,
+    "raw_tool_outputs_are_not_model_features": true,
+    "simulator_state_and_exact_delta_are_audit_only": true
+  },
+  "parameter_gate": {
+    "required_complete_pairs": 12,
+    "minimum_control_successes": 12,
+    "minimum_corrupted_errors": 10,
+    "minimum_paired_status_flips": 10,
+    "minimum_effect_changes": 10
+  },
+  "legacy_evidence_diagnostics": {
+    "minimum_observed_bound_query_fraction": 0.0,
+    "minimum_counterfactual_execution_errors": 0,
+    "minimum_counterfactual_conflicts": 0,
+    "minimum_counterfactual_ambiguity_events": 0
+  },
+  "fixed_budget": {
+    "manifest_independent_builds": 2,
+    "pairs": 12,
+    "manifest_rows": 24,
+    "branch_tool_executions": 48,
+    "observed_prefix_replay_tool_executions": 76,
+    "total_sandbox_tool_executions": 124,
+    "victim_llm_calls": 0,
+    "attack_examples": 0,
+    "model_training_runs": 0,
+    "dreamer_runs": 0,
+    "rerun_after_scientific_result": false
+  },
+  "decision_policy": {
+    "pass": "Keep parameter-intervention collection as the execution-boundary component of the future paired branch dataset; separately test modify-readback persistence/conflicts before any model probe.",
+    "fail": "Do not learn execution boundaries from these data; retain the exact simulator/error engine and stop the intervention-latent direction."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/formal_v1"
+}
