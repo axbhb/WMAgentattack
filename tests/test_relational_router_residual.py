@@ -6,6 +6,7 @@ from wmagentattack.relational_router_residual import (
     SparseRelationalSignatureResidual,
     parameter_gap_fraction,
     stack_relation_signature_features,
+    standardize_relation_signatures,
 )
 
 
@@ -49,6 +50,16 @@ def test_signature_changes_with_visible_relation_state():
     right = stack_relation_signature_features(source, hash_dimension=24)
     assert not np.array_equal(left[0], right[0])
     assert not np.array_equal(left[1], right[1])
+
+
+def test_standardizer_fits_training_rows_only():
+    values = np.arange(30, dtype=np.float32).reshape(6, 5)
+    mask = np.asarray([True, True, True, True, False, False])
+    left, audit = standardize_relation_signatures(values, mask)
+    changed = values.copy(); changed[~mask] += 10000
+    right, _ = standardize_relation_signatures(changed, mask)
+    np.testing.assert_array_equal(left[mask], right[mask])
+    assert audit["confirmation_rows_used_for_fit"] == 0
 
 
 def test_zero_gates_are_an_exact_v6_noop():

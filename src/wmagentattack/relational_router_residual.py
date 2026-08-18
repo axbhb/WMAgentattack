@@ -50,6 +50,31 @@ def stack_relation_signature_features(
     return np.stack(rows).astype(np.float32)
 
 
+def standardize_relation_signatures(
+    signatures: np.ndarray, training_mask: np.ndarray
+) -> tuple[np.ndarray, dict[str, object]]:
+    """Fit scaling on training tasks only and apply it to every row in a fold."""
+    signatures = np.asarray(signatures, dtype=np.float32)
+    training_mask = np.asarray(training_mask, dtype=bool)
+    if signatures.ndim != 2 or training_mask.shape != (len(signatures),):
+        raise ValueError("invalid signature standardization inputs")
+    if not training_mask.any() or training_mask.all():
+        raise ValueError("both training and confirmation rows are required")
+    training = signatures[training_mask]
+    mean = training.mean(axis=0)
+    scale = training.std(axis=0)
+    active = scale > 1e-6
+    output = np.zeros_like(signatures)
+    output[:, active] = (signatures[:, active] - mean[active]) / scale[active]
+    output = np.clip(output, -5.0, 5.0)
+    return output, {
+        "fit_rows": int(training_mask.sum()),
+        "active_dimensions": int(active.sum()),
+        "confirmation_rows_used_for_fit": 0,
+        "clip_absolute": 5.0,
+    }
+
+
 def _adapter(hidden_size: int, bottleneck_size: int) -> nn.Sequential:
     return nn.Sequential(
         nn.Linear(hidden_size, bottleneck_size), nn.GELU(),

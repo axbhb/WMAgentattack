@@ -82,7 +82,7 @@ def main() -> None:
         "parameter_matched": metrics["parameter_diagnostics"]["gap_fraction"] <= gate["maximum_parameter_gap_fraction"],
         "router_integrity": not routing["task_id_used"] and not routing["track_used"] and not routing["label_used"] and all(value > 0 for value in routing["hard_counts"]),
         "router_not_collapsed": routing["maximum_soft_load"] <= gate["maximum_expert_soft_load"] and routing["mean_normalized_topk_entropy"] >= gate["minimum_topk_entropy"] and abs(routing["mean_active_experts"] - 2) < 1e-6,
-        "signature_integrity": not audit["lexical_hash_coordinates_used"] and not audit["raw_values_encoded"] and audit["unmatched_text_tokens_encoded"] == audit["truncated_rows"] == audit["concept_truncated_rows"] == 0,
+        "signature_integrity": not audit["lexical_hash_coordinates_used"] and not audit["raw_values_encoded"] and audit["training_only_standardization"] and audit["unmatched_text_tokens_encoded"] == audit["truncated_rows"] == audit["concept_truncated_rows"] == 0,
         "all_legal": all(row["legal_prediction"] == 1 for row in sparse),
         "complete_budget": metrics["teacher_fits"] == metrics["dense_control_fits"] == metrics["sparse_relation_fits"] == 15 and metrics["runtime_failures"] == 0,
     }

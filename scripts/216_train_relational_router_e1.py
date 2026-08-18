@@ -18,6 +18,7 @@ from wmagentattack.relational_router_residual import (
     SparseRelationalSignatureResidual,
     parameter_gap_fraction,
     stack_relation_signature_features,
+    standardize_relation_signatures,
     trainable_parameter_count,
 )
 from wmagentattack.relational_slot_latent import stack_interface_affordance_states
@@ -93,7 +94,7 @@ def main() -> None:
     data = json.loads(args.dataset.read_text()); torch.set_num_threads(8); device = "cpu"
     args.output_dir.mkdir(parents=True, exist_ok=True)
     prediction_path = args.output_dir / "predictions.jsonl"; prediction_path.write_text("")
-    runs = []; audits = []; route_totals = np.zeros(4); hard_totals = np.zeros(4, dtype=np.int64)
+    runs = []; audits = []; scaling_audits = []; route_totals = np.zeros(4); hard_totals = np.zeros(4, dtype=np.int64)
     entropies = []; active_counts = []; parameter_diagnostics = None
     builder = protocol["stage_e1"]["relation_signature"]
     teacher_protocol = {"training": protocol["teacher"]}
@@ -106,9 +107,12 @@ def main() -> None:
             events, hash_dimension=builder["removed_hash_dimension"],
             max_nodes=builder["max_nodes"], max_concepts=builder["max_concepts"],
         )
-        signature = stack_relation_signature_features(
+        raw_signature = stack_relation_signature_features(
             graph, hash_dimension=builder["removed_hash_dimension"]
         )
+        training_mask = np.asarray([event["split"] == "training" for event in events])
+        signature, scaling_audit = standardize_relation_signatures(raw_signature, training_mask)
+        scaling_audits.append(scaling_audit)
         slots = {"signature": signature}; audits.extend(graph["audit"])
         unused = np.zeros(len(events), dtype=np.int64)
         for training_seed in protocol["research_budget"]["seeds"]:
@@ -174,6 +178,8 @@ def main() -> None:
             "unmatched_text_tokens_encoded": sum(row["unmatched_text_tokens_encoded"] for row in audits),
             "truncated_rows": sum(row["truncated"] for row in audits),
             "concept_truncated_rows": sum(row["concepts_truncated"] for row in audits),
+            "training_only_standardization": all(row["confirmation_rows_used_for_fit"] == 0 for row in scaling_audits),
+            "active_dimensions_by_fold": [row["active_dimensions"] for row in scaling_audits],
         },
         "predictions_sha256": file_sha256(prediction_path),
     }

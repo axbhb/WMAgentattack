@@ -74,9 +74,11 @@
       "max_nodes": 64,
       "max_concepts": 32,
       "features": ["node_type_histogram", "relation_type_histogram", "numeric_affordance_mean", "numeric_affordance_max"],
+      "standardization": "fit_on_training_tasks_only_per_fold_clip_5",
       "uses_lexical_hashes": false,
       "uses_track": false,
-      "uses_task_id": false
+      "uses_task_id": false,
+      "uses_confirmation_rows_for_scaling": false
     },
     "dense_control": {"bottleneck_size": 96},
     "sparse_router": {
