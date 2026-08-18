@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_modular_event_world_model_v13",
-  "status": "preregistered_modular_recombination_before_build",
+  "status": "stage_m1_passed_stage_m2_frozen_before_training",
   "research_question": "Can the v12 event-graph action path and retained v6 joint-outcome path coexist without shared-hidden negative transfer?",
   "sequential_exploratory": true,
   "scope": {
@@ -38,6 +38,61 @@
       "require_all_legal": true
     }
   },
-  "stage_m2_authorization": "only_if_stage_m1_complete_gate_passes; train a graph predictor for action dynamics while the v6 outcome path remains independent",
+  "stage_m1_result": {
+    "decision": "GO_MODULAR_EVENT_WORLD_MODEL_V13",
+    "git_commit": "e9b9a3b6ad3961dbc57f6d7644e22a0530e96971",
+    "archive": "/share/guozhix/wmagentattack/0818/modular_event_world_model_v13/stage_m1/formal_v1",
+    "rows": 41433,
+    "training_runs": 0,
+    "h1_nll_gain_vs_v6": 0.0009601707653063528,
+    "h1_accuracy_gain_vs_v6": 0.0058180736629738486,
+    "h2_h5_nll_gain_vs_v6": 0.03618342273872657,
+    "h2_h5_nll_gain_vs_zero_graph": 0.03846340085993861,
+    "future_joint_ce_difference_vs_v6": -1.4802973661668754e-17,
+    "predictions_sha256": "37e5ba0988db459ff9f4d74ede200a26e7c9d401098805713049b06a2c27c05f",
+    "gate_sha256": "d1ddcace4fee83ce234c233b37477ecb93c2d94e2a310979658e32a96c3ba2ca",
+    "checksums_sha256": "3883cccdf1969908be2536bbbd720f570c15b2a252d1dfa3662848e2f88dd5bf"
+  },
+  "stage_m2": {
+    "authorization": "stage_m1 complete gate passed",
+    "event_graph_dataset": "/share/guozhix/wmagentattack/0818/action_event_graph_v12/data_gate/formal_v1/a/dataset.json",
+    "event_graph_sha256": "a6ea2205db5055c2ab96dc32efbf9d41d70c6160af1b1d44bcd677d73872ebb7",
+    "events_dataset": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "events_sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "folds": 5,
+    "seeds": [7,17,29],
+    "fixed_fits": {"teacher":15,"unsupervised_capacity_control":15,"predicted_event_graph":15},
+    "post_result_reruns": 0,
+    "training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "graph_loss_weight": 0.25,
+      "graph_positive_weight_cap": 20.0,
+      "graph_prior_smoothing": 0.5,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2":1.0,"3":0.5,"4":0.25,"5":0.125},
+      "latent_weight": 0.1
+    },
+    "gate": {
+      "minimum_graph_bce_gain_vs_train_prior": 0.01,
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.01,
+      "minimum_h2_h5_nll_gain_vs_capacity_control": 0.005,
+      "minimum_positive_task_fraction": 0.60,
+      "minimum_positive_seeds": 2,
+      "maximum_absolute_future_joint_ce_difference_vs_v6": 1e-12,
+      "require_all_legal": true,
+      "require_parameter_match": true,
+      "require_complete_budget": true
+    }
+  },
+  "teacher_training_protocol": {
+    "training": {"fixed_epochs":120,"learning_rate":0.001,"weight_decay":0.0001,"hidden_size":96,"hash_dimension":128,"dropout":0.1,"outcome_loss_weight":1.0,"outcome_positive_weight_cap":10.0,"joint_loss_weight":0.25}
+  },
   "planned_archive": "/share/guozhix/wmagentattack/0818/modular_event_world_model_v13"
 }
