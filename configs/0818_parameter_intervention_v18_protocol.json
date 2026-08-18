@@ -113,5 +113,21 @@
     "fail": "Do not learn execution boundaries from these data; retain the exact simulator/error engine and stop the intervention-latent direction."
   },
   "planned_archive": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/formal_v1",
-  "result": null
+  "result": {
+    "job_id": 7114,
+    "decision": "GO_PARAMETER_INTERVENTION_DATA_DIRECTION_V18",
+    "runtime_failures": 0,
+    "complete_pairs": 12,
+    "control_successes": 12,
+    "corrupted_errors": 12,
+    "paired_status_flips": 12,
+    "pairs_with_effect_change": 12,
+    "suites_with_status_flip": 4,
+    "tests_passed": 18,
+    "dataset_sha256": "36f20f1fb2c5850b40fabb50bb4d687c3b4643b7da80fa7dee40f42501c84002",
+    "gate_sha256": "2c03f730452f29ee4cb5bf259de4a07373667bee275cdb95a3c63e875930c0f9",
+    "archive_checksums_sha256": "c7297a0b0c1223fcb95bd687153e000b5ec4654586d3abc0c2e6bc51fdf1631b",
+    "archive": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/formal_v1",
+    "scientific_interpretation": "Minimal same-state same-tool parameter interventions reliably expose execution success/error boundaries across all four suites. This is a validated data-collection component, not yet evidence for multi-step persistence, conflict dynamics, attack utility, or a superior learned world model."
+  }
 }
