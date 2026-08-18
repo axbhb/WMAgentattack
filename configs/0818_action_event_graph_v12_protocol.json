@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_action_conditioned_event_graph_v12",
-  "status": "data_gate_passed_oracle_stage_frozen_before_training",
+  "status": "completed_no_go_oracle_joint_negative_transfer",
   "research_question": "Do causal tool/action/argument/receipt event graphs contain task-disjoint action-dynamics information that generic v11 text-delta factors lacked?",
   "direction_change_evidence": {
     "v11_decision": "NO_GO_FACTORIZED_SEMANTIC_TRANSITION_V11",
@@ -110,6 +110,31 @@
     "audit_sha256": "5f98f27f0270737b430d515e5de50007566254b92c069ff43eab6f63c1e44459",
     "data_gate_sha256": "510ba1401e818d28e8686254317ab5fd3fccca3ff5ec2f908ec820549d1b6255",
     "checksums_sha256": "d5a79a28d2b405cd63f19acb82b11544388f64a811f41ade0675d3a97f5cb970"
+  },
+  "oracle_sufficiency_result": {
+    "decision": "NO_GO_EVENT_GRAPH_ORACLE_SUFFICIENCY_V12",
+    "job_id": 7107,
+    "git_commit_at_run": "a7c4d6c0fb31ac40b9d5b5d501dbfe191007d437",
+    "archive": "/share/guozhix/wmagentattack/0818/action_event_graph_v12/oracle_sufficiency/formal_v1",
+    "fixed_fits_completed": 30,
+    "runtime_failures": 0,
+    "parameter_count_each_arm": 126151,
+    "paired_rows_each_arm": 41433,
+    "gate_clauses_passed": 11,
+    "gate_clauses_total": 12,
+    "metrics": {
+      "h1_nll_gain_vs_v6": 0.0009601707653063767,
+      "h1_accuracy_gain_vs_v6": 0.0058180736629738486,
+      "h2_h5_nll_gain_vs_v6": 0.03618342273872658,
+      "h2_h5_nll_gain_vs_zero_graph": 0.03846340085993861,
+      "h2_h5_positive_task_fraction": 0.9,
+      "future_joint_ce_gain_vs_v6": -0.00887096351676868
+    },
+    "predictions_sha256": "50547423cd0ee6392fdfd9aa26bbf5cc2e974e55e49db49b4857ddb82f4760b5",
+    "run_metrics_sha256": "dc806ee7a8e7f3332abee7973afac357d43947948c77c3262f50f8c2a980f035",
+    "oracle_gate_sha256": "c0a3b155e4bff9e9b21e1300f950907da6f7e372c80588c506d217e68f4a0625",
+    "checksums_sha256": "8ac6c2c039e42d8a13a300771a1e3a68c6fb06b9db6fe85ccd6b8362bacbc328",
+    "authorized_next_direction": "sequentially exploratory modular action-dynamics branch with an independent retained v6 joint-outcome path; no shared graph-conditioned joint hidden"
   },
   "literature_map": [
     {
