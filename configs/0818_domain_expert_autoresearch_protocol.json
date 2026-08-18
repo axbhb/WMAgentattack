@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_domain_expert_affordance_autoresearch_v9",
-  "status": "preregistered_stage_d1_before_training",
+  "status": "completed_no_go_stage_d2_not_authorized",
   "research_question": "Can deterministic domain-routed affordance experts remove the Slack/Travel negative transfer of a shared latent and scientifically support replacing Structured Markov v3?",
   "scope": {
     "existing_agentdojo_traces_only": true,
@@ -131,5 +131,56 @@
       "require_all_legal": true
     }
   },
-  "planned_archive_root": "/share/guozhix/wmagentattack/0818/domain_expert_affordance_v9"
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/domain_expert_affordance_v9",
+  "formal_result": {
+    "stage_d1": {
+      "job_id": 7083,
+      "archive": "/share/guozhix/wmagentattack/0818/domain_expert_affordance_v9/stage_d1/formal_v1",
+      "git_commit": "3d272ecec8225f97554399cfe873d7481a66c2d0",
+      "decision": "NO_GO_DOMAIN_EXPERT_D1",
+      "gate_clauses_passed": 7,
+      "gate_clauses_total": 15,
+      "runtime_failures": 0,
+      "completed_fits": {
+        "teacher": 15,
+        "dense_capacity_control": 15,
+        "domain_expert": 15
+      },
+      "absolute_metrics": {
+        "domain_expert_h1_nll": 1.7704062013771424,
+        "v6_h1_nll": 1.7717618233981816,
+        "domain_expert_h1_accuracy": 0.44415094226867186,
+        "v6_h1_accuracy": 0.4468999546221178,
+        "domain_expert_h2_h5_nll": 1.6759105776885377,
+        "dense_h2_h5_nll": 1.6631753626882453,
+        "v6_h2_h5_nll": 1.657453813329674,
+        "domain_expert_future_joint_ce": 1.2855233681561484,
+        "v6_future_joint_ce": 1.262605137943679
+      },
+      "gains": {
+        "h1_nll_vs_v6": 0.0013556220210390248,
+        "h1_accuracy_vs_v6": -0.0027490123534459794,
+        "h2_h5_nll_vs_v6": -0.018456764358863897,
+        "h2_h5_nll_vs_dense": -0.012735215000292385,
+        "future_joint_ce_vs_v6": -0.02291823021246951
+      },
+      "h2_h5_domain_gains_vs_v6": {
+        "banking": 0.002582386598894863,
+        "slack": -0.07584341089972728,
+        "travel": 0.00920913071309406,
+        "workspace": -0.009775163847717231
+      },
+      "h2_h5_positive_task_fraction": 0.4,
+      "parameter_gap_fraction": 0.000811701896202574,
+      "router_task_id_used": false,
+      "predictions_sha256": "bddcccb7504509ef1849a9ef8ebbb9ea94ea538da88ced2fa09952d825b05211",
+      "run_metrics_sha256": "b22250684fb79b3e4638dafe6dcb1af82a402565a516d8c4101f97a06e94745d"
+    },
+    "stage_d2": {
+      "decision": "NOT_AUTHORIZED",
+      "reason": "Stage D1 failed the complete preregistered gate; pure replacement would confound a rejected modular mechanism with removal of the retained Structured Markov context."
+    },
+    "retained_model": "Structured Markov v3 plus four-cell outcome head plus zero-initialized multi-step residual dynamics (v6)",
+    "scientific_conclusion": "Deterministic domain routing is legal, balanced in capacity, and uses all experts, but domain-specific adapters do not remove negative transfer. They preserve h1 NLL only while degrading h1 accuracy, future joint prediction, and multi-step prediction versus both v6 and a matched dense control."
+  }
 }
