@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_factorized_semantic_transition_v11",
-  "status": "preregistered_label_gate_before_build",
+  "status": "label_gate_passed_stage_f2_frozen_before_training",
   "research_question": "Does predicting stable semantic state/evidence/progress/execution transitions before the next action improve task-disjoint world modeling over v6?",
   "scope": {
     "existing_agentdojo_traces_only": true,
@@ -69,9 +69,41 @@
       "require_all_legal": true
     }
   },
+  "teacher_training_protocol": {
+    "training": {
+      "fixed_epochs": 120,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "hash_dimension": 128,
+      "dropout": 0.1,
+      "outcome_loss_weight": 1.0,
+      "outcome_positive_weight_cap": 10.0,
+      "joint_loss_weight": 0.25
+    }
+  },
   "external_v6_control": {
     "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
     "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
   },
-  "planned_archive_root": "/share/guozhix/wmagentattack/0818/factorized_semantic_transition_v11"
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/factorized_semantic_transition_v11",
+  "stage_f1_result": {
+    "decision": "GO_FACTORIZED_LABEL_GATE",
+    "archive": "/share/guozhix/wmagentattack/0818/factorized_semantic_transition_v11/label_gate/formal_v1",
+    "git_commit": "6e98487d83d0c7a61bb7231ddf1c9355601fa42e",
+    "rows": 4703,
+    "tasks": 20,
+    "dataset_sha256": "74925561691739f984f0f0d6ed317e7d3c9cba1339bbf052bad3254c748c9297",
+    "audit_sha256": "c397c517a6d6bf29d1edba1f8098edd4017d30cf196ad7e0de332159e6e61c08",
+    "label_gate_sha256": "a06c8f8a463f449b93a7cee1a6132d71e94fc51e9e970b276cf445a5d60e2601",
+    "class_counts": {
+      "observation_delta": {"unchanged": 484, "append_growth": 72, "novel_gain": 53, "rewrite_or_loss": 4094},
+      "evidence_delta": {"none": 2189, "goal_gain": 142, "interface_gain": 1451, "mixed_gain": 921},
+      "goal_progress": {"regress": 2380, "steady": 1581, "advance_small": 411, "advance_large": 331},
+      "execution_status": {"error_empty_continue": 374, "productive_continue": 4260, "empty_continue": 69}
+    }
+  },
+  "implementation_integrity_repairs": [
+    "Copied the already-frozen v6 teacher-training hyperparameters into this self-contained protocol before any Stage F2 neural result."
+  ]
 }
