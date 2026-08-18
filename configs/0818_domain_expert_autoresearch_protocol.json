@@ -1,0 +1,135 @@
+{
+  "protocol_id": "0818_domain_expert_affordance_autoresearch_v9",
+  "status": "preregistered_stage_d1_before_training",
+  "research_question": "Can deterministic domain-routed affordance experts remove the Slack/Travel negative transfer of a shared latent and scientifically support replacing Structured Markov v3?",
+  "scope": {
+    "existing_agentdojo_traces_only": true,
+    "new_llm_calls": 0,
+    "new_tool_executions": 0,
+    "new_attacks": 0,
+    "planner_runs": 0,
+    "labels_are_targets_not_inputs": true,
+    "router_uses_task_id": false,
+    "router_input": "causal_model_input.track"
+  },
+  "research_budget": {
+    "maximum_candidate_stages": 2,
+    "post_result_reruns": 0,
+    "folds": 5,
+    "seeds": [7, 17, 29]
+  },
+  "frozen_dataset": {
+    "path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "audit_path": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json",
+    "audit_sha256": "677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80",
+    "event_rows": 6763,
+    "trajectories": 2060,
+    "tasks": 20
+  },
+  "external_v6_control": {
+    "predictions": "/share/guozhix/wmagentattack/0817/structured_residual_v6/formal_v1/results/predictions.jsonl",
+    "sha256": "971d0bb6129ddc07ec31f5cc2d77ca4d6e465d592b12212c3420232764e32abd"
+  },
+  "external_original_structured_control": {
+    "predictions": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/formal_v1/results/predictions.jsonl",
+    "sha256": "fc4632f59b72ea2a140caadd8cfae5fad1c85a429262857b010a7ea0996398db"
+  },
+  "external_v8_c2_diagnostic": {
+    "predictions": "/share/guozhix/wmagentattack/0818/interface_affordance_v8/stage_c2/formal_v1/results/predictions.jsonl",
+    "sha256": "74798cad40508d30fe5b50be15fb037d9c45634a5535727db491dc8cc445bf03"
+  },
+  "teacher": {
+    "fixed_epochs": 120,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "hidden_size": 96,
+    "hash_dimension": 128,
+    "dropout": 0.1,
+    "outcome_loss_weight": 1.0,
+    "outcome_positive_weight_cap": 10.0,
+    "joint_loss_weight": 0.25
+  },
+  "literature_mapping": [
+    {
+      "paper": "Mixture-of-World Models: Scaling Multi-Task Reinforcement Learning with Modular Latent Dynamics, ICLR 2026",
+      "url": "https://openreview.net/forum?id=qUQARlAx5y",
+      "repo_hypothesis": "Use a shared affordance encoder plus deterministic domain-conditioned dynamics adapters."
+    },
+    {
+      "paper": "Is a Modular Architecture Enough?, NeurIPS 2022",
+      "url": "https://openreview.net/forum?id=3-3XMModtrx",
+      "repo_hypothesis": "Avoid learned-router collapse and measure specialization/utilization explicitly."
+    },
+    {
+      "paper": "Mixture of Experts in a Mixture of RL settings, 2024",
+      "url": "https://arxiv.org/abs/2406.18420",
+      "repo_hypothesis": "Compare against a parameter-matched dense control to separate modularity from added capacity."
+    }
+  ],
+  "stage_d1": {
+    "hypothesis": "Four deterministic track-routed adapters over a shared interface-affordance encoder prevent cross-domain gradient interference and outperform a parameter-matched dense adapter.",
+    "domains": ["banking", "slack", "travel", "workspace"],
+    "affordance_builder": {
+      "hash_dimension": 24,
+      "max_nodes": 64,
+      "max_concepts": 32,
+      "hidden_size": 96,
+      "message_layers": 2,
+      "interface_intersection_only": true
+    },
+    "dense_control": {"bottleneck_size": 96},
+    "domain_experts": {"experts": 4, "bottleneck_size": 24, "routing": "hard_visible_track"},
+    "training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1,
+      "successor_weight": 0.25,
+      "successor_discount": 0.8
+    },
+    "fixed_fits": {"teacher": 15, "dense_capacity_control": 15, "domain_expert": 15},
+    "gate": {
+      "maximum_h1_nll_degradation_vs_v6": 0.005,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.002,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.03,
+      "minimum_h2_h5_nll_gain_vs_dense": 0.02,
+      "minimum_h2_h5_positive_task_fraction": 0.60,
+      "minimum_threshold_positive_seeds": 2,
+      "minimum_positive_domains": 3,
+      "minimum_slack_h2_h5_gain_vs_v6": 0.0,
+      "minimum_travel_h2_h5_gain_vs_v6": 0.0,
+      "maximum_future_joint_ce_degradation": 0.01,
+      "maximum_parameter_gap_fraction": 0.02,
+      "require_all_experts_used": true,
+      "require_task_id_free_router": true,
+      "require_all_legal": true
+    }
+  },
+  "stage_d2": {
+    "authorization": "run_only_if_stage_d1_passes_complete_gate",
+    "mechanism": "Remove the Structured Markov context and train next-action, recurrent, successor, and four-cell heads only from the shared interface-affordance encoder plus deterministic domain experts.",
+    "fixed_fits": {"pure_domain_expert": 15},
+    "gate": {
+      "minimum_h1_nll_gain_vs_original_structured": 0.01,
+      "minimum_h1_accuracy_gain_vs_original_structured": 0.01,
+      "maximum_h1_nll_degradation_vs_v6": 0.01,
+      "maximum_h1_accuracy_degradation_vs_v6": 0.01,
+      "minimum_h2_h5_nll_gain_vs_v6": 0.03,
+      "minimum_h2_h5_positive_task_fraction": 0.60,
+      "minimum_threshold_positive_seeds": 2,
+      "minimum_positive_domains": 3,
+      "minimum_slack_h2_h5_gain_vs_v6": 0.0,
+      "minimum_travel_h2_h5_gain_vs_v6": 0.0,
+      "maximum_future_joint_ce_degradation": 0.01,
+      "require_all_legal": true
+    }
+  },
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/domain_expert_affordance_v9"
+}
