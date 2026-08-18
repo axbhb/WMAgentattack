@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_hybrid_evidence_residual_v14",
-  "status": "partition_data_gate_passed_oracle_attribution_frozen_before_training",
+  "status": "complete_no_go_individual_partitions_interaction_required",
   "research_question": "Which label-blind event-graph partition carries the v12 task-disjoint multi-step action gain: exact action/tool protocol structure, stochastic receipt/evidence residuals, or their interaction?",
   "sequential_exploratory": true,
   "sources": {
@@ -112,6 +112,31 @@
       "joint_loss_weight": 0.25
     }
   },
+  "oracle_attribution_result": {
+    "decision": "NO_GO_INDIVIDUAL_PARTITIONS_INTERACTION_REQUIRED_V14",
+    "job_id": 7109,
+    "git_commit": "484c17b",
+    "archive": "/share/guozhix/wmagentattack/0818/hybrid_evidence_residual_v14/oracle_attribution/formal_v1",
+    "elapsed": "00:09:45",
+    "training_units": 45,
+    "teacher_fits": 15,
+    "runtime_failures": 0,
+    "paired_rows_each_arm": 41433,
+    "full_graph_h2_h5_nll_gain_vs_v6": 0.03626429907161375,
+    "full_graph_positive_task_fraction": 0.9,
+    "exact_h2_h5_nll_gain_vs_v6": 0.018389867925427326,
+    "exact_positive_task_fraction": 0.85,
+    "evidence_h2_h5_nll_gain_vs_v6": 0.025278043624712105,
+    "evidence_positive_task_fraction": 0.85,
+    "evidence_fraction_of_full_gain": 0.6970526388058117,
+    "exact_pass": false,
+    "evidence_pass": false,
+    "predictions_sha256": "7cbcf3d4ad118d3eb4c91e41d9a44e663684acd2a7707c072e4cc4a8e3f2a220",
+    "run_metrics_sha256": "ff03e4b1ca676cd3a83754071a8a0dbcb9126fe1605b77d121ae508174c3cbc3",
+    "gate_sha256": "5ecd9f3c25e1783ff9d06d0a54c113d7b09803485bf0d9b08761f1fa7c0d2d72",
+    "checksums_sha256": "b2a370c1f89de0f32ed2e3ae60bc8daa46626b1f26a5a4ad4d3cb5023eaf7ff1"
+  },
+  "authorized_direction": "v15 interaction-aware late fusion and action-relevant distillation; no dense graph reconstruction",
   "scope": {
     "new_llm_calls": 0,
     "new_tool_executions": 0,
