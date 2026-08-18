@@ -1,0 +1,16 @@
+{
+  "schema_version": "wmagentattack.persistence_adapter_extension.v19",
+  "benchmark_version": "v1.2.2",
+  "scope": "label-blind adapter for the frozen Slack removal persistence branch",
+  "additional_adapters": {
+    "remove_user_from_slack": {
+      "family": "slack",
+      "mode": "MUTATION_ACK",
+      "entity_type": "slack_user",
+      "entity_argument_fields": ["user"]
+    }
+  },
+  "outcome_labels_present": false,
+  "manifest_selection_changed": false,
+  "scientific_gate_changed": false
+}
