@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_parameter_intervention_v18",
-  "status": "preregistered_before_manifest_build",
+  "status": "manifest_frozen_before_parameter_execution",
   "research_question": "Can one-field, schema-valid parameter interventions at the same state and tool reliably create the execution-boundary supervision that clean donor actions failed to expose in v17?",
   "scope": {
     "clean_only": true,
@@ -71,7 +71,9 @@
   "manifest": {
     "path": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/manifest_preflight_v1/a/manifest.json",
     "audit_path": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/manifest_preflight_v1/a/audit.json",
-    "sha256": null
+    "sha256": "306d80996fd40f099cc4214751adff07c245ac5fdb16d5ad198f5365eefa1499",
+    "audit_sha256": "a872313e966ec5a61b19941ac583f0ee325cf093c1998e42d8b6ed8b4527d2fc",
+    "independent_builds_byte_identical": true
   },
   "execution": {
     "fresh_state_replicas_per_row": 2,
@@ -110,5 +112,6 @@
     "pass": "Keep parameter-intervention collection as the execution-boundary component of the future paired branch dataset; separately test modify-readback persistence/conflicts before any model probe.",
     "fail": "Do not learn execution boundaries from these data; retain the exact simulator/error engine and stop the intervention-latent direction."
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/formal_v1",
+  "result": null
 }
