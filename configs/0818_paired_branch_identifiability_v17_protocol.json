@@ -113,5 +113,27 @@
     "pass": "Authorize a separately preregistered task-disjoint paired-branch dataset expansion and an intervention-masked entity-slot world-model probe; do not authorize attacks or Dreamer.",
     "fail": "Retain counterevidence and stop neural architecture search on the current AgentDojo data; use exact transition execution with uncertainty rather than a learned action-effect latent model."
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/formal_v1",
+  "result": {
+    "job_id": 7113,
+    "decision": "NO_GO_PAIRED_BRANCH_DATA_DIRECTION_V17",
+    "archive": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/formal_v1",
+    "code_commit": "e0353ca45515b4e9e0e1ebeade5e3f6715b32c1b",
+    "gate_sha256": "67e007bfc3b137a75484474060a06b8661308ff33ad9caf9266499cd8f24004d",
+    "dataset_sha256": "c3c46f54bc17b53bbcd77a2ed21e64d0e8602fbe6bd5cd6a1758bd7ce55f0ce2",
+    "tests": "18 passed",
+    "runtime_failures": 0,
+    "metrics": {
+      "complete_four_action_anchors": 12,
+      "anchors_with_two_effects": 12,
+      "anchors_with_three_effects": 12,
+      "pairwise_effect_difference_fraction": 0.9583333333333334,
+      "boundary_event_total": 3,
+      "boundary_event_types_present": 1,
+      "execution_errors": 0,
+      "conflicts": 0,
+      "ambiguities": 3
+    },
+    "interpretation": "Same-prefix branching identifies ordinary action effects extremely well, but clean donor arguments remain inside permissive simulator regions and do not identify error or conflict boundaries. The broad action-effect data gate remains NO-GO; the next mechanism must intervene on parameters and temporal read-back, not representations."
+  }
 }
