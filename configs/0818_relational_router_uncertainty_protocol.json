@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_relational_router_then_uncertainty_v10",
-  "status": "preregistered_stage_e1_before_training",
+  "status": "stage_e1_no_go_stage_e2_frozen_before_training",
   "research_question": "Can a task-ID-free relational state signature and state-dependent sparse residual beat v6; if not, does an uncertainty-aware ensemble provide a scientifically better world model without another latent router?",
   "scope": {
     "existing_agentdojo_traces_only": true,
@@ -123,6 +123,22 @@
     "authorization": "run_only_if_stage_e1_is_no_go",
     "hypothesis": "The limiting factor is irreducible and epistemic uncertainty rather than missing latent capacity; a uniform probabilistic ensemble improves task-disjoint predictive distributions and identifies model errors.",
     "mechanism": "Three independent v6 teacher-plus-residual members per ensemble; uniform probability mixture; predictive entropy and member mutual information reported separately; no confirmation-tuned weights or thresholds.",
+    "frozen_v6_protocol": {
+      "path": "configs/0817_structured_residual_v6_protocol.json",
+      "sha256": "cd72365d47a8a8cf5b7eb0df395473055116f2bc874bc6b56563c764fd072a4f"
+    },
+    "residual_training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1
+    },
     "ensemble_groups": {
       "7": [7, 17, 29],
       "37": [37, 47, 59],
@@ -140,5 +156,29 @@
       "require_all_legal": true
     }
   },
-  "planned_archive_root": "/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10"
+  "planned_archive_root": "/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10",
+  "stage_e1_formal_result": {
+    "job_id": 7103,
+    "git_commit": "384e3ecd5d50ef1aabd60750fd03fc6c54224139",
+    "archive": "/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10/stage_e1/formal_v1",
+    "decision": "NO_GO_RELATIONAL_ROUTER_E1",
+    "gate_clauses_passed": 10,
+    "gate_clauses_total": 17,
+    "runtime_failures": 0,
+    "metrics": {
+      "h1_nll_gain_vs_v6": -0.0007450987816886801,
+      "h1_accuracy_gain_vs_v6": 0.0005889558000337701,
+      "h2_h5_nll_gain_vs_v6": -0.0009107375630217762,
+      "h2_h5_nll_gain_vs_dense": -0.0022151051713824766,
+      "h2_h5_nll_gain_vs_v9": 0.01754602679584212,
+      "future_joint_ce_gain_vs_v6": 0.010415718140503108,
+      "h2_h5_positive_task_fraction": 0.55,
+      "slack_h2_h5_gain_vs_v6": -0.018437432484108757,
+      "travel_h2_h5_gain_vs_v6": 0.016008177534940757,
+      "mean_normalized_topk_entropy": 0.4627909402242283
+    },
+    "predictions_sha256": "cbe0ac0ca67a5773d7c261c8a0061d4545086367ad1ab7a91d5ac039fe5f1673",
+    "run_metrics_sha256": "bf4bdc468a748e6c9e4c9375d7b154f27ae8424086e5c3a51f39bfd361033602",
+    "authorized_next_stage": "stage_e2_direction_switch"
+  }
 }

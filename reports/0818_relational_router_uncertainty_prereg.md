@@ -11,3 +11,13 @@ The design follows QORA's evidence for object-relational transfer, DSMoE's state
 Stage E2 is frozen now but authorized only if E1 is NO-GO. It is a genuine direction change based on PETS: three independently trained v6 models form each uniform predictive ensemble, and member disagreement estimates epistemic uncertainty. Confirmation labels cannot tune weights, temperatures, or thresholds. E2 advances only if the ensemble improves one-step, multi-step, and future joint distributions, retains accuracy, improves most held-out tasks in at least two independent ensemble groups, and assigns higher epistemic uncertainty to errors.
 
 No attacks, planner, real endpoints, Dreamer training, task removal, threshold changes, or post-result reruns are authorized.
+
+## Stage E1 formal conclusion
+
+Slurm 7103 completed all 15 paired fold/seed units and all 45 frozen fits with zero runtime failures. Source and archive hashes pass, as do all 12 preregistered tests. The decision is `NO_GO_RELATIONAL_ROUTER_E1`: 10 of 17 clauses passed.
+
+The mechanism has two real local signals. Future four-cell CE improves by 0.01042 and h1 accuracy improves by 0.00059. It also improves H2--H5 NLL over the rejected v9 domain experts by 0.01755. However, H2--H5 NLL is 1.65836 versus 1.65745 for v6 (a 0.00091 degradation) and 1.65615 for the identical-input dense control (a 0.00222 degradation). Only 55% of held-out tasks improve, Slack degrades by 0.01844, and normalized top-2 routing entropy is 0.46279 below the frozen 0.60 bar. The relation signature therefore contains useful outcome information, but sparse routing does not turn it into better dynamics.
+
+This result rejects another latent/router escalation. Stage E2 is now authorized exactly as frozen: a uniform three-member probabilistic v6 ensemble with three independent ensemble groups. It changes the research target from representation capacity to predictive uncertainty. No E2 weight, temperature, threshold, task, seed, or gate has been selected from E1 outcomes.
+
+Stage E1 archive: `/share/guozhix/wmagentattack/0818/relational_router_uncertainty_v10/stage_e1/formal_v1`
