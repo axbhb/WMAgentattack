@@ -1,6 +1,6 @@
 {
   "protocol_id": "0818_late_fusion_distillation_v15",
-  "status": "preregistered_before_training",
+  "status": "complete_no_go_stop_neural_latent_direction",
   "research_question": "Can a zero-initialized exact/evidence late-fusion student distill the action-relevant contribution of a full-graph oracle without reconstructing future sparse graph features?",
   "sources": {
     "events": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
@@ -56,5 +56,32 @@
     "require_complete_budget": true
   },
   "scope": {"new_llm_calls": 0, "new_tool_executions": 0, "new_attacks": 0, "planner_runs": 0, "real_endpoints": 0},
+  "result": {
+    "decision": "NO_GO_LATE_FUSION_DISTILLED_WORLD_MODEL_V15",
+    "job_id": 7110,
+    "git_commit": "3c3accc",
+    "archive": "/share/guozhix/wmagentattack/0818/late_fusion_distillation_v15/formal_v1",
+    "elapsed": "00:10:14",
+    "training_units": 45,
+    "teacher_fits": 15,
+    "oracle_fits": 15,
+    "runtime_failures": 0,
+    "paired_rows_each_arm": 41433,
+    "h1_nll_gain_vs_v6": 0.0027626077423184756,
+    "h1_accuracy_gain_vs_v6": 0.00356713350832879,
+    "h2_h5_nll_gain_vs_v6": -0.011201125196110287,
+    "h2_h5_nll_gain_vs_capacity": 0.011641712846141567,
+    "oracle_ce_gain_vs_capacity": 0.0067876225662420785,
+    "h2_h5_positive_task_fraction": 0.4,
+    "positive_seeds": 0,
+    "full_oracle_h2_h5_gain_vs_v6": 0.03626429907161375,
+    "future_joint_ce_difference_vs_v6": 0.0,
+    "predictions_sha256": "d8d5867e8c2721be37e0a124106f732c94e0df370d2c35f7f4011159fd39221e",
+    "composite_sha256": "653c7233f37e210960152e61a6062a0df96b92897ed339a249ccdee6436b5efb",
+    "run_metrics_sha256": "34c9014775b9d3cf6ddcfa8b154e552e935599408ee878dd25a8afe57b94c6e1",
+    "gate_sha256": "3dfb5079a9d25f223ba585593ca7fb396c96723df39890b76143ac5b58e105cd",
+    "checksums_sha256": "6b5710962576f8a37479417f9e4fc6ea57d22fe0abfb9de2e76f733476eed20a"
+  },
+  "authorized_direction": "v16 task-disjoint retrieval/prototype world model with conservative v6 residual fusion; stop neural future-latent generation",
   "planned_archive": "/share/guozhix/wmagentattack/0818/late_fusion_distillation_v15/formal_v1"
 }
