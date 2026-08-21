@@ -99,8 +99,8 @@ def main() -> None:
         },
         "authorization": {
             "fit_long_horizon_models": decision == "GO_LONG_HORIZON_MODEL_GATE_V22",
-            "construct_pseudo_sequences": false,
-            "large_scale_world_model": false
+            "construct_pseudo_sequences": False,
+            "large_scale_world_model": False
         },
         "counterevidence": "H10 has only 206 windows over 9/20 tasks and one frozen fold has zero support, so H10 is diagnostic only."
     }

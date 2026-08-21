@@ -123,9 +123,9 @@ def main() -> None:
             "rollout_diagnostics": diagnostics,
         },
         "counterevidence": {
-            "h10_is_not_a_gate": true,
+            "h10_is_not_a_gate": True,
             "h10_reason": "support spans only 9/20 tasks and one frozen fold has zero windows",
-            "teacher_forced_is_not_free_rollout": true,
+            "teacher_forced_is_not_free_rollout": True,
         },
         "hashes": {
             "protocol": sha256(args.protocol),

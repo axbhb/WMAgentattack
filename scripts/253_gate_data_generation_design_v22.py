@@ -53,9 +53,9 @@ def main() -> None:
         "authorization": {
             "build_manifest_twice": all(clauses.values()),
             "run_96_episode_smoke": all(clauses.values()),
-            "medium_generation": false,
-            "large_generation": false,
-            "large_world_model_training": false,
+            "medium_generation": False,
+            "large_generation": False,
+            "large_world_model_training": False,
         },
         "claim_boundary": "This gate validates the schema, frozen budget, source tiers, LLM contract, and leakage policy. It does not claim that 96 episodes have been generated."
     }

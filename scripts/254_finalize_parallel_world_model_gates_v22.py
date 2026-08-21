@@ -40,10 +40,10 @@ def main() -> None:
         },
         "authorization": {
             "run_frozen_96_episode_data_smoke": decision == "GO_RUN_FROZEN_96_EPISODE_DATA_SMOKE_V22",
-            "medium_scale_generation": false,
-            "large_scale_generation": false,
-            "large_world_model_training": false,
-            "attack_selector_training": false,
+            "medium_scale_generation": False,
+            "large_scale_generation": False,
+            "large_world_model_training": False,
+            "attack_selector_training": False,
         },
         "hashes": {
             "open_gate": sha256(args.open_gate),
