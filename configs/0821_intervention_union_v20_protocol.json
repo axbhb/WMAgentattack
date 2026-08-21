@@ -1,6 +1,6 @@
 {
   "protocol_id": "0821_intervention_union_v20",
-  "status": "model_preregistered_before_results",
+  "status": "completed_go_with_shortcut_counterevidence",
   "research_question": "Can v17 legal forks, v18 parameter boundaries, and v19 persistence/conflict sequences be merged into one deterministic, task-disjoint, leakage-free transition dataset suitable for a tiny modular world-model comparison?",
   "scope": {
     "clean_only": true,
@@ -103,6 +103,49 @@
   "decision_policy": {
     "union_pass": "Completed: exact dataset/audit hashes are frozen; run exactly the preregistered 27 tiny model fits once.",
     "union_fail": "Do not train; retain the failed audit and repair only deterministic schema or grouping integrity without changing source outcomes."
+  },
+  "postrun_results": {
+    "job_id": 7196,
+    "archive": "/share/guozhix/wmagentattack/0821/intervention_union_v20/formal_v1",
+    "completed_model_fits": 27,
+    "runtime_failures": 0,
+    "tests_passed": 15,
+    "decision": "GO_INTERVENTION_MODULAR_V20",
+    "metrics_sha256": "6c7fae00f644323cec328176eb2505e5ef7600264d393f90f0a2631ee9ba7c09",
+    "gate_sha256": "cc4ccaa06cefef9f4f8a2bcbe8939997aa09479fcb3b7fa780239f61687d22b6",
+    "aggregate": {
+      "intervention_modular_v20": {
+        "one_step_task_macro_bce": 0.04743953268349435,
+        "one_step_micro_f1": 0.9512561816292284,
+        "execution_brier": 0.000002964646935450017,
+        "execution_accuracy": 1.0,
+        "pair_assignment_accuracy": 0.9932659932659933,
+        "v19_rollout_task_macro_bce": 0.035185564898711164,
+        "parameter_count": 47737
+      },
+      "structured_markov_v3": {
+        "one_step_task_macro_bce": 0.12874803946896546,
+        "pair_assignment_accuracy": 0.9898989898989901,
+        "v19_rollout_task_macro_bce": 0.133276701466659,
+        "parameter_count": 50713
+      },
+      "structured_residual_v6": {
+        "one_step_task_macro_bce": 0.0719360679512693,
+        "pair_assignment_accuracy": 0.9865319865319866,
+        "v19_rollout_task_macro_bce": 0.06004525867239055,
+        "parameter_count": 52794
+      }
+    },
+    "counterevidence": {
+      "pair_metric_near_ceiling_for_all_arms": true,
+      "action_implied_source_tokens": 121,
+      "rows": 121,
+      "effect_vocabulary_size": 120,
+      "heldout_positive_token_occurrences_unseen_in_training_by_fold": {"0": 10, "1": 0, "2": 11},
+      "full_vocabulary_bce_is_sparse_and_can_underweight_unseen_positive_tokens": true,
+      "bundle_ablation_not_identified": true,
+      "scale_up_authorized": false
+    }
   },
   "planned_archive": "/share/guozhix/wmagentattack/0821/intervention_union_v20"
 }
