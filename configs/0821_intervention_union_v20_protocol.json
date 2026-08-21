@@ -1,0 +1,64 @@
+{
+  "protocol_id": "0821_intervention_union_v20",
+  "status": "preregistered_before_union_build",
+  "research_question": "Can v17 legal forks, v18 parameter boundaries, and v19 persistence/conflict sequences be merged into one deterministic, task-disjoint, leakage-free transition dataset suitable for a tiny modular world-model comparison?",
+  "scope": {
+    "clean_only": true,
+    "external_endpoints": false,
+    "attack_examples": 0,
+    "victim_llm_calls": 0,
+    "large_model_runs": 0,
+    "dreamer_runs": 0
+  },
+  "sources": {
+    "v17": {
+      "path": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/formal_v1/paired_branch_dataset.json",
+      "sha256": "c3c46f54bc17b53bbcd77a2ed21e64d0e8602fbe6bd5cd6a1758bd7ce55f0ce2"
+    },
+    "v18": {
+      "path": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/formal_v1/parameter_intervention_dataset.json",
+      "sha256": "36f20f1fb2c5850b40fabb50bb4d687c3b4643b7da80fa7dee40f42501c84002"
+    },
+    "v19": {
+      "path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v2/persistence_conflict_dataset.json",
+      "sha256": "895294f17261d553e578317220a1fd0be1543ae85e9205f8a9e1fd467aa42ca0"
+    }
+  },
+  "split_contract": {
+    "folds": 3,
+    "confirmation_fold_by_difficulty": {"L1": 0, "L2": 1, "L3": 2},
+    "grouping_unit": "task; roots, pairs, and sequences inherit their task fold",
+    "task_id_is_never_a_model_input": true
+  },
+  "union_gate": {
+    "source_raw_transition_counts": {
+      "v17_legal_fork": 48,
+      "v18_parameter_boundary": 24,
+      "v19_persistence_conflict": 72
+    },
+    "raw_transition_count": 144,
+    "minimum_canonical_transition_count": 120,
+    "maximum_canonical_transition_count": 144,
+    "tasks": 12,
+    "suites": ["banking", "slack", "travel", "workspace"],
+    "difficulties": ["L1", "L2", "L3"]
+  },
+  "union": {
+    "path": "/share/guozhix/wmagentattack/0821/intervention_union_v20/preflight_v1/a/dataset.json",
+    "audit_path": "/share/guozhix/wmagentattack/0821/intervention_union_v20/preflight_v1/a/audit.json",
+    "sha256": null
+  },
+  "fixed_budget": {
+    "independent_union_builds": 2,
+    "model_arms_if_union_go": 3,
+    "folds_if_union_go": 3,
+    "training_seeds_if_union_go": 3,
+    "maximum_model_fits_if_union_go": 27,
+    "post_result_reruns": 0
+  },
+  "decision_policy": {
+    "union_pass": "Freeze exact dataset and audit hashes, then freeze one tiny 3-arm task-disjoint model protocol before reading model results.",
+    "union_fail": "Do not train; retain the failed audit and repair only deterministic schema or grouping integrity without changing source outcomes."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0821/intervention_union_v20"
+}
