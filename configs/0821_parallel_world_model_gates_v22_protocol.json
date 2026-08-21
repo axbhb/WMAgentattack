@@ -1,0 +1,241 @@
+{
+  "protocol_id": "0821_parallel_world_model_gates_v22",
+  "status": "preregistered_before_results",
+  "research_program": "Run three independent, fixed-budget gates in parallel: open-vocabulary effect transfer, paired multi-source generation design/smoke, and long-horizon data sufficiency. A failure in one line cannot be hidden by another line.",
+  "scope": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "real_external_endpoints": 0,
+    "novel_attack_payload_generation": 0,
+    "dreamer_runs": 0,
+    "large_planner_runs": 0,
+    "large_scale_generation": 0
+  },
+  "parent": {
+    "commit": "76c39c913f92997d2c98eccd39fca3a0cf19c9ea",
+    "retained_architecture": "intervention_no_execution_experts_v21",
+    "counterevidence": "all v21 arms had zero unseen-positive recall"
+  },
+  "data": {
+    "path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
+    "sha256": "5ce08331f89f7e10da7512c98a26f44a7748bc8e3e755a38cf5c69edda6a4323",
+    "rows": 121,
+    "tasks": 12,
+    "effect_tokens": 94,
+    "source_components": ["v17_legal_fork", "v18_parameter_boundary", "v19_persistence_conflict"]
+  },
+  "open_vocabulary_gate": {
+    "question": "Does a slot-compositional, candidate-conditioned effect scorer predict positive labels absent from the training fold without materially degrading the retained v21 one-step and rollout behavior?",
+    "arms": [
+      "fixed_v21",
+      "independent_candidate_control_v22",
+      "compositional_candidate_v22"
+    ],
+    "model_comparison": {
+      "state_hash_dimension": 32,
+      "action_hash_dimension": 64,
+      "action_semantic_dimension": 32,
+      "label_hash_dimension": 16,
+      "hidden_size": 56,
+      "task_training_seeds": [7, 17, 29],
+      "diagnostic_training_seeds": [17],
+      "epochs": 300,
+      "learning_rate": 0.0025,
+      "weight_decay": 0.0001,
+      "execution_weight": 0.5,
+      "sequence_weight": 0.35,
+      "pair_weight": 0.25,
+      "gradient_clip": 5.0,
+      "torch_threads": 4,
+      "early_stopping": false,
+      "unseen_labels_are_excluded_from_candidate_training_loss": true,
+      "confirmation_labels_used_for_threshold_or_model_selection": false
+    },
+    "fixed_budget": {
+      "task_disjoint_folds": 3,
+      "task_disjoint_seeds": 3,
+      "diagnostic_folds": 6,
+      "diagnostic_seeds": 1,
+      "arms": 3,
+      "model_fits": 45,
+      "post_result_reruns": 0
+    },
+    "acceptance_thresholds": {
+      "maximum_parameters": 100000,
+      "minimum_task_unseen_recall": 0.2,
+      "minimum_diagnostic_unseen_recall": 0.1,
+      "minimum_unseen_recall_gain_vs_independent_control": 0.1,
+      "minimum_unseen_nll_gain_vs_fixed": 0.25,
+      "seen_recall_noninferiority_margin": 0.05,
+      "one_step_bce_noninferiority_margin": 0.02,
+      "rollout_bce_noninferiority_margin": 0.02,
+      "query_read_recall_noninferiority_margin": 0.05
+    },
+    "authorization_if_go": "Authorize one 384-768 episode paired generation pilot and a separate pretrained-label-encoder confirmation; do not authorize tens-of-thousands scale.",
+    "authorization_if_no_go": "Retain v21 as a closed-vocabulary probe and change the semantic label encoder or collect explicit unseen-slot support before scale-up."
+  },
+  "data_generation_gate": {
+    "status": "protocol_frozen_smoke_not_yet_run",
+    "episode_tables": ["episodes", "transitions", "outcomes", "pairs"],
+    "trajectory_outcome_classes": [
+      "attack0_utility0",
+      "attack0_utility1",
+      "attack1_utility0",
+      "attack1_utility1"
+    ],
+    "outcome_rule": "Four-cell outcomes are episode-level labels and must never be copied into step-level transition inputs or targets.",
+    "sources": ["agentdojo", "tool_sandbox", "injecagent"],
+    "transition_tiers": {
+      "agentdojo": "observed_or_exact_sandbox",
+      "tool_sandbox": "exact_in_memory",
+      "injecagent": "observation_contrast_only"
+    },
+    "shared_llm_contract": {
+      "model": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+      "snapshot": "/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b",
+      "quantization": "4bit_nf4",
+      "tool_protocol": "function_tags_repair_retry",
+      "max_input_tokens": 8192,
+      "max_new_tokens": 256,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "do_sample": true,
+      "max_tool_output_chars": 12000,
+      "trust_remote_code": false,
+      "format_retries": 1
+    },
+    "smoke_budget": {
+      "episodes": 96,
+      "paired_instances": 48,
+      "seeds": [431, 433],
+      "agentdojo_episodes": 48,
+      "tool_sandbox_episodes": 24,
+      "injecagent_episodes": 24,
+      "post_result_additions": 0
+    },
+    "split_rule": "Connected components sharing task, canonical template, native template, root state, pair, episode family, normalized attack template, or multi-seed repeat group cannot cross train/calibration/confirmation.",
+    "hard_gates": {
+      "complete_episodes": 96,
+      "complete_pairs": 48,
+      "runtime_failures": 0,
+      "real_external_endpoint_calls": 0,
+      "nonempty_completion_fraction": 1.0,
+      "exact_semantic_replica_fraction": 1.0,
+      "minimum_raw_replica_fraction": 0.95,
+      "conflicting_exact_transition_targets": 0,
+      "minimum_exact_or_observed_transitions": 96,
+      "minimum_agentdojo_multistep_episodes": 24,
+      "minimum_valid_joint_examples_per_cell": 3,
+      "maximum_joint_class_fraction": 0.7,
+      "split_component_overlap": 0
+    },
+    "authorization_if_go": "Only a separately preregistered 384-768 episode medium pilot.",
+    "authorization_if_no_go": "No data expansion; preserve source-specific insufficiency and repair only the failed data mechanism."
+  },
+  "long_horizon_gate": {
+    "question": "Do the frozen v19 causal effect sequences and the frozen AgentDojo natural trajectories support separate task-disjoint tests of teacher-forced semantic dynamics and H1-H5 free victim-action rollout?",
+    "data_sufficiency_precedes_model_fits": true,
+    "agentdojo_adjacent_dataset": {
+      "path": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/dataset.json",
+      "sha256": "066b69fb580634ac5354c4aa59463b86ff26fadfc3f7436b6e0646f3c0cafa5f",
+      "audit_path": "/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/audit.json",
+      "audit_sha256": "c60ea091978bf6a24904dfcc7147576252daf17e930967da5f715aaa52a5d46c"
+    },
+    "external_typed_v4_control": {
+      "path": "/share/guozhix/wmagentattack/0817/factorized_belief_wm_v4/pilot_v1/results/predictions.jsonl",
+      "sha256": "af05762c6e198d4ace4bd889ec5f3c3bb9c1d48fa455dcdd2064fd525b4d52e9",
+      "arm": "fns_bwm_multihorizon"
+    },
+    "teacher_training_protocol": {
+      "training": {
+        "fixed_epochs": 120,
+        "learning_rate": 0.001,
+        "weight_decay": 0.0001,
+        "hidden_size": 96,
+        "hash_dimension": 128,
+        "dropout": 0.1,
+        "outcome_loss_weight": 1.0,
+        "outcome_positive_weight_cap": 10.0,
+        "joint_loss_weight": 0.25
+      }
+    },
+    "residual_training": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1
+    },
+    "training_seeds": [7, 17, 29],
+    "v19_effect_surface": {
+      "sequences": 24,
+      "steps_per_sequence": 3,
+      "tasks": 12,
+      "claim": "teacher-forced semantic effect dynamics only"
+    },
+    "required_horizons": [1, 2, 3, 5, 10],
+    "minimum_requirements": {
+      "trajectories": 2060,
+      "adjacent_transitions": 4703,
+      "tasks": 20,
+      "suites": 4,
+      "horizon_windows": {"1": 4703, "2": 3450, "3": 2499, "5": 1320, "10": 206},
+      "horizon5_tasks": 19,
+      "horizon10_tasks": 9,
+      "runtime_failures": 0
+    },
+    "model_controls_if_data_go": [
+      "one_step_repeated",
+      "teacher_forced_residual",
+      "free_latent_rollout",
+      "free_latent_rollout_with_one_step_kl_noninferiority"
+    ],
+    "model_gate_if_data_go": {
+      "maximum_h1_nll_degradation_vs_teacher": 0.005,
+      "maximum_h1_accuracy_degradation_vs_teacher": 0.002,
+      "minimum_h2_h5_nll_gain_over_typed_v4": 0.1,
+      "minimum_h2_h5_positive_task_fraction": 0.55,
+      "minimum_positive_seeds": 2,
+      "require_all_predictions_legal": true,
+      "v19_effect_bce_noninferiority_margin": 0.01,
+      "v19_positive_recall_noninferiority_margin": 0.01,
+      "query_read_positive_nll_noninferiority_margin": 0.05,
+      "query_read_recall_noninferiority_margin": 0.05,
+      "query_read_pair_assignment_floor": 0.75,
+      "horizon10_is_counterevidence_not_a_release_gate": true
+    },
+    "fixed_budget_if_data_go": {
+      "agentdojo_teacher_fits": 15,
+      "agentdojo_residual_fits": 15,
+      "v19_effect_fits_are_shared_with_open_vocabulary_line": true,
+      "new_long_horizon_fits": 30,
+      "post_result_reruns": 0
+    },
+    "claim_boundary": "H1-H5 is the primary AgentDojo victim-action surface. H10 is support-conditioned counterevidence because only 9/20 tasks are represented and one frozen confirmation fold has zero windows.",
+    "authorization_if_data_no_go": "Do not fit a long-horizon model; require the paired generation line to collect real 5-10 step sequences."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1",
+  "mutable_files": [
+    "src/wmagentattack/compositional_effect_world_model.py",
+    "src/wmagentattack/paired_generation_schema.py",
+    "scripts/248_train_open_vocabulary_v22.py",
+    "scripts/249_gate_open_vocabulary_v22.py",
+    "scripts/250_audit_long_horizon_v22.py",
+    "scripts/251_train_long_horizon_controls_v22.py",
+    "scripts/252_gate_long_horizon_controls_v22.py",
+    "scripts/253_gate_data_generation_design_v22.py",
+    "scripts/254_finalize_parallel_world_model_gates_v22.py",
+    "tests/test_compositional_effect_world_model.py",
+    "tests/test_paired_generation_schema.py",
+    "scripts/server/run_0821_open_vocabulary_v22.sbatch",
+    "scripts/server/run_0821_long_horizon_v22.sbatch",
+    "scripts/server/run_0821_parallel_world_model_gates_v22_finalize.sbatch",
+    "reports/0821_parallel_world_model_gates_v22_preregistration.md",
+    "reports/0821_parallel_world_model_gates_v22_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
