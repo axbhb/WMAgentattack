@@ -18,6 +18,8 @@ ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1
 OUT=$ROOT/long_horizon
 cd "$WT"
 mkdir -p logs
+test "$(git rev-parse HEAD)" = "$(cat "$ROOT/GIT_HEAD")"
+sha256sum -c "$ROOT/code_and_data.prerun.sha256" > "$OUT.prerun.verify.txt"
 if [[ -e "$OUT/COMPLETE" || -e "$OUT.tmp" ]]; then echo duplicate-long-v22 >&2; exit 3; fi
 mkdir -p "$OUT.tmp/results"
 trap 'status=$?; echo "$status" > "$OUT.tmp/FAILED"; exit "$status"' ERR
@@ -41,6 +43,7 @@ PY
   --protocol "$PROTOCOL" --dataset "$DATA" --audit "$AUDIT" \
   --output-dir "$OUT.tmp/results" > "$OUT.tmp/train_stdout.json"
 echo "finished_at=$(date -Is)" >> "$OUT.tmp/runtime.txt"
+sha256sum -c "$ROOT/code_and_data.prerun.sha256" > "$OUT.tmp/postrun.verify.txt"
 touch "$OUT.tmp/COMPLETE"
 mv "$OUT.tmp" "$OUT"
 trap - ERR

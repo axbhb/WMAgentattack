@@ -16,6 +16,8 @@ ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1
 OUT=$ROOT/open_vocabulary
 cd "$WT"
 mkdir -p logs
+test "$(git rev-parse HEAD)" = "$(cat "$ROOT/GIT_HEAD")"
+sha256sum -c "$ROOT/code_and_data.prerun.sha256" > "$OUT.prerun.verify.txt"
 if [[ -e "$OUT/COMPLETE" || -e "$OUT.tmp" ]]; then echo duplicate-open-v22 >&2; exit 3; fi
 mkdir -p "$OUT.tmp/results"
 trap 'status=$?; echo "$status" > "$OUT.tmp/FAILED"; exit "$status"' ERR
@@ -40,7 +42,7 @@ export OMP_NUM_THREADS=8 MKL_NUM_THREADS=8
   --protocol "$PROTOCOL" --metrics "$OUT.tmp/results/run_metrics.json" \
   --output "$OUT.tmp/results/gate.json" > "$OUT.tmp/gate_stdout.json"
 echo "finished_at=$(date -Is)" >> "$OUT.tmp/runtime.txt"
+sha256sum -c "$ROOT/code_and_data.prerun.sha256" > "$OUT.tmp/postrun.verify.txt"
 touch "$OUT.tmp/COMPLETE"
 mv "$OUT.tmp" "$OUT"
 trap - ERR
-

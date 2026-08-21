@@ -17,6 +17,8 @@ LONG=$ROOT/long_horizon/results
 V4=/share/guozhix/wmagentattack/0817/factorized_belief_wm_v4/pilot_v1/results/predictions.jsonl
 cd "$WT"
 if [[ -e "$ROOT/COMPLETE" ]]; then echo duplicate-finalize-v22 >&2; exit 3; fi
+test "$(git rev-parse HEAD)" = "$(cat "$ROOT/GIT_HEAD")"
+sha256sum -c "$ROOT/code_and_data.prerun.sha256" > "$ROOT/final_prerun.verify.txt"
 test -e "$ROOT/open_vocabulary/COMPLETE"
 test -e "$ROOT/long_horizon/COMPLETE"
 mkdir -p "$ROOT/final"
@@ -36,4 +38,3 @@ mkdir -p "$ROOT/final"
 find "$ROOT" -type f -not -name checksums.sha256 -not -name COMPLETE -print0 \
   | sort -z | xargs -0 sha256sum > "$ROOT/checksums.sha256"
 date -Is > "$ROOT/COMPLETE"
-
