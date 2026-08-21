@@ -157,9 +157,9 @@ def main() -> None:
     if protocol["status"] != "preregistered_before_results":
         raise ValueError("v22 protocol is not frozen")
     cfg = protocol["long_horizon_gate"]
-    if file_sha256(args.dataset) != cfg["agentdojo_adjacent_dataset"]["sha256"]:
+    if file_sha256(args.dataset) != cfg["model_dataset"]["sha256"]:
         raise ValueError("long-horizon dataset hash mismatch")
-    if file_sha256(args.audit) != cfg["agentdojo_adjacent_dataset"]["audit_sha256"]:
+    if file_sha256(args.audit) != cfg["model_dataset"]["audit_sha256"]:
         raise ValueError("long-horizon audit hash mismatch")
     dataset = json.loads(args.dataset.read_text(encoding="utf-8"))
     device = "cpu"

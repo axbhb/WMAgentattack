@@ -11,8 +11,9 @@ set -euo pipefail
 WT=/share/guozhix/WMagentattack-parallel-gates-aug21
 PY=/share/guozhix/software/miniconda3/envs/wmagentattack/bin/python
 PROTOCOL=configs/0821_parallel_world_model_gates_v22_protocol.json
-DATA=/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/dataset.json
-AUDIT=/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/audit.json
+ADJACENT=/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/dataset.json
+DATA=/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json
+AUDIT=/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json
 ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1
 OUT=$ROOT/long_horizon
 cd "$WT"
@@ -29,7 +30,7 @@ export OMP_NUM_THREADS=8 MKL_NUM_THREADS=8
   echo "device=cpu"
 } > "$OUT.tmp/runtime.txt"
 "$PY" scripts/250_audit_long_horizon_v22.py \
-  --protocol "$PROTOCOL" --dataset "$DATA" --output "$OUT.tmp/results/data_gate.json" \
+  --protocol "$PROTOCOL" --dataset "$ADJACENT" --output "$OUT.tmp/results/data_gate.json" \
   > "$OUT.tmp/data_gate_stdout.json"
 "$PY" - "$OUT.tmp/results/data_gate.json" <<'PY'
 import json,sys
@@ -43,4 +44,3 @@ echo "finished_at=$(date -Is)" >> "$OUT.tmp/runtime.txt"
 touch "$OUT.tmp/COMPLETE"
 mv "$OUT.tmp" "$OUT"
 trap - ERR
-
