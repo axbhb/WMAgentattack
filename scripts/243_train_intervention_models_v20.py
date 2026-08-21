@@ -207,7 +207,7 @@ def train_one(
         )
         total = effect + float(cfg["execution_weight"]) * execution_loss
         recurrent = torch.zeros(())
-        if arm in {"structured_residual_v6", "intervention_modular_v20"}:
+        if arm in {"structured_residual_v6", "intervention_modular_v20"} and train_sequences:
             recurrent = torch.stack([
                 sequence_loss(model, arm, sequence, states, actions, targets, pos_weight)
                 for sequence in train_sequences

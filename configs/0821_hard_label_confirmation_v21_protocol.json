@@ -1,6 +1,6 @@
 {
   "protocol_id": "0821_hard_label_confirmation_v21",
-  "status": "preregistered_before_view_build",
+  "status": "model_preregistered_before_results",
   "research_question": "Does the v20 modular transition advantage survive removal of mechanically action-implied source labels, harder positive-label metrics, and tool-family/source-held-out diagnostics; and which modular components are necessary?",
   "scope": {
     "clean_only": true,
@@ -32,7 +32,56 @@
   "hard_view": {
     "path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
     "audit_path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/audit.json",
-    "sha256": null
+    "sha256": "5ce08331f89f7e10da7512c98a26f44a7748bc8e3e755a38cf5c69edda6a4323",
+    "audit_sha256": "29d2d7d70b6afcbd04a9ee0bc0fb342ea41cb1f38b0612d07e2863978d485317",
+    "byte_identical_independent_builds": true,
+    "gate_passed": true
+  },
+  "model_comparison": {
+    "arms": [
+      "structured_residual_v6",
+      "intervention_modular_v20",
+      "intervention_no_pair_v21",
+      "intervention_no_execution_experts_v21"
+    ],
+    "state_hash_dimension": 32,
+    "action_hash_dimension": 64,
+    "hidden_sizes": {
+      "structured_residual_v6": 64,
+      "intervention_modular_v20": 56
+    },
+    "task_training_seeds": [7, 17, 29],
+    "diagnostic_training_seeds": [17],
+    "epochs": 300,
+    "learning_rate": 0.0025,
+    "weight_decay": 0.0001,
+    "execution_weight": 0.5,
+    "sequence_weight": 0.35,
+    "pair_weight": 0.25,
+    "gradient_clip": 5.0,
+    "torch_threads": 4,
+    "diagnostic_sequence_supervision": false,
+    "early_stopping": false,
+    "confirmation_data_used_for_training_or_model_selection": false
+  },
+  "model_gate": {
+    "maximum_parameters": 100000,
+    "minimum_hard_bce_gain": 0.01,
+    "minimum_positive_nll_gain": 0.05,
+    "positive_recall_noninferiority_margin": 0.01,
+    "minimum_rollout_bce_gain": 0.01,
+    "execution_brier_noninferiority_margin": 0.01,
+    "diagnostic_positive_nll_noninferiority_margin": 0.05,
+    "diagnostic_recall_noninferiority_margin": 0.05,
+    "minimum_positive_folds": 2,
+    "minimum_positive_seeds": 2,
+    "simplicity_order": [
+      "intervention_no_execution_experts_v21",
+      "intervention_no_pair_v21",
+      "intervention_modular_v20"
+    ],
+    "selection_rule": "Select the first modular candidate in simplicity order that passes every primary, diagnostic, robustness, integrity, and parameter check; otherwise retain Structured residual v6.",
+    "unseen_positive_metrics_are_counterevidence_not_acceptance_thresholds": true
   },
   "fixed_budget": {
     "independent_view_builds": 2,
@@ -49,7 +98,7 @@
     "post_result_reruns": 0
   },
   "decision_policy": {
-    "view_pass": "Freeze exact view and audit hashes, then freeze model architecture, hard metrics, ablations, and acceptance gate before any v21 model result.",
+    "view_pass": "Completed: exact view and audit hashes are frozen; run exactly the preregistered 60 CPU fits once.",
     "view_fail": "Do not train; retain the audit and repair only deterministic filtering or split integrity."
   },
   "planned_archive": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21"

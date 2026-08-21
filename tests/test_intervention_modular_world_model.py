@@ -3,6 +3,7 @@ import torch
 from wmagentattack.intervention_modular_world_model import (
     DirectStructuredTransition,
     InterventionModularTransition,
+    InterventionSharedEffectTransition,
     RecurrentResidualTransition,
     assert_transition_only,
     trainable_parameter_count,
@@ -16,6 +17,7 @@ def test_all_v20_arms_emit_effect_and_execution_logits() -> None:
         DirectStructuredTransition(18, 9, 16, 7),
         RecurrentResidualTransition(18, 9, 16, 7),
         InterventionModularTransition(18, 9, 16, 7),
+        InterventionSharedEffectTransition(18, 9, 16, 7),
     ):
         effects, execution = model(state, action)
         assert effects.shape == (4, 7)
@@ -37,3 +39,10 @@ def test_v6_style_residual_gate_starts_at_identity() -> None:
     hidden = model.initial_hidden(torch.randn(4, 18))
     following = model.advance(hidden, torch.randn(4, 9))
     assert torch.equal(following, hidden)
+
+
+def test_shared_effect_ablation_has_no_conditional_experts() -> None:
+    model = InterventionSharedEffectTransition(18, 9, 16, 7)
+    names = set(dict(model.named_modules()))
+    assert "success_effect_head" not in names
+    assert "error_effect_head" not in names

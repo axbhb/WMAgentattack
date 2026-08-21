@@ -114,6 +114,48 @@ class InterventionModularTransition(nn.Module):
         return self.predict_hidden(hidden, execution_logit), execution_logit
 
 
+class InterventionSharedEffectTransition(nn.Module):
+    """Ablation retaining latent residual dynamics but removing effect experts."""
+
+    def __init__(self, state_size: int, action_size: int, hidden_size: int, targets: int) -> None:
+        super().__init__()
+        self.state_encoder = nn.Sequential(
+            nn.Linear(state_size, hidden_size), nn.LayerNorm(hidden_size), nn.GELU()
+        )
+        self.action_encoder = nn.Sequential(
+            nn.Linear(action_size, hidden_size), nn.LayerNorm(hidden_size), nn.GELU()
+        )
+        self.residual = nn.Sequential(
+            nn.Linear(hidden_size * 2, hidden_size),
+            nn.GELU(),
+            nn.Linear(hidden_size, hidden_size),
+        )
+        nn.init.zeros_(self.residual[-1].weight)
+        nn.init.zeros_(self.residual[-1].bias)
+        self.next_norm = nn.LayerNorm(hidden_size)
+        self.execution_head = nn.Linear(hidden_size * 2, 1)
+        self.effect_head = nn.Linear(hidden_size, targets)
+
+    def initial_hidden(self, state: Tensor) -> Tensor:
+        return self.state_encoder(state)
+
+    def advance_with_execution(self, hidden: Tensor, action: Tensor) -> tuple[Tensor, Tensor]:
+        action_hidden = self.action_encoder(action)
+        joint = torch.cat((hidden, action_hidden), dim=-1)
+        execution_logit = self.execution_head(joint).squeeze(-1)
+        return self.next_norm(hidden + self.residual(joint)), execution_logit
+
+    def predict_hidden(self, hidden: Tensor, execution_logit: Tensor) -> Tensor:
+        del execution_logit
+        return self.effect_head(hidden)
+
+    def forward(self, state: Tensor, action: Tensor) -> tuple[Tensor, Tensor]:
+        hidden, execution_logit = self.advance_with_execution(
+            self.initial_hidden(state), action
+        )
+        return self.predict_hidden(hidden, execution_logit), execution_logit
+
+
 def trainable_parameter_count(model: nn.Module) -> int:
     return sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
 
