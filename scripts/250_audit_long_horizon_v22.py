@@ -14,6 +14,8 @@ def sha256(path: Path) -> str:
 
 
 def suite(task_id: str) -> str:
+    if "|" in task_id:
+        return task_id.split("|", 1)[0]
     parts = task_id.split("::")
     if parts[0] in {"banking", "slack", "travel", "workspace"}:
         return parts[0]
@@ -46,7 +48,7 @@ def main() -> None:
         if len(tasks) != 1:
             raise ValueError("trajectory crosses task boundary")
         task = next(iter(tasks))
-        suite_values = {suite(str(row["task_key"])) for row in ordered}
+        suite_values = {suite(str(row["task_name"])) for row in ordered}
         if len(suite_values) != 1:
             raise ValueError("trajectory crosses suite boundary")
         trajectory_rows.append({
