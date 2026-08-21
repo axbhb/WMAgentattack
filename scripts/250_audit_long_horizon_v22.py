@@ -46,7 +46,15 @@ def main() -> None:
         if len(tasks) != 1:
             raise ValueError("trajectory crosses task boundary")
         task = next(iter(tasks))
-        trajectory_rows.append({"trajectory_id": reference, "length": len(ordered), "task": task, "suite": suite(task)})
+        suite_values = {suite(str(row["task_key"])) for row in ordered}
+        if len(suite_values) != 1:
+            raise ValueError("trajectory crosses suite boundary")
+        trajectory_rows.append({
+            "trajectory_id": reference,
+            "length": len(ordered),
+            "task": task,
+            "suite": next(iter(suite_values)),
+        })
     lengths = Counter(row["length"] for row in trajectory_rows)
     horizons = [1, 2, 3, 5, 10]
     windows = {
