@@ -110,6 +110,9 @@ def main() -> None:
         "v19_effect_rollout_noninferiority": open_gate["clauses"]["rollout_bce_noninferiority"],
         "query_read_recall_noninferiority": open_gate["clauses"]["query_read_recall_noninferiority"],
     }
+    # NumPy comparisons produce np.bool_, which is semantically correct but is
+    # not accepted by the standard JSON encoder. Normalize only the output type.
+    clauses = {name: bool(value) for name, value in clauses.items()}
     decision = "GO_LONG_HORIZON_H1_H5_V22" if all(clauses.values()) else "NO_GO_LONG_HORIZON_H1_H5_V22"
     payload = {
         "schema_version": "wmagentattack.long_horizon_gate.v22",
@@ -122,7 +125,7 @@ def main() -> None:
             "h1_accuracy_gain_vs_teacher": float(np.mean(h1_accuracy)),
             "h2_h5_nll_gain_over_typed_v4": float(np.mean(multistep)),
             "h2_h5_positive_task_fraction": float(np.mean([np.mean(values) > 0 for values in by_task.values()])),
-            "positive_seeds": sum(np.mean(values) > 0 for values in by_seed.values()),
+            "positive_seeds": int(sum(np.mean(values) > 0 for values in by_seed.values())),
             "rollout_diagnostics": diagnostics,
         },
         "counterevidence": {

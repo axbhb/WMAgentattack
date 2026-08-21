@@ -1,5 +1,8 @@
 from importlib.util import module_from_spec, spec_from_file_location
+import json
 from pathlib import Path
+
+import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,3 +39,9 @@ def test_clause_counts_accepts_both_frozen_gate_schemas():
     finalizer = load_script("finalize_v22", "254_finalize_parallel_world_model_gates_v22.py")
     assert finalizer.clause_counts({"passed": 8, "total": 10}) == (8, 10)
     assert finalizer.clause_counts({"passed_clauses": 7, "total_clauses": 12}) == (7, 12)
+
+
+def test_numpy_gate_comparisons_are_normalized_before_json_output():
+    clauses = {"gain": np.mean([1.0]) > 0}
+    normalized = {name: bool(value) for name, value in clauses.items()}
+    assert json.loads(json.dumps(normalized)) == {"gain": True}
