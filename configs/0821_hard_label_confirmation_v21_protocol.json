@@ -1,6 +1,6 @@
 {
   "protocol_id": "0821_hard_label_confirmation_v21",
-  "status": "model_preregistered_before_results",
+  "status": "completed_go_closed_vocabulary_with_open_vocabulary_block",
   "research_question": "Does the v20 modular transition advantage survive removal of mechanically action-implied source labels, harder positive-label metrics, and tool-family/source-held-out diagnostics; and which modular components are necessary?",
   "scope": {
     "clean_only": true,
@@ -100,6 +100,47 @@
   "decision_policy": {
     "view_pass": "Completed: exact view and audit hashes are frozen; run exactly the preregistered 60 CPU fits once.",
     "view_fail": "Do not train; retain the audit and repair only deterministic filtering or split integrity."
+  },
+  "postrun_results": {
+    "job_id": 7204,
+    "archive": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/formal_v1",
+    "completed_model_fits": 60,
+    "runtime_failures": 0,
+    "tests_passed": 18,
+    "decision": "GO_REPLACE_WITH_INTERVENTION_NO_EXECUTION_EXPERTS_V21",
+    "selected_architecture": "intervention_no_execution_experts_v21",
+    "metrics_sha256": "365def3161d381d3aab5634a4316026e822e54023a8df332af412a3dd6745fcb",
+    "gate_sha256": "0eeabe1f17cdb81eeedf82ca30a60a9918dd0cd55d5803b5349bef01103930de",
+    "primary_task_disjoint": {
+      "selected": {
+        "hard_task_macro_bce": 0.04426232394528625,
+        "hard_positive_task_macro_nll": 0.18571963173092101,
+        "hard_positive_task_macro_recall": 0.9620204365637802,
+        "v19_rollout_hard_bce": 0.02268882077543013,
+        "parameter_count": 32575
+      },
+      "structured_residual_v6": {
+        "hard_task_macro_bce": 0.06801697795972818,
+        "hard_positive_task_macro_nll": 0.34015895229398424,
+        "hard_positive_task_macro_recall": 0.9013578162081775,
+        "v19_rollout_hard_bce": 0.05697845915953318,
+        "parameter_count": 51104
+      }
+    },
+    "counterevidence": {
+      "all_arms_unseen_positive_recall": 0.0,
+      "task_disjoint_unseen_positive_occurrences_across_unique_folds": 16,
+      "tool_family_unseen_positive_occurrences": 213,
+      "source_unseen_positive_occurrences": 332,
+      "query_read_recall_selected": 0.7439116656763715,
+      "query_read_recall_v6": 0.8230303030303031,
+      "query_read_pair_accuracy_selected": 0.38461538461538464,
+      "query_read_pair_accuracy_v6": 0.6923076923076923,
+      "full_v20_failed_tool_family_nll_noninferiority": true,
+      "no_pair_failed_tool_family_nll_noninferiority": true,
+      "open_vocabulary_scale_up_authorized": false
+    },
+    "replacement_scope": "Retain the selected no-expert modular residual as the leading closed-vocabulary transition probe; do not yet replace the open-vocabulary data-construction or planning pipeline."
   },
   "planned_archive": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21"
 }
