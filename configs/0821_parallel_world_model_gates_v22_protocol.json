@@ -1,6 +1,6 @@
 {
   "protocol_id": "0821_parallel_world_model_gates_v22",
-  "status": "preregistered_before_results",
+  "status": "completed_no_go_formal_scale",
   "research_program": "Run three independent, fixed-budget gates in parallel: open-vocabulary effect transfer, paired multi-source generation design/smoke, and long-horizon data sufficiency. A failure in one line cannot be hidden by another line.",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -224,6 +224,40 @@
     },
     "claim_boundary": "H1-H5 is the primary AgentDojo victim-action surface. H10 is support-conditioned counterevidence because only 9/20 tasks are represented and one frozen confirmation fold has zero windows.",
     "authorization_if_data_no_go": "Do not fit a long-horizon model; require the paired generation line to collect real 5-10 step sequences."
+  },
+  "postrun": {
+    "overall_decision": "NO_GO_FORMAL_SCALE_V22__RETAIN_INDEPENDENT_COUNTEREVIDENCE",
+    "scientific_job_ids": {
+      "open_vocabulary": 7220,
+      "long_horizon": 7223,
+      "final_gate_repair": 7226
+    },
+    "superseded_or_failed_job_ids": {
+      "long_horizon_pending_cancelled_before_start": 7221,
+      "original_finalize_schema_failure": 7224,
+      "first_gate_repair_json_serialization_failure": 7225
+    },
+    "stage_decisions": {
+      "open_vocabulary": "NO_GO_OPEN_VOCABULARY_V22",
+      "data_generation_design": "GO_DATA_GENERATION_PROTOCOL_READY_V22__96_EPISODE_SMOKE_NOT_RUN",
+      "long_horizon": "NO_GO_LONG_HORIZON_H1_H5_V22"
+    },
+    "gate_counts": {
+      "open_vocabulary": "7/12",
+      "data_generation_design": "15/15",
+      "long_horizon": "9/10"
+    },
+    "scientific_runtime_failures": 0,
+    "post_result_model_reruns": 0,
+    "runtime_repairs": [
+      "Skip interleaved frozen-v4 outcome rows that have no horizon when constructing the rollout comparison surface.",
+      "Accept both frozen clause-count field schemas and normalize NumPy scalar booleans/integers before JSON serialization."
+    ],
+    "original_model_commit": "c3e108ee14200f8881b5df779f75eb55d55896c8",
+    "source_repair_commit": "3c840da3df36061bcffeef088db2192149dd710f",
+    "remote_repair_commit": "560123f",
+    "archive_complete": true,
+    "checksums_verified": true
   },
   "planned_archive": "/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2",
   "archive_note": "formal_v1 was created empty before a label-blind suite-provenance preflight failed; it is preserved and never used for model results.",
