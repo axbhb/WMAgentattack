@@ -1,0 +1,56 @@
+{
+  "protocol_id": "0821_hard_label_confirmation_v21",
+  "status": "preregistered_before_view_build",
+  "research_question": "Does the v20 modular transition advantage survive removal of mechanically action-implied source labels, harder positive-label metrics, and tool-family/source-held-out diagnostics; and which modular components are necessary?",
+  "scope": {
+    "clean_only": true,
+    "external_endpoints": false,
+    "attack_examples": 0,
+    "victim_llm_calls": 0,
+    "large_model_runs": 0,
+    "dreamer_runs": 0
+  },
+  "source_union": {
+    "path": "/share/guozhix/wmagentattack/0821/intervention_union_v20/preflight_v1/a/dataset.json",
+    "sha256": "cf5eb6fb2e92f8175e399ca1230d40d31b3d954a99b0f32258ba9789190b50ca"
+  },
+  "view_gate": {
+    "rows": 121,
+    "hard_vocabulary_size": 94,
+    "removed_source_token_occurrences": 121,
+    "tool_family_counts": {
+      "create_send_reserve": 28,
+      "mutation": 33,
+      "query_read": 60
+    },
+    "source_test_counts": {
+      "v17_legal_fork": 48,
+      "v18_parameter_boundary": 24,
+      "v19_persistence_conflict": 60
+    }
+  },
+  "hard_view": {
+    "path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
+    "audit_path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/audit.json",
+    "sha256": null
+  },
+  "fixed_budget": {
+    "independent_view_builds": 2,
+    "task_disjoint_arms": 4,
+    "task_disjoint_folds": 3,
+    "task_disjoint_seeds": 3,
+    "tool_family_diagnostic_arms": 4,
+    "tool_family_folds": 3,
+    "tool_family_seeds": 1,
+    "source_diagnostic_arms": 4,
+    "source_folds": 3,
+    "source_seeds": 1,
+    "maximum_model_fits_if_view_go": 60,
+    "post_result_reruns": 0
+  },
+  "decision_policy": {
+    "view_pass": "Freeze exact view and audit hashes, then freeze model architecture, hard metrics, ablations, and acceptance gate before any v21 model result.",
+    "view_fail": "Do not train; retain the audit and repair only deterministic filtering or split integrity."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21"
+}
