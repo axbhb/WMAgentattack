@@ -12,6 +12,15 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def clause_counts(gate: dict) -> tuple[int, int]:
+    """Read both the open-gate and the compact gate count schemas."""
+    passed = gate.get("passed", gate.get("passed_clauses"))
+    total = gate.get("total", gate.get("total_clauses"))
+    if passed is None or total is None:
+        raise KeyError("gate does not expose clause counts")
+    return int(passed), int(total)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--open-gate", type=Path, required=True)
@@ -26,6 +35,9 @@ def main() -> None:
     open_go = open_gate["decision"] == "GO_COMPOSITIONAL_OPEN_VOCABULARY_V22"
     long_go = long_gate["decision"] == "GO_LONG_HORIZON_H1_H5_V22"
     design_go = data_gate["decision"].startswith("GO_DATA_GENERATION_PROTOCOL_READY_V22")
+    open_passed, open_total = clause_counts(open_gate)
+    data_passed, data_total = clause_counts(data_gate)
+    long_passed, long_total = clause_counts(long_gate)
     if open_go and long_go and design_go:
         decision = "GO_RUN_FROZEN_96_EPISODE_DATA_SMOKE_V22"
     else:
@@ -60,9 +72,9 @@ def main() -> None:
         "",
         "## Independent stage decisions",
         "",
-        f"- Open vocabulary: `{open_gate['decision']}` ({open_gate['passed']}/{open_gate['total']} clauses).",
-        f"- Data generation design: `{data_gate['decision']}` ({data_gate['passed']}/{data_gate['total']} clauses).",
-        f"- Long horizon: `{long_gate['decision']}` ({long_gate['passed']}/{long_gate['total']} clauses).",
+        f"- Open vocabulary: `{open_gate['decision']}` ({open_passed}/{open_total} clauses).",
+        f"- Data generation design: `{data_gate['decision']}` ({data_passed}/{data_total} clauses).",
+        f"- Long horizon: `{long_gate['decision']}` ({long_passed}/{long_total} clauses).",
         "",
         "The data-design result does not claim that the 96 episodes already exist. Formal scale remains prohibited. H10 remains diagnostic because its task support is incomplete.",
         "",

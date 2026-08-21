@@ -23,7 +23,10 @@ def task_surface(rows: list[dict], control: str, horizons: set[int]) -> dict[tup
     grouped = defaultdict(lambda: defaultdict(list))
     for row in rows:
         row_control = row.get("control", row.get("arm"))
-        if row_control != control or int(row["horizon"]) not in horizons:
+        # The frozen v4 control interleaves episode-level outcome rows with
+        # rollout rows. Outcome rows intentionally have no horizon and are not
+        # members of the action-prediction comparison surface.
+        if row_control != control or "horizon" not in row or int(row["horizon"]) not in horizons:
             continue
         key = (int(row["training_seed"]), int(row["horizon"]), str(row["task_name"]))
         grouped[key]["nll"].append(float(row["action_nll"]))
