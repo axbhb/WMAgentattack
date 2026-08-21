@@ -225,7 +225,8 @@
     "claim_boundary": "H1-H5 is the primary AgentDojo victim-action surface. H10 is support-conditioned counterevidence because only 9/20 tasks are represented and one frozen confirmation fold has zero windows.",
     "authorization_if_data_no_go": "Do not fit a long-horizon model; require the paired generation line to collect real 5-10 step sequences."
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1",
+  "planned_archive": "/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2",
+  "archive_note": "formal_v1 was created empty before a label-blind suite-provenance preflight failed; it is preserved and never used for model results.",
   "mutable_files": [
     "src/wmagentattack/compositional_effect_world_model.py",
     "src/wmagentattack/paired_generation_schema.py",

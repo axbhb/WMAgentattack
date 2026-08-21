@@ -14,7 +14,7 @@ PROTOCOL=configs/0821_parallel_world_model_gates_v22_protocol.json
 ADJACENT=/share/guozhix/wmagentattack/0813/adjacent_transition/preflight_v1/a/dataset.json
 DATA=/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json
 AUDIT=/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json
-ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1
+ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2
 OUT=$ROOT/long_horizon
 cd "$WT"
 mkdir -p logs

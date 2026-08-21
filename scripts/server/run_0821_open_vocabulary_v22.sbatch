@@ -12,7 +12,7 @@ WT=/share/guozhix/WMagentattack-parallel-gates-aug21
 PY=/share/guozhix/software/miniconda3/envs/wmagentattack/bin/python
 PROTOCOL=configs/0821_parallel_world_model_gates_v22_protocol.json
 DATA=/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json
-ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1
+ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2
 OUT=$ROOT/open_vocabulary
 cd "$WT"
 mkdir -p logs

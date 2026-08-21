@@ -11,7 +11,7 @@ set -euo pipefail
 WT=/share/guozhix/WMagentattack-parallel-gates-aug21
 PY=/share/guozhix/software/miniconda3/envs/wmagentattack/bin/python
 PROTOCOL=configs/0821_parallel_world_model_gates_v22_protocol.json
-ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v1
+ROOT=/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2
 OPEN=$ROOT/open_vocabulary/results
 LONG=$ROOT/long_horizon/results
 V4=/share/guozhix/wmagentattack/0817/factorized_belief_wm_v4/pilot_v1/results/predictions.jsonl
