@@ -1,0 +1,127 @@
+{
+  "protocol_id": "0824_typed_relation_identifiability_v31",
+  "status": "preregistered_before_results",
+  "research_question": "Can typed entity/attribute/action/value roles plus a frozen semantic alignment branch distinguish v29 record--goal edges from label-verified hard negatives, and is each held-out task fold sufficiently supported for another model fit?",
+  "scope": {
+    "clean_transition_data_only": true,
+    "agentdojo_synthetic_sandbox_only": true,
+    "real_external_endpoints": false,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0,
+    "model_fits": 0,
+    "gpu_requests": 0,
+    "attack_generation": false,
+    "large_scale_generation": false,
+    "planner": false,
+    "dreamer": false
+  },
+  "data": {
+    "hard_dataset": {
+      "path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
+      "sha256": "5ce08331f89f7e10da7512c98a26f44a7748bc8e3e755a38cf5c69edda6a4323"
+    },
+    "relational_dataset": {
+      "path": "/share/guozhix/wmagentattack/0824/relational_successor_data_v29/formal_v1/build_a/dataset.json",
+      "sha256": "5b85a68602113b5042f2af08c63b9792595455fbdf85892403b8ebfb1f82b463"
+    },
+    "confirmation_rows": 121,
+    "record_local_positive_edges": 74,
+    "known_positive_edges_by_fold": [16, 1, 57],
+    "known_counterevidence": "The single positive edge in fold 1 is insufficient for a model-level transfer claim even if representation discrimination passes."
+  },
+  "representation": {
+    "typed_goal_roles": ["ATTRIBUTE_TOKEN", "ENTITY_TOKEN", "ACTION_FIELD_TOKEN", "VALUE_KIND", "LEXICAL_TOKEN"],
+    "relation_types": ["DIRECT_ATTRIBUTE", "DIRECT_ENTITY", "ACTION_FIELD_BRIDGE", "TYPED_VALUE_CARRIER", "SEMANTIC_ONLY"],
+    "structural_weight": 0.65,
+    "semantic_weight": 0.35,
+    "model_name": "intfloat/e5-base-v2",
+    "model_revision": "f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+    "model_snapshot": "/share/guozhix/hf_cache/models--intfloat--e5-base-v2/snapshots/f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+    "batch_size": 32,
+    "model_file_sha256": {
+      "config.json": "01cc39aa39538a8179aa131c8a16adc03b506c92009f091502e4eb0c702f5f78",
+      "model.safetensors": "d0d559c47d5f71b1d280b13b62a2657f3e3bc70c0786f9ab91a36545e6a8f693",
+      "special_tokens_map.json": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+      "tokenizer.json": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "tokenizer_config.json": "ae83fa6ca0333117ff12606020af925d648667ef70d92ff7f27d781ba0ca4544",
+      "vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+    },
+    "allowed_inputs": ["current goal text at inference", "normalized action", "static record schemas", "v29 record-local relation labels for evaluation only"],
+    "forbidden_outputs": ["raw goal terms", "raw values", "task IDs", "suite IDs", "utility", "security", "attack", "final outcome"]
+  },
+  "fixed_budget": {
+    "deterministic_build_replicas": 2,
+    "frozen_e5_cpu_passes": 2,
+    "hard_negatives_per_positive": 4,
+    "model_fits": 0,
+    "post_result_reruns": 0,
+    "gpu_requests": 0,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0
+  },
+  "acceptance_thresholds": {
+    "required_confirmation_rows": 121,
+    "required_positive_relation_edges": 74,
+    "minimum_positive_structural_coverage": 0.45,
+    "minimum_positive_typed_unit_coverage": 0.45,
+    "minimum_hard_negatives_per_positive": 4,
+    "minimum_combined_pair_accuracy": 0.65,
+    "minimum_pair_accuracy_gain_over_record_only": 0.1,
+    "minimum_per_fold_pair_accuracy": 0.55,
+    "maximum_semantic_unit_norm_error": 0.00001,
+    "minimum_positive_relation_edges_per_fold_for_model_fit": 8
+  },
+  "decision_policy": {
+    "representation_and_support_go": "Authorize one separately preregistered small typed-relation model comparison; no attacks or scale-up.",
+    "representation_go_support_no_go": "Authorize exactly one 24-episode clean relation-support pilot using the frozen Llama-3.1-70B contract; no model fit.",
+    "representation_no_go": "Do not generate data or fit a model. Preserve counterevidence and change the typed/semantic relation representation."
+  },
+  "targeted_support_pilot_if_authorized": {
+    "episodes": 24,
+    "task_configurations": 12,
+    "seeds_per_configuration": 2,
+    "model": "Meta-Llama-3.1-70B-Instruct 4bit, identical to the frozen multisource contract",
+    "scope": "AgentDojo synthetic clean sandbox only",
+    "allocation": "16 episodes to the fold-1 relation deficit, 4 fold-0 controls, 4 fold-2 controls",
+    "minimum_postpilot_positive_edges_per_fold": 8,
+    "real_external_endpoints": false,
+    "attacks": false
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0824/typed_relation_identifiability_v31/formal_v1",
+  "literature_mapping": [
+    {
+      "source": "https://arxiv.org/abs/2608.12078",
+      "repo_hypothesis": "Binding quality and frozen pretrained features, rather than object slots alone, should be tested directly under held-out shifts."
+    },
+    {
+      "source": "https://proceedings.mlr.press/v275/ugadiarov25a.html",
+      "repo_hypothesis": "Record-local object units should interact through explicit relation features rather than a monolithic text pointer."
+    },
+    {
+      "source": "https://proceedings.mlr.press/v267/kempf25a.html",
+      "counterevidence": "Compositional transfer depends on shared representations and data diversity; a pretrained encoder alone does not guarantee it."
+    },
+    {
+      "source": "https://proceedings.mlr.press/v162/xia22b.html",
+      "counterevidence": "Similarity-mined hard negatives may be false negatives, so v31 uses only v29 label-verified negatives."
+    }
+  ],
+  "implementation_sha256": {
+    "src/wmagentattack/typed_relation_contract.py": "02831fe1db471578b754f645051e7882b0229ad0b35ea491a785a4286ee3843f",
+    "scripts/273_build_typed_relation_identifiability_v31.py": "9acf63c5eda8026f9749c3c0105976be8e53467cc669e22b3bfaff6ca795f854",
+    "scripts/274_gate_typed_relation_identifiability_v31.py": "2072bd9edb1e80f8c9c2304488765ff20f32ca8446ff77cfecddae72ad9b5070",
+    "scripts/server/run_0824_typed_relation_identifiability_v31.sbatch": "d9e03e906213de982c0561bd78180a99a0dd49a1a372bb0093fab168e78c32cb",
+    "tests/test_typed_relation_contract.py": "e2865217b45147ae1c1952b7162f9cb7af05db8cb8520684a414dff8d8220acb"
+  },
+  "mutable_files": [
+    "src/wmagentattack/typed_relation_contract.py",
+    "scripts/273_build_typed_relation_identifiability_v31.py",
+    "scripts/274_gate_typed_relation_identifiability_v31.py",
+    "scripts/server/run_0824_typed_relation_identifiability_v31.sbatch",
+    "tests/test_typed_relation_contract.py",
+    "configs/0824_typed_relation_identifiability_v31_protocol.json",
+    "reports/0824_typed_relation_identifiability_v31_preregistration.md",
+    "reports/0824_typed_relation_identifiability_v31_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
