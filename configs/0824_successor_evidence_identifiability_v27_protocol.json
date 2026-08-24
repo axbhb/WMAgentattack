@@ -1,0 +1,70 @@
+{
+  "protocol_id": "0824_successor_evidence_identifiability_v27",
+  "status": "preregistered_before_results",
+  "research_question": "Can frozen v17-v19 and v25 clean sandbox outcomes be converted into leakage-free bound successor-evidence targets that exactly render v20/v21 effects and provide task-disjoint support for the mechanisms that defeated v26?",
+  "scope": {
+    "clean_only": true,
+    "agentdojo_synthetic_sandbox_only": true,
+    "offline_reconstruction_only": true,
+    "real_external_endpoints": false,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0,
+    "model_fits": 0,
+    "gpu_requests": 0,
+    "attack_generation": false,
+    "planner": false,
+    "dreamer": false
+  },
+  "sources": {
+    "v17": {"path": "/share/guozhix/wmagentattack/0818/paired_branch_identifiability_v17/formal_v1/paired_branch_dataset.json", "sha256": "c3c46f54bc17b53bbcd77a2ed21e64d0e8602fbe6bd5cd6a1758bd7ce55f0ce2"},
+    "v18": {"path": "/share/guozhix/wmagentattack/0818/parameter_intervention_v18/formal_v1/parameter_intervention_dataset.json", "sha256": "36f20f1fb2c5850b40fabb50bb4d687c3b4643b7da80fa7dee40f42501c84002"},
+    "v19": {"path": "/share/guozhix/wmagentattack/0818/persistence_conflict_v19/formal_v2/persistence_conflict_dataset.json", "sha256": "895294f17261d553e578317220a1fd0be1543ae85e9205f8a9e1fd467aa42ca0"},
+    "v20_union": {"path": "/share/guozhix/wmagentattack/0821/intervention_union_v20/preflight_v1/a/dataset.json", "sha256": "cf5eb6fb2e92f8175e399ca1230d40d31b3d954a99b0f32258ba9789190b50ca"},
+    "v21_hard": {"path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json", "sha256": "5ce08331f89f7e10da7512c98a26f44a7748bc8e3e755a38cf5c69edda6a4323"},
+    "v25_support_execution": {"path": "/share/guozhix/wmagentattack/0824/explicit_atom_support_v25/formal_v1/execution_dataset.json", "sha256": "4d16b7cf2f588302487ab13603cf4a3a99fbb1b4ef5daf113b2be4ec2a5b460f"}
+  },
+  "target_contract": {
+    "model_input": ["current_semantic_state", "normalized_action"],
+    "model_target": ["execution_status", "delta_bits", "added_evidence_records(entity_type, link_status, attributes(name, kind))", "added_conflicts", "newly_matched_goal_term_indices"],
+    "deterministic_outputs": ["source token from normalized action", "matched_count from goal-term pointer cardinality", "entity/attribute/link tokens from bound evidence records"],
+    "audit_only": ["canonical effect tokens", "raw goal terms", "state refs", "source versions"],
+    "forbidden_model_fields": ["task_id", "suite", "difficulty", "fold", "utility", "security", "attack", "final outcome", "canonical effect tokens"]
+  },
+  "acceptance_thresholds": {
+    "required_confirmation_rows": 121,
+    "required_support_rows": 10,
+    "required_confirmation_tasks": 12,
+    "required_support_tasks": 4,
+    "minimum_entity_relation_coverage": 1.0,
+    "minimum_attribute_relation_coverage": 1.0,
+    "minimum_operation_coverage": 1.0,
+    "minimum_support_count3_rows": 1,
+    "required_matched_count_values": [0, 1, 3]
+  },
+  "fixed_budget": {
+    "independent_builds": 2,
+    "confirmation_rows_per_build": 121,
+    "support_rows_per_build": 10,
+    "model_fits": 0,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0,
+    "gpu_requests": 0,
+    "post_result_reruns": 0
+  },
+  "decision_policy": {
+    "go": "Freeze the typed successor-evidence dataset and authorize exactly one separately preregistered small bound-record successor model comparison against fixed v21, v23 and v26 controls.",
+    "no_go": "Do not train another model. Preserve the failed binding/pointer evidence and redesign data collection without changing this gate."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0824/successor_evidence_identifiability_v27/formal_v1",
+  "mutable_files": [
+    "src/wmagentattack/successor_evidence_contract.py",
+    "scripts/265_build_successor_evidence_contract_v27.py",
+    "scripts/266_gate_successor_evidence_contract_v27.py",
+    "scripts/server/run_0824_successor_evidence_identifiability_v27.sbatch",
+    "tests/test_successor_evidence_contract.py",
+    "configs/0824_successor_evidence_identifiability_v27_protocol.json",
+    "reports/0824_successor_evidence_identifiability_v27_preregistration.md",
+    "reports/0824_successor_evidence_identifiability_v27_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
