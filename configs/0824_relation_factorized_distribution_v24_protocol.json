@@ -44,7 +44,13 @@
     "action_channel_weights": [0.45, 0.35, 0.2],
     "relation_kernel_temperature": 0.15,
     "cache_path": "/share/guozhix/wmagentattack/0824/relation_factorized_distribution_v24/preflight_v1/a/relation_cache.npz",
+    "cache_sha256": "ea8096d6ce63b7254b64180794b7823d14ea0e2755b6bcf507e97c5aabe01a8e",
     "audit_path": "/share/guozhix/wmagentattack/0824/relation_factorized_distribution_v24/preflight_v1/a/audit.json",
+    "audit_sha256": "b696fc03277dfdc44202c84fe662d66b162ae1075857d62fd7deebc72f5b725d",
+    "double_build_gate_path": "/share/guozhix/wmagentattack/0824/relation_factorized_distribution_v24/preflight_v1/double_build_gate.json",
+    "double_build_gate_sha256": "75dea808ee101e329271f1b0cfbc5a4fd31bf0258b9b79bfa28bdd986383b0fb",
+    "preflight_job_ids": [7300, 7301],
+    "preflight_runtime_note": "7300 exited before cache construction because shell continuation markers were serialized as literal plus signs. The label-blind repair changed only shell argument serialization; 7301 passed 5 tests and produced two value-identical caches.",
     "allowed_inputs": [
       "effect_token_vocabulary",
       "model_input.normalized_action"
