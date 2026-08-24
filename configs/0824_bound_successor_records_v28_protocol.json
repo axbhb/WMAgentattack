@@ -110,7 +110,7 @@
     "src/wmagentattack/bound_successor_world_model.py": "288bcf4b32a48fc402e2c67e36c759bb37e4d2408ad382427b0da9f992587a07",
     "scripts/267_train_bound_successor_records_v28.py": "97bf94da23b26a18a9a67af4ea24dad30f3f0e258946b8c9413a7e6f29c538d7",
     "scripts/268_gate_bound_successor_records_v28.py": "df15630e0233eab6c6dda43d519b5071d3d75760d013e17007f098f962a72281",
-    "scripts/server/run_0824_bound_successor_records_v28.sbatch": "827d54e73b4e6f029f837340d1d37b4f9462dd61ac9702f63ec57748e9edb535",
+    "scripts/server/run_0824_bound_successor_records_v28.sbatch": "f5ae1eadd8fda719fafc81505525250823014838b90400b7fd371fa47cccb89b",
     "tests/test_bound_successor_world_model.py": "10556413eaaeb9af72ce6cf257653e65a499fedc42b88990e63b21855da07852"
   },
   "literature": [

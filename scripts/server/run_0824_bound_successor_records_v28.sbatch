@@ -20,23 +20,8 @@ V27_GATE=/share/guozhix/wmagentattack/0824/successor_evidence_identifiability_v2
 
 mkdir -p "$ARCHIVE/logs" "$ARCHIVE/results" "$ARCHIVE/source_snapshot"
 cd "$WT"
-git rev-parse HEAD > "$ARCHIVE/GIT_HEAD"
-cp "$PROTOCOL" "$ARCHIVE/protocol.frozen.json"
-cp reports/0824_bound_successor_records_v28_preregistration.md "$ARCHIVE/preregistration.md"
-cp src/wmagentattack/bound_successor_world_model.py "$ARCHIVE/source_snapshot/"
-cp scripts/267_train_bound_successor_records_v28.py "$ARCHIVE/source_snapshot/"
-cp scripts/268_gate_bound_successor_records_v28.py "$ARCHIVE/source_snapshot/"
-cp scripts/server/run_0824_bound_successor_records_v28.sbatch "$ARCHIVE/source_snapshot/"
-cp tests/test_bound_successor_world_model.py "$ARCHIVE/source_snapshot/"
-
-sha256sum \
-  "$PROTOCOL" \
-  src/wmagentattack/bound_successor_world_model.py \
-  scripts/267_train_bound_successor_records_v28.py \
-  scripts/268_gate_bound_successor_records_v28.py \
-  scripts/server/run_0824_bound_successor_records_v28.sbatch \
-  tests/test_bound_successor_world_model.py \
-  "$HARD" "$STRUCTURED" "$V26" "$V27_GATE" > "$ARCHIVE/code_and_data.prerun.sha256"
+test ! -e "$ARCHIVE/COMPLETE"
+test "$(git rev-parse HEAD)" = "$(cat "$ARCHIVE/GIT_HEAD")"
 sha256sum -c "$ARCHIVE/code_and_data.prerun.sha256" > "$ARCHIVE/prerun.verify.txt"
 
 start=$(date +%s)
