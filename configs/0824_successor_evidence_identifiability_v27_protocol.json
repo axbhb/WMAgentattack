@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_successor_evidence_identifiability_v27",
-  "status": "preregistered_before_results",
+  "status": "completed_go_bound_successor_model",
   "research_question": "Can frozen v17-v19 and v25 clean sandbox outcomes be converted into leakage-free bound successor-evidence targets that exactly render v20/v21 effects and provide task-disjoint support for the mechanisms that defeated v26?",
   "scope": {
     "clean_only": true,
@@ -56,6 +56,40 @@
     "no_go": "Do not train another model. Preserve the failed binding/pointer evidence and redesign data collection without changing this gate."
   },
   "planned_archive": "/share/guozhix/wmagentattack/0824/successor_evidence_identifiability_v27/formal_v1",
+  "formal_run": {
+    "job_id": 7312,
+    "remote_preregistered_commit": "0df9270b994a6a36f9e2f27089f0dfe020b87a66",
+    "elapsed_seconds": 7,
+    "runtime_failures": 0,
+    "tests": "3 passed in 1.90s",
+    "frozen_hash_verification": "all source, protocol, and six input datasets verified before results"
+  },
+  "result": {
+    "decision": "GO_BOUND_SUCCESSOR_MODEL_V27",
+    "passed_clauses": 23,
+    "total_clauses": 23,
+    "confirmation_rows": 121,
+    "support_rows": 10,
+    "confirmation_tasks": 12,
+    "support_tasks": 4,
+    "full_render_matches": 121,
+    "hard_render_matches": 121,
+    "entity_relation_coverage": 1.0,
+    "attribute_relation_coverage": 1.0,
+    "operation_coverage": 1.0,
+    "support_matched_count_values": {"0": 8, "1": 1, "3": 1},
+    "dataset_sha256": "88b9825b910f212c22dad91cab2274589e15302beaf660541f9c485567933070",
+    "audit_sha256": "7930c6b35a513c45a81929dcfe2f6db2dc19e0133f5224a20b5ece296f338370",
+    "gate_sha256": "f5c65119f1f669ac2d026a895d1b524c6ae50cc7b9614ea0efee632cf4e34bcd",
+    "failed_clauses": [],
+    "authorization": {
+      "one_small_bound_successor_model_comparison": true,
+      "attack_generation": false,
+      "large_scale_generation": false,
+      "large_world_model_training": false,
+      "planner_or_dreamer": false
+    }
+  },
   "mutable_files": [
     "src/wmagentattack/successor_evidence_contract.py",
     "scripts/265_build_successor_evidence_contract_v27.py",
