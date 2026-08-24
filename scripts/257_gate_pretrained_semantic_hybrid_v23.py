@@ -133,10 +133,10 @@ def main() -> None:
         "data_design_ready": data_ready,
         "authorization": {
             "run_frozen_96_episode_data_smoke": overall_go,
-            "medium_scale_generation": false,
-            "large_scale_generation": false,
-            "large_world_model_training": false,
-            "attack_generation": false,
+            "medium_scale_generation": False,
+            "large_scale_generation": False,
+            "large_world_model_training": False,
+            "attack_generation": False,
         },
         "hashes": {
             "protocol": sha256(args.protocol), "metrics": sha256(args.metrics),
