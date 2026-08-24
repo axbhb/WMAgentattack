@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_support_conditioned_compositional_v26",
-  "status": "preregistered_before_results",
+  "status": "completed_no_go_support_conditioned_compositional_v26",
   "research_question": "Does v25 outcome-blind atom support improve task-disjoint unseen canonical-effect prediction when the v21 seen-label transition model is preserved and matched_count is handled by a separate cumulative ordinal head?",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -117,5 +117,75 @@
     "reports/0824_support_conditioned_compositional_v26_preregistration.md",
     "reports/0824_support_conditioned_compositional_v26_results.md",
     "reports/autoresearch_result_ledger.jsonl"
-  ]
+  ],
+  "postrun": {
+    "job_id": 7306,
+    "scientific_commit": "78075cdf47719d1c5a00927c2b35ba3767c23b34",
+    "elapsed_seconds": 265,
+    "decision": "NO_GO_SUPPORT_CONDITIONED_COMPOSITIONAL_V26",
+    "gate_clauses_passed": 12,
+    "gate_clauses_total": 20,
+    "failed_clauses": [
+      "task_unseen_recall_floor",
+      "task_unseen_recall_gain_vs_v23_raw",
+      "support_gain_cell_stability",
+      "unseen_nll_ceiling",
+      "matched_count3_recall_floor",
+      "focused_unseen_recall_floor",
+      "tool_family_unseen_recall_floor",
+      "source_unseen_recall_floor"
+    ],
+    "model_fits": 45,
+    "metric_rows": 45,
+    "runtime_failures": 0,
+    "tests": "5 passed",
+    "task_disjoint": {
+      "fixed_v21_unseen_recall": 0.0,
+      "no_support_unseen_recall": 0.16666666666666666,
+      "support_unseen_recall": 0.5052910052910053,
+      "support_recall_gain_vs_no_support": 0.3386243386243387,
+      "v23_raw_unseen_recall": 0.5291005291005291,
+      "support_recall_gain_vs_v23_raw": -0.023809523809523725,
+      "no_support_unseen_nll": 3.2020302997519505,
+      "support_unseen_nll": 1.583056348870393,
+      "support_unseen_false_positive_rate": 0.025962341751815436,
+      "support_unseen_precision": 0.3574074074074074,
+      "support_focused_unseen_recall": 0.35714285714285715,
+      "support_matched_count3_recall": 0.38095238095238093,
+      "support_seen_recall": 0.9748852806736803,
+      "support_one_step_bce": 0.042848021504600174,
+      "support_rollout_bce": 0.027774200473833763,
+      "support_pair_accuracy": 0.9930555555555556
+    },
+    "stability": {
+      "positive_gain_cells": 3,
+      "required_positive_gain_cells": 4,
+      "fold_0_support_recall_all_seeds": 0.7142857142857143,
+      "fold_2_support_recall_by_seed": [0.2222222222222222, 0.3333333333333333, 0.3333333333333333]
+    },
+    "counterevidence": {
+      "support_is_causally_active": true,
+      "fold_0_all_seven_explicitly_supported_entity_attribute_occurrences_improved_stably": true,
+      "fold_2_webpage_entity_attribute_occurrences_remained_zero_recall": true,
+      "fold_2_seven_matched_count3_occurrences_remained_weak": true,
+      "independent_atom_sets_do_not_preserve_entity_field_tool_binding": true,
+      "ordinal_count_is_not_reliably_extrapolated_from_counts_zero_and_one": true
+    },
+    "retained_architecture": "fixed v21 seen-effect transition plus v22 recurrent supervision; v25 support data retained as positive mechanism evidence, v26 atom renderer rejected as the primary open-vocabulary head",
+    "next_direction": "Predict typed successor evidence records and their bindings, then deterministically render entity, attribute, source and matched-count effects from the successor-state delta. Run a data-identifiability gate before another model fit.",
+    "authorization": {
+      "retain_v26_as_open_vocabulary_effect_head": false,
+      "run_frozen_96_episode_data_smoke": false,
+      "large_scale_generation": false,
+      "large_world_model_training": false,
+      "attack_generation": false,
+      "successor_evidence_data_identifiability_gate": true
+    },
+    "hashes": {
+      "metrics": "4ec9cee78d210668c0af8925012fc9ff5152f3493c26786f9f342def034c6771",
+      "gate": "ab99f4299d3f098c271d6bcc495785461b400de69dd49d98f25f7948a863b3e7",
+      "archive_checksums": "087501fe249bb05ae541221a58d6a60808a8bc56c06a5a39a65ec985db36f088",
+      "complete": "ab8ff0784613f669b6e2657a9803358b19026d453cc763a55fabd2399ee3f8ab"
+    }
+  }
 }
