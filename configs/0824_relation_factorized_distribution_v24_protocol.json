@@ -164,6 +164,7 @@
     "scripts/259_train_relation_factorized_hybrid_v24.py",
     "scripts/260_gate_relation_factorized_hybrid_v24.py",
     "scripts/server/preflight_0824_relation_factorized_distribution_v24.sbatch",
+    "scripts/server/smoke_0824_relation_factorized_distribution_v24.sbatch",
     "scripts/server/run_0824_relation_factorized_distribution_v24.sbatch",
     "tests/test_relation_factorized_semantic_world_model.py",
     "configs/0824_relation_factorized_distribution_v24_protocol.json",
