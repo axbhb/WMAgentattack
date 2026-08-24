@@ -2,6 +2,7 @@ import json
 
 from wmagentattack.bound_successor_world_model import record_signature
 from wmagentattack.typed_relation_contract import (
+    bare_tool_id,
     has_forbidden_key,
     relation_score,
     schema_vocabulary,
@@ -59,3 +60,8 @@ def test_forbidden_raw_goal_and_task_keys_are_detected():
     assert has_forbidden_key({"normalized_goal": "secret"})
     assert has_forbidden_key({"nested": [{"task_id": "x"}]})
     assert not has_forbidden_key({"unit_hash": "a" * 64, "roles": ["ATTRIBUTE_TOKEN"]})
+
+
+def test_namespaced_tool_id_matches_static_v29_registry_key():
+    assert bare_tool_id("banking::update_password") == "update_password"
+    assert bare_tool_id("update_password") == "update_password"

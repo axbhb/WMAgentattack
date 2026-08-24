@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from wmagentattack.decision_state import canonical_json_value
 from wmagentattack.typed_relation_contract import (
     SCHEMA_VERSION,
+    bare_tool_id,
     gold_pairs,
     has_forbidden_key,
     record_description,
@@ -87,7 +88,7 @@ def build_rows(
         ref = row["transition_ref"]
         fold = fold_by_ref[ref]
         action = row["model_input"]["normalized_action"]
-        tool = str(action["tool_id"])
+        tool = bare_tool_id(str(action["tool_id"]))
         allowed = relational["static_candidates_by_tool"][tool]
         units = typed_goal_units(row["model_input"]["current_semantic_state"]["goal"], action, vocabulary)
         gold = gold_pairs(row)

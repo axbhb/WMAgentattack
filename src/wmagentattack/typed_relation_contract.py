@@ -25,6 +25,11 @@ def stable_hash(namespace: str, value: str) -> str:
     return hashlib.sha256(f"{namespace}:{value}".encode("utf-8")).hexdigest()
 
 
+def bare_tool_id(value: str) -> str:
+    """Normalize the namespaced runtime tool ID to the frozen v29 registry key."""
+    return str(value).rsplit("::", 1)[-1]
+
+
 def lexical_tokens(value: str) -> set[str]:
     tokens = set(_TOKEN.findall(str(value).lower().replace("_", " ")))
     expanded = set(tokens)
@@ -200,4 +205,3 @@ def gold_pairs(row: Mapping[str, Any]) -> set[tuple[str, int]]:
         for index in record["newly_matched_goal_term_indices"]:
             output.add((signature, int(index)))
     return output
-

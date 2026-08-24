@@ -88,6 +88,17 @@
     "attacks": false
   },
   "planned_archive": "/share/guozhix/wmagentattack/0824/typed_relation_identifiability_v31/formal_v1",
+  "runtime_integrity_repairs": [
+    {
+      "failed_job_id": 7320,
+      "stage": "before_first_dataset_or_metric_output",
+      "error": "Namespaced runtime tool ID was used against the frozen bare-name v29 static registry.",
+      "repair": "Apply rsplit('::', 1)[-1] before the static registry lookup and add a unit test.",
+      "scientific_surface_changed": false,
+      "tasks_labels_seeds_thresholds_or_scores_changed": false,
+      "maximum_retries_authorized": 1
+    }
+  ],
   "literature_mapping": [
     {
       "source": "https://arxiv.org/abs/2608.12078",
@@ -107,11 +118,11 @@
     }
   ],
   "implementation_sha256": {
-    "src/wmagentattack/typed_relation_contract.py": "02831fe1db471578b754f645051e7882b0229ad0b35ea491a785a4286ee3843f",
-    "scripts/273_build_typed_relation_identifiability_v31.py": "9acf63c5eda8026f9749c3c0105976be8e53467cc669e22b3bfaff6ca795f854",
+    "src/wmagentattack/typed_relation_contract.py": "68a564b4bc9e9a3b7446581512a6fe50e6cf3d5d3983d8e24bf49fee8bd66f87",
+    "scripts/273_build_typed_relation_identifiability_v31.py": "433fd66c827a76beee944e2ebf3e9f90372d2f0e6322fd8324502754fa026974",
     "scripts/274_gate_typed_relation_identifiability_v31.py": "2072bd9edb1e80f8c9c2304488765ff20f32ca8446ff77cfecddae72ad9b5070",
     "scripts/server/run_0824_typed_relation_identifiability_v31.sbatch": "d9e03e906213de982c0561bd78180a99a0dd49a1a372bb0093fab168e78c32cb",
-    "tests/test_typed_relation_contract.py": "e2865217b45147ae1c1952b7162f9cb7af05db8cb8520684a414dff8d8220acb"
+    "tests/test_typed_relation_contract.py": "b96423e0a5d3785d34c1a0a822c3bf455b7c23fe43684cd383af4eb4ce8ad1fe"
   },
   "mutable_files": [
     "src/wmagentattack/typed_relation_contract.py",
