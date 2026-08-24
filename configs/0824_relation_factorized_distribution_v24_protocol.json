@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_relation_factorized_distribution_v24",
-  "status": "preregistered_before_results",
+  "status": "completed_no_go_relation_factorized_distribution_v24",
   "question": "Can relation-factorized E5 descriptions, similarity-distribution supervision, and train-only support-set selection improve genuinely unseen effect recall over v23 without sacrificing probability quality, seen effects, rollout fidelity, or open-set precision?",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -155,6 +155,67 @@
   "authorization_if_go": "Run exactly the already frozen 96-episode three-source smoke protocol; medium and large generation remain unauthorized.",
   "authorization_if_no_go": "Do not generate data. Retain v21/v22 and the v23 E5 diagnostic. Stop architecture-only open-vocabulary search on this 121-row dataset and preregister explicit label-disjoint branching support collection.",
   "planned_archive": "/share/guozhix/wmagentattack/0824/relation_factorized_distribution_v24/formal_v1",
+  "postrun": {
+    "scientific_job_id": 7304,
+    "scientific_commit": "4bd775f4b5feed3f8ae6fd8495404da6aa8fbdc8",
+    "elapsed_seconds": 972,
+    "decision": "NO_GO_96_EPISODE_DATA_SMOKE_V24",
+    "open_vocabulary_decision": "NO_GO_RELATION_FACTORIZED_DISTRIBUTION_V24",
+    "gate_clauses_passed": 15,
+    "gate_clauses_total": 20,
+    "failed_clauses": [
+      "rollout_bce_noninferiority",
+      "task_unseen_false_positive_rate",
+      "task_unseen_precision",
+      "task_unseen_recall_floor",
+      "task_unseen_recall_gain_vs_v23_raw"
+    ],
+    "model_fits": 45,
+    "metric_rows": 45,
+    "runtime_failures": 0,
+    "task_disjoint": {
+      "v23_raw_unseen_recall": 0.5291005291005291,
+      "relation_raw_unseen_recall": 0.20634920634920637,
+      "relation_support_unseen_recall": 0.2619047619047619,
+      "support_recall_gain_vs_relation_raw": 0.055555555555555525,
+      "support_recall_gain_vs_v23_raw": -0.2671957671957672,
+      "v23_raw_unseen_nll": 0.996468826225922,
+      "relation_support_unseen_nll": 0.9873584062837036,
+      "unseen_false_positive_rate": 0.07623760255339203,
+      "unseen_precision": 0.13490000356359802,
+      "mean_predicted_unseen_set_size": 0.49275067750677515,
+      "mean_true_unseen_set_size": 0.13150406504065038,
+      "set_size_limit": 0.7630081300813008,
+      "all_inner_selection_feasible": true,
+      "fixed_v21_seen_recall": 0.9748852806736803,
+      "candidate_seen_recall": 0.9748852806736803,
+      "fixed_v21_one_step_bce": 0.04426232394528625,
+      "candidate_one_step_bce": 0.05150846387083667,
+      "fixed_v21_rollout_bce": 0.02268882077543013,
+      "candidate_rollout_bce": 0.03411055740013872
+    },
+    "diagnostic_unseen_recall": {
+      "tool_family_heldout": 0.2892300845571874,
+      "source_heldout": 0.24539512774806893
+    },
+    "recomposed_long_gate_passed": false,
+    "data_design_ready": true,
+    "authorization": {
+      "run_frozen_96_episode_data_smoke": false,
+      "medium_scale_generation": false,
+      "large_scale_generation": false,
+      "large_world_model_training": false,
+      "attack_generation": false
+    },
+    "tests": "6 passed",
+    "hashes": {
+      "metrics": "18ecea492f450db9ad040a053804d2b3d5a91a0e54ca2818bfd14cfcfe2adc13",
+      "gate": "a664a9bf309859b7e9f832ed403a79507b776f4e3a92d748419d8501b95119d7",
+      "archive_checksums": "59dde39a76a9e61a12fc22766ce40d3c0480a56184b73f9216dc39f349d4c0bc",
+      "complete": "ad5a008c891cf67474f24f9212cb3394d974fec88fe3f93819b115816b6c0433"
+    },
+    "scientific_interpretation": "Relation factorization plus distribution matching preserved low unseen NLL and support diffusion improved its own raw recall, but generic category/kind relations replaced task-specific label geometry. With zero exact entity support in task-disjoint training folds, the model propagated probability to semantically related but causally wrong effects, causing low precision, excess false positives, seed instability, and rollout degradation. Architecture-only open-vocabulary search on the 121-row dataset is closed; the next authorized research direction is explicit label-disjoint branching support collection."
+  },
   "literature": [
     "https://arxiv.org/abs/2510.11892",
     "https://proceedings.mlr.press/v202/aggarwal23a.html",
