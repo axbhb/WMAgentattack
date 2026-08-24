@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_relational_successor_data_v29",
-  "status": "preregistered_before_results",
+  "status": "completed_go_relational_successor_model_v29",
   "research_question": "Can raw semantic evidence records be converted into privacy-safe record-to-goal relation targets, while static outcome-blind tool contracts provide complete record candidates for task-, tool-family-, and source-heldout evaluation?",
   "scope": {
     "clean_only": true,
@@ -56,6 +56,43 @@
     "no_go": "Do not train. Preserve the missing relation or static-schema counterevidence and redesign only the data contract."
   },
   "planned_archive": "/share/guozhix/wmagentattack/0824/relational_successor_data_v29/formal_v1",
+  "postrun": {
+    "job_id": 7318,
+    "remote_scientific_commit": "68b7dfa4528d529190b3243c9071a925e4b192e7",
+    "slurm_state": "COMPLETED",
+    "exit_code": "0:0",
+    "slurm_runtime_seconds": 25,
+    "build_and_gate_seconds": 6,
+    "runtime_failures": 0,
+    "tests": "2 passed in 9.44s",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "decision": "GO_RELATIONAL_SUCCESSOR_MODEL_V29",
+    "gate_clauses_passed": 19,
+    "gate_clauses_total": 19,
+    "confirmation_rows": 121,
+    "support_rows": 10,
+    "records_with_goal_links": 24,
+    "maximum_goal_links_per_record": 16,
+    "static_candidate_count": 133,
+    "static_candidate_tools": 55,
+    "task_tool_source_candidate_coverage": 1.0,
+    "action_conditioned_candidate_coverage_diagnostic": 1.0,
+    "action_conditioned_record_occurrences": 196,
+    "dataset_sha256": "5b85a68602113b5042f2af08c63b9792595455fbdf85892403b8ebfb1f82b463",
+    "audit_sha256": "6b83ef0ae19824cb58e08766435a70584c321f9d985f4a99944e780f1321929c",
+    "gate_sha256": "42936048233847651079ccb0402b05072f5e96a8a38cff9f40d818ff1018c6db",
+    "checksums_sha256": "634e475307ba86f18931d27e8f9ed708d810c7aa0d23117ea09d20bbe1b33841",
+    "complete_sha256": "3cdf39f690d0629fa9a725aca9a154ca49653731c6a2ccf16941308b496c7d44",
+    "interpretation": "The missing goal-pointer identity and open diagnostic candidate inventory are data-contract problems that can be repaired without outcome labels. This is an identifiability and support GO, not evidence that a learned world model already improves over v28.",
+    "authorization": {
+      "one_small_relational_successor_model_comparison": true,
+      "large_scale_generation": false,
+      "large_world_model_training": false,
+      "attack_generation": false,
+      "planner_or_dreamer": false
+    }
+  },
   "implementation_sha256": {
     "configs/0824_static_tool_output_schema_v29.json": "9e5897fc6b2925b703e71d36e7752f99c9a5763fdacc47296244bcafcd44343e",
     "src/wmagentattack/relational_successor_contract.py": "e5f03d1bf4f00feb61be6a1335eee17dca5aebab8f0a5349039c6da708fb46d3",
