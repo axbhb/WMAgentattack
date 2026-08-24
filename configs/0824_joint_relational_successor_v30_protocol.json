@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_joint_relational_successor_v30",
-  "status": "preregistered_before_results",
+  "status": "completed_no_go",
   "research_question": "Does a joint action-conditioned record--goal relation scorer resolve v28's pointer, NLL, webpage, tool-heldout, and source-heldout failures while preserving fixed-v21 one-step and rollout behavior?",
   "scope": {
     "clean_transition_model_only": true,
@@ -122,6 +122,78 @@
     "scripts/272_gate_joint_relational_successor_v30.py": "a60b9411686f8131bbbb7f22edf1ec4ffd02baf97624ba1c029fa5ba7749735d",
     "scripts/server/run_0824_joint_relational_successor_v30.sbatch": "dac101efb1b10b15e5607219aa921162221fee84c0235c7280a5ae3ea91cc261",
     "tests/test_joint_relational_world_model.py": "cd21980f57b3b7a81ba44ee2380fc97e8d15873027111f98cb2b46104b3fb659"
+  },
+  "postrun": {
+    "job_id": 7319,
+    "scientific_commit": "c41367ac2a2e6a8571d5cbbfa9a2ce9d1377e9ab",
+    "decision": "NO_GO_JOINT_RELATIONAL_SUCCESSOR_V30",
+    "completed_model_fits": 30,
+    "completed_metric_rows": 30,
+    "runtime_failures": 0,
+    "elapsed_seconds": 446,
+    "gate_clauses_passed": 26,
+    "gate_clauses_total": 30,
+    "failed_clauses": [
+      "relation_f1_floor",
+      "relation_recall_floor",
+      "goal_pointer_f1_floor",
+      "goal_pointer_gain_vs_v28"
+    ],
+    "task_disjoint_metrics": {
+      "unseen_positive_recall": 0.888888888888889,
+      "unseen_positive_nll": 0.16068295960076515,
+      "unseen_precision": 0.6666666666666666,
+      "unseen_false_positive_rate": 0.0,
+      "bound_record_f1": 0.95976644062241,
+      "bound_record_recall": 0.9890921409214093,
+      "bound_record_exact_set_accuracy": 0.9563008130081302,
+      "record_goal_relation_f1": 0.06325132276258323,
+      "record_goal_relation_precision": 0.04021135216126596,
+      "record_goal_relation_recall": 0.14814814814814814,
+      "goal_pointer_f1": 0.1567901234567901,
+      "matched_count3_recall": 0.7142857142857143,
+      "focused_unseen_recall": 1.0,
+      "one_step_bce": 0.03619867249254963,
+      "rollout_bce": 0.026859882813747855,
+      "parameter_count": 91736
+    },
+    "comparison_vs_v28": {
+      "unseen_recall_gain": 0.1428571428571429,
+      "unseen_nll_change": -2.2482761485135283,
+      "record_f1_gain": 0.128969159755732,
+      "goal_pointer_f1_gain": -0.014938270375294799
+    },
+    "diagnostic_metrics": {
+      "tool_family_unseen_recall": 0.6123275478415665,
+      "source_unseen_recall": 0.6127178143984867,
+      "tool_family_goal_pointer_f1": 0.49153915820582483,
+      "source_goal_pointer_f1": 0.6722639933166249,
+      "tool_family_relation_f1": 0.2443342239177274,
+      "source_relation_f1": 0.2982120843105418,
+      "source_unseen_nll": 3.5948588070638565
+    },
+    "counterevidence": {
+      "heldout_fold_positive_relation_edges": [16, 1, 57],
+      "fold0_relation_recall_all_seeds": 0.0,
+      "fold0_unseen_recall_all_seeds": 1.0,
+      "training_relation_loss_start": 0.776910662651062,
+      "training_relation_loss_end": 0.14413613080978394,
+      "interpretation": "The record branch and canonical renderer improve transfer, but the intended relation mechanism does not transfer task-disjointly. Sparse and fold-imbalanced edge labels plus fixed hashed raw goal-term features permit training fit without semantic relation generalization."
+    },
+    "artifact_sha256": {
+      "results/run_metrics.json": "1658a13ecc7e6aff5a78f1516cf51962b3b38a56f4e74a8301e1199e730d493b",
+      "gate.json": "8f8654324a7711deb179bbaa6eceebd8406e9ca7afb3ccb714aca791687d6153",
+      "checksums.sha256": "597bb9ed8ac64c76597923d5fa981cbe36544e16b440b31b0dcddfded9b5dfa6"
+    },
+    "authorization": {
+      "retain_v30_as_primary_open_vocabulary_branch": false,
+      "one_frozen_96_episode_clean_data_smoke": false,
+      "attack_generation": false,
+      "large_scale_generation": false,
+      "large_world_model_training": false,
+      "planner_or_dreamer": false
+    },
+    "next_direction": "Keep the v30 record branch and canonical transfer evidence, but replace raw goal-term hashing with typed entity/attribute/operation relation features or a frozen semantic alignment branch; rebalance positive relation edges by held-out fold and test relation identifiability before any additional model fit."
   },
   "literature_mapping": [
     {"source": "https://proceedings.mlr.press/v80/sanchez-gonzalez18a.html", "repo_hypothesis": "explicit record--goal edges supply a relational inductive bias instead of a monolithic pointer head"},
