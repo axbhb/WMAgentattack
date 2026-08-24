@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_explicit_atom_support_v25",
-  "status": "preregistered_before_manifest_build",
+  "status": "manifest_frozen_before_execution",
   "research_question": "Can clean sibling-task branches provide explicit entity, field, kind, and operation support for the task-disjoint hard effects that v24 could not identify, while keeping exact composite effect labels disabled for training?",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -60,6 +60,14 @@
     "composite_effect_tokens_are_audit_only": true,
     "model_training_receives_slot_atoms_only": true
   },
+  "manifest": {
+    "path": "/share/guozhix/wmagentattack/0824/explicit_atom_support_v25/preflight_v1/a/manifest.json",
+    "audit_path": "/share/guozhix/wmagentattack/0824/explicit_atom_support_v25/preflight_v1/a/audit.json",
+    "sha256": "9bd4df644642e4b3e4886dc764294c1eb42f573039aa0679e8cb67a07d893678",
+    "audit_sha256": "7a8e904d150f2adeb76ed3279c11f6892f4d86d0d6777416fcc5f1c89d71e00d",
+    "independent_builds_byte_identical": true,
+    "selection_uses_outcomes": false
+  },
   "coverage_gate": {
     "required_support_rows": 10,
     "required_support_tasks": 4,
@@ -82,8 +90,8 @@
     "manifest_rows": 10,
     "rows_per_class": {"read_only": 6, "mutating": 4},
     "branch_tool_executions": 20,
-    "observed_prefix_replay_tool_executions": null,
-    "total_sandbox_tool_executions": null,
+    "observed_prefix_replay_tool_executions": 42,
+    "total_sandbox_tool_executions": 62,
     "victim_llm_calls": 0,
     "attack_examples": 0,
     "model_training_runs": 0,
