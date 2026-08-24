@@ -1,0 +1,121 @@
+{
+  "protocol_id": "0824_support_conditioned_compositional_v26",
+  "status": "preregistered_before_results",
+  "research_question": "Does v25 outcome-blind atom support improve task-disjoint unseen canonical-effect prediction when the v21 seen-label transition model is preserved and matched_count is handled by a separate cumulative ordinal head?",
+  "scope": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "clean_transition_model_only": true,
+    "real_external_endpoints": false,
+    "victim_llm_calls": 0,
+    "attack_generation": false,
+    "planner": false,
+    "dreamer": false,
+    "large_scale_generation": false
+  },
+  "data": {
+    "hard_dataset": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
+    "hard_dataset_sha256": "5ce08331f89f7e10da7512c98a26f44a7748bc8e3e755a38cf5c69edda6a4323",
+    "hard_rows": 121,
+    "confirmation_tasks": 12,
+    "effect_tokens": 94,
+    "support_dataset": "/share/guozhix/wmagentattack/0824/explicit_atom_support_v25/formal_v1/atom_support_dataset.json",
+    "support_dataset_sha256": "459d57cd3a75ad24709ee0a29569c1941bed4b1ac20f0cf6ccc3f8d83224bdfb",
+    "support_rows": 10,
+    "support_tasks": 4,
+    "support_confirmation_task_overlap": [],
+    "support_composite_effect_tokens_audit_only": true,
+    "support_model_inputs": ["model_input.current_semantic_state", "model_input.normalized_action", "model_target.effect_slot_atoms", "model_target.execution_error"],
+    "support_forbidden_inputs": ["audit_only", "task_id_split_only", "suite_split_only", "utility", "security", "attack", "final outcome"]
+  },
+  "architecture": {
+    "seen_effects": "fixed v21 intervention modular transition head",
+    "unseen_effects": "zero-start residual transition latent -> reusable atom logits -> geometric fuzzy-AND canonical renderer",
+    "atom_slots": ["category", "entity", "field", "kind", "value"],
+    "matched_count": "separate four-class cumulative-link ordinal head with learned ordered thresholds",
+    "execution": "fixed v21 execution head for evaluation",
+    "support_conditioning": "atom supervision only; exact composite labels remain audit-only"
+  },
+  "model_comparison": {
+    "arms": ["fixed_v21", "factorized_ordinal_no_support_v26", "factorized_ordinal_support_v26"],
+    "external_control": "hybrid_e5_raw_v23",
+    "state_hash_dimension": 32,
+    "action_hash_dimension": 64,
+    "hidden_size": 64,
+    "fixed_v21_hidden_size": 56,
+    "task_training_seeds": [7, 17, 29],
+    "diagnostic_training_seeds": [17],
+    "epochs": 300,
+    "fixed_v21_epochs": 300,
+    "learning_rate": 0.0025,
+    "weight_decay": 0.0001,
+    "execution_weight": 0.5,
+    "ordinal_weight": 0.5,
+    "support_weight": 0.5,
+    "sequence_weight": 0.35,
+    "pair_weight": 0.25,
+    "gradient_clip": 5.0,
+    "torch_threads": 4,
+    "decision_threshold": 0.5,
+    "split_contract": "unchanged v21 task/tool-family/source-disjoint manifests; support tasks never enter confirmation"
+  },
+  "fixed_budget": {
+    "split_seed_units": 15,
+    "fixed_v21_fits": 15,
+    "factorized_no_support_fits": 15,
+    "factorized_support_fits": 15,
+    "model_fits": 45,
+    "metric_rows": 45,
+    "post_result_reruns": 0,
+    "gpu_requests": 0,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0
+  },
+  "external_controls": {
+    "v23_metrics": "/share/guozhix/wmagentattack/0824/pretrained_semantic_hybrid_v23/formal_v1/results/run_metrics.json",
+    "v23_metrics_sha256": "8c7af9f2b3145c949d31053dd5f01757f7de5dcc8b66bf949774003ee4faa9ec",
+    "v25_gate": "/share/guozhix/wmagentattack/0824/explicit_atom_support_v25/formal_v1/gate.json",
+    "v25_gate_sha256": "ee80151926b1b9bb38574829c1cea090c606a46be84d7283072f106b7e3a4075"
+  },
+  "acceptance_thresholds": {
+    "maximum_fixed_reproduction_absolute_error": 0.000001,
+    "minimum_task_unseen_recall": 0.6,
+    "minimum_task_unseen_recall_gain_vs_v23_raw": 0.04,
+    "minimum_support_recall_gain": 0.04,
+    "minimum_positive_gain_cells": 4,
+    "maximum_task_unseen_nll": 1.0,
+    "minimum_unseen_precision": 0.1,
+    "maximum_unseen_false_positive_rate": 0.05,
+    "minimum_matched_count3_recall": 0.6,
+    "minimum_focused_unseen_recall": 0.55,
+    "seen_recall_noninferiority_margin": 0.001,
+    "one_step_bce_noninferiority_margin": 0.01,
+    "rollout_bce_noninferiority_margin": 0.01,
+    "query_read_recall_noninferiority_margin": 0.001,
+    "pair_accuracy_noninferiority_margin": 0.02,
+    "minimum_tool_family_unseen_recall": 0.25,
+    "minimum_source_unseen_recall": 0.15,
+    "maximum_combined_parameters": 150000
+  },
+  "decision_policy": {
+    "go": "Retain v26 as the open-vocabulary effect branch and authorize only the already frozen 96-episode data smoke; no large generation, attack study, Dreamer, or planner.",
+    "no_go": "Retain fixed v21 plus v22 recurrent supervision, preserve v25 support data and all counterevidence, and change research direction rather than relaxing thresholds or rerunning this panel."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0824/support_conditioned_compositional_v26/formal_v1",
+  "literature": [
+    "https://proceedings.mlr.press/v275/pruthi25a.html",
+    "https://proceedings.mlr.press/v274/luketina25a.html",
+    "https://proceedings.mlr.press/v267/liang25n.html",
+    "https://arxiv.org/abs/2506.05801"
+  ],
+  "mutable_files": [
+    "src/wmagentattack/support_conditioned_effect_world_model.py",
+    "scripts/263_train_support_conditioned_compositional_v26.py",
+    "scripts/264_gate_support_conditioned_compositional_v26.py",
+    "scripts/server/run_0824_support_conditioned_compositional_v26.sbatch",
+    "tests/test_support_conditioned_effect_world_model.py",
+    "configs/0824_support_conditioned_compositional_v26_protocol.json",
+    "reports/0824_support_conditioned_compositional_v26_preregistration.md",
+    "reports/0824_support_conditioned_compositional_v26_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
