@@ -1,0 +1,167 @@
+{
+  "protocol_id": "0824_relation_factorized_distribution_v24",
+  "status": "preregistered_before_results",
+  "question": "Can relation-factorized E5 descriptions, similarity-distribution supervision, and train-only support-set selection improve genuinely unseen effect recall over v23 without sacrificing probability quality, seen effects, rollout fidelity, or open-set precision?",
+  "scope": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "clean_transition_model_only": true,
+    "real_external_endpoints": false,
+    "attack_generation": false,
+    "planner": false,
+    "dreamer": false
+  },
+  "data": {
+    "path": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
+    "sha256": "5ce08331f89f7e10da7512c98a26f44a7748bc8e3e755a38cf5c69edda6a4323",
+    "rows": 121,
+    "tasks": 12,
+    "effect_tokens": 94,
+    "task_disjoint_unseen_occurrences_per_seed": 16,
+    "task_disjoint_unseen_atom_coverage": {
+      "exact_entity": 0.0,
+      "exact_field": 0.1875,
+      "exact_kind": 0.75,
+      "category_kind": 0.75,
+      "entity_lexical_part": 0.4375
+    }
+  },
+  "semantic_cache": {
+    "model_name": "intfloat/e5-base-v2",
+    "model_revision": "f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+    "model_snapshot": "/share/guozhix/hf_cache/models--intfloat--e5-base-v2/snapshots/f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+    "model_file_sha256": {
+      "config.json": "01cc39aa39538a8179aa131c8a16adc03b506c92009f091502e4eb0c702f5f78",
+      "model.safetensors": "d0d559c47d5f71b1d280b13b62a2657f3e3bc70c0786f9ab91a36545e6a8f693",
+      "special_tokens_map.json": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+      "tokenizer.json": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "tokenizer_config.json": "ae83fa6ca0333117ff12606020af925d648667ef70d92ff7f27d781ba0ca4544",
+      "vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+    },
+    "batch_size": 32,
+    "semantic_dimension": 64,
+    "label_channel_order": ["full", "category", "entity", "field", "kind_value"],
+    "label_channel_weights": [0.35, 0.1, 0.25, 0.2, 0.1],
+    "action_channel_weights": [0.45, 0.35, 0.2],
+    "relation_kernel_temperature": 0.15,
+    "cache_path": "/share/guozhix/wmagentattack/0824/relation_factorized_distribution_v24/preflight_v1/a/relation_cache.npz",
+    "audit_path": "/share/guozhix/wmagentattack/0824/relation_factorized_distribution_v24/preflight_v1/a/audit.json",
+    "allowed_inputs": [
+      "effect_token_vocabulary",
+      "model_input.normalized_action"
+    ],
+    "forbidden_inputs": [
+      "task_id",
+      "suite",
+      "source_versions",
+      "model_target",
+      "outcome",
+      "utility",
+      "security",
+      "confirmation labels"
+    ]
+  },
+  "model_comparison": {
+    "fresh_arms": [
+      "fixed_v21",
+      "relation_e5_raw_v24",
+      "relation_support_set_v24"
+    ],
+    "external_controls": [
+      "hybrid_e5_raw_v23",
+      "hybrid_e5_calibrated_v23",
+      "independent_candidate_control_v22"
+    ],
+    "state_hash_dimension": 32,
+    "action_hash_dimension": 64,
+    "hidden_size": 64,
+    "fixed_v21_hidden_size": 56,
+    "task_training_seeds": [7, 17, 29],
+    "diagnostic_training_seeds": [17],
+    "inner_epochs": 200,
+    "outer_epochs": 300,
+    "fixed_v21_epochs": 300,
+    "learning_rate": 0.0025,
+    "weight_decay": 0.0001,
+    "execution_weight": 0.5,
+    "sequence_weight": 0.35,
+    "pair_weight": 0.25,
+    "ranking_weight": 0.25,
+    "distribution_weight": 0.2,
+    "distribution_temperature": 0.2,
+    "ranking_margin": 0.5,
+    "hard_negatives_per_positive": 4,
+    "gradient_clip": 5.0,
+    "torch_threads": 4,
+    "calibration_label_modulus": 5,
+    "minimum_calibration_labels": 6,
+    "support_top_k": 8,
+    "support_weights": [0.0, 0.25, 0.5, 0.75],
+    "decision_thresholds": [0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.7],
+    "selection_maximum_false_positive_rate": 0.05,
+    "selection_maximum_set_size_multiplier": 2.0,
+    "selection_set_size_offset": 0.5,
+    "selection_rule": "On each outer training fold only, labels selected by sha256(v24-cal:<token>) modulo 5 are hidden from the inner fit. Choose support weight and decision threshold by maximum micro F2 on those held labels, subject to false-positive rate <=0.05, mean predicted set size <=2*mean true set size+0.5, and positive NLL no worse than raw by 0.1. Tie-break by lower BCE, lower support weight, and higher threshold. Refit the outer semantic model on all observed labels."
+  },
+  "fixed_budget": {
+    "split_seed_units": 15,
+    "fixed_v21_fits": 15,
+    "relation_inner_fits": 15,
+    "relation_outer_fits": 15,
+    "model_fits": 45,
+    "metric_rows": 45,
+    "post_result_reruns": 0
+  },
+  "external_controls": {
+    "v23_metrics_path": "/share/guozhix/wmagentattack/0824/pretrained_semantic_hybrid_v23/formal_v1/results/run_metrics.json",
+    "v23_metrics_sha256": "8c7af9f2b3145c949d31053dd5f01757f7de5dcc8b66bf949774003ee4faa9ec",
+    "v23_gate_path": "/share/guozhix/wmagentattack/0824/pretrained_semantic_hybrid_v23/formal_v1/results/gate.json",
+    "v23_gate_sha256": "e01906c89a6294e0eb7575f3f9787613533082eef08dd149bae7fc33bc4ee790",
+    "v22_long_gate_path": "/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2/final/long_horizon_gate.json",
+    "v22_long_gate_sha256": "78e5c3e5c4603e2c33fcadb2317068aae66d31c993e50e0f6d2042852ee57238",
+    "v22_data_design_gate_path": "/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2/final/data_generation_design_gate.json",
+    "v22_data_design_gate_sha256": "eba31fe31b1c9a54d711d30e63f5fee7bb7ee7515f50c43db2f38e6c6038180c"
+  },
+  "acceptance_thresholds": {
+    "maximum_combined_parameters": 160000,
+    "maximum_fixed_reproduction_absolute_error": 0.000001,
+    "minimum_task_unseen_recall": 0.55,
+    "minimum_task_unseen_recall_gain_vs_v23_raw": 0.02,
+    "maximum_task_unseen_nll_increase_vs_v23_raw": 0.1,
+    "minimum_tool_family_unseen_recall": 0.28,
+    "minimum_source_unseen_recall": 0.2,
+    "maximum_task_unseen_false_positive_rate": 0.05,
+    "minimum_task_unseen_precision": 0.2,
+    "maximum_task_mean_predicted_set_multiplier": 2.0,
+    "maximum_task_mean_predicted_set_offset": 0.5,
+    "seen_recall_noninferiority_margin": 0.001,
+    "one_step_bce_noninferiority_margin": 0.01,
+    "rollout_bce_noninferiority_margin": 0.01,
+    "query_read_recall_noninferiority_margin": 0.001,
+    "minimum_support_recall_gain_vs_relation_raw": 0.01,
+    "maximum_support_nll_increase_vs_relation_raw": 0.1,
+    "minimum_cache_explained_energy": 0.9,
+    "maximum_cache_unit_norm_error": 0.00001
+  },
+  "recomposed_long_gate_rule": "All immutable v22 direct long-action clauses remain true. The effect-rollout clause is replaced only by the v24 rollout noninferiority clause.",
+  "authorization_if_go": "Run exactly the already frozen 96-episode three-source smoke protocol; medium and large generation remain unauthorized.",
+  "authorization_if_no_go": "Do not generate data. Retain v21/v22 and the v23 E5 diagnostic. Stop architecture-only open-vocabulary search on this 121-row dataset and preregister explicit label-disjoint branching support collection.",
+  "planned_archive": "/share/guozhix/wmagentattack/0824/relation_factorized_distribution_v24/formal_v1",
+  "literature": [
+    "https://arxiv.org/abs/2510.11892",
+    "https://proceedings.mlr.press/v202/aggarwal23a.html",
+    "https://proceedings.mlr.press/v161/daghaghi21a.html",
+    "https://proceedings.mlr.press/v222/ji24c.html"
+  ],
+  "mutable_files": [
+    "src/wmagentattack/relation_factorized_semantic_world_model.py",
+    "scripts/258_build_relation_factorized_cache_v24.py",
+    "scripts/259_train_relation_factorized_hybrid_v24.py",
+    "scripts/260_gate_relation_factorized_hybrid_v24.py",
+    "scripts/server/run_0824_relation_factorized_distribution_v24.sbatch",
+    "tests/test_relation_factorized_semantic_world_model.py",
+    "configs/0824_relation_factorized_distribution_v24_protocol.json",
+    "reports/0824_relation_factorized_distribution_v24_preregistration.md",
+    "reports/0824_relation_factorized_distribution_v24_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
