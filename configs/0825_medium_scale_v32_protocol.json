@@ -1,0 +1,149 @@
+{
+  "protocol_id": "0825_medium_scale_capacity_v32",
+  "status": "preregistered_before_results",
+  "research_question": "Does scaling the retained Structured Markov v3, four-cell auxiliary, zero-start recurrent action dynamics, and shared-effect transition probe from roughly 33K-100K parameters to a 7.17M-parameter modular system improve task-disjoint prediction without capacity overfit?",
+  "scope": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "clean_transition_training_only": true,
+    "real_external_endpoints": false,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0,
+    "attack_generation": false,
+    "planner": false,
+    "dreamer": false,
+    "utility_or_value_heads": false,
+    "formal_large_scale_claim": false
+  },
+  "data": {
+    "action_dataset": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "action_dataset_sha256": "3b58a769d732f1c6f6573d2ec6e12bd8c13e7f0e429ade659670f1634da95ae2",
+    "action_audit": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json",
+    "action_audit_sha256": "677a651f7d65f2e64d94e0e42a93f5bd9d7aadab56b069262d95043f1c9b9a80",
+    "action_events": 6763,
+    "trajectories": 2060,
+    "tasks": 20,
+    "task_folds": 5,
+    "effect_dataset": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
+    "effect_dataset_sha256": "5ce08331f89f7e10da7512c98a26f44a7748bc8e3e755a38cf5c69edda6a4323",
+    "effect_rows": 121,
+    "effect_task_folds": 3,
+    "leakage_policy": "Task-disjoint confirmation rows are never used for gradient updates or model selection. Terminal labels remain outside transition inputs."
+  },
+  "external_controls": {
+    "small_action_predictions": "/share/guozhix/wmagentattack/0821/parallel_world_model_gates_v22/formal_v2/long_horizon/results/predictions.jsonl",
+    "small_action_predictions_sha256": "d4b71fb0cbe3a541a9ed2c0ab8bcacb7628fad2719f235d5ec61d02a7e5d43f0",
+    "small_effect_metrics": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/formal_v1/results/run_metrics.json",
+    "small_effect_metrics_sha256": "365def3161d381d3aab5634a4316026e822e54023a8df332af412a3dd6745fcb",
+    "small_effect_arm": "intervention_no_execution_experts_v21",
+    "same_seeds_and_task_splits": true
+  },
+  "training": {
+    "device": "one Slurm-isolated RTX 6000 Ada GPU",
+    "precision": "float32",
+    "deterministic_algorithms": true,
+    "seeds": [7, 17, 29],
+    "action_branch": {
+      "hash_dimension": 128,
+      "teacher": {
+        "fixed_epochs": 120,
+        "learning_rate": 0.001,
+        "weight_decay": 0.0001,
+        "hidden_size": 768,
+        "hash_dimension": 128,
+        "dropout": 0.1,
+        "outcome_loss_weight": 1.0,
+        "outcome_positive_weight_cap": 10.0,
+        "joint_loss_weight": 0.25
+      },
+      "residual": {
+        "epochs": 80,
+        "learning_rate": 0.001,
+        "weight_decay": 0.0001,
+        "hidden_size": 768,
+        "dropout": 0.1,
+        "h1_ce_weight": 0.25,
+        "h1_kl_weight": 2.0,
+        "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+        "latent_weight": 0.1,
+        "future_joint_weight": 0.1
+      }
+    },
+    "effect_candidate_arm": "medium_shared_effect_v32",
+    "effect_branch": {
+      "state_hash_dimension": 32,
+      "action_hash_dimension": 64,
+      "hidden_size": 768,
+      "epochs": 300,
+      "learning_rate": 0.0025,
+      "weight_decay": 0.0001,
+      "execution_weight": 0.5,
+      "sequence_weight": 0.35,
+      "pair_weight": 0.25,
+      "gradient_clip": 5.0
+    },
+    "expected_parameter_counts": {
+      "action_teacher": 900104,
+      "action_residual": 4341510,
+      "effect_transition": 1924703,
+      "combined_modular": 7166317
+    }
+  },
+  "fixed_budget": {
+    "gpus": 1,
+    "action_folds": 5,
+    "action_seeds": 3,
+    "action_paired_units": 15,
+    "action_teacher_fits": 15,
+    "action_residual_fits": 15,
+    "effect_folds": 3,
+    "effect_seeds": 3,
+    "effect_fits": 9,
+    "total_model_fits": 39,
+    "post_result_reruns": 0,
+    "hyperparameter_searches": 0,
+    "maximum_wall_time_hours": 12
+  },
+  "acceptance_gate": {
+    "effect_baseline_arm": "intervention_no_execution_experts_v21",
+    "effect_candidate_arm": "medium_shared_effect_v32",
+    "required_model_fits": 39,
+    "minimum_combined_parameters": 3000000,
+    "maximum_combined_parameters": 10000000,
+    "minimum_paired_key_coverage": 1.0,
+    "maximum_h1_nll_degradation": 0.01,
+    "maximum_h1_accuracy_degradation": 0.005,
+    "minimum_h2_h5_nll_gain": 0.01,
+    "minimum_h2_h5_positive_task_fraction": 0.55,
+    "minimum_h2_h5_positive_seeds": 2,
+    "maximum_effect_positive_nll_degradation": 0.03,
+    "maximum_effect_recall_degradation": 0.01,
+    "maximum_effect_rollout_bce_degradation": 0.01,
+    "minimum_effect_noninferior_folds": 2,
+    "minimum_effect_noninferior_seeds": 2,
+    "require_all_predictions_legal": true
+  },
+  "decision_policy": {
+    "go": "Retain the medium checkpoint as the capacity-scaled closed-vocabulary/action-dynamics reference and preregister an obligation-graph representation gate. This result alone does not authorize formal large training.",
+    "no_go": "Retain v21/v22 small models, preserve capacity-overfit counterevidence, and do not increase parameter count on the current representation.",
+    "unchanged_blocks": "v31 representation NO-GO, open-vocabulary block, fresh clean eligibility block, and attack/planner prohibition remain in force regardless of this result."
+  },
+  "implementation_sha256": {
+    "src/wmagentattack/medium_scale_diagnostic.py": "317d510add0a693a770a085b788ddeb9c501685e5d2ececb70e6278e721be6c4",
+    "scripts/275_train_medium_scale_v32.py": "63ac4d4a81424183190ad3390ff289bb3dfbcd56b10884242d5980350cef8d6a",
+    "scripts/276_gate_medium_scale_v32.py": "921184c411fc064834d0e7d2dffdff16d1c7b6effa004e0594f5040c2ae5d6e1",
+    "scripts/server/run_0825_medium_scale_v32.sbatch": "a016319b1c04398646cccbe81d2f549b90d59197253a98fcbb8ff1a9a9cc57ea",
+    "tests/test_medium_scale_diagnostic.py": "27d722391633a494db35780b2403ed87039ae1feed7b687a10fc1be8156c2370"
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0825/medium_scale_v32/formal_v1",
+  "mutable_files": [
+    "src/wmagentattack/medium_scale_diagnostic.py",
+    "scripts/275_train_medium_scale_v32.py",
+    "scripts/276_gate_medium_scale_v32.py",
+    "scripts/server/run_0825_medium_scale_v32.sbatch",
+    "tests/test_medium_scale_diagnostic.py",
+    "configs/0825_medium_scale_v32_protocol.json",
+    "reports/0825_medium_scale_v32_preregistration.md",
+    "reports/0825_medium_scale_v32_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
