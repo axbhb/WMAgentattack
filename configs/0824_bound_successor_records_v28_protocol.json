@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_bound_successor_records_v28",
-  "status": "preregistered_before_results",
+  "status": "completed_no_go_bound_successor_records_v28",
   "research_question": "Does a candidate-conditioned bound successor-record set model improve task-disjoint unseen effect prediction over v26 while preserving fixed-v21 seen effects and rollout surfaces?",
   "scope": {
     "clean_transition_model_only": true,
@@ -129,5 +129,70 @@
     "reports/0824_bound_successor_records_v28_preregistration.md",
     "reports/0824_bound_successor_records_v28_results.md",
     "reports/autoresearch_result_ledger.jsonl"
-  ]
+  ],
+  "postrun": {
+    "job_id": 7313,
+    "remote_scientific_commit": "b0838c65a7b79a358fdfd44ebff924ff28591156",
+    "elapsed_seconds": 358,
+    "decision": "NO_GO_BOUND_SUCCESSOR_RECORDS_V28",
+    "gate_clauses_passed": 19,
+    "gate_clauses_total": 26,
+    "failed_clauses": [
+      "fixed_v21_exact_reproduction",
+      "goal_pointer_f1_floor",
+      "gain_cell_stability",
+      "unseen_nll_ceiling",
+      "focused_unseen_recall_floor",
+      "tool_family_unseen_recall_floor",
+      "source_unseen_recall_floor"
+    ],
+    "model_fits": 30,
+    "metric_rows": 30,
+    "runtime_failures": 0,
+    "tests": "7 passed",
+    "task_disjoint": {
+      "unseen_positive_recall": 0.746031746031746,
+      "unseen_recall_gain_vs_v26": 0.2407407407407407,
+      "unseen_positive_nll": 2.4089591081142934,
+      "unseen_false_positive_rate": 0.009361009361009361,
+      "unseen_precision": 0.4690656565656566,
+      "focused_unseen_recall": 0.35714285714285715,
+      "matched_count3_recall": 1.0,
+      "bound_record_f1": 0.830797280866678,
+      "bound_record_recall": 0.7991192411924118,
+      "bound_record_exact_set_accuracy": 0.7327913279132791,
+      "goal_pointer_f1": 0.1717283938320849,
+      "one_step_bce": 0.041123596874439186,
+      "rollout_bce": 0.02789124750644364,
+      "pair_assignment_accuracy": 0.9893593189964158
+    },
+    "diagnostic_counterevidence": {
+      "positive_gain_cells": 3,
+      "required_positive_gain_cells": 4,
+      "fold0_recall_unchanged_from_v26": 0.7142857142857143,
+      "fold2_recall": 0.7777777777777778,
+      "fold2_focused_webpage_recall": 0.0,
+      "tool_family_unseen_recall": 0.020516243880729864,
+      "source_unseen_recall": 0.0056022408963585435,
+      "tool_family_exact_record_candidate_coverage": 0.4388888888888889,
+      "source_exact_record_candidate_coverage": 0.5690058479532164,
+      "maximum_fixed_v21_reproduction_error": 0.00347222222222221
+    },
+    "interpretation": "Whole-record binding is a real improvement and deterministically derived count-3 succeeds, but exact goal-term identity is underidentified and the open diagnostic splits lack candidate coverage. The aggregate gain is count-driven, not broad relation transfer, and NLL remains unstable. Retain v21/v22 and v27 data evidence; keep v28 only as a mechanism component.",
+    "next_direction": "Run a zero-fit relational data-sufficiency gate that adds privacy-safe attribute-to-goal-term evidence links and outcome-blind support for webpage plus tool/source-heldout exact records before another model fit.",
+    "authorization": {
+      "retain_v28_as_primary_open_vocabulary_branch": false,
+      "relational_link_data_gate": true,
+      "run_frozen_96_episode_data_smoke": false,
+      "large_scale_generation": false,
+      "large_world_model_training": false,
+      "attack_generation": false
+    },
+    "hashes": {
+      "metrics": "aa4f6ba2facb5eebd21d3b8947c06e13cc326383aed0c9a18b54fb5e72267515",
+      "gate": "4463d5f4d24af285f12611f8980a84831319d48e0b1769145f319b501eba09e0",
+      "archive_checksums": "08b08381fc655298d498e905760f025a8ba905b3f552e250c23c6dfb2f73dfc8",
+      "complete": "2a3132b7cbd33b95b5134694129e5eab88bf85c7fbd2c74afc242522825fd807"
+    }
+  }
 }
