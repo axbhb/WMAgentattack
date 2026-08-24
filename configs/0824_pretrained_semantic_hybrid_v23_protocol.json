@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_pretrained_semantic_hybrid_v23",
-  "status": "preregistered_before_results",
+  "status": "completed_no_go_pretrained_semantic_hybrid_v23",
   "question": "Can a hybrid effect head preserve fixed-v21 predictions for seen labels while a frozen pretrained E5 semantic prototype scorer and train-only label-heldout calibration improve genuinely unseen labels enough to unlock the already validated v22 long-action and data-design branches?",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -108,6 +108,64 @@
   "authorization_if_go": "Run exactly the already frozen 96-episode three-source smoke protocol; medium and large generation remain unauthorized.",
   "authorization_if_no_go": "Do not generate the 96 episodes. Retain v21 for seen labels and v22 recurrent action dynamics, preserve counterevidence, and change only the failed semantic mechanism or collect explicit label-disjoint support.",
   "planned_archive": "/share/guozhix/wmagentattack/0824/pretrained_semantic_hybrid_v23/formal_v1",
+  "postrun": {
+    "scientific_job_id": 7291,
+    "gate_repair_job_id": 7294,
+    "scientific_elapsed": "00:19:14",
+    "scientific_commit": "b559d1107c402c62ca3135e8371c5b59905cf445",
+    "gate_repair_commit": "8cc2c6402e1292a7e9cb2e747cb06873503a943e",
+    "decision": "NO_GO_96_EPISODE_DATA_SMOKE_V23",
+    "open_vocabulary_decision": "NO_GO_PRETRAINED_SEMANTIC_HYBRID_V23",
+    "gate_clauses_passed": 13,
+    "gate_clauses_total": 16,
+    "failed_clauses": [
+      "calibration_improves_unseen_nll",
+      "task_unseen_recall_floor",
+      "task_unseen_recall_gain_vs_id_control"
+    ],
+    "model_fits": 45,
+    "metric_rows": 45,
+    "runtime_failures": 0,
+    "task_disjoint": {
+      "fixed_v21_unseen_recall": 0.0,
+      "independent_v22_unseen_recall": 0.507936507936508,
+      "hybrid_e5_calibrated_unseen_recall": 0.5291005291005291,
+      "hybrid_e5_recall_gain_vs_independent": 0.02116402116402112,
+      "minimum_required_recall": 0.55,
+      "minimum_required_gain_vs_independent": 0.04,
+      "independent_v22_unseen_nll": 2.393791218598684,
+      "hybrid_e5_raw_unseen_nll": 0.996468826225922,
+      "hybrid_e5_calibrated_unseen_nll": 1.2560529155134794,
+      "calibration_nll_change_raw_to_calibrated": 0.2595840892875574,
+      "fixed_v21_seen_recall": 0.9748852806736803,
+      "hybrid_e5_seen_recall": 0.9748852806736803,
+      "fixed_v21_one_step_bce": 0.04426232394528625,
+      "hybrid_e5_calibrated_one_step_bce": 0.040746058354459574,
+      "fixed_v21_rollout_bce": 0.02268882077543013,
+      "hybrid_e5_calibrated_rollout_bce": 0.027843729299526315
+    },
+    "diagnostic_unseen_recall": {
+      "tool_family_heldout": 0.279792810166642,
+      "source_heldout": 0.20084397395321765
+    },
+    "recomposed_long_gate_passed": true,
+    "data_design_ready": true,
+    "authorization": {
+      "run_frozen_96_episode_data_smoke": false,
+      "medium_scale_generation": false,
+      "large_scale_generation": false,
+      "large_world_model_training": false,
+      "attack_generation": false
+    },
+    "runtime_integrity_note": "Job 7291 completed all 45 frozen scientific fits and wrote the immutable metric file, then the gate writer failed on a lowercase Python Boolean literal. Job 7294 performed only the documented label-blind Boolean serialization repair and reran tests plus the gate; no fit, prediction, seed, split, metric, or threshold changed.",
+    "tests": "4 passed before training and 4 passed after the gate-only repair",
+    "hashes": {
+      "metrics": "8c7af9f2b3145c949d31053dd5f01757f7de5dcc8b66bf949774003ee4faa9ec",
+      "gate": "e01906c89a6294e0eb7575f3f9787613533082eef08dd149bae7fc33bc4ee790",
+      "complete": "0cb3e4052db1dc8748daebb44470e82667844189e4a6dc5ea56b27a1d28fc3d1",
+      "archive_checksums": "87c51756649de95f86a4ef94a4b09d2d69888bf88c87a9ca99811172e7ec9844"
+    }
+  },
   "literature": [
     "https://arxiv.org/abs/2602.05842",
     "https://arxiv.org/abs/2608.04653",
