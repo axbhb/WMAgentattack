@@ -1,6 +1,6 @@
 {
   "protocol_id": "0824_explicit_atom_support_v25",
-  "status": "manifest_frozen_before_execution",
+  "status": "completed_go_support_conditioned_model_v25",
   "research_question": "Can clean sibling-task branches provide explicit entity, field, kind, and operation support for the task-disjoint hard effects that v24 could not identify, while keeping exact composite effect labels disabled for training?",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -102,5 +102,34 @@
     "pass": "Freeze the atom-support dataset and authorize one separately preregistered support-conditioned modular world-model comparison; no attack, planner, Dreamer, or large-scale generation.",
     "fail": "Retain counterevidence and do not train another encoder on the 121-row panel; redesign support collection or move matched-count prediction to an exact/ordinal module without relaxing this gate."
   },
-  "planned_archive": "/share/guozhix/wmagentattack/0824/explicit_atom_support_v25/formal_v1"
+  "planned_archive": "/share/guozhix/wmagentattack/0824/explicit_atom_support_v25/formal_v1",
+  "postrun": {
+    "job_id": 7305,
+    "scientific_commit": "46065f922d59dc3ed4cd331bb1d6431b130d5596",
+    "elapsed_seconds": 9,
+    "decision": "GO_SUPPORT_CONDITIONED_MODEL_V25",
+    "manifest_rows": 10,
+    "branch_tool_executions": 20,
+    "observed_prefix_replay_tool_executions": 42,
+    "total_sandbox_tool_executions": 62,
+    "successful_support_rows": 10,
+    "runtime_failures": 0,
+    "coverage": {"entity": 1.0, "field": 1.0, "kind": 1.0, "operation": 1.0},
+    "coverage_denominators": {"entity": 9, "field": 5, "kind": 5, "operation": 9},
+    "unseen_positive_occurrences_retained": 16,
+    "counterevidence": {
+      "unsupported_scalar_occurrences": {"matched_count=3": 7},
+      "legacy_collector_all_12_cells_check": false,
+      "legacy_collector_check_is_out_of_scope": true,
+      "reason": "The v25 pilot intentionally targets four rare-mechanism cells; all other frozen runtime-integrity checks pass. Scalar matched-count prediction remains a separately modeled ordinal/exact requirement."
+    },
+    "tests": "21 passed",
+    "hashes": {
+      "execution_dataset": "4d16b7cf2f588302487ab13603cf4a3a99fbb1b4ef5daf113b2be4ec2a5b460f",
+      "support_dataset": "459d57cd3a75ad24709ee0a29569c1941bed4b1ac20f0cf6ccc3f8d83224bdfb",
+      "gate": "ee80151926b1b9bb38574829c1cea090c606a46be84d7283072f106b7e3a4075",
+      "archive_checksums": "0975febe8f5e7ced58648a72e6326c45d7b5de1fdc505693c59e2f063bbf9266"
+    },
+    "authorization": "One separately preregistered support-conditioned modular world-model comparison against fixed v21 and v23 controls; attacks, planner, Dreamer, and scale-up remain unauthorized."
+  }
 }
