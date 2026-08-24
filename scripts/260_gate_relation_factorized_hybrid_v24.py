@@ -46,6 +46,14 @@ def panel(rows):
     output["unseen_positive_occurrences_reported"] = int(sum(
         row.get("unseen_positive_occurrences", 0) for row in rows
     ))
+    selections = [
+        row.get("selection", {}) for row in rows
+        if row.get("arm") == "relation_support_set_v24"
+    ]
+    output["selection_feasible_fraction"] = (
+        float(np.mean([bool(value.get("feasible", False)) for value in selections]))
+        if selections else None
+    )
     return output
 
 
@@ -128,6 +136,11 @@ def main() -> None:
         "parameter_limit": (
             candidate["task_disjoint"]["parameter_count"]
             <= thresholds["maximum_combined_parameters"]
+        ),
+        "all_inner_support_rules_feasible": (
+            candidate["task_disjoint"]["selection_feasible_fraction"] == 1.0
+            and candidate["tool_family_heldout"]["selection_feasible_fraction"] == 1.0
+            and candidate["source_heldout"]["selection_feasible_fraction"] == 1.0
         ),
         "task_unseen_recall_floor": (
             candidate["task_disjoint"]["unseen_positive_recall"]

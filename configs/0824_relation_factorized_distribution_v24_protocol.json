@@ -106,7 +106,7 @@
     "selection_maximum_false_positive_rate": 0.05,
     "selection_maximum_set_size_multiplier": 2.0,
     "selection_set_size_offset": 0.5,
-    "selection_rule": "On each outer training fold only, labels selected by sha256(v24-cal:<token>) modulo 5 are hidden from the inner fit. Choose support weight and decision threshold by maximum micro F2 on those held labels, subject to false-positive rate <=0.05, mean predicted set size <=2*mean true set size+0.5, and positive NLL no worse than raw by 0.1. Tie-break by lower BCE, lower support weight, and higher threshold. Refit the outer semantic model on all observed labels."
+    "selection_rule": "On each outer training fold only, labels selected by sha256(v24-cal:<token>) modulo 5 are hidden from the inner fit. Choose support weight and decision threshold by maximum micro F2 on those held labels, subject to false-positive rate <=0.05, mean predicted set size <=2*mean true set size+0.5, and positive NLL no worse than raw by 0.1. Tie-break by lower BCE, lower support weight, and higher threshold. If no rule is feasible, emit a conservative zero-support, maximum-threshold rule marked feasible=false; any such mark automatically fails the formal gate. Refit the outer semantic model on all observed labels."
   },
   "fixed_budget": {
     "split_seed_units": 15,
@@ -128,6 +128,7 @@
     "v22_data_design_gate_sha256": "eba31fe31b1c9a54d711d30e63f5fee7bb7ee7515f50c43db2f38e6c6038180c"
   },
   "acceptance_thresholds": {
+    "require_all_inner_support_rules_feasible": true,
     "maximum_combined_parameters": 160000,
     "maximum_fixed_reproduction_absolute_error": 0.000001,
     "minimum_task_unseen_recall": 0.55,

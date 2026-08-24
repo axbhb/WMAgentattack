@@ -117,5 +117,31 @@ def test_support_rule_respects_frozen_open_set_constraints():
         set_size_offset=0.5,
     )
     assert rule["false_positive_rate"] <= 0.05
+    assert rule["feasible"]
     assert rule["mean_predicted_set_size"] <= rule["selection_set_limit"]
     assert rule["positive_nll"] <= rule["raw_positive_nll"] + 0.1
+
+
+def test_infeasible_support_rule_falls_back_conservatively():
+    logits = np.full((3, 3), 8.0)
+    targets = np.asarray([
+        [1.0, 1.0, 0.0],
+        [1.0, 0.0, 1.0],
+        [1.0, 0.0, 0.0],
+    ])
+    rule = select_support_set_rule(
+        logits,
+        targets,
+        np.asarray([True, False, False]),
+        np.asarray([False, True, True]),
+        np.ones((3, 3)),
+        support_weights=[0.0],
+        thresholds=[0.5, 0.7],
+        top_k=2,
+        maximum_false_positive_rate=0.0,
+        maximum_set_size_multiplier=0.0,
+        set_size_offset=0.0,
+    )
+    assert not rule["feasible"]
+    assert rule["support_weight"] == 0.0
+    assert rule["threshold"] == 0.7

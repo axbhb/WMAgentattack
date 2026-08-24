@@ -256,12 +256,31 @@ def select_support_set_rule(
                     set_limit,
                 ))
     if not candidates:
-        raise ValueError("no feasible support-set calibration rule")
+        fallback_threshold = float(max(thresholds))
+        fallback_probability = support_fused_probabilities(
+            logits, fitted_labels, heldout_labels, kernel, 0.0, top_k
+        )[:, heldout_labels]
+        fallback_metrics = _selection_metrics(
+            fallback_probability, y, fallback_threshold
+        )
+        return {
+            "support_weight": 0.0,
+            "threshold": fallback_threshold,
+            "raw_positive_nll": raw_nll,
+            "selection_set_limit": float(
+                maximum_set_size_multiplier
+                * fallback_metrics["mean_true_set_size"]
+                + set_size_offset
+            ),
+            "feasible": False,
+            **fallback_metrics,
+        }
     best = min(candidates, key=lambda value: value[0])
     return {
         "support_weight": best[0][2],
         "threshold": -best[0][3],
         "raw_positive_nll": raw_nll,
         "selection_set_limit": float(best[2]),
+        "feasible": True,
         **best[1],
     }

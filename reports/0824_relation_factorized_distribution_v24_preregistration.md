@@ -35,6 +35,7 @@ Training adds a similarity-distribution loss: positives on fitted labels induce 
 
 The support-set candidate must:
 
+- find a feasible train-only support rule in every split/seed unit; a conservative runtime fallback is an automatic gate failure;
 - reach task-disjoint unseen recall >=0.55 and improve by >=0.02 over v23 raw;
 - keep unseen positive NLL within +0.1 of v23 raw;
 - reach tool/source unseen recall floors;
