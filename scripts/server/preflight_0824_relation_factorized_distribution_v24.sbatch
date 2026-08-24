@@ -18,7 +18,7 @@ test ! -e "$ROOT/COMPLETE"
 mkdir -p "$ROOT/a" "$ROOT/b"
 PYTHONPATH=src "$PY" -m pytest -q tests/test_relation_factorized_semantic_world_model.py > "$ROOT/tests.txt"
 for replica in a b; do
-  PYTHONPATH=src "$PY" scripts/258_build_relation_factorized_cache_v24.py +    --protocol "$PROTOCOL" --dataset "$DATA" +    --output "$ROOT/$replica/relation_cache.npz" +    --audit "$ROOT/$replica/audit.json" > "$ROOT/$replica/stdout.json"
+  PYTHONPATH=src "$PY" scripts/258_build_relation_factorized_cache_v24.py --protocol "$PROTOCOL" --dataset "$DATA" --output "$ROOT/$replica/relation_cache.npz" --audit "$ROOT/$replica/audit.json" > "$ROOT/$replica/stdout.json"
 done
 PYTHONPATH=src "$PY" - "$ROOT" <<'PY'
 import hashlib,json,sys

@@ -22,8 +22,8 @@ AUDIT=$($PY -c 'import json; d=json.load(open("configs/0824_relation_factorized_
 mkdir -p "$ROOT/results"
 PYTHONPATH=src "$PY" -m pytest -q tests/test_relation_factorized_semantic_world_model.py > "$ROOT/tests.txt"
 START=$(date +%s)
-PYTHONPATH=src "$PY" scripts/259_train_relation_factorized_hybrid_v24.py +  --protocol "$PROTOCOL" --dataset "$DATA" --semantic-cache "$CACHE" +  --output-dir "$ROOT/results" > "$ROOT/train_stdout.json"
-PYTHONPATH=src "$PY" scripts/260_gate_relation_factorized_hybrid_v24.py +  --protocol "$PROTOCOL" --metrics "$ROOT/results/run_metrics.json" +  --cache-audit "$AUDIT" --output "$ROOT/results/gate.json" > "$ROOT/gate_stdout.json"
+PYTHONPATH=src "$PY" scripts/259_train_relation_factorized_hybrid_v24.py --protocol "$PROTOCOL" --dataset "$DATA" --semantic-cache "$CACHE" --output-dir "$ROOT/results" > "$ROOT/train_stdout.json"
+PYTHONPATH=src "$PY" scripts/260_gate_relation_factorized_hybrid_v24.py --protocol "$PROTOCOL" --metrics "$ROOT/results/run_metrics.json" --cache-audit "$AUDIT" --output "$ROOT/results/gate.json" > "$ROOT/gate_stdout.json"
 END=$(date +%s)
 printf 'start=%s\nend=%s\nelapsed_seconds=%s\n' "$START" "$END" "$((END-START))" > "$ROOT/runtime.txt"
 find "$ROOT" -type f -not -name checksums.sha256 -not -name COMPLETE -print0 | sort -z | xargs -0 sha256sum > "$ROOT/checksums.sha256"
