@@ -1,6 +1,6 @@
 {
   "protocol_id": "0825_medium_scale_capacity_v32",
-  "status": "preregistered_before_results",
+  "status": "completed_no_go",
   "research_question": "Does scaling the retained Structured Markov v3, four-cell auxiliary, zero-start recurrent action dynamics, and shared-effect transition probe from roughly 33K-100K parameters to a 7.17M-parameter modular system improve task-disjoint prediction without capacity overfit?",
   "scope": {
     "agentdojo_synthetic_sandbox_only": true,
@@ -133,6 +133,62 @@
     "scripts/276_gate_medium_scale_v32.py": "921184c411fc064834d0e7d2dffdff16d1c7b6effa004e0594f5040c2ae5d6e1",
     "scripts/server/run_0825_medium_scale_v32.sbatch": "a016319b1c04398646cccbe81d2f549b90d59197253a98fcbb8ff1a9a9cc57ea",
     "tests/test_medium_scale_diagnostic.py": "27d722391633a494db35780b2403ed87039ae1feed7b687a10fc1be8156c2370"
+  },
+  "postrun": {
+    "job_id": 7322,
+    "scientific_commit": "112b1eb7a1cbcf7130a9d01dc9d9cfd17b278d35",
+    "decision": "NO_GO_MEDIUM_SCALE_CAPACITY_V32",
+    "passed_clauses": 9,
+    "total_clauses": 17,
+    "duration_seconds": 504,
+    "completed_model_fits": 39,
+    "runtime_failures": 0,
+    "device": "NVIDIA RTX 6000 Ada Generation",
+    "peak_cuda_memory_bytes": 2245836800,
+    "actual_parameter_counts": {
+      "action_teacher": 1503752,
+      "action_residual": 4341510,
+      "effect_transition": 2085983,
+      "combined_modular": 7931245
+    },
+    "metrics": {
+      "h1_nll_gain_over_small_v22": -0.527543880898829,
+      "h1_accuracy_gain_over_small_v22": -0.003202849833833006,
+      "h2_h5_nll_gain_over_small_v22": -0.5152999034004606,
+      "h2_h5_positive_task_fraction": 0.2,
+      "h2_h5_positive_seeds": 0,
+      "effect_positive_nll_gain": -0.05685203002059344,
+      "effect_recall_gain": -0.0009144072301966455,
+      "effect_rollout_bce_gain": -0.010146160850328875,
+      "effect_noninferior_folds": 1,
+      "effect_noninferior_seeds": 0,
+      "effect_final_training_loss": 0.0003150446055870917,
+      "effect_initial_training_loss": 2.0365277661217585,
+      "unseen_positive_recall": 0.0
+    },
+    "failed_clauses": [
+      "effect_fold_replication",
+      "effect_positive_nll_noninferiority",
+      "effect_rollout_noninferiority",
+      "effect_seed_replication",
+      "h1_nll_noninferiority",
+      "h2_h5_nll_gain",
+      "h2_h5_positive_task_fraction",
+      "h2_h5_seed_replication"
+    ],
+    "artifact_sha256": {
+      "gate": "df486240bd85cf091d7c8538c09322b986048984a15b580963028fedcc87879d",
+      "training_metrics": "9b6928b89f3cc7a391c06500b3db77f2cd2565f92d304fe4085680deb1c72c53",
+      "action_predictions": "d11d7b3154eed874b0ce44c040da7276363fafab7246fb8e3e8af7304bb1915f",
+      "diagnostics": "d14c49fd00f3d16186cbc33f60a9267675d21598b57ec7b843ee47ea8f53885e"
+    },
+    "interpretation": "Capacity scaling sharply reduced training losses but worsened task-disjoint action NLL at H1 and H2-H5, and worsened effect positive NLL and rollout BCE. Accuracy was mixed while NLL degraded, indicating overconfident errors rather than useful generalization. Parameter count is not the current bottleneck; representation and data support are.",
+    "authorization": {
+      "retain_medium_checkpoint": false,
+      "formal_large_scale_training": false,
+      "attack_generation": false,
+      "planner_or_dreamer": false
+    }
   },
   "planned_archive": "/share/guozhix/wmagentattack/0825/medium_scale_v32/formal_v1",
   "mutable_files": [
