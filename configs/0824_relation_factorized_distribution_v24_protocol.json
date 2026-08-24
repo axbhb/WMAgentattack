@@ -51,6 +51,8 @@
     "double_build_gate_sha256": "75dea808ee101e329271f1b0cfbc5a4fd31bf0258b9b79bfa28bdd986383b0fb",
     "preflight_job_ids": [7300, 7301],
     "preflight_runtime_note": "7300 exited before cache construction because shell continuation markers were serialized as literal plus signs. The label-blind repair changed only shell argument serialization; 7301 passed 5 tests and produced two value-identical caches.",
+    "full_path_smoke_job_ids": [7302, 7303],
+    "full_path_smoke_note": "7302 stopped before complete output when one-epoch inner selection had no feasible open-set rule. The completeness repair emits a conservative infeasible marker that automatically fails the formal gate. 7303 completed all 45 one-epoch fit paths and 45 metric rows with zero failures; smoke metrics were not used for scientific selection.",
     "allowed_inputs": [
       "effect_token_vocabulary",
       "model_input.normalized_action"
