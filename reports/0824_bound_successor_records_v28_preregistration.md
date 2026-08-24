@@ -1,0 +1,9 @@
+# v28 bound successor-record model preregistration
+
+v26 established that explicit sibling-task support is causally useful, but its independent atom heads lost entity-field-tool bindings and its standalone ordinal count head failed on `matched_count=3`. v27 then established that all 121 confirmation transitions and 10 support transitions admit leakage-free bound successor targets, with exact whole-record support in every task-disjoint fold.
+
+v28 changes one mechanism. It scores complete typed evidence records as an unordered candidate set and scores each current trusted goal term as a pointer. Canonical entity, attribute, link, conflict, execution, delta and matched-count probabilities are rendered from those structured predictions. The matched count is the clipped Poisson-binomial cardinality of pointer probabilities, never a separate learned label. Seen canonical effects continue to use the fixed v21 head.
+
+The comparison uses the unchanged v21 task, tool-family and source-disjoint splits and seeds. Candidates are constructed only from each training fold plus the frozen task-disjoint v27 support rows; test records, task IDs, outcome labels and audit-only canonical labels are forbidden. The fixed budget is 30 CPU fits: 15 fixed-v21 reproductions and 15 bound-successor fits. No GPU, LLM, sandbox, attack, large-data, Dreamer or planner call is permitted.
+
+GO requires the complete frozen vector: exact fixed-v21 reproduction, full candidate coverage, record-set and goal-pointer quality, at least 0.55 task-unseen recall and +0.04 over v26, stable cell gains, NLL/FPR/precision controls, `matched_count=3` and focused-effect recall, one-step and rollout non-inferiority, diagnostic transfer, and the parameter ceiling. A failed clause is scientific NO-GO and cannot be repaired after results.
