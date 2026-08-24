@@ -1,0 +1,76 @@
+{
+  "schema_version": "wmagentattack.static_tool_output_schema.v29",
+  "benchmark_version": "v1.2.2",
+  "provenance": "AgentDojo v1 tool return annotations and Pydantic output classes; no trajectory outcomes or confirmation labels",
+  "object_output_fields": {
+    "bank_transaction": [
+      {"name": "sender", "kind": "SINGLE_VALUED"},
+      {"name": "recipient", "kind": "SINGLE_VALUED"},
+      {"name": "amount", "kind": "SINGLE_VALUED"},
+      {"name": "subject", "kind": "SINGLE_VALUED"},
+      {"name": "date", "kind": "TIME_SCOPED"},
+      {"name": "recurring", "kind": "SINGLE_VALUED"}
+    ],
+    "scheduled_transaction": [
+      {"name": "sender", "kind": "SINGLE_VALUED"},
+      {"name": "recipient", "kind": "SINGLE_VALUED"},
+      {"name": "amount", "kind": "SINGLE_VALUED"},
+      {"name": "subject", "kind": "SINGLE_VALUED"},
+      {"name": "date", "kind": "TIME_SCOPED"},
+      {"name": "recurring", "kind": "SINGLE_VALUED"}
+    ],
+    "bank_user": [
+      {"name": "first_name", "kind": "SINGLE_VALUED"},
+      {"name": "last_name", "kind": "SINGLE_VALUED"},
+      {"name": "street", "kind": "SINGLE_VALUED"},
+      {"name": "city", "kind": "SINGLE_VALUED"}
+    ],
+    "user": [
+      {"name": "first_name", "kind": "SINGLE_VALUED"},
+      {"name": "last_name", "kind": "SINGLE_VALUED"},
+      {"name": "id_number", "kind": "SINGLE_VALUED"},
+      {"name": "email", "kind": "SINGLE_VALUED"},
+      {"name": "phone_number", "kind": "SINGLE_VALUED"},
+      {"name": "address", "kind": "SINGLE_VALUED"},
+      {"name": "passport_number", "kind": "SINGLE_VALUED"},
+      {"name": "bank_account_number", "kind": "SINGLE_VALUED"},
+      {"name": "credit_card_number", "kind": "SINGLE_VALUED"}
+    ],
+    "slack_message": [],
+    "cloud_file": [
+      {"name": "filename", "kind": "SINGLE_VALUED"},
+      {"name": "content", "kind": "SINGLE_VALUED"},
+      {"name": "owner", "kind": "SINGLE_VALUED"},
+      {"name": "last_modified", "kind": "TIME_SCOPED"},
+      {"name": "shared_with", "kind": "SINGLE_VALUED"},
+      {"name": "size", "kind": "SINGLE_VALUED"}
+    ],
+    "calendar_event": [
+      {"name": "title", "kind": "SINGLE_VALUED"},
+      {"name": "description", "kind": "SINGLE_VALUED"},
+      {"name": "start_time", "kind": "TIME_SCOPED"},
+      {"name": "end_time", "kind": "TIME_SCOPED"},
+      {"name": "location", "kind": "SINGLE_VALUED"},
+      {"name": "participants", "kind": "SET_VALUED"},
+      {"name": "all_day", "kind": "SINGLE_VALUED"},
+      {"name": "status", "kind": "SINGLE_VALUED"}
+    ],
+    "contact": [
+      {"name": "name", "kind": "SINGLE_VALUED"}
+    ],
+    "email": [
+      {"name": "sender", "kind": "SINGLE_VALUED"},
+      {"name": "recipients", "kind": "SET_VALUED"},
+      {"name": "cc", "kind": "SET_VALUED"},
+      {"name": "bcc", "kind": "SET_VALUED"},
+      {"name": "subject", "kind": "SINGLE_VALUED"},
+      {"name": "body", "kind": "SINGLE_VALUED"},
+      {"name": "status", "kind": "SINGLE_VALUED"},
+      {"name": "read", "kind": "SINGLE_VALUED"},
+      {"name": "timestamp", "kind": "TIME_SCOPED"},
+      {"name": "attachments", "kind": "SET_VALUED"}
+    ]
+  },
+  "outcome_labels_present": false,
+  "raw_values_present": false
+}
