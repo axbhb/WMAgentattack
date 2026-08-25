@@ -1,0 +1,23 @@
+{
+  "policy_id": "no_content_checksums_v1",
+  "effective_date": "2026-08-25",
+  "scope": "all WMagentattack experiments and artifacts created on or after the effective date",
+  "content_checksums_enabled": false,
+  "forbidden_operations": [
+    "calculate content checksums",
+    "verify content checksums",
+    "save content checksums in configs, reports, manifests, or ledgers",
+    "use content checksums as an experiment gate"
+  ],
+  "required_provenance": [
+    "git branch and commit",
+    "immutable versioned artifact path",
+    "dataset and config version",
+    "schema version",
+    "row, transition, trajectory, and task counts as applicable",
+    "Slurm job ID and exit state",
+    "exact command and runtime configuration",
+    "test and gate results"
+  ],
+  "historical_artifacts": "Preserve completed archives unchanged. Existing checksum fields are historical records only and must not be regenerated or used by future workflows."
+}
