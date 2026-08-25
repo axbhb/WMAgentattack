@@ -4,12 +4,12 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=02:00:00
-#SBATCH --output=/share/guozhix/WMagentattack-attack-ranking-aug25/logs/%x-%j.out
-#SBATCH --error=/share/guozhix/WMagentattack-attack-ranking-aug25/logs/%x-%j.err
+#SBATCH --output=/share/guozhix/WMagentattack-paired-attack-aug26/logs/%x-%j.out
+#SBATCH --error=/share/guozhix/WMagentattack-paired-attack-aug26/logs/%x-%j.err
 
 set -euo pipefail
 
-ROOT=/share/guozhix/WMagentattack-attack-ranking-aug25
+ROOT=/share/guozhix/WMagentattack-paired-attack-aug26
 PY=/share/guozhix/software/miniconda3/envs/wmagentattack/bin/python
 ARCHIVE=/share/guozhix/wmagentattack/0825/paired_attack_intervention_v34/formal_v1
 PROTOCOL=$ROOT/configs/0825_paired_attack_intervention_v34_protocol.json

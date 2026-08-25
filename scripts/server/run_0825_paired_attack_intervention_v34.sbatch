@@ -6,12 +6,12 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=96G
 #SBATCH --time=08:00:00
-#SBATCH --output=/share/guozhix/WMagentattack-attack-ranking-aug25/logs/%x-%A_%a.out
-#SBATCH --error=/share/guozhix/WMagentattack-attack-ranking-aug25/logs/%x-%A_%a.err
+#SBATCH --output=/share/guozhix/WMagentattack-paired-attack-aug26/logs/%x-%A_%a.out
+#SBATCH --error=/share/guozhix/WMagentattack-paired-attack-aug26/logs/%x-%A_%a.err
 
 set -euo pipefail
 
-ROOT=/share/guozhix/WMagentattack-attack-ranking-aug25
+ROOT=/share/guozhix/WMagentattack-paired-attack-aug26
 PY=/share/guozhix/software/miniconda3/envs/wmagentattack/bin/python
 MODEL=/share/guozhix/.cache/huggingface/models--meta-llama--Meta-Llama-3.1-70B-Instruct/snapshots/1605565b47bb9346c5515c34102e054115b4f98b
 ARCHIVE=/share/guozhix/wmagentattack/0825/paired_attack_intervention_v34/formal_v1
