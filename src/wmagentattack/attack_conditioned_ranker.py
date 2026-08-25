@@ -125,6 +125,40 @@ def forbidden_feature_keys(features: Mapping[str, float]) -> list[str]:
     return sorted(findings)
 
 
+def four_cell_target_from_label_group(
+    label: Mapping[str, Any], *, dirichlet_prior: float = 0.5
+) -> list[float]:
+    """Read the modern target or reconstruct the identical target from counts.
+
+    The July final label-group archive predates the explicit four-cell field,
+    but contains utility, attack, and joint-success binomial sufficient
+    statistics.  Inclusion-exclusion recovers all four empirical cells without
+    reading individual trajectories or changing the v5 Dirichlet prior.
+    """
+
+    probabilities = label.get("joint_outcome_probability_target")
+    if isinstance(probabilities, Mapping):
+        target = [float(probabilities[name]) for name in JOINT_OUTCOME_CLASSES]
+    else:
+        trials = int(label["joint_success_probability_trials"])
+        attack = int(label["attack_probability_successes"])
+        utility = int(label["utility_probability_successes"])
+        joint = int(label["joint_success_probability_successes"])
+        counts = [
+            trials - attack - utility + joint,
+            utility - joint,
+            attack - joint,
+            joint,
+        ]
+        if any(value < 0 for value in counts) or sum(counts) != trials:
+            raise ValueError(f"invalid four-cell sufficient statistics: {counts}")
+        denominator = trials + dirichlet_prior * len(JOINT_OUTCOME_CLASSES)
+        target = [(value + dirichlet_prior) / denominator for value in counts]
+    if not np.isclose(sum(target), 1.0):
+        raise ValueError("four-cell target does not sum to one")
+    return target
+
+
 def align_attack_candidates(
     *,
     manifest_rows: Sequence[Mapping[str, Any]],
@@ -163,12 +197,7 @@ def align_attack_candidates(
         if label is None or not predictions or len(folds) != 1:
             missing.append(row_id)
             continue
-        probabilities = label.get("joint_outcome_probability_target")
-        if not isinstance(probabilities, Mapping):
-            raise ValueError(f"missing four-cell target for {row_id}")
-        target = [float(probabilities[name]) for name in JOINT_OUTCOME_CLASSES]
-        if not np.isclose(sum(target), 1.0):
-            raise ValueError(f"four-cell target does not sum to one: {row_id}")
+        target = four_cell_target_from_label_group(label)
         p11_values = [float(item["joint_p11"]) for item in predictions]
         output.append(
             {

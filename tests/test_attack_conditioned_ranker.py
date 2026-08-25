@@ -7,6 +7,7 @@ from wmagentattack.attack_conditioned_ranker import (
     align_attack_candidates,
     base_distribution_from_p11,
     forbidden_feature_keys,
+    four_cell_target_from_label_group,
     ranking_metrics,
     structured_attack_features,
     within_task_pairs,
@@ -56,6 +57,19 @@ def test_zero_start_ranker_preserves_base_distribution() -> None:
     probability = torch.softmax(model(torch.randn(2, 6), base), dim=1)
     assert torch.allclose(probability, base, atol=1e-6)
     assert torch.allclose(base.sum(dim=1), torch.ones(2))
+
+
+def test_legacy_label_group_reconstructs_exact_four_cells() -> None:
+    target = four_cell_target_from_label_group(
+        {
+            "joint_success_probability_trials": 5,
+            "attack_probability_successes": 3,
+            "utility_probability_successes": 4,
+            "joint_success_probability_successes": 2,
+        }
+    )
+    # Empirical counts are n00=0, n01=2, n10=1, n11=2; alpha=0.5 each.
+    assert target == [0.5 / 7.0, 2.5 / 7.0, 1.5 / 7.0, 2.5 / 7.0]
 
 
 def test_alignment_audit_passes_for_rectangular_fixture() -> None:
