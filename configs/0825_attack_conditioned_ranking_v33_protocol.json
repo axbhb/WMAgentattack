@@ -1,6 +1,6 @@
 {
   "protocol_id": "0825_attack_conditioned_four_cell_ranking_v33",
-  "status": "preregistered_before_results",
+  "status": "completed_scientific_no_go",
   "research_question": "Does a payload-blind structured attacker-action representation, attached as a zero-start residual to the frozen Structured Markov v3 four-cell p11 signal, improve task-disjoint within-task selection of attacks that jointly preserve utility and achieve the attack goal?",
   "scope": {
     "existing_agentdojo_synthetic_traces_only": true,
@@ -103,5 +103,30 @@
     "reports/0825_attack_conditioned_ranking_v33_preregistration.md",
     "reports/0825_attack_conditioned_ranking_v33_results.md",
     "reports/autoresearch_result_ledger.jsonl"
-  ]
+  ],
+  "result": {
+    "job_id": 7331,
+    "decision": "NO_GO_ATTACK_CONDITIONED_RANKING_V33",
+    "archive": "/share/guozhix/wmagentattack/0825/attack_conditioned_ranking_v33/formal_v1",
+    "model_fits": 45,
+    "runtime_failures": 0,
+    "passed_clauses": 8,
+    "total_clauses": 12,
+    "top1_target_p11": {
+      "frozen_v5": 0.2285714285714285,
+      "structured_attack_residual": 0.2571428571428571,
+      "world_attack_residual": 0.26428571428571423,
+      "random_expectation": 0.13714285714285718
+    },
+    "failed_checks": [
+      "four_cell_ce_gain_vs_structured",
+      "p11_brier_noninferiority",
+      "pairwise_gain_vs_v5",
+      "positive_task_fraction"
+    ],
+    "positive_tasks": 4,
+    "negative_tasks": 1,
+    "unchanged_tasks": 15,
+    "interpretation": "The candidate improves top-1 selection in aggregate, but worsens four-cell likelihood and p11 calibration, loses pairwise accuracy to v5, and concentrates all positive task effects in Banking. Redirect to task-disjoint paired attack interventions that vary one causal attack factor at a time."
+  }
 }
