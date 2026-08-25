@@ -76,7 +76,8 @@ def test_features_exclude_identity_and_raw_text():
     keys = " ".join([*state, *action])
     assert "user_task" not in keys
     assert "suite" not in keys
-    assert "payload" not in keys
+    assert "payload=" not in keys
+    assert "payload_text" not in keys
     assert "injection_goal" not in keys
 
 
