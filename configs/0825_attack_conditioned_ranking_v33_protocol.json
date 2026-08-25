@@ -1,0 +1,107 @@
+{
+  "protocol_id": "0825_attack_conditioned_four_cell_ranking_v33",
+  "status": "preregistered_before_results",
+  "research_question": "Does a payload-blind structured attacker-action representation, attached as a zero-start residual to the frozen Structured Markov v3 four-cell p11 signal, improve task-disjoint within-task selection of attacks that jointly preserve utility and achieve the attack goal?",
+  "scope": {
+    "existing_agentdojo_synthetic_traces_only": true,
+    "new_attack_generation": false,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0,
+    "real_external_endpoints": false,
+    "planner_execution": false,
+    "dreamer": false,
+    "large_model_training": false
+  },
+  "data": {
+    "manifest": "/share/guozhix/wmagentattack/0714/agentdojo_v2/manifests/screen_manifest.json",
+    "label_groups": "/share/guozhix/wmagentattack/0714/agentdojo_v2/final_dataset/label_groups.jsonl",
+    "v5_predictions": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/formal_v1/results/predictions.jsonl",
+    "attack_candidates": 400,
+    "tasks": 20,
+    "candidates_per_task": 20,
+    "victim_seeds_per_candidate": 5,
+    "split": "reuse the frozen five-fold task-disjoint confirmation assignment from v5",
+    "primary_target": "Dirichlet-smoothed P(attack_success=1, utility_success=1)",
+    "leakage_policy": "Task, injection, trajectory, payload, raw goal, final outcome, and checker identifiers are excluded from features. Five-seed outcomes are targets only. Frozen v5 scores are out-of-fold for every task."
+  },
+  "candidate_mechanism": {
+    "name": "world_attack_residual",
+    "base": "frozen v5 out-of-fold joint_p11 lifted to a four-cell distribution using the training-fold residual cell prior",
+    "features": [
+      "attack kind and role",
+      "knowledge level",
+      "endpoint policy",
+      "payload position",
+      "trigger stage",
+      "target tool sequence and typed placeholder arguments",
+      "candidate injection vectors",
+      "required depth and segment counts",
+      "independent clean-solvability prior when available"
+    ],
+    "excluded_primary_features": [
+      "attack family/name/variant",
+      "raw payload",
+      "raw injection goal",
+      "suite/task/injection IDs",
+      "outcome labels"
+    ],
+    "objective": "task-balanced four-cell soft cross-entropy plus within-task pairwise p11 ranking",
+    "selection_score": "predicted P(attack_success=1, utility_success=1)"
+  },
+  "controls": [
+    "frozen_v5_p11",
+    "random_within_task_expectation",
+    "structured_attack_residual_without_v5",
+    "world_family_diagnostic_with_family/name/variant"
+  ],
+  "training": {
+    "seeds": [7, 17, 29],
+    "epochs": 300,
+    "learning_rate": 0.002,
+    "weight_decay": 0.001,
+    "hidden_size": 48,
+    "dropout": 0.1,
+    "pairwise_loss_weight": 0.5,
+    "minimum_pair_target_gap": 0.1,
+    "gradient_clip": 5.0,
+    "early_stopping": false,
+    "hyperparameter_search": false
+  },
+  "fixed_budget": {
+    "folds": 5,
+    "arms": 3,
+    "seeds": 3,
+    "model_fits": 45,
+    "gpus": 0,
+    "post_result_reruns": 0,
+    "maximum_wall_time_hours": 2
+  },
+  "acceptance_gate": {
+    "minimum_top1_p11_gain_vs_v5": 0.02,
+    "minimum_pairwise_accuracy_gain_vs_v5": 0.02,
+    "minimum_positive_task_fraction": 0.55,
+    "minimum_positive_seeds": 2,
+    "maximum_p11_brier_degradation": 0.005,
+    "minimum_four_cell_ce_gain_vs_structured": 0.0,
+    "minimum_top1_gain_vs_random": 0.02,
+    "maximum_family_diagnostic_advantage": 0.02,
+    "require_complete_budget": true,
+    "require_zero_new_attack_execution": true
+  },
+  "decision_policy": {
+    "go": "Authorize one separately frozen, equal-budget, short-horizon AgentDojo-sandbox attack-planning pilot on independently clean-solvable tasks. Do not authorize large training or unrestricted attack generation.",
+    "no_go": "Retain v5 and the historical candidate ranker, preserve counterevidence, and redirect to paired attack-intervention data that varies one attack factor at a time before any planner run."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0825/attack_conditioned_ranking_v33/formal_v1",
+  "mutable_files": [
+    "src/wmagentattack/attack_conditioned_ranker.py",
+    "scripts/277_train_attack_conditioned_ranking_v33.py",
+    "scripts/278_gate_attack_conditioned_ranking_v33.py",
+    "scripts/server/run_0825_attack_conditioned_ranking_v33.sbatch",
+    "tests/test_attack_conditioned_ranker.py",
+    "configs/0825_attack_conditioned_ranking_v33_protocol.json",
+    "reports/0825_attack_conditioned_ranking_v33_preregistration.md",
+    "reports/0825_attack_conditioned_ranking_v33_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
