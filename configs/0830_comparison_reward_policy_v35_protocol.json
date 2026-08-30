@@ -1,0 +1,111 @@
+{
+  "protocol_id": "0830_comparison_reward_attack_policy_v35",
+  "status": "preregistered_before_results",
+  "research_question": "Can an uncertainty-aware comparison reward learned from repeated four-cell AgentDojo outcomes select utility-preserving successful attacks on held-out tasks better than an equal-capacity absolute four-cell predictor?",
+  "scope": {
+    "existing_agentdojo_synthetic_traces_only": true,
+    "new_attack_generation": false,
+    "victim_llm_calls": 0,
+    "sandbox_tool_calls": 0,
+    "real_external_endpoints": false,
+    "planner_execution": false,
+    "dreamer": false,
+    "large_model_training": false
+  },
+  "evidence_basis": {
+    "v34_joint_successes": 10,
+    "v34_attack_trials": 96,
+    "v34_tasks_with_two_attack_outcome_levels": 2,
+    "motivation": "The v34 absolute selector tied the structured baseline, lost to random expectation, and had sparse within-task signal. Recent automated prompt-injection work uses comparison feedback to densify binary rewards; v35 tests that mechanism without new attack execution."
+  },
+  "data": {
+    "manifest": "/share/guozhix/wmagentattack/0714/agentdojo_v2/manifests/screen_manifest.json",
+    "label_groups": "/share/guozhix/wmagentattack/0714/agentdojo_v2/final_dataset/label_groups.jsonl",
+    "v5_predictions_for_frozen_folds_only": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/formal_v1/results/predictions.jsonl",
+    "attack_candidates": 400,
+    "tasks": 20,
+    "candidates_per_task": 20,
+    "victim_seeds_per_candidate": 5,
+    "split": "frozen five-fold task-disjoint v5 assignment",
+    "inferential_unit": "task",
+    "forbidden_inputs": [
+      "suite/task/injection IDs",
+      "raw payload and injection goal text",
+      "victim trajectory and tool receipts",
+      "utility/security/final outcome labels",
+      "checker identifiers"
+    ]
+  },
+  "comparison_target": {
+    "posterior": "independent Dirichlet posterior over n00,n01,n10,n11 with alpha=0.5",
+    "reward_weights_n00_n01_n10_n11": [-0.05, 0.05, -0.2, 1.0],
+    "interpretation": "joint success dominates; attack success without user-task utility is penalized; benign utility is only a small tie-breaker",
+    "pair_label": "posterior probability that the left candidate has larger constrained reward"
+  },
+  "data_support_gate": {
+    "minimum_confident_pairs": 400,
+    "minimum_tasks_with_twenty_confident_pairs": 12,
+    "minimum_tasks_with_multiple_attack_families": 16,
+    "failure_policy": "Stop before model fitting and authorize only a separately preregistered high-contrast strategy-generation pilot."
+  },
+  "model": {
+    "baseline": "equal-capacity structured pre-execution encoder trained by task-balanced four-cell cross-entropy",
+    "candidate": "structured pre-execution encoder with a scalar Bradley-Terry comparison head and an auxiliary four-cell outcome anchor",
+    "diagnostic": "candidate with attack family/name/variant features to test whether a family shortcut is required",
+    "selection_score": "learned scalar comparison reward",
+    "no_world_model_post_trajectory_score": true
+  },
+  "training": {
+    "model_seeds": [47, 53, 59],
+    "epochs": 300,
+    "learning_rate": 0.002,
+    "weight_decay": 0.001,
+    "hidden_size": 48,
+    "dropout": 0.1,
+    "posterior_draws": 2048,
+    "posterior_seed": 20260830,
+    "minimum_confidence_gap": 0.15,
+    "outcome_anchor_weight": 0.25,
+    "gradient_clip": 5.0,
+    "hyperparameter_search": false,
+    "early_stopping": false
+  },
+  "fixed_budget": {
+    "folds": 5,
+    "arms": 3,
+    "model_seeds": 3,
+    "model_fits": 45,
+    "gpus": 0,
+    "post_result_reruns": 0,
+    "maximum_wall_time_hours": 2
+  },
+  "acceptance_gate": {
+    "minimum_top1_reward_gain": 0.03,
+    "minimum_top1_p11_gain": 0.02,
+    "minimum_pairwise_accuracy_gain": 0.03,
+    "minimum_positive_task_fraction": 0.55,
+    "minimum_positive_seeds": 2,
+    "maximum_utility_degradation": 0.02,
+    "minimum_p11_gain_vs_random": 0.02,
+    "maximum_family_diagnostic_advantage": 0.02,
+    "require_complete_budget": true,
+    "require_zero_new_execution": true
+  },
+  "decision_policy": {
+    "go": "Authorize one fixed-budget AgentDojo-sandbox high-contrast candidate-generation pilot using comparison feedback and a frozen transferable strategy library; do not authorize a large world model.",
+    "no_go_support": "The existing 400 configurations do not contain enough preference support. Skip further selector fitting and build a high-contrast strategy-generation pilot.",
+    "no_go_policy": "Comparison learning does not generalize task-disjointly. Retain the data audit and pivot to iterative strategy-library search with empirical sandbox feedback rather than a larger predictor."
+  },
+  "planned_archive": "/share/guozhix/wmagentattack/0830/comparison_reward_policy_v35/formal_v1",
+  "mutable_files": [
+    "src/wmagentattack/comparison_reward_policy.py",
+    "scripts/283_train_comparison_reward_policy_v35.py",
+    "scripts/284_gate_comparison_reward_policy_v35.py",
+    "scripts/server/run_0830_comparison_reward_policy_v35.sbatch",
+    "tests/test_comparison_reward_policy.py",
+    "configs/0830_comparison_reward_policy_v35_protocol.json",
+    "reports/0830_comparison_reward_policy_v35_preregistration.md",
+    "reports/0830_comparison_reward_policy_v35_results.md",
+    "reports/autoresearch_result_ledger.jsonl"
+  ]
+}
