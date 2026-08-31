@@ -1,9 +1,24 @@
 {
   "protocol_id": "0831_protocol_recovery_v38_v40",
-  "status": "v38_viability_passed_v39_submitted",
+  "status": "completed_v39_no_go_v40_not_authorized",
   "execution_records": {
     "v38": {"decision": "GO_PARSER_VIABILITY_V38", "candidate_commit": "86cff9e", "new_valid_call_episodes": 2, "new_validated_calls": 2, "legacy_unvalidated_recoveries": 8, "strict_changes": 0, "successful_toolfree_changes": 0, "raw_mismatches": 0, "model_generations": 0, "tool_executions": 0, "remote_tests_passed": 42},
-    "v39": {"job_id": "7565", "implementation_commit": "ad3cecb", "submitted_at_utc": "2026-08-31T13:03:47.479216+00:00", "remote_tests_passed": 55, "local_synthetic_tests_passed": 31, "decision": "PENDING", "receipt": "/share/guozhix/wmagentattack/0831/protocol_recovery_v39/formal_v1/submission.json"}
+    "v39": {
+      "job_id": "7565", "implementation_commit": "ad3cecb", "audit_commit": "f3e6a24",
+      "submitted_at_utc": "2026-08-31T13:03:47.479216+00:00", "started_at_utc": "2026-08-31T13:32:00+00:00", "completed_at_utc": "2026-08-31T15:07:41+00:00",
+      "remote_tests_passed": 55, "closeout_remote_tests_passed": 55, "local_synthetic_tests_passed": 31,
+      "decision": "NO_GO_PROTOCOL_RECOVERY", "scientific_result": true, "selected_arm": null,
+      "completed_episodes": 180, "raw_traces": 180, "diagnostics": 180, "runtime_failures": 0, "blocked_network_attempts": 0,
+      "actual_gpu": 0, "slurm_exit_code": null, "start_to_complete_seconds": 5741,
+      "independent_gate_recomputation_equal": true, "independent_exact_pvalue_enumeration_equal": true,
+      "strict": {"successes": 32, "episodes": 60, "stable_tasks": 10, "generation_calls": 152, "output_tokens": 9589, "zero_call_failures": 21, "failures_with_parsed_calls": 7},
+      "syntax": {"successes": 34, "episodes": 60, "stable_tasks": 11, "improved_tasks": 2, "task_signflip_p": 0.25, "generation_calls": 154, "output_tokens": 9680, "zero_call_failures": 19},
+      "syntax_retry": {"successes": 38, "episodes": 60, "stable_tasks": 12, "improved_tasks": 4, "task_signflip_p": 0.0625, "generation_calls": 229, "output_tokens": 13490, "extra_retry_generations": 17, "zero_call_failures": 5, "failures_with_parsed_calls": 17, "tool_free_control_utility_regressions": 0, "travel_stable_tasks": 0},
+      "receipt": "/share/guozhix/wmagentattack/0831/protocol_recovery_v39/formal_v1/submission.json",
+      "closeout_audit": "/share/guozhix/wmagentattack/0831/protocol_recovery_v39/formal_v1/posthoc_closeout_audit.json"
+    },
+    "v40": {"decision": "NOT_AUTHORIZED", "job_id": null, "episodes_run": 0, "reason": "Neither v39 candidate passed all frozen acceptance clauses."},
+    "cycle": {"new_clean_episodes": 180, "new_attack_episodes": 0, "model_fits": 0, "post_result_reruns": 0}
   },
   "scope": "AgentDojo stock synthetic clean-only; no attacks, no model fitting, no real endpoints",
   "parent_protocol": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1/preregistered_protocol.json",
