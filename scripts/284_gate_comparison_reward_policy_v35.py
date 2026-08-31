@@ -27,7 +27,8 @@ def _aggregate(rows: list[dict], arm: str) -> list[dict]:
         if row["arm"] == arm:
             grouped[str(row["row_id"])].append(row)
     output = []
-    for values in grouped.values():
+    for row_id in sorted(grouped):
+        values = grouped[row_id]
         first = values[0]
         output.append(
             {
@@ -53,6 +54,32 @@ def _aggregate(rows: list[dict], arm: str) -> list[dict]:
     return output
 
 
+def _validate_predictions(rows: list[dict], protocol: dict) -> None:
+    expected_arms = {"absolute_four_cell", "comparison_outcome_anchored", "family_comparison_diagnostic"}
+    expected_seeds = set(protocol["training"]["model_seeds"])
+    keys = [(row["arm"], int(row["seed"]), row["row_id"]) for row in rows]
+    if len(keys) != 400 * len(expected_arms) * len(expected_seeds) or len(set(keys)) != len(keys):
+        raise ValueError("incomplete or duplicate prediction matrix")
+    common_ids = None
+    targets = {}
+    for arm in expected_arms:
+        for seed in expected_seeds:
+            cell = [row for row in rows if row["arm"] == arm and int(row["seed"]) == seed]
+            ids = {row["row_id"] for row in cell}
+            if len(ids) != 400 or len({row["task_name"] for row in cell}) != 20:
+                raise ValueError("incomplete arm/seed task set")
+            if common_ids is not None and common_ids != ids:
+                raise ValueError("arm/seed row sets differ")
+            common_ids = ids
+            for row in cell:
+                if not np.isfinite([row["predicted_score"], row["predicted_p11"], row["predicted_utility"]]).all():
+                    raise ValueError("nonfinite prediction")
+                target = (row["task_name"], row["fold"], tuple(row["counts"]), tuple(row["target"]))
+                if row["row_id"] in targets and targets[row["row_id"]] != target:
+                    raise ValueError("cross-arm target metadata mismatch")
+                targets[row["row_id"]] = target
+
+
 def _selection_by_task(rows: list[dict], key: str) -> dict[str, dict]:
     grouped: dict[str, list[dict]] = defaultdict(list)
     for row in rows:
@@ -74,13 +101,18 @@ def main() -> None:
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     support = json.loads(args.support_audit.read_text(encoding="utf-8"))
     runtime = json.loads(args.run_metrics.read_text(encoding="utf-8"))
+    if runtime["runtime_failures"] != 0 or any(
+        runtime[key] != 0 for key in ("attack_examples_generated", "victim_llm_calls", "sandbox_tool_calls", "real_external_endpoint_calls")
+    ):
+        raise ValueError("runtime/scope integrity failure is not a scientific gate result")
     if not support["passed"]:
         output = {
             "decision": "NO_GO_COMPARISON_DATA_SUPPORT_V35",
             "data_support": support,
             "checks": {"data_support_passed": False, "zero_runtime_failures": runtime["runtime_failures"] == 0},
             "authorization": {
-                "high_contrast_strategy_generation_pilot": True,
+                "preregister_high_contrast_pilot": True,
+                "attack_execution_before_independent_clean_gate": False,
                 "online_attack_policy_training": False,
                 "large_world_model_training": False,
             },
@@ -91,6 +123,7 @@ def main() -> None:
         return
 
     raw = _read_jsonl(args.predictions)
+    _validate_predictions(raw, protocol)
     arms = {
         arm: _aggregate(raw, arm)
         for arm in ("absolute_four_cell", "comparison_outcome_anchored", "family_comparison_diagnostic")
@@ -123,6 +156,8 @@ def main() -> None:
         baseline_seed = [
             row for row in raw if row["arm"] == "absolute_four_cell" and int(row["seed"]) == int(seed)
         ]
+        candidate_seed.sort(key=lambda row: row["row_id"])
+        baseline_seed.sort(key=lambda row: row["row_id"])
         candidate_metric = preference_metrics(candidate_seed, score_key="predicted_score", pairs=pairs)
         baseline_metric = preference_metrics(baseline_seed, score_key="predicted_score", pairs=pairs)
         seed_results.append(
@@ -164,7 +199,8 @@ def main() -> None:
         "task_reward_deltas": task_deltas,
         "seed_results": seed_results,
         "authorization": {
-            "high_contrast_strategy_generation_pilot": True,
+            "preregister_high_contrast_pilot": True,
+            "attack_execution_before_independent_clean_gate": False,
             "online_comparison_attack_pilot": decision.startswith("GO_"),
             "large_world_model_training": False,
         },

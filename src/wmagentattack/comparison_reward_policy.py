@@ -35,7 +35,7 @@ def four_cell_counts_from_label_group(label: Mapping[str, Any]) -> list[int]:
     utility = int(label["utility_probability_successes"])
     joint = int(label["joint_success_probability_successes"])
     counts = [trials - attack - utility + joint, utility - joint, attack - joint, joint]
-    if any(value < 0 for value in counts) or sum(counts) != trials:
+    if trials <= 0 or any(value < 0 for value in counts) or sum(counts) != trials:
         raise ValueError(f"invalid four-cell sufficient statistics: {counts}")
     return counts
 
@@ -98,6 +98,12 @@ def align_preference_candidates(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Align 400 actions with repeated outcomes and frozen task folds."""
 
+    manifest_ids = [str(row["row_id"]) for row in manifest_rows]
+    attack_labels = [row for row in label_groups if str(row.get("source_kind")) == "attack"]
+    if len(set(manifest_ids)) != len(manifest_ids):
+        raise ValueError("duplicate manifest row_id")
+    if len({str(row["row_id"]) for row in attack_labels}) != len(attack_labels):
+        raise ValueError("duplicate attack label row_id")
     labels = {
         str(row["row_id"]): dict(row)
         for row in label_groups
@@ -138,6 +144,13 @@ def align_preference_candidates(
         "aligned_candidates_400": len(output) == 400,
         "tasks_20": len(per_task) == 20,
         "twenty_candidates_per_task": set(per_task.values()) == {20},
+        "five_trials_per_candidate": all(sum(row["counts"]) == 5 for row in output),
+        "finite_valid_targets": all(
+            np.isfinite(row["target"]).all()
+            and np.all(np.asarray(row["target"]) >= 0)
+            and np.allclose(row["target"], (np.asarray(row["counts"]) + 0.5) / 7.0)
+            for row in output
+        ),
         "five_task_folds": set(int(value) for value in fold_by_task.values()) == set(range(5)),
         "features_outcome_blind": all(not forbidden_feature_keys(row["features"]) for row in output),
         "zero_missing_alignments": not missing,
@@ -187,13 +200,16 @@ def build_preference_pairs(
                     (str(rows[left]["attack_family"]), str(rows[right]["attack_family"]))
                 )
         task_pair_counts[task] = kept
+    confidence_by_task: dict[str, float] = defaultdict(float)
+    for _, _, _, confidence, task in pairs:
+        confidence_by_task[task] += confidence
     numeric = np.asarray(
         [
             (
                 left,
                 right,
                 probability,
-                confidence / max(1, task_pair_counts[task]),
+                confidence / confidence_by_task[task],
             )
             for left, right, probability, confidence, task in pairs
         ],

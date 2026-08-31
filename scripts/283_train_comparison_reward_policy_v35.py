@@ -182,6 +182,8 @@ def main() -> None:
     parser.add_argument("--v5-predictions", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
+    if args.output_dir.exists() and any(args.output_dir.iterdir()):
+        raise FileExistsError("v35 output directory is not empty; refusing to overwrite a prior attempt")
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     if protocol["status"] != "preregistered_before_results":
         raise ValueError("v35 protocol is not frozen")

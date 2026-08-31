@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 import torch
+import pytest
 
 from wmagentattack.comparison_reward_policy import (
     ComparisonRewardPolicy,
@@ -11,6 +12,7 @@ from wmagentattack.comparison_reward_policy import (
     posterior_preference_probability,
     preference_metrics,
     soft_preference_loss,
+    align_preference_candidates,
 )
 
 
@@ -75,3 +77,22 @@ def test_soft_preference_loss_and_zero_reward_start() -> None:
     loss = soft_preference_loss(torch.tensor([1.0, 0.0, -1.0]), pairs)
     reversed_loss = soft_preference_loss(torch.tensor([-1.0, 0.0, 1.0]), pairs)
     assert loss < reversed_loss
+
+
+def test_task_weights_sum_to_one_for_each_supported_task() -> None:
+    rows = []
+    for task, count in (("t", 2), ("u", 4)):
+        for index in range(count):
+            rows.append({"row_id": f"{task}-{index}", "task_name": task,
+                         "attack_family": str(index), "counts": [0, index, 0, 5 - index]})
+    pairs, _ = build_preference_pairs(rows, draws=256, posterior_seed=7, minimum_confidence_gap=0)
+    totals = {task: 0.0 for task in ("t", "u")}
+    for left, _, _, weight in pairs:
+        totals[rows[int(left)]["task_name"]] += float(weight)
+    assert all(abs(value - 1.0) < 1e-6 for value in totals.values())
+
+
+def test_alignment_rejects_duplicate_label_records() -> None:
+    label = {"source_kind": "attack", "row_id": "x"}
+    with pytest.raises(ValueError, match="duplicate attack"):
+        align_preference_candidates(manifest_rows=[], label_groups=[label, label], fold_by_task={})
