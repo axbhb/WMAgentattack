@@ -1,6 +1,7 @@
 {
   "protocol_id": "0831_fixed_goal_identifiability_v36",
-  "status": "preregistered_before_v36_metrics",
+  "status": "completed_scientific_data_no_go",
+  "result": {"job_id": 7559, "candidate_commit": "08061c0", "decision": "NO_GO_FIXED_GOAL_SUPPORT_V36", "elapsed_seconds": 11, "exit_code": "0:0", "tests_passed": 17, "informative_tasks": 9, "informative_goals": 29, "within_goal_reward_pairs": 267, "cross_goal_reward_pairs": 1000, "within_goal_p11_pairs": 209, "feature_collisions": 0, "informative_suites": 2, "task_macro_uniform_p11": 0.092, "task_macro_oracle_p11": 0.2325, "model_fits": 0},
   "question": "Does the existing archive contain identifiable strategy differences for a fixed user task AND injection goal, rather than differences between goal difficulties?",
   "scope": "read-only analysis of existing AgentDojo synthetic outcomes; no fitting, generation, victim calls or tool execution",
   "data": {
