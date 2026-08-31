@@ -1,0 +1,36 @@
+{
+  "protocol_id": "0831_protocol_recovery_v38_v40",
+  "status": "preregistered_before_new_metrics",
+  "scope": "AgentDojo stock synthetic clean-only; no attacks, no model fitting, no real endpoints",
+  "parent_protocol": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1/preregistered_protocol.json",
+  "task_model_contract": "Retain all 20 v37 tasks and its entire model configuration, base prompt and function-tags template. Never remove a task after outcomes. No tokenizer/model/prompt/max-token changes.",
+  "arms": {"strict": "unchanged historical strict parser", "syntax": "strict first; explicit whole-message serialization recovery with runtime argument validation", "syntax_retry": "syntax plus the unchanged first-turn tool-intent heuristic and one correction generation"},
+  "mutable_files": ["src/wmagentattack/protocol_recovery.py", "src/wmagentattack/protocol_recovery_adapter.py", "src/wmagentattack/protocol_recovery_eval.py", "scripts/288_audit_protocol_recovery_v38.py", "scripts/289_run_protocol_recovery_v39_v40.py", "tests/test_protocol_recovery.py", "tests/test_protocol_recovery_eval.py", "scripts/server/run_0831_protocol_recovery_v39.sbatch", "scripts/server/run_0831_protocol_recovery_v40.sbatch"],
+  "v38": {
+    "archive": "/share/guozhix/wmagentattack/0831/protocol_recovery_v38/formal_v1",
+    "data": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1",
+    "budget": "one read-only replay of all assistant messages in 60 existing traces; no calls or generations",
+    "gate": {"minimum_new_valid_call_episodes": 1, "maximum_strict_call_changes": 0, "maximum_changes_to_successful_tool_free_episodes": 0},
+    "interpretation": "Implementation viability only, not a clean-utility effect or fresh confirmation. Known historical outcomes must not be used to tune the grammar after replay."
+  },
+  "v39": {
+    "archive": "/share/guozhix/wmagentattack/0831/protocol_recovery_v39/formal_v1",
+    "seeds": [631, 641, 647], "arms": ["strict", "syntax", "syntax_retry"],
+    "episodes": 180, "gpu_jobs": 1, "gpus": 1, "maximum_hours": 6,
+    "gate": {"minimum_gain": 0.1, "minimum_improved_tasks": 6, "maximum_task_signflip_p": 0.025, "maximum_suite_degradation": 0.1, "maximum_regressions_on_successful_tool_free_strict": 0, "minimum_stable_tasks": 12, "minimum_suites_with_two_stable_tasks": 3},
+    "selection": "Choose syntax if it passes; otherwise syntax_retry if it passes; otherwise NO_GO. No tuning or resubmission."
+  },
+  "v40": {
+    "archive": "/share/guozhix/wmagentattack/0831/protocol_recovery_v40/formal_v1",
+    "seeds": [661, 673, 677], "arms": "strict and the unique frozen v39 passing selection",
+    "episodes": 120, "gpu_jobs": 1, "gpus": 1, "maximum_hours": 4,
+    "gate": {"minimum_gain": 0.1, "minimum_improved_tasks": 6, "maximum_task_signflip_p": 0.05, "maximum_suite_degradation": 0.1, "maximum_regressions_on_successful_tool_free_strict": 0, "minimum_stable_tasks": 12, "minimum_suites_with_two_stable_tasks": 3, "minimum_stable_task_overlap_with_v39": 10}
+  },
+  "integrity": ["all frozen episode keys and raw traces complete", "zero runtime failures and attempted Python network calls", "actual task-level seed shared across arms", "identical first input token arrays and first completions across arms per task/seed", "at most one extra retry generation in syntax_retry", "all control and candidate tasks retained"],
+  "seed_allocation": "run_seed * 10000 + frozen v37 task index * 100; independent of arm; rotate arm execution order by task and seed index",
+  "metrics": ["clean success task macro", "task-level exact one-sided paired sign-flip test", "stable tasks >=2/3", "per-suite utility", "zero-call failures", "valid tool-free control regressions", "generation calls and output tokens including retry cost"],
+  "statistics": "Inferential units are 20 tasks, not 60 independent Bernoulli episodes. V39 applies p<=0.025 for two comparisons; v40 is independent-seed, same-task confirmation with p<=0.05. This does not establish unseen-task generalization.",
+  "stop_policy": "At any invalid or NO_GO stage, retain evidence and stop downstream stages without retries or relaxing thresholds. End automation after v40 conclusion. A clean GO does not authorize attacks or large world-model training in this cycle.",
+  "maximum_new_clean_episodes": 300,
+  "post_result_reruns": 0
+}
