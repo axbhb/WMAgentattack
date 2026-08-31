@@ -18,8 +18,14 @@ prevent duplicate submissions and silent reruns. All actual data stay remote.
 Archive: `/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1`.
 Worktree: `/share/guozhix/WMagentattack-clean-pairing-aug31`.
 
-The existing WMagentattack heartbeat has been updated to monitor this job and
-continue only the next gate-authorized, separately preregistered sandbox pilot.
+The old WMagentattack automation no longer existed, so a new active heartbeat
+`wmagentattack-v37` was created to check this job every 20 minutes and continue
+only the next gate-authorized, separately preregistered sandbox pilot.
 No architectural improvement has been demonstrated in v35/v36: those rounds
 identified coverage/goal-comparison problems before fitting. Structured Markov
 remains the retained baseline.
+
+Local execution note: PowerShell currently fails at startup with a CET error;
+use `cmd.exe` with `login=false` for the existing Paramiko helpers. Remote
+commands are saved in `.codex_tmp/v37_monitor.sh`, with pending-job-safe log
+checks. This helper contains no experiment submissions.
