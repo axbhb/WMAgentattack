@@ -1,8 +1,9 @@
 {
   "protocol_id": "0831_protocol_recovery_v38_v40",
-  "status": "v38_viability_passed_v39_not_submitted",
+  "status": "v38_viability_passed_v39_submitted",
   "execution_records": {
-    "v38": {"decision": "GO_PARSER_VIABILITY_V38", "candidate_commit": "86cff9e", "new_valid_call_episodes": 2, "new_validated_calls": 2, "legacy_unvalidated_recoveries": 8, "strict_changes": 0, "successful_toolfree_changes": 0, "raw_mismatches": 0, "model_generations": 0, "tool_executions": 0, "remote_tests_passed": 42}
+    "v38": {"decision": "GO_PARSER_VIABILITY_V38", "candidate_commit": "86cff9e", "new_valid_call_episodes": 2, "new_validated_calls": 2, "legacy_unvalidated_recoveries": 8, "strict_changes": 0, "successful_toolfree_changes": 0, "raw_mismatches": 0, "model_generations": 0, "tool_executions": 0, "remote_tests_passed": 42},
+    "v39": {"job_id": "7565", "implementation_commit": "ad3cecb", "submitted_at_utc": "2026-08-31T13:03:47.479216+00:00", "remote_tests_passed": 55, "local_synthetic_tests_passed": 31, "decision": "PENDING", "receipt": "/share/guozhix/wmagentattack/0831/protocol_recovery_v39/formal_v1/submission.json"}
   },
   "scope": "AgentDojo stock synthetic clean-only; no attacks, no model fitting, no real endpoints",
   "parent_protocol": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1/preregistered_protocol.json",

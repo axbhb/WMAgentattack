@@ -8,7 +8,9 @@ Counterevidence: the historical permissive parser recognized eight additional un
 
 Archive: `/share/guozhix/wmagentattack/0831/protocol_recovery_v38/formal_v1`, including the original preregistration, submission receipt and gate. No new content checksums are used.
 
-## v39: preregistered, awaiting submission
+## v39: submitted, scientific result pending
+
+Submitted exactly one Slurm job **7565** at 2026-08-31 13:03:47 UTC. The submission receipt records implementation commit `ad3cecb`, 180 episodes, one GPU and a six-hour cap. All **55 remote tests** passed before submission; 31 lightweight synthetic fixture tests also passed locally. The first queue snapshot was PENDING; that is not evidence of model loading or a completed result. No v40 job has been submitted. The original v38 archived protocol was copied to the v39 archive unchanged; execution metadata in the repository config does not revise its scientific contract.
 
 Run 20 retained tasks × 3 new seeds × 3 arms = 180 clean episodes on one GPU with one Llama-3.1-70B-Instruct 4bit model load. Compare unchanged strict parsing, validated syntax recovery, and syntax recovery plus the unchanged one-shot first-turn intention correction. Preserve all original prompts and model settings. Share actual task/seed RNG allocation; verify first prompt tokens and first completions exactly match across arms.
 
