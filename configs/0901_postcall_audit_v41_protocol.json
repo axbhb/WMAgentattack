@@ -1,0 +1,12 @@
+{
+  "protocol_id": "0901_postcall_audit_v41",
+  "source_archive": "/share/guozhix/wmagentattack/0831/protocol_recovery_v39/formal_v1",
+  "archive": "/share/guozhix/wmagentattack/0901/postcall_audit_v41/formal_v1",
+  "scope": "Single remote read-only audit of all 180 v39 clean traces and diagnostic records, including all successful controls. No model generation, tool execution, training, attacks or real endpoints.",
+  "known_before_audit": "V39 syntax_retry had 17 failures despite parsed calls and 5 zero-call failures; aggregate outcomes are already known. This is exploratory diagnosis, never independent confirmation.",
+  "budget": {"existing_traces": 180, "model_generations": 0, "tool_executions": 0, "audit_runs": 1, "maximum_following_new_clean_episodes_this_cycle": 360},
+  "observations": ["explicit nonempty tool.error fields", "terminal unparsed function marker after at least one tool result", "terminal tool-intention wording after tool results using the unchanged historical heuristic", "consecutive repeated identical function and arguments", "recorded input tokens at cap 8192", "recorded output tokens at cap 256"],
+  "interpretation": "Nonexclusive observable indicators, not mutually exclusive proven causes. Token cap hits are not proof of truncation; calls with no error are not proof of correct reasoning. Preserve other/unknown and inspect success counterexamples. Never read expert solutions or rerun evaluators to tune a repair.",
+  "integrity": "180 distinct row/raw/diagnostic mappings; original utility/status and parsed counts agree; archive intact. Outcomes are used for reporting groups only, never for an online repair trigger.",
+  "next_step": "After this descriptive audit, select one locally observable mechanism and separately preregister new-seed end-to-end clean controls, including a matched extra-generation control. Maximum 240 screening plus 120 conditional confirmation episodes; no automatic attacks or world-model fitting. Stop the fixed cycle on integrity failure or scientific NO_GO without changing thresholds."
+}
