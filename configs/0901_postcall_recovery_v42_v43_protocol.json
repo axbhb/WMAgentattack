@@ -1,7 +1,10 @@
 {
   "protocol_id": "0901_postcall_recovery_v42_v43",
-  "status": "preregistered_before_fresh_results",
-  "execution_records": {"pre_submission": {"tested_candidate_commit": "4265e82", "remote_tests_passed": 74, "local_synthetic_tests_passed": 43}},
+  "status": "v41_complete_v42_submitted",
+  "execution_records": {
+    "pre_submission": {"tested_candidate_commit": "4265e82", "remote_tests_passed": 74, "local_synthetic_tests_passed": 43},
+    "v42": {"job_id": "7567", "implementation_commit": "4958f9b", "submitted_at_utc": "2026-08-31T16:17:32.045814+00:00", "decision": "PENDING", "receipt": "/share/guozhix/wmagentattack/0901/postcall_recovery_v42/formal_v1/submission.json"}
+  },
   "parent_protocol": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1/preregistered_protocol.json",
   "audit_archive": "/share/guozhix/wmagentattack/0901/postcall_audit_v41/formal_v1",
   "scope": "Stock AgentDojo v1.2.2 in-memory clean sandbox, no attacks/model fitting/real endpoints. Retain all 20 familiar tasks and complete v37 model contract. V39 is development evidence; no claim of unseen-task validation.",
