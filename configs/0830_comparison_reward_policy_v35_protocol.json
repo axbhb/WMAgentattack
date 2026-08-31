@@ -1,6 +1,22 @@
 {
   "protocol_id": "0830_comparison_reward_attack_policy_v35",
-  "status": "preregistered_before_results",
+  "status": "completed_scientific_data_no_go",
+  "result": {
+    "job_id": 7558,
+    "slurm_state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:00:21",
+    "decision": "NO_GO_COMPARISON_DATA_SUPPORT_V35",
+    "confident_pairs": 1267,
+    "tasks_with_twenty_confident_pairs": 11,
+    "required_tasks_with_twenty_confident_pairs": 12,
+    "tasks_with_multiple_attack_families": 16,
+    "model_fits": 0,
+    "runtime_failures": 0,
+    "remote_tests": "11 passed",
+    "archive": "/share/guozhix/wmagentattack/0830/comparison_reward_policy_v35/formal_v1",
+    "interpretation": "The global pair count passes but coverage fails. Do not fit or lower the threshold. Audit fixed-goal contrast before collecting fresh clean-gated data."
+  },
   "research_question": "Can an uncertainty-aware comparison reward learned from repeated four-cell AgentDojo outcomes select utility-preserving successful attacks on held-out tasks better than an equal-capacity absolute four-cell predictor?",
   "scope": {
     "existing_agentdojo_synthetic_traces_only": true,
