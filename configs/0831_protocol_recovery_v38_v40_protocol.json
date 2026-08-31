@@ -1,6 +1,9 @@
 {
   "protocol_id": "0831_protocol_recovery_v38_v40",
-  "status": "preregistered_before_new_metrics",
+  "status": "v38_viability_passed_v39_not_submitted",
+  "execution_records": {
+    "v38": {"decision": "GO_PARSER_VIABILITY_V38", "candidate_commit": "86cff9e", "new_valid_call_episodes": 2, "new_validated_calls": 2, "legacy_unvalidated_recoveries": 8, "strict_changes": 0, "successful_toolfree_changes": 0, "raw_mismatches": 0, "model_generations": 0, "tool_executions": 0, "remote_tests_passed": 42}
+  },
   "scope": "AgentDojo stock synthetic clean-only; no attacks, no model fitting, no real endpoints",
   "parent_protocol": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1/preregistered_protocol.json",
   "task_model_contract": "Retain all 20 v37 tasks and its entire model configuration, base prompt and function-tags template. Never remove a task after outcomes. No tokenizer/model/prompt/max-token changes.",
