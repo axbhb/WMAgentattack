@@ -1,0 +1,32 @@
+{
+  "protocol_id": "0831_fixed_goal_identifiability_v36",
+  "status": "preregistered_before_v36_metrics",
+  "question": "Does the existing archive contain identifiable strategy differences for a fixed user task AND injection goal, rather than differences between goal difficulties?",
+  "scope": "read-only analysis of existing AgentDojo synthetic outcomes; no fitting, generation, victim calls or tool execution",
+  "data": {
+    "manifest": "/share/guozhix/wmagentattack/0714/agentdojo_v2/manifests/screen_manifest.json",
+    "labels": "/share/guozhix/wmagentattack/0714/agentdojo_v2/final_dataset/label_groups.jsonl",
+    "candidates": 400,
+    "tasks": 20,
+    "goals_per_task": 4,
+    "variants_per_goal": 5,
+    "trials_per_candidate": 5
+  },
+  "posterior": {"draws": 2048, "seed": 20260830, "confidence_gap": 0.15, "dirichlet_prior": 0.5},
+  "primary_signal": "A fixed-goal block is informative only if it has a non-tied empirical p11 pair with posterior p11 superiority confidence gap >=0.15. Reward-only variation is reported separately.",
+  "metrics": ["within_goal_p11_support", "within_vs_cross_goal_reward_pairs", "task_macro_oracle_minus_random_p11", "contrasting_pair_feature_collision", "suite_coverage"],
+  "gate": {
+    "minimum_informative_tasks": 12,
+    "minimum_informative_goals": 24,
+    "minimum_task_macro_oracle_random_p11_gap": 0.05,
+    "maximum_feature_collision_fraction": 0.25,
+    "minimum_suites_with_two_informative_tasks": 3
+  },
+  "budget": {"analysis_runs": 1, "maximum_minutes": 15, "cpus": 2, "gpus": 0, "model_fits": 0, "new_episodes": 0, "post_result_reruns": 0},
+  "interpretation": "Descriptive audit of previously inspected legacy data, not independent confirmation. The oracle is an optimistic in-sample ceiling, not attainable held-out performance. Aggregate counts cannot establish actual seed pairing or causal effects.",
+  "decision_policy": {
+    "go": "May preregister a fixed-goal task-disjoint selector experiment; not evidence that a selector already improved.",
+    "no_go": "Do not fit on weak/mixed-goal labels. Preregister a fresh clean-only eligibility and pairing-integrity pilot before any new attacks."
+  },
+  "archive": "/share/guozhix/wmagentattack/0831/fixed_goal_identifiability_v36/formal_v1"
+}
