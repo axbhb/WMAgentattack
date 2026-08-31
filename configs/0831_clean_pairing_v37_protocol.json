@@ -1,6 +1,7 @@
 {
   "protocol_id": "0831_clean_pairing_v37",
   "status": "preregistered_before_v37_outcomes",
+  "execution": {"job_id": 7562, "candidate_commit": "ea4b6e4", "state_at_20260831_0733_utc": "PENDING (Resources)", "tests_passed": 23, "remote_registration_preflight": "20 tasks,60 seed assignments; no model loaded", "frozen_execution_protocol": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1/preregistered_protocol.json"},
   "question": "Under fresh random draws, which of the existing twenty tasks remain clean-solvable, and can runtime pairing be made independent of variant IDs?",
   "scope": "AgentDojo v1.2.2 stock in-memory clean tasks only; no attacks, fitting, planner or real endpoints",
   "independence": "New seeds on familiar previously studied tasks, not unseen tasks. No post-result task deletion. This is an eligibility/calibration study, not an attack-method result.",
