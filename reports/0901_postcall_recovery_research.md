@@ -34,4 +34,4 @@ Each candidate must improve anchor by at least 10 percentage points on at least 
 
 Only a passing V42 selection may enter V43 (120 episodes, new seeds 727/733/739, anchor versus selected candidate; p≤0.05 and at least ten stable-task overlap in addition to the effect/safety gates). No use of the withheld old V40 seeds. Total fresh budget is 360 clean episodes, two sequential one-GPU jobs at most. Stop after NO_GO/INVALID or confirmation conclusion; no post-result retry, threshold relaxation, attack generation, or model fitting.
 
-Fresh GPU submission status: not yet submitted; integration tests and deployment pending.
+Fresh GPU submission status: ready for the sole V42 submission after **74 remote tests passed** (candidate `4265e82`), with 43 local synthetic tests passed. No V43 submission before a passing V42 selection. The exclusive remote submitter `scripts/293_submit_postcall_stage_once.py` refuses a duplicate/uncertain archive and records submission receipts; it does not rerun an uncertain job.
