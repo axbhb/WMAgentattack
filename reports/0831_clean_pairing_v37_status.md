@@ -1,4 +1,14 @@
-# v37 status at 2026-08-31 07:33 UTC / 15:33 China time
+# v37 final status
+
+Completed scientific result: **NO_GO_CLEAN_PAIRING_V37**. The 60 clean
+episodes completed at the script sentinel time 2026-08-31 09:18:17 UTC / 17:18
+China time: 30 successes, 10 stable tasks, only two suites with at least two
+stable tasks. No runtime failures. Frozen thresholds are not met. No new attack
+pilot or model fitting is authorized. See `0831_clean_pairing_v37_results.md`.
+
+The fixed monitoring/research cycle is ending after this scientific result.
+
+## Initial submission snapshot (superseded; retained for provenance)
 
 Slurm **7562** was submitted once at 07:33:08 UTC, execution commit `ea4b6e4`.
 State: **PENDING (Resources)**. No result exists yet; missing run logs while
