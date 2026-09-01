@@ -1,9 +1,10 @@
 {
   "protocol_id": "0901_postcall_recovery_v42_v43",
-  "status": "v41_complete_v42_submitted",
+  "status": "v42_no_go_v43_not_authorized_cycle_complete",
   "execution_records": {
     "pre_submission": {"tested_candidate_commit": "4265e82", "remote_tests_passed": 74, "local_synthetic_tests_passed": 43},
-    "v42": {"job_id": "7567", "implementation_commit": "4958f9b", "submitted_at_utc": "2026-08-31T16:17:32.045814+00:00", "decision": "PENDING", "receipt": "/share/guozhix/wmagentattack/0901/postcall_recovery_v42/formal_v1/submission.json"}
+    "v42": {"job_id": "7567", "implementation_commit": "4958f9b", "submitted_at_utc": "2026-08-31T16:17:32.045814+00:00", "completed_at_utc": "2026-08-31T22:23:38.432611+00:00", "decision": "NO_GO_POSTCALL_RECOVERY", "completed_episodes": 240, "runtime_failures": 0, "raw_traces": 240, "diagnostics": 240, "selected_arm": null, "independent_gate_recompute_equal": true, "independent_exact_p_equal": true, "receipt": "/share/guozhix/wmagentattack/0901/postcall_recovery_v42/formal_v1/submission.json"},
+    "v43": {"decision": "NOT_AUTHORIZED", "job_id": null, "episodes_run": 0, "reason": "Neither v42 candidate passed the complete preregistered gate."}
   },
   "parent_protocol": "/share/guozhix/wmagentattack/0831/clean_pairing_v37/formal_v1/preregistered_protocol.json",
   "audit_archive": "/share/guozhix/wmagentattack/0901/postcall_audit_v41/formal_v1",
