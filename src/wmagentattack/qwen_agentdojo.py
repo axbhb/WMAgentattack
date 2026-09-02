@@ -32,6 +32,22 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 class TransformersQwenLLM(BasePipelineElement):
     """AgentDojo pipeline element backed by a local Transformers chat model."""
 
+    @staticmethod
+    def _four_bit_compute_dtype(device: str) -> torch.dtype:
+        """Use native BF16 only on Ampere-or-newer CUDA devices.
+
+        ``torch.cuda.is_bf16_supported`` can report emulated support on older
+        cards.  BitsAndBytes NF4 inference on Volta should instead accumulate
+        in FP16; this keeps the frozen quantization contract while avoiding an
+        unsupported hardware path.
+        """
+
+        if device.startswith("cuda"):
+            major, _minor = torch.cuda.get_device_capability(torch.device(device))
+            if major < 8:
+                return torch.float16
+        return torch.bfloat16
+
     def __init__(
         self,
         model_path: str | Path,
@@ -102,7 +118,7 @@ class TransformersQwenLLM(BasePipelineElement):
             model_kwargs["quantization_config"] = BitsAndBytesConfig(
                 load_in_4bit=True,
                 bnb_4bit_quant_type="nf4",
-                bnb_4bit_compute_dtype=torch.bfloat16,
+                bnb_4bit_compute_dtype=self._four_bit_compute_dtype(device),
                 bnb_4bit_use_double_quant=True,
             )
         elif quantization == "bf16":

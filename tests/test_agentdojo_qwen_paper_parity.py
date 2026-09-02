@@ -3,6 +3,10 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+import torch
+
+from wmagentattack.qwen_agentdojo import TransformersQwenLLM
+
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location(
@@ -24,3 +28,15 @@ def test_summary_reports_joint_and_conditional_attack_success() -> None:
     assert summary["targeted_asr"] == 1.0
     assert summary["joint_task_and_attack_rate"] == 0.5
     assert summary["conditional_targeted_asr_given_utility"] == 1.0
+
+
+def test_four_bit_compute_dtype_uses_fp16_on_volta(monkeypatch) -> None:
+    monkeypatch.setattr(torch.cuda, "get_device_capability", lambda _device: (7, 0))
+    dtype = TransformersQwenLLM._four_bit_compute_dtype("cuda:0")
+    assert dtype is torch.float16
+
+
+def test_four_bit_compute_dtype_keeps_bf16_on_ampere(monkeypatch) -> None:
+    monkeypatch.setattr(torch.cuda, "get_device_capability", lambda _device: (8, 0))
+    dtype = TransformersQwenLLM._four_bit_compute_dtype("cuda:0")
+    assert dtype is torch.bfloat16
