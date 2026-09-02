@@ -30,6 +30,7 @@ run_suite() {
     --prompt-profile base
     --max-input-tokens 8192
     --protocol native
+    --agentdojo-local-alias
     --quantization 4bit
     --device cuda:0
     --logdir "$logdir"
@@ -61,6 +62,7 @@ case "$MODE" in
       --prompt-profile base \
       --max-input-tokens 8192 \
       --protocol native \
+      --agentdojo-local-alias \
       --quantization 4bit \
       --device cuda:0 \
       --logdir "$SMOKE" \
