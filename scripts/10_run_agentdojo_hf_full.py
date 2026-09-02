@@ -20,13 +20,21 @@ from agentdojo.agent_pipeline import AgentPipeline
 from agentdojo.agent_pipeline.agent_pipeline import PipelineConfig
 from agentdojo.attacks.attack_registry import load_attack
 from agentdojo.benchmark import (
+    TaskResults,
     benchmark_suite_with_injections,
     benchmark_suite_without_injections,
 )
+from agentdojo.functions_runtime import FunctionCall
 from agentdojo.logging import OutputLogger
 from agentdojo.task_suite.load_suites import get_suite, get_suites
 
 from wmagentattack.qwen_agentdojo import TransformersQwenLLM
+
+
+# AgentDojo's persisted ChatMessage schema keeps FunctionCall as a forward
+# reference. Newer Pydantic releases require the symbol when rebuilding the
+# model before an existing trajectory can be loaded.
+TaskResults.model_rebuild(_types_namespace={"FunctionCall": FunctionCall})
 
 
 def _summarize_results(results: dict) -> dict:
