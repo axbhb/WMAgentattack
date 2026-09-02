@@ -31,7 +31,7 @@
   },
   "training": {
     "seeds": [7, 17, 29, 43, 61],
-    "device": "one Slurm-isolated GPU",
+    "device": "Slurm CPU execution with 8 threads; model and scientific budget are unchanged",
     "teacher": {
       "fixed_epochs": 120,
       "learning_rate": 0.001,
@@ -108,5 +108,11 @@
     }
   },
   "decision_rule": "The four-cell and effect gates must pass for a mentor-ready closed-vocabulary model. Multi-step residual dynamics is retained only if its separate gate passes; otherwise the frozen one-step teacher is the selected action model. Open-vocabulary and new-task claims remain prohibited.",
-  "archive": "/share/guozhix/wmagentattack/0902/mentor_scale_best_wm_v44/formal_v1"
+  "runtime_amendment_before_results": {
+    "reason": "The first GPU submission was pending with a next-day start estimate. It was cancelled before allocation, CUDA preflight, model fitting, or result creation.",
+    "scientific_changes": 0,
+    "superseded_gpu_job": 7654,
+    "superseded_archive": "/share/guozhix/wmagentattack/0902/mentor_scale_best_wm_v44/formal_v1"
+  },
+  "archive": "/share/guozhix/wmagentattack/0902/mentor_scale_best_wm_v44/formal_v2_cpu"
 }

@@ -98,6 +98,7 @@ def main() -> None:
     parser.add_argument("--action-audit", type=Path, required=True)
     parser.add_argument("--effect-dataset", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
     args = parser.parse_args()
 
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
@@ -110,11 +111,11 @@ def main() -> None:
     effect_data = json.loads(args.effect_dataset.read_text(encoding="utf-8"))
     assert_dataset_contract(action_data, effect_data, protocol)
 
-    if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
-        raise RuntimeError("v44 requires exactly one Slurm-isolated GPU")
-    device = "cuda"
+    device = args.device
+    if device == "cuda" and (not torch.cuda.is_available() or torch.cuda.device_count() != 1):
+        raise RuntimeError("CUDA execution requires exactly one Slurm-isolated GPU")
     torch.use_deterministic_algorithms(True)
-    torch.set_num_threads(4)
+    torch.set_num_threads(8 if device == "cpu" else 4)
 
     output = args.output_dir
     checkpoints = output / "checkpoints"
@@ -189,7 +190,8 @@ def main() -> None:
                 "action_prediction_rows": len(control_rows),
             })
             del baseline, joint, teacher, residual, context, logits
-            torch.cuda.empty_cache()
+            if device == "cuda":
+                torch.cuda.empty_cache()
 
     effect_cfg = copy.deepcopy(protocol["training"]["effect"])
     effect_base = v20.arrays(
@@ -230,12 +232,12 @@ def main() -> None:
     payload = {
         "schema_version": "wmagentattack.mentor_scale_best_wm.v44",
         "device": device,
-        "cuda_device_name": torch.cuda.get_device_name(0),
+        "cuda_device_name": torch.cuda.get_device_name(0) if device == "cuda" else None,
         "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
         "completed_model_fits": completed,
         "runtime_failures": 0,
         "parameter_counts": parameter_counts,
-        "peak_cuda_memory_bytes": int(torch.cuda.max_memory_allocated()),
+        "peak_cuda_memory_bytes": int(torch.cuda.max_memory_allocated()) if device == "cuda" else 0,
         "action_runs": action_runs,
         "effect_runs": effect_runs,
     }

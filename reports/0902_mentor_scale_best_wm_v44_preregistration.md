@@ -34,6 +34,15 @@ component from being hidden inside an aggregate score.
 - No new LLM trajectories, attack generation, external endpoints, Dreamer,
   task removal, result-conditioned rerun, or content checksums.
 
+## Pre-result scheduling amendment
+
+The first GPU submission, Slurm 7654, remained pending with a next-day start
+estimate and was cancelled before allocation or execution. Because all models
+are small and the scale comes from data coverage and 105 repeated fits, the
+unchanged experiment is executed with eight CPU threads in `formal_v2_cpu`.
+No task, seed, model, loss, metric, threshold or fit count changed, and the
+superseded GPU submission record remains archived in `formal_v1`.
+
 ## Primary metrics
 
 - one-step action NLL and accuracy;
@@ -45,4 +54,3 @@ component from being hidden inside an aggregate score.
 
 The exact thresholds and fallback rule are frozen in
 `configs/0902_mentor_scale_best_wm_v44_protocol.json` before any v44 result.
-
