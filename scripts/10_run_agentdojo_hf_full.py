@@ -77,6 +77,8 @@ def main():
     parser.add_argument("--model-label", default="hf-local")
     parser.add_argument("--benchmark-version", default="v1.2.2")
     parser.add_argument("--suite", action="append", dest="suites")
+    parser.add_argument("--user-task", action="append", dest="user_tasks")
+    parser.add_argument("--injection-task", action="append", dest="injection_tasks")
     parser.add_argument(
         "--attack",
         action="append",
@@ -161,6 +163,8 @@ def main():
         "pipeline_name": pipeline.name,
         "benchmark_version": args.benchmark_version,
         "suites": suites,
+        "user_tasks": args.user_tasks,
+        "injection_tasks": args.injection_tasks,
         "attacks": attacks,
         "seed": args.seed,
         "do_sample": args.do_sample,
@@ -178,6 +182,7 @@ def main():
                 suite,
                 logdir=args.logdir,
                 force_rerun=args.force_rerun,
+                user_tasks=args.user_tasks,
                 benchmark_version=args.benchmark_version,
             )
             summary["clean"][suite_name] = _summarize_results(clean_results)
@@ -190,6 +195,8 @@ def main():
                     attack,
                     logdir=args.logdir,
                     force_rerun=args.force_rerun,
+                    user_tasks=args.user_tasks,
+                    injection_tasks=args.injection_tasks,
                     benchmark_version=args.benchmark_version,
                 )
                 summary["attack"].setdefault(attack_name, {})[suite_name] = (
