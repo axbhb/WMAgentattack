@@ -1,6 +1,6 @@
 {
   "protocol_id": "0902_agentdojo_qwen25_paper_parity_v1",
-  "status": "deployed_to_friend_v100_model_transfer_running",
+  "status": "complete_scientific_result",
   "research_question": "What are AgentDojo paper metrics when the paper's Llama 3-70B victim is replaced by the locally available Qwen2.5-7B-Instruct under one fixed model-specific tool protocol?",
   "scope": {
     "benchmark": "AgentDojo v1 synthetic sandbox",
@@ -51,6 +51,54 @@
     "environment": "/home/pth/venvs/wmagentattack_qwen25",
     "model": "/home/pth/models/Qwen2.5-7B-Instruct",
     "hardware_only_change": "NF4 accumulation uses FP16 on Volta instead of BF16; tasks, attack, prompt, decoding, quantization, seeds, budget, and gates are unchanged."
+  },
+  "execution": {
+    "completed_at_cst": "2026-09-03",
+    "clean_cases_completed": 97,
+    "attack_cases_completed": 629,
+    "runtime_failures": 0,
+    "smoke_gate": "PASS",
+    "clean_gate": "GO_ATTACK_EVALUATION",
+    "attack_evaluation": "COMPLETE",
+    "compatibility_repairs": [
+      "Registered the local Qwen pipeline under an AgentDojo-compatible local model alias without changing prompts or model behavior.",
+      "Rebuilt AgentDojo TaskResults with FunctionCall in the Pydantic type namespace so stored clean results could be loaded under the installed Pydantic version."
+    ],
+    "archived_failed_attempts": [
+      "initial smoke model-name compatibility failure",
+      "initial attack-worker Pydantic forward-reference failure"
+    ],
+    "archive": "/home/pth/outputs/wmagentattack/0902/agentdojo_qwen25_paper_parity/formal_v1"
+  },
+  "result": {
+    "decision": "COMPLETE_QWEN25_AGENTDOJO_PAPER_PARITY_BASELINE",
+    "counts": {
+      "clean_success": 29,
+      "clean_total": 97,
+      "attack_utility_success": 163,
+      "attack_total": 629,
+      "targeted_attack_success": 120,
+      "joint_task_and_attack_success": 21
+    },
+    "metrics": {
+      "benign_utility": 0.29896907216494845,
+      "utility_under_attack": 0.2591414944356121,
+      "targeted_asr": 0.1907790143084261,
+      "joint_task_and_attack_rate": 0.033386327503974564,
+      "conditional_targeted_asr_given_utility": 0.12883435582822086
+    },
+    "difference_qwen_minus_paper_llama3_70b": {
+      "benign_utility": -0.04603092783505153,
+      "utility_under_attack": 0.07634149443561208,
+      "targeted_asr": -0.009520985691573919
+    },
+    "per_suite": {
+      "workspace": {"benign_utility": 0.3, "utility_under_attack": 0.2708333333333333, "targeted_asr": 0.04583333333333333, "joint_rate": 0.0},
+      "travel": {"benign_utility": 0.1, "utility_under_attack": 0.06428571428571428, "targeted_asr": 0.2571428571428571, "joint_rate": 0.0},
+      "banking": {"benign_utility": 0.375, "utility_under_attack": 0.3958333333333333, "targeted_asr": 0.1597222222222222, "joint_rate": 0.034722222222222224},
+      "slack": {"benign_utility": 0.42857142857142855, "utility_under_attack": 0.3047619047619048, "targeted_asr": 0.47619047619047616, "joint_rate": 0.1523809523809524}
+    },
+    "summary_file": "/home/pth/outputs/wmagentattack/0902/agentdojo_qwen25_paper_parity/formal_v1/paper_parity_summary.json"
   },
   "integrity": {
     "no_content_checksums": true,
