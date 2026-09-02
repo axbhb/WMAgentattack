@@ -1,0 +1,112 @@
+{
+  "protocol_id": "0902_mentor_scale_best_wm_v44",
+  "status": "preregistered_before_results",
+  "research_question": "Does the strongest retained small hybrid world model replicate at larger task-level evaluation budget without the capacity overfit observed in v32?",
+  "scope": {
+    "agentdojo_synthetic_sandbox_only": true,
+    "existing_data_only": true,
+    "new_attack_generation": 0,
+    "real_external_endpoints": 0,
+    "victim_llm_calls": 0,
+    "content_checksums": false
+  },
+  "retained_architecture": {
+    "state": "Structured Semantic State v3",
+    "one_step_teacher": "Structured Markov v3 plus normalized four-cell outcome auxiliary",
+    "multi_step": "zero-initialized recurrent residual action dynamics",
+    "effect_head": "v21 shared semantic effect head without execution-conditional experts",
+    "fallback_rule": "retain the one-step teacher if the residual fails direct repeated-teacher non-inferiority"
+  },
+  "data": {
+    "action_dataset": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "action_audit": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/audit.json",
+    "effect_dataset": "/share/guozhix/wmagentattack/0821/hard_label_confirmation_v21/preflight_v1/a/dataset.json",
+    "expected_trajectories": 2060,
+    "expected_event_rows": 6763,
+    "expected_adjacent_transitions": 4703,
+    "expected_tasks": 20,
+    "expected_suites": 4,
+    "expected_effect_rows": 121,
+    "split": "frozen task-disjoint folds; no task crosses train and confirmation within a fold"
+  },
+  "training": {
+    "seeds": [7, 17, 29, 43, 61],
+    "device": "one Slurm-isolated GPU",
+    "teacher": {
+      "fixed_epochs": 120,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "hash_dimension": 128,
+      "dropout": 0.1,
+      "outcome_loss_weight": 1.0,
+      "outcome_positive_weight_cap": 10.0,
+      "joint_loss_weight": 0.25
+    },
+    "residual": {
+      "epochs": 80,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "hidden_size": 96,
+      "dropout": 0.1,
+      "h1_ce_weight": 0.25,
+      "h1_kl_weight": 2.0,
+      "horizon_weights": {"2": 1.0, "3": 0.5, "4": 0.25, "5": 0.125},
+      "latent_weight": 0.1,
+      "future_joint_weight": 0.1
+    },
+    "effect": {
+      "state_hash_dimension": 32,
+      "action_hash_dimension": 64,
+      "hidden_sizes": {"structured_residual_v6": 64, "intervention_modular_v20": 56},
+      "epochs": 300,
+      "learning_rate": 0.0025,
+      "weight_decay": 0.0001,
+      "execution_weight": 0.5,
+      "sequence_weight": 0.35,
+      "pair_weight": 0.25,
+      "gradient_clip": 5.0,
+      "torch_threads": 4
+    }
+  },
+  "fixed_budget": {
+    "action_folds": 5,
+    "effect_folds": 3,
+    "training_seeds": 5,
+    "baseline_teacher_fits": 25,
+    "joint_teacher_fits": 25,
+    "residual_fits": 25,
+    "effect_baseline_fits": 15,
+    "effect_candidate_fits": 15,
+    "total_model_fits": 105,
+    "post_result_reruns": 0
+  },
+  "acceptance_gate": {
+    "four_cell": {
+      "minimum_action_nll_gain": 0.01,
+      "minimum_action_accuracy_gain": 0.005,
+      "minimum_joint_ce_gain_over_prior": 0.04,
+      "minimum_joint_brier_gain_over_prior": 0.005,
+      "maximum_outcome_bce_degradation": 0.005,
+      "minimum_positive_task_fraction": 0.55,
+      "minimum_positive_seeds": 4
+    },
+    "multi_step": {
+      "maximum_h1_nll_degradation": 0.01,
+      "maximum_h1_accuracy_degradation": 0.005,
+      "minimum_h2_h5_nll_gain_vs_repeated_teacher": 0.02,
+      "minimum_positive_task_fraction": 0.55,
+      "minimum_positive_seeds": 4,
+      "require_all_predictions_legal": true
+    },
+    "effect": {
+      "minimum_hard_bce_gain": 0.01,
+      "minimum_positive_nll_gain": 0.05,
+      "positive_recall_noninferiority_margin": 0.01,
+      "minimum_rollout_bce_gain": 0.01,
+      "minimum_positive_seeds": 4
+    }
+  },
+  "decision_rule": "The four-cell and effect gates must pass for a mentor-ready closed-vocabulary model. Multi-step residual dynamics is retained only if its separate gate passes; otherwise the frozen one-step teacher is the selected action model. Open-vocabulary and new-task claims remain prohibited.",
+  "archive": "/share/guozhix/wmagentattack/0902/mentor_scale_best_wm_v44/formal_v1"
+}
