@@ -1,0 +1,192 @@
+{
+  "protocol_id": "large_hybrid_world_model_v45_formal_v1",
+  "status": "implementation_ready_not_submitted",
+  "created_at": "2026-09-02",
+  "research_question": "Can a large pretrained semantic state encoder, large candidate-conditioned victim action model, and large zero-initialized multi-step residual dynamics model improve task-disjoint prediction over Structured Markov v3 without sacrificing one-step validity?",
+  "authorization": {
+    "code_changes": true,
+    "semantic_cache_build": false,
+    "formal_training_submission": false,
+    "attack_generation": false,
+    "real_external_endpoints": false,
+    "post_result_reruns": false
+  },
+  "scope": {
+    "environment": "AgentDojo synthetic sandbox only",
+    "dataset": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "trajectory_count": 2060,
+    "event_count": 6763,
+    "adjacent_transition_count": 4703,
+    "task_count": 20,
+    "suite_count": 4,
+    "candidate_count": 31,
+    "fold_count": 5,
+    "split_unit": "task",
+    "seeds": [7, 17, 29],
+    "total_formal_fits": 15
+  },
+  "semantic_backbone": {
+    "model": "intfloat/e5-base-v2",
+    "server_snapshot": "/share/guozhix/hf_cache/models--intfloat--e5-base-v2/snapshots/f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+    "local_files_only": true,
+    "embedding_size": 768,
+    "max_length": 256,
+    "state_fields": [
+      "trusted_goal",
+      "visible_observation",
+      "legal_tools",
+      "visible_prior_tool",
+      "source_track"
+    ],
+    "forbidden_inputs": [
+      "task_id",
+      "task_name",
+      "trajectory_id",
+      "observed_outcome",
+      "joint_outcome_target",
+      "future_actions",
+      "future_outcomes"
+    ]
+  },
+  "architecture": {
+    "name": "LargeHybridWorldModelV45",
+    "structured_state_encoder": {
+      "type": "pretrained_e5_plus_structured_transformer",
+      "hidden_size": 768,
+      "layers": 8,
+      "attention_heads": 12,
+      "feedforward_size": 3072,
+      "dropout": 0.1
+    },
+    "victim_action_dynamics": {
+      "type": "candidate_query_cross_attention_transformer",
+      "hidden_size": 768,
+      "layers": 6,
+      "attention_heads": 12,
+      "feedforward_size": 3072,
+      "outputs": [
+        "legal_candidate_action_logits",
+        "five_outcome_logits",
+        "four_cell_joint_outcome_logits"
+      ]
+    },
+    "multi_step_residual_dynamics": {
+      "type": "zero_initialized_transformer_memory_residual",
+      "hidden_size": 768,
+      "layers": 6,
+      "attention_heads": 12,
+      "feedforward_size": 3072,
+      "memory_tokens": 8,
+      "max_horizon": 5,
+      "zero_initialized_outputs": true,
+      "one_step_teacher_anchor": true
+    },
+    "exact_components_outside_neural_model": [
+      "legal_tool_mask",
+      "candidate_catalog",
+      "sandbox_tool_execution",
+      "environment_state_transition"
+    ]
+  },
+  "training": {
+    "teacher_stage": {
+      "epochs": 12,
+      "batch_size": 16,
+      "learning_rate": 0.0002,
+      "weight_decay": 0.0001,
+      "gradient_clip": 1.0,
+      "losses": {
+        "action_cross_entropy": 1.0,
+        "five_outcome_binary_cross_entropy": 1.0,
+        "four_cell_joint_cross_entropy": 0.25
+      },
+      "outcome_positive_weight_cap": 10.0
+    },
+    "residual_stage": {
+      "epochs": 8,
+      "batch_size": 16,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001,
+      "gradient_clip": 1.0,
+      "max_horizon": 5,
+      "horizon_weights": {
+        "1": 0.25,
+        "2": 1.0,
+        "3": 0.5,
+        "4": 0.25,
+        "5": 0.125
+      },
+      "h1_teacher_kl_weight": 2.0,
+      "freeze_teacher": true
+    }
+  },
+  "comparators": {
+    "required": [
+      "structured_markov_v3_joint_aux_v5",
+      "structured_markov_v3_zero_init_residual_v22"
+    ],
+    "counterevidence": [
+      "e5_open_vocabulary_v23_improved_nll_but_failed_recall_gate",
+      "medium_capacity_v32_overfit_task_disjoint_test"
+    ]
+  },
+  "evaluation": {
+    "one_step": [
+      "action_nll",
+      "action_accuracy",
+      "legal_prediction_rate",
+      "outcome_bce",
+      "joint_cross_entropy",
+      "joint_brier",
+      "p_task_success_and_attack_success"
+    ],
+    "multi_step": [
+      "h2_action_nll",
+      "h3_action_nll",
+      "h4_action_nll",
+      "h5_action_nll",
+      "horizon_weighted_nll"
+    ],
+    "aggregation": [
+      "fold_macro",
+      "suite_macro",
+      "task_macro",
+      "seed_macro",
+      "same_task_same_seed_paired_delta"
+    ]
+  },
+  "frozen_gate": {
+    "data_and_runtime": {
+      "all_fifteen_fits_complete": true,
+      "runtime_failures": 0,
+      "real_endpoint_calls": 0,
+      "legal_prediction_rate": 1.0
+    },
+    "teacher": {
+      "action_nll_gain_over_v5_min": 0.02,
+      "action_accuracy_drop_over_v5_max": 0.01,
+      "joint_cross_entropy_gain_over_v5_min": 0.0,
+      "joint_brier_gain_over_v5_min": 0.0
+    },
+    "residual": {
+      "h1_action_nll_degradation_vs_teacher_max": 0.01,
+      "horizon_weighted_nll_gain_over_v22_min": 0.05,
+      "positive_task_fraction_min": 0.55,
+      "positive_seed_count_min": 2,
+      "suite_macro_drop_max": 0.1
+    },
+    "decision": "GO only if every frozen condition passes; otherwise retain the result as counterevidence and do not tune thresholds after seeing test results."
+  },
+  "artifacts": {
+    "archive_root": "/share/guozhix/wmagentattack/0902/large_hybrid_world_model_v45/formal_v1",
+    "semantic_cache": "semantic_cache/large_semantic_cache_v45.npz",
+    "runs": "runs/fold_{fold}/seed_{seed}",
+    "summary": "large_hybrid_world_model_v45_summary.json",
+    "report": "reports/0902_large_hybrid_world_model_v45_results.md"
+  },
+  "submission": {
+    "submitted": false,
+    "job_ids": [],
+    "note": "The user requested code modification first. No cache or training job may be submitted in this stage."
+  }
+}
