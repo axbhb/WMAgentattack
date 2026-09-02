@@ -22,3 +22,9 @@ def test_mean_pool_ignores_padding():
     hidden = torch.tensor([[[1.0, 3.0], [3.0, 5.0], [100.0, 100.0]]])
     mask = torch.tensor([[1, 1, 0]])
     assert torch.equal(module.mean_pool(hidden, mask), torch.tensor([[2.0, 4.0]]))
+
+
+def test_v100_uses_fp16_and_ampere_uses_bf16():
+    module = load_script()
+    assert module.cuda_dtype_for_capability(7) is torch.float16
+    assert module.cuda_dtype_for_capability(8) is torch.bfloat16

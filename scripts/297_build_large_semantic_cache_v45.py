@@ -27,7 +27,17 @@ def mean_pool(last_hidden: torch.Tensor, attention_mask: torch.Tensor) -> torch.
     return (last_hidden * weights).sum(1) / weights.sum(1).clamp_min(1.0)
 
 
+def cuda_dtype_for_capability(major: int) -> torch.dtype:
+    """V100/Volta requires FP16; Ampere and newer can use native BF16."""
+    return torch.bfloat16 if major >= 8 else torch.float16
+
+
 def encode_texts(model, tokenizer, texts, *, batch_size, max_length, device):
+    autocast_dtype = (
+        cuda_dtype_for_capability(torch.cuda.get_device_capability()[0])
+        if device == "cuda"
+        else torch.float32
+    )
     outputs = []
     for start in range(0, len(texts), batch_size):
         batch = texts[start : start + batch_size]
@@ -40,7 +50,7 @@ def encode_texts(model, tokenizer, texts, *, batch_size, max_length, device):
         )
         tokens = {key: value.to(device) for key, value in tokens.items()}
         with torch.inference_mode(), torch.autocast(
-            device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"
+            device_type="cuda", dtype=autocast_dtype, enabled=device == "cuda"
         ):
             hidden = model(**tokens).last_hidden_state
             pooled = F.normalize(mean_pool(hidden, tokens["attention_mask"]), dim=-1)
@@ -82,9 +92,14 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(
         args.model, local_files_only=True, trust_remote_code=False
     )
+    model_dtype = (
+        cuda_dtype_for_capability(torch.cuda.get_device_capability()[0])
+        if args.device == "cuda"
+        else torch.float32
+    )
     model = AutoModel.from_pretrained(
         args.model, local_files_only=True, trust_remote_code=False,
-        torch_dtype=torch.bfloat16 if args.device == "cuda" else torch.float32,
+        torch_dtype=model_dtype,
     ).to(args.device).eval()
     for parameter in model.parameters():
         parameter.requires_grad_(False)
@@ -123,6 +138,7 @@ def main():
         "semantic_size": int(field_embeddings.shape[-1]),
         "max_length": args.max_length,
         "dtype": "float16",
+        "model_compute_dtype": str(model_dtype),
         "outcome_fields_encoded": 0,
         "task_identifiers_encoded": 0,
         "real_external_endpoint_calls": 0,
