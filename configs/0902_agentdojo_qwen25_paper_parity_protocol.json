@@ -1,6 +1,6 @@
 {
   "protocol_id": "0902_agentdojo_qwen25_paper_parity_v1",
-  "status": "preregistered_clean_not_submitted",
+  "status": "deployed_to_friend_v100_model_transfer_running",
   "research_question": "What are AgentDojo paper metrics when the paper's Llama 3-70B victim is replaced by the locally available Qwen2.5-7B-Instruct under one fixed model-specific tool protocol?",
   "scope": {
     "benchmark": "AgentDojo v1 synthetic sandbox",
@@ -42,6 +42,16 @@
     "maximum_concurrent_gpus": 2
   },
   "archive": "/share/guozhix/wmagentattack/0902/agentdojo_qwen25_paper_parity/formal_v1",
+  "friend_v100_deployment": {
+    "reason": "NTU Slurm smoke remained pending for resources; job 7674 was cancelled before migration.",
+    "host": "friend-v100 (gpuserver)",
+    "gpus": "2 x Tesla V100-PCIE-32GB",
+    "worktree": "/home/pth/projects/WMagentattack-qwen-parity-sep2",
+    "archive": "/home/pth/outputs/wmagentattack/0902/agentdojo_qwen25_paper_parity/formal_v1",
+    "environment": "/home/pth/venvs/wmagentattack_qwen25",
+    "model": "/home/pth/models/Qwen2.5-7B-Instruct",
+    "hardware_only_change": "NF4 accumulation uses FP16 on Volta instead of BF16; tasks, attack, prompt, decoding, quantization, seeds, budget, and gates are unchanged."
+  },
   "integrity": {
     "no_content_checksums": true,
     "do_not_change_model_prompt_attack_or_thresholds_after_results": true
