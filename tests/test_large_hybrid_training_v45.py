@@ -54,7 +54,9 @@ def test_frozen_protocol_builds_requested_large_architecture():
     assert config.residual_layers == 6
     assert config.attention_heads == 12
     assert config.memory_tokens == 8
-    assert protocol["submission"]["submitted"] is False
+    assert protocol["authorization"]["formal_training_submission"] is True
+    assert protocol["submission"]["submitted"] is True
+    assert protocol["submission"]["execution"] == "direct_tmux_two_v100_workers"
 
 
 def test_requested_architecture_is_over_one_hundred_million_trainable_parameters():

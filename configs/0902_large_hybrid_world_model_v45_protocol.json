@@ -1,19 +1,19 @@
 {
   "protocol_id": "large_hybrid_world_model_v45_formal_v1",
-  "status": "implementation_ready_not_submitted",
+  "status": "authorized_for_friend_v100_formal_run",
   "created_at": "2026-09-02",
   "research_question": "Can a large pretrained semantic state encoder, large candidate-conditioned victim action model, and large zero-initialized multi-step residual dynamics model improve task-disjoint prediction over Structured Markov v3 without sacrificing one-step validity?",
   "authorization": {
     "code_changes": true,
-    "semantic_cache_build": false,
-    "formal_training_submission": false,
+    "semantic_cache_build": true,
+    "formal_training_submission": true,
     "attack_generation": false,
     "real_external_endpoints": false,
     "post_result_reruns": false
   },
   "scope": {
     "environment": "AgentDojo synthetic sandbox only",
-    "dataset": "/share/guozhix/wmagentattack/0817/structured_joint_outcome_v5/preflight_v1/a/dataset.json",
+    "dataset": "/home/pth/data/wmagentattack/v45/dataset.json",
     "trajectory_count": 2060,
     "event_count": 6763,
     "adjacent_transition_count": 4703,
@@ -27,7 +27,7 @@
   },
   "semantic_backbone": {
     "model": "intfloat/e5-base-v2",
-    "server_snapshot": "/share/guozhix/hf_cache/models--intfloat--e5-base-v2/snapshots/f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+    "server_snapshot": "/home/pth/models/e5-base-v2",
     "local_files_only": true,
     "embedding_size": 768,
     "max_length": 256,
@@ -178,15 +178,17 @@
     "decision": "GO only if every frozen condition passes; otherwise retain the result as counterevidence and do not tune thresholds after seeing test results."
   },
   "artifacts": {
-    "archive_root": "/share/guozhix/wmagentattack/0902/large_hybrid_world_model_v45/formal_v1",
+    "archive_root": "/home/pth/outputs/wmagentattack/v45_formal_v1",
     "semantic_cache": "semantic_cache/large_semantic_cache_v45.npz",
     "runs": "runs/fold_{fold}/seed_{seed}",
     "summary": "large_hybrid_world_model_v45_summary.json",
     "report": "reports/0902_large_hybrid_world_model_v45_results.md"
   },
   "submission": {
-    "submitted": false,
+    "submitted": true,
     "job_ids": [],
-    "note": "The user requested code modification first. No cache or training job may be submitted in this stage."
+    "execution": "direct_tmux_two_v100_workers",
+    "tmux_session": "wmagentattack-v45-formal",
+    "note": "Authorized by the user for the fixed 15-fit formal run on the friend V100 server; no Slurm service is configured on that host."
   }
 }
