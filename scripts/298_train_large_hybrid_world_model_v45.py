@@ -412,6 +412,17 @@ def evaluate_rollouts(model, events, arrays, test_tasks, protocol, device, fold,
     return predictions
 
 
+def validate_formal_authorization(protocol):
+    """Require the exact frozen status and explicit cache/training authorization."""
+    authorization = protocol.get("authorization", {})
+    if protocol.get("status") != "authorized_for_friend_v100_formal_run":
+        raise ValueError("v45 protocol is not authorized for the friend V100 formal run")
+    if authorization.get("semantic_cache_build") is not True:
+        raise ValueError("v45 formal semantic cache build is not authorized")
+    if authorization.get("formal_training_submission") is not True:
+        raise ValueError("v45 formal training submission is not authorized")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--protocol", type=Path, required=True)
@@ -424,8 +435,7 @@ def main():
     args = parser.parse_args()
 
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
-    if protocol["status"] != "implementation_ready_not_submitted":
-        raise ValueError("v45 protocol is not implementation-frozen")
+    validate_formal_authorization(protocol)
     dataset = json.loads(args.dataset.read_text(encoding="utf-8"))
     with np.load(args.semantic_cache, allow_pickle=False) as cache:
         arrays = build_arrays(dataset, cache)

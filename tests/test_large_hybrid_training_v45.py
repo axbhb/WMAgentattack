@@ -59,6 +59,34 @@ def test_frozen_protocol_builds_requested_large_architecture():
     assert protocol["submission"]["execution"] == "direct_tmux_two_v100_workers"
 
 
+def test_formal_authorization_accepts_only_explicit_friend_v100_status():
+    module = load_script()
+    protocol = json.loads(
+        (ROOT / "configs" / "0902_large_hybrid_world_model_v45_protocol.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    module.validate_formal_authorization(protocol)
+
+    old_status = json.loads(json.dumps(protocol))
+    old_status["status"] = "implementation_ready_not_submitted"
+    try:
+        module.validate_formal_authorization(old_status)
+    except ValueError as exc:
+        assert "not authorized" in str(exc)
+    else:
+        raise AssertionError("unsubmitted protocol status must be rejected")
+
+    disabled = json.loads(json.dumps(protocol))
+    disabled["authorization"]["formal_training_submission"] = False
+    try:
+        module.validate_formal_authorization(disabled)
+    except ValueError as exc:
+        assert "submission is not authorized" in str(exc)
+    else:
+        raise AssertionError("disabled formal submission must be rejected")
+
+
 def test_requested_architecture_is_over_one_hundred_million_trainable_parameters():
     module = load_script()
     protocol = json.loads(
