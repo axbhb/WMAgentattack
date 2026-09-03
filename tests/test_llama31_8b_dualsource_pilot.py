@@ -11,7 +11,7 @@ DATA = ROOT / "data" / "0903_llama31_8b_dualsource_pilot"
 
 def test_frozen_budget_and_source_semantics():
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
-    assert protocol["status"] == "preregistered_before_pilot_outcomes"
+    assert protocol["status"] == "completed_scientific_no_scale"
     assert protocol["victim_model"]["training_data_decoding"]["seeds"] == [
         1103,
         1109,
@@ -22,6 +22,12 @@ def test_frozen_budget_and_source_semantics():
     assert protocol["injecagent"]["pilot_budget"]["decisions"] == 48
     assert "never consecutive time steps" in protocol["injecagent"]["transition_semantics"]
     assert protocol["authorization_boundary"]["real_external_endpoint_calls"] == 0
+    assert protocol["pilot_result"]["passed"] is False
+    assert protocol["pilot_result"]["full_scale_authorized"] is False
+    assert (
+        protocol["pilot_result"]["decision"]
+        == "NO_SCALE_RETAIN_COUNTEREVIDENCE_AND_REDESIGN_ONE_CAUSE"
+    )
 
 
 def test_task_selection_and_intervention_pairs_are_complete():
