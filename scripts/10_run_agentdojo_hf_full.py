@@ -88,6 +88,14 @@ def main():
     parser.add_argument("--user-task", action="append", dest="user_tasks")
     parser.add_argument("--injection-task", action="append", dest="injection_tasks")
     parser.add_argument(
+        "--selection-manifest",
+        type=Path,
+        help=(
+            "JSON file with a per-suite mapping of user_tasks and injection_tasks. "
+            "This keeps task-disjoint selections exact when task IDs overlap across suites."
+        ),
+    )
+    parser.add_argument(
         "--attack",
         action="append",
         dest="attacks",
@@ -131,6 +139,13 @@ def main():
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
     suites = args.suites or list(get_suites(args.benchmark_version).keys())
+    selection = None
+    if args.selection_manifest is not None:
+        selection = json.loads(args.selection_manifest.read_text(encoding="utf-8"))
+        selected_suites = set(selection["suites"])
+        missing = set(suites) - selected_suites
+        if missing:
+            raise ValueError(f"selection manifest is missing suites: {sorted(missing)}")
     attacks = [] if args.clean_only else (
         args.attacks or ["important_instructions_no_model_name"]
     )
@@ -173,6 +188,7 @@ def main():
         "suites": suites,
         "user_tasks": args.user_tasks,
         "injection_tasks": args.injection_tasks,
+        "selection_manifest": str(args.selection_manifest) if args.selection_manifest else None,
         "attacks": attacks,
         "seed": args.seed,
         "do_sample": args.do_sample,
@@ -185,12 +201,17 @@ def main():
     with OutputLogger(str(args.logdir)):
         for suite_name in suites:
             suite = get_suite(args.benchmark_version, suite_name)
+            suite_selection = selection["suites"][suite_name] if selection else {}
+            user_tasks = suite_selection.get("user_tasks", args.user_tasks)
+            injection_tasks = suite_selection.get(
+                "injection_tasks", args.injection_tasks
+            )
             clean_results = benchmark_suite_without_injections(
                 pipeline,
                 suite,
                 logdir=args.logdir,
                 force_rerun=args.force_rerun,
-                user_tasks=args.user_tasks,
+                user_tasks=user_tasks,
                 benchmark_version=args.benchmark_version,
             )
             summary["clean"][suite_name] = _summarize_results(clean_results)
@@ -203,8 +224,8 @@ def main():
                     attack,
                     logdir=args.logdir,
                     force_rerun=args.force_rerun,
-                    user_tasks=args.user_tasks,
-                    injection_tasks=args.injection_tasks,
+                    user_tasks=user_tasks,
+                    injection_tasks=injection_tasks,
                     benchmark_version=args.benchmark_version,
                 )
                 summary["attack"].setdefault(attack_name, {})[suite_name] = (

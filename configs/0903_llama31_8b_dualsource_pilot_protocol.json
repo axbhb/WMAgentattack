@@ -1,0 +1,132 @@
+{
+  "protocol_id": "wmagentattack_llama31_8b_dualsource_pilot_20260903_v1",
+  "date": "2026-09-03",
+  "status": "preregistered_before_pilot_outcomes",
+  "research_question": "Can one Llama-3.1-8B victim produce a complete, diverse, task-disjoint-ready AgentDojo trajectory corpus and an aligned InjecAgent intervention corpus before full-scale construction?",
+  "authorization_boundary": {
+    "synthetic_or_offline_benchmarks_only": true,
+    "real_external_endpoint_calls": 0,
+    "published_attacks_only": true,
+    "pilot_before_full_scale": true,
+    "large_scale_authorized_only_if_both_source_gates_pass": true,
+    "sha256_or_content_checksums_disabled_by_user": true
+  },
+  "victim_model": {
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "model_path_friend_server": "/home/pth/models/Meta-Llama-3.1-8B-Instruct",
+    "quantization": "4bit_nf4",
+    "compute_dtype_on_v100": "float16",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "training_data_decoding": {
+      "do_sample": true,
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "seeds": [1103, 1109, 1117]
+    },
+    "locked_evaluation_decoding": {
+      "do_sample": false,
+      "temperature": null,
+      "purpose": "paper-aligned evaluation only; never training data"
+    }
+  },
+  "agentdojo": {
+    "benchmark_version": "v1",
+    "role": "primary temporal trajectory source",
+    "tool_protocol": "native",
+    "prompt_profile": "base",
+    "pilot_suites": {
+      "workspace": {
+        "user_tasks": ["user_task_3", "user_task_9", "user_task_14", "user_task_22", "user_task_31", "user_task_37"],
+        "injection_tasks": ["injection_task_0", "injection_task_4"]
+      },
+      "banking": {
+        "user_tasks": ["user_task_1", "user_task_4", "user_task_7", "user_task_10", "user_task_13", "user_task_15"],
+        "injection_tasks": ["injection_task_1", "injection_task_7"]
+      },
+      "travel": {
+        "user_tasks": ["user_task_0", "user_task_4", "user_task_7", "user_task_11", "user_task_15", "user_task_19"],
+        "injection_tasks": ["injection_task_2", "injection_task_6"]
+      },
+      "slack": {
+        "user_tasks": ["user_task_2", "user_task_6", "user_task_9", "user_task_13", "user_task_17", "user_task_20"],
+        "injection_tasks": ["injection_task_1", "injection_task_5"]
+      }
+    },
+    "published_attack_candidates": [
+      "direct",
+      "ignore_previous",
+      "system_message",
+      "injecagent",
+      "important_instructions",
+      "important_instructions_no_user_name",
+      "important_instructions_no_model_name",
+      "tool_knowledge"
+    ],
+    "pilot_budget": {
+      "user_tasks": 24,
+      "clean_trajectories": 72,
+      "attack_pairs_per_seed": 384,
+      "attack_trajectories": 1152,
+      "total_trajectories": 1224
+    }
+  },
+  "injecagent": {
+    "role": "primary paired intervention source",
+    "transition_semantics": "clean and poisoned observations are parallel interventions, never consecutive time steps",
+    "published_case_indices": {
+      "direct_harm": [79, 138, 238, 400],
+      "data_stealing": [122, 203, 287, 406]
+    },
+    "variants": ["clean", "poisoned"],
+    "pilot_budget": {
+      "cases": 8,
+      "paired_case_seed_groups": 24,
+      "decisions": 48
+    }
+  },
+  "split_contract": {
+    "agentdojo": "outer task-disjoint folds keyed by suite plus user_task_id; all injections, attacks and seeds for a task stay in one fold",
+    "injecagent": "outer folds keyed by user tool; each clean-poison pair and all seeds stay in one fold",
+    "cross_source_alignment": "shared semantic/action vocabulary with source-specific temporal and intervention heads",
+    "locked_greedy_data_must_not_enter_training": true
+  },
+  "pilot_gate": {
+    "integrity": {
+      "agentdojo_expected_trajectories": 1224,
+      "injecagent_expected_decisions": 48,
+      "zero_runtime_failures": true,
+      "all_outputs_nonempty": true,
+      "all_clean_poison_pairs_complete": true,
+      "one_victim_model_contract": true,
+      "zero_real_external_endpoint_calls": true
+    },
+    "agentdojo_clean_eligibility": {
+      "tasks_with_at_least_two_of_three_clean_successes": 12,
+      "minimum_per_suite": 2
+    },
+    "agentdojo_diversity": {
+      "tasks_with_at_least_two_distinct_joint_success_rates_across_candidates": 12,
+      "minimum_joint_task_and_attack_success_trajectories": 30,
+      "tasks_with_at_least_one_multistep_trajectory": 12,
+      "multistep_must_cover_all_suites": true
+    },
+    "injecagent_intervention_signal": {
+      "descriptive_only_not_a_release_threshold": true,
+      "report_clean_and_poisoned_attacker_tool_rates": true,
+      "report_discordant_pair_counts": true
+    }
+  },
+  "decision_if_pass": "AUTHORIZE_FULL_DUALSOURCE_COLLECTION_WITH_FROZEN_OUTER_FOLDS",
+  "decision_if_fail": "NO_SCALE_RETAIN_COUNTEREVIDENCE_AND_REDESIGN_ONE_CAUSE",
+  "full_scale_plan_if_authorized": {
+    "agentdojo_user_tasks": 97,
+    "agentdojo_clean_trajectories": 291,
+    "agentdojo_attack_trajectories": 15096,
+    "agentdojo_total_trajectories": 15387,
+    "injecagent_cases": 1054,
+    "injecagent_decisions": 6324,
+    "total_model_interactions": 21711,
+    "locked_greedy_agentdojo_evaluation": "97 clean plus 629 important_instructions pairs under the same Llama-3.1-8B victim"
+  }
+}

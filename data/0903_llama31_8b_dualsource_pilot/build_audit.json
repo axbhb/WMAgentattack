@@ -1,0 +1,9 @@
+{
+  "agentdojo_expected_trajectories": 1224,
+  "agentdojo_tasks": 24,
+  "content_checksums": "disabled",
+  "injecagent_pairs": 24,
+  "injecagent_rows": 48,
+  "passed": true,
+  "protocol_id": "wmagentattack_llama31_8b_dualsource_pilot_20260903_v1"
+}
