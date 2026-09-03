@@ -34,6 +34,11 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Label-blind runtime smoke limit; omit for the frozen formal budget.",
+    )
     args = parser.parse_args()
 
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
@@ -63,10 +68,15 @@ def main() -> None:
     )
     model.eval()
     decoding = model_cfg["training_data_decoding"]
+    rows = list(manifest["records"])
+    if args.limit is not None:
+        if args.limit <= 0:
+            raise ValueError("--limit must be positive")
+        rows = rows[: args.limit]
     records = []
-    expected = int(manifest["expected_rows"])
+    expected = len(rows)
 
-    for index, row in enumerate(manifest["records"]):
+    for index, row in enumerate(rows):
         print(f"INJEC_ROW_START {index + 1}/{expected} {row['row_id']}", flush=True)
         record = {**row, "completion": "", "decision": None, "runtime_error": None}
         try:
