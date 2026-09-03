@@ -50,6 +50,8 @@ def main() -> None:
     }
     trajectories = []
     duplicate_keys = Counter()
+    auxiliary_injection_utility_trajectories = 0
+    unexpected_trajectory_keys = []
     for path in sorted(args.agentdojo_root.glob("seed*/**/*.json")):
         if path.name.startswith("summary_"):
             continue
@@ -68,6 +70,21 @@ def main() -> None:
         attack = payload.get("attack_type")
         is_clean = attack is None
         if not is_clean and attack not in attacks:
+            continue
+        task_key = (payload["suite_name"], payload["user_task_id"])
+        if task_key not in selected:
+            expected_injection_ids = set(
+                protocol["agentdojo"]["pilot_suites"][payload["suite_name"]][
+                    "injection_tasks"
+                ]
+            )
+            if is_clean and payload["user_task_id"] in expected_injection_ids:
+                # AgentDojo evaluates every selected injection task by itself to
+                # report injection-task utility. These are auxiliary benchmark
+                # diagnostics, not clean user-task trajectories in our corpus.
+                auxiliary_injection_utility_trajectories += 1
+                continue
+            unexpected_trajectory_keys.append(task_key)
             continue
         key = (
             payload["suite_name"],
@@ -154,6 +171,7 @@ def main() -> None:
         "agentdojo_selected_tasks_only": {
             (row["suite"], row["task_id"]) for row in trajectories
         } == selected,
+        "no_unexpected_agentdojo_trajectories": not unexpected_trajectory_keys,
         "zero_agentdojo_runtime_failures": not any(row["runtime_error"] for row in trajectories),
         "injecagent_exact_count": len(injec) == protocol["injecagent"]["pilot_budget"]["decisions"],
         "zero_injecagent_runtime_failures": not any(row.get("runtime_error") for row in injec),
@@ -191,6 +209,8 @@ def main() -> None:
             "joint_success_trajectories": sum(row["joint_success"] for row in attacked),
             "multistep_tasks": len(multistep),
             "multistep_suites": sorted(multistep_suites),
+            "excluded_auxiliary_injection_utility_trajectories": auxiliary_injection_utility_trajectories,
+            "unexpected_trajectory_keys": sorted(set(unexpected_trajectory_keys)),
         },
         "injecagent": {
             "decisions": len(injec),
