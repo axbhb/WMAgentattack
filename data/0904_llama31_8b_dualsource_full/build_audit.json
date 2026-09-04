@@ -1,0 +1,13 @@
+{
+  "agentdojo_expected_trajectories": 15387,
+  "agentdojo_pairs_per_attack": 629,
+  "agentdojo_user_tasks": 97,
+  "content_checksums": "disabled",
+  "injecagent_cases": 1054,
+  "injecagent_pairs": 3162,
+  "injecagent_rows": 6324,
+  "injecagent_user_tools": 17,
+  "passed": true,
+  "protocol_id": "wmagentattack_llama31_8b_dualsource_full_20260904_v1",
+  "real_external_endpoint_calls": 0
+}

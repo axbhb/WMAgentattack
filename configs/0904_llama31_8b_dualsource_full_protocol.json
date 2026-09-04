@@ -1,0 +1,85 @@
+{
+  "protocol_id": "wmagentattack_llama31_8b_dualsource_full_20260904_v1",
+  "date": "2026-09-04",
+  "status": "user_authorized_exploratory_full_collection_frozen_before_run",
+  "scientific_context": {
+    "pilot_decision": "NO_SCALE_RETAIN_COUNTEREVIDENCE_AND_REDESIGN_ONE_CAUSE",
+    "pilot_result_is_not_overridden": true,
+    "purpose": "Construct the complete dual-source corpus requested by the user; this is an exploratory data artifact and is not evidence that the failed pilot gate passed."
+  },
+  "authorization_boundary": {
+    "explicit_user_authorization_date": "2026-09-04",
+    "synthetic_or_offline_benchmarks_only": true,
+    "published_attacks_only": true,
+    "real_external_endpoint_calls": 0,
+    "model_training_not_part_of_this_run": true,
+    "content_checksums_disabled_by_user": true
+  },
+  "victim_model": {
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "model_path_friend_server": "/home/pth/models/Meta-Llama-3.1-8B-Instruct",
+    "quantization": "4bit_nf4",
+    "compute_dtype_on_v100": "float16",
+    "max_input_tokens": 8192,
+    "max_new_tokens": 256,
+    "decoding": {
+      "do_sample": true,
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "seeds": [1103, 1109, 1117]
+    }
+  },
+  "agentdojo": {
+    "benchmark_version": "v1",
+    "suites": ["workspace", "travel", "banking", "slack"],
+    "tool_protocol": "native",
+    "prompt_profile": "base",
+    "selection": "all official v1 user tasks and all official v1 injection tasks, frozen in the generated selection manifest",
+    "published_attacks": [
+      "direct",
+      "ignore_previous",
+      "system_message",
+      "injecagent",
+      "important_instructions",
+      "important_instructions_no_user_name",
+      "important_instructions_no_model_name",
+      "tool_knowledge"
+    ],
+    "budget": {
+      "user_tasks": 97,
+      "compatible_user_injection_pairs_per_attack": 629,
+      "clean_trajectories": 291,
+      "attack_trajectories": 15096,
+      "selected_trajectories": 15387
+    }
+  },
+  "injecagent": {
+    "upstream": "https://github.com/uiuc-kang-lab/InjecAgent",
+    "setting": "base",
+    "source_selection": "all records in test_cases_dh_base.json and test_cases_ds_base.json in source-file order",
+    "transition_semantics": "clean and poisoned observations are parallel interventions, never consecutive time steps",
+    "variants": ["clean", "poisoned"],
+    "budget": {
+      "direct_harm_cases": 510,
+      "data_stealing_cases": 544,
+      "cases": 1054,
+      "paired_case_seed_groups": 3162,
+      "decisions": 6324
+    }
+  },
+  "split_contract": {
+    "outer_folds": 5,
+    "agentdojo": "Within each suite, sorted user task IDs are assigned round-robin to outer folds; every seed, injection and attack for a user task remains in one fold.",
+    "injecagent": "Sorted user-tool names are assigned round-robin to outer folds; all cases, variants and seeds for one user tool remain in one fold.",
+    "greedy_evaluation_data_excluded_from_training": true
+  },
+  "execution": {
+    "host": "friend-v100",
+    "worktree": "/home/pth/projects/WMagentattack-llama31-8b-dualsource-full-sep4",
+    "archive": "/home/pth/outputs/wmagentattack/0904/llama31_8b_dualsource_full/formal_v1",
+    "gpus": [0, 1],
+    "resume_policy": "Never duplicate a completed record. AgentDojo reuses valid task result files; InjecAgent uses one atomic JSON file per decision.",
+    "completion_gate": "Exact frozen counts, exact expected keys, no duplicates, nonempty outputs, zero runtime failures and zero real external endpoint calls."
+  },
+  "fixed_total_model_interactions": 21711
+}
